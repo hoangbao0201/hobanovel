@@ -8,14 +8,16 @@ import { getNovelsByPageHandle } from "@/services/novels.services";
 import Outstanding from "@/components/Share/Outstanding";
 import { NovelType } from "@/types";
 import JustUpdated from "@/components/Share/JustUpdated";
+import Reading from "@/components/Share/Reading";
 
 
 export interface PageHomeProps {
     novelsOutstending: NovelType[] | []
     novelsJustUpdated: NovelType[] | []
+    novelsReading: NovelType[] | []
 }
 
-const HomePage = ({ novelsOutstending, novelsJustUpdated } : PageHomeProps ) => {
+const HomePage = ({ novelsOutstending, novelsJustUpdated, novelsReading } : PageHomeProps ) => {
 
     return (
         <>
@@ -34,7 +36,14 @@ const HomePage = ({ novelsOutstending, novelsJustUpdated } : PageHomeProps ) => 
             <main>
 
                 <div className="max-w-7xl mx-auto px-3">
-                    <Outstanding novels={novelsOutstending}/>
+                    <div className="flex flex-col lg:flex-row my-6">
+                        <div className="lg:w-8/12">
+                            <Outstanding novels={novelsOutstending}/>
+                        </div>
+                        <div className="lg:w-4/12">
+                            <Reading novels={novelsReading}/>
+                        </div>
+                    </div>
                     <JustUpdated novels={novelsJustUpdated}/>
                 </div>
 
@@ -51,6 +60,7 @@ export const getStaticProps : GetStaticProps = async () => {
         props: {
             novelsOutstending: novelsResponse?.data.novels || null,
             novelsJustUpdated: novelsResponse?.data.novels || null,
+            novelsReading: novelsResponse?.data.novels || null,
         },
         revalidate: REVALIDATE_TIME
     }

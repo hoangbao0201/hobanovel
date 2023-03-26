@@ -9,9 +9,8 @@ interface JustUpdatedProps {
 const JustUpdated = ({ novels } : JustUpdatedProps) => {
 
     return (
-        <div className="">
-
-            <h3 className="text-xl font-semibold">Truyện mới cập nhật</h3>
+        <>
+            <h3 className="px-4 mb-5 text-xl font-semibold">Truyện mới cập nhật</h3>
 
             <table className="w-full my-6 pt-1 border-t">
                 <tbody>
@@ -23,12 +22,12 @@ const JustUpdated = ({ novels } : JustUpdatedProps) => {
                                     <td className="p-2 text-sm text-slate-600">
                                         <h2>{novel.category || "Không tìm thấy"}</h2>
                                     </td>
-                                    <td className="w-1/4 text-slate-700 font-semibold text-base">
+                                    <td className="w-1/4 pr-2 text-slate-700 font-semibold text-base">
                                         <Link href={`/novel/${novel.slug}`}>
                                             <h2 className="line-clamp-1">{novel.title || "Không tìm thấy"}</h2>
                                         </Link>
                                     </td>
-                                    <td className="w-1/4 text-slate-700 font-semibold text-base">
+                                    <td className="w-1/4 pr-2 text-slate-700 font-semibold text-base">
                                         <Link href={`/novel/${novel.slug}`}>
                                             <h2 className="line-clamp-1">{novel.newChapterTitle || "Không tìm thấy"}</h2>
                                         </Link>
@@ -49,8 +48,7 @@ const JustUpdated = ({ novels } : JustUpdatedProps) => {
 
                 </tbody>
             </table>
-
-        </div>
+        </>
 
     )
 }

@@ -103,10 +103,10 @@ export const getNovelsByPageHandle = async (page : any) => {
         const qGetNovel = `
             SELECT novelId, slug, title, LEFT(description, 150) as description, thumbnailUrl, thumbnailPublicId, author, category, personality, scene, classify, viewFrame FROM novels
             ORDER BY createdAt DESC
-            LIMIT 12 OFFSET ?;
+            LIMIT 6 OFFSET ?;
         `;
 
-        const [rows] = await connection.query(qGetNovel, [(page-1)*12]);
+        const [rows] = await connection.query(qGetNovel, [(page-1)*6]);
 
         connection.release();
 
