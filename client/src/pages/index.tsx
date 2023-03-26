@@ -9,15 +9,21 @@ import Outstanding from "@/components/Share/Outstanding";
 import { NovelType } from "@/types";
 import JustUpdated from "@/components/Share/JustUpdated";
 import Reading from "@/components/Share/Reading";
+import HighlyRated from "@/components/Share/HighlyRated";
+import LatestReviews from "@/components/Share/LatestReviews";
 
 
 export interface PageHomeProps {
     novelsOutstending: NovelType[] | []
     novelsJustUpdated: NovelType[] | []
     novelsReading: NovelType[] | []
+    novelsHighlyRated: NovelType[] | []
+    novelsLatestReviews: NovelType[] | []
+
+    commentsLatestReviews: any
 }
 
-const HomePage = ({ novelsOutstending, novelsJustUpdated, novelsReading } : PageHomeProps ) => {
+const HomePage = ({ novelsOutstending, novelsJustUpdated, novelsReading, novelsHighlyRated, commentsLatestReviews } : PageHomeProps ) => {
 
     return (
         <>
@@ -44,7 +50,17 @@ const HomePage = ({ novelsOutstending, novelsJustUpdated, novelsReading } : Page
                             <Reading novels={novelsReading}/>
                         </div>
                     </div>
-                    <JustUpdated novels={novelsJustUpdated}/>
+                    <div className="hidden lg:block">
+                        <JustUpdated novels={novelsJustUpdated}/>
+                    </div>
+                    <div className="flex flex-col lg:flex-row my-6">
+                        <div className="lg:w-8/12">
+                            <HighlyRated novels={novelsHighlyRated}/>
+                        </div>
+                        <div className="lg:w-4/12">
+                            <LatestReviews comments={commentsLatestReviews}/>
+                        </div>
+                    </div>
                 </div>
 
             </main>
@@ -61,6 +77,9 @@ export const getStaticProps : GetStaticProps = async () => {
             novelsOutstending: novelsResponse?.data.novels || null,
             novelsJustUpdated: novelsResponse?.data.novels || null,
             novelsReading: novelsResponse?.data.novels || null,
+            novelsHighlyRated: novelsResponse?.data.novels || null,
+
+            commentsLatestReviews: null,
         },
         revalidate: REVALIDATE_TIME
     }

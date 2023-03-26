@@ -1,18 +1,18 @@
-import Link from "next/link";
-
-import { NovelType } from "@/types";
 import { placeholderBlurhash } from "@/constants";
+import { NovelType } from "@/types";
+import Link from "next/link";
 import BlurImage from "../Layout/BlurImage";
 
-interface OutstandingProps {
-    novels: NovelType[]
+
+interface HighlyRatedProps {
+    novels?: NovelType[]
 }
 
-const Outstanding = ({ novels = [] } : OutstandingProps) => {
+const HighlyRated = ({ novels = [] } : HighlyRatedProps) => {
 
     return (
         <div className="mb-5">
-            <h3 className="px-4 mb-5 text-xl font-semibold">Truyện nổi bật</h3>
+            <h3 className="px-4 mb-5 text-xl font-semibold">Truyện đánh giá cao</h3>
             <div className="grid sm:grid-cols-2 grid-cols-1 gap-6 px-4">
     
                 {   
@@ -35,6 +35,10 @@ const Outstanding = ({ novels = [] } : OutstandingProps) => {
                                         <h2 className="mb-2 text-base line-clamp-1 font-semibold">
                                             <Link className="block" href={`/novel/${novel.slug}`}>{novel.title}</Link>
                                         </h2>
+                                        <div className="flex items-center mb-2">
+                                            <div className="py-[4px] px-3 rounded-full text-base leading-none text-white font-semibold bg-red-700">5.00</div>
+                                            <div className="ml-3 text-green-700 text-base">83 đánh giá</div>
+                                        </div>
                                         <div className="line-clamp-2 text-sm mb-2 text-slate-900">{novel.description.replace(/<[^>]+>/g, '')}</div>
                                         <div className="text-base flex align-middle items-center justify-between">
                                             <span className="max-w-[60%] text-base inline-block line-clamp-1 align-middle">{novel.author}</span>
@@ -53,4 +57,4 @@ const Outstanding = ({ novels = [] } : OutstandingProps) => {
     )
 }
 
-export default Outstanding;
+export default HighlyRated;

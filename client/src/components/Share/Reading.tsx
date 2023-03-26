@@ -11,7 +11,7 @@ interface ReadingProps {
 const Reading = ({ novels } : ReadingProps) => {
 
     return (
-        <div className="">
+        <div className="mb-5">
             <h3 className="px-4 mb-5 text-xl font-semibold">Truyện đang đọc</h3>
             <div className="px-4">
                 {

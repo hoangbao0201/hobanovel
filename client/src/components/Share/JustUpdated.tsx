@@ -3,10 +3,10 @@ import Link from "next/link";
 
 
 interface JustUpdatedProps {
-    novels: NovelType[] | []
+    novels: NovelType[]
 }
 
-const JustUpdated = ({ novels } : JustUpdatedProps) => {
+const JustUpdated = ({ novels= [] } : JustUpdatedProps) => {
 
     return (
         <>
