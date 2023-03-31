@@ -1,5 +1,6 @@
 import dynamic from "next/dynamic";
 import { ReactNode } from "react";
+import Footer from "../partials/Footer";
 
 interface MainLayoutProps {
     children: ReactNode
@@ -18,6 +19,8 @@ const MainLayout= ({ children } : MainLayoutProps) => {
             <div>
                 {children}
             </div>
+
+            <Footer />
         
         </>
     )

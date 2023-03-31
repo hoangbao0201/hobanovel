@@ -11,6 +11,8 @@ import JustUpdated from "@/components/Share/JustUpdated";
 import Reading from "@/components/Share/Reading";
 import HighlyRated from "@/components/Share/HighlyRated";
 import LatestReviews from "@/components/Share/LatestReviews";
+import JustCompleted from "@/components/Share/JustCompleted";
+import JustPosted from "@/components/Share/JustPosted";
 
 
 export interface PageHomeProps {
@@ -19,11 +21,12 @@ export interface PageHomeProps {
     novelsReading: NovelType[] | []
     novelsHighlyRated: NovelType[] | []
     novelsLatestReviews: NovelType[] | []
+    novelsJustCompleted: NovelType[] | []
 
     commentsLatestReviews: any
 }
 
-const HomePage = ({ novelsOutstending, novelsJustUpdated, novelsReading, novelsHighlyRated, commentsLatestReviews } : PageHomeProps ) => {
+const HomePage = ({ novelsOutstending, novelsJustUpdated, novelsReading, novelsHighlyRated, commentsLatestReviews, novelsJustCompleted } : PageHomeProps ) => {
 
     return (
         <>
@@ -61,6 +64,14 @@ const HomePage = ({ novelsOutstending, novelsJustUpdated, novelsReading, novelsH
                             <LatestReviews comments={commentsLatestReviews}/>
                         </div>
                     </div>
+                    <div className="flex flex-col lg:flex-row my-6">
+                        <div className="lg:w-4/12">
+                            <JustPosted novels={novelsHighlyRated}/>
+                        </div>
+                        <div className="lg:w-8/12">
+                            <JustCompleted novels={novelsJustCompleted}/>
+                        </div>
+                    </div>
                 </div>
 
             </main>
@@ -78,6 +89,8 @@ export const getStaticProps : GetStaticProps = async () => {
             novelsJustUpdated: novelsResponse?.data.novels || null,
             novelsReading: novelsResponse?.data.novels || null,
             novelsHighlyRated: novelsResponse?.data.novels || null,
+
+            novelsJustCompleted: novelsResponse?.data.novels || null,
 
             commentsLatestReviews: null,
         },

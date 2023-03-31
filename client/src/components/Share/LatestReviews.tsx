@@ -17,7 +17,7 @@ const LatestReviews = ({ comments } : LatestReviewsProps) => {
 
 
                 <div className="p-4 rounded-lg bg-gray-100 mb-3">
-                    <div className="flex mb-4">
+                    <div className="flex mb-4 items-center">
                         <Link href={`/user/1`} className="w-10 h-10 rounded-full overflow-hidden shadow align-middle inline-block">
                             <BlurImage
                                 width={500}
@@ -30,12 +30,20 @@ const LatestReviews = ({ comments } : LatestReviewsProps) => {
                             />
                         </Link>
                         <div className="flex-1 ml-4">
-                            <Link href={""}>
-                                <h2 className="line-clamp-1 text-base w-full font-semibold">Họ và tên Họ và tên Họ và tên Họ và tên Họ và tên</h2>
-                            </Link>
-                            <Link href={""}>
-                                <h2 className="line-clamp-1 text-sm w-full">Tên Truyện Tên Truyện Tên Truyện Tên Truyện Tên Truyện Tên Truyện</h2>
-                            </Link>
+                            <h2 className="line-clamp-1 text-base w-full font-semibold mb-2">
+                                <Link href={""}>
+                                    Họ và tên Họ và tên Họ và tên Họ và tên Họ và tên
+                                </Link>
+                            </h2>
+                            <div className="flex items-center mb-2">
+                                <div className="py-[4px] px-3 rounded-full text-base leading-none text-white font-semibold bg-red-700">5.00</div>
+                                <div className="ml-3 text-green-700 text-base">83 đánh giá</div>
+                            </div>
+                            <h2 className="line-clamp-1 text-sm w-full">
+                                <Link href={""}>
+                                    Tên Truyện Tên Truyện Tên Truyện Tên Truyện Tên Truyện Tên Truyện        
+                                </Link>
+                            </h2>
                         </div>
                     </div>
                     <div className="line-clamp-3 text-gray-600 text-sm">
@@ -45,7 +53,7 @@ const LatestReviews = ({ comments } : LatestReviewsProps) => {
                     </div>  
                 </div>
                 <div className="p-4 rounded-lg bg-gray-100 mb-3">
-                    <div className="flex mb-4">
+                    <div className="flex mb-4 items-center">
                         <Link href={`/user/1`} className="w-10 h-10 rounded-full overflow-hidden shadow align-middle inline-block">
                             <BlurImage
                                 width={500}
@@ -58,12 +66,20 @@ const LatestReviews = ({ comments } : LatestReviewsProps) => {
                             />
                         </Link>
                         <div className="flex-1 ml-4">
-                            <Link href={""}>
-                                <h2 className="line-clamp-1 text-base w-full font-semibold">Họ và tên Họ và tên Họ và tên Họ và tên Họ và tên</h2>
-                            </Link>
-                            <Link href={""}>
-                                <h2 className="line-clamp-1 text-sm w-full">Tên Truyện Tên Truyện Tên Truyện Tên Truyện Tên Truyện Tên Truyện</h2>
-                            </Link>
+                            <h2 className="line-clamp-1 text-base w-full font-semibold mb-2">
+                                <Link href={""}>
+                                    Họ và tên Họ và tên Họ và tên Họ và tên Họ và tên
+                                </Link>
+                            </h2>
+                            <div className="flex items-center mb-2">
+                                <div className="py-[4px] px-3 rounded-full text-base leading-none text-white font-semibold bg-red-700">5.00</div>
+                                <div className="ml-3 text-green-700 text-base">83 đánh giá</div>
+                            </div>
+                            <h2 className="line-clamp-1 text-sm w-full">
+                                <Link href={""}>
+                                    Tên Truyện Tên Truyện Tên Truyện Tên Truyện Tên Truyện Tên Truyện        
+                                </Link>
+                            </h2>
                         </div>
                     </div>
                     <div className="line-clamp-3 text-gray-600 text-sm">
@@ -73,7 +89,7 @@ const LatestReviews = ({ comments } : LatestReviewsProps) => {
                     </div>  
                 </div>
                 <div className="p-4 rounded-lg bg-gray-100 mb-3">
-                    <div className="flex mb-4">
+                    <div className="flex mb-4 items-center">
                         <Link href={`/user/1`} className="w-10 h-10 rounded-full overflow-hidden shadow align-middle inline-block">
                             <BlurImage
                                 width={500}
@@ -86,12 +102,20 @@ const LatestReviews = ({ comments } : LatestReviewsProps) => {
                             />
                         </Link>
                         <div className="flex-1 ml-4">
-                            <Link href={""}>
-                                <h2 className="line-clamp-1 text-base w-full font-semibold">Họ và tên Họ và tên Họ và tên Họ và tên Họ và tên</h2>
-                            </Link>
-                            <Link href={""}>
-                                <h2 className="line-clamp-1 text-sm w-full">Tên Truyện Tên Truyện Tên Truyện Tên Truyện Tên Truyện Tên Truyện</h2>
-                            </Link>
+                            <h2 className="line-clamp-1 text-base w-full font-semibold mb-2">
+                                <Link href={""}>
+                                    Họ và tên Họ và tên Họ và tên Họ và tên Họ và tên
+                                </Link>
+                            </h2>
+                            <div className="flex items-center mb-2">
+                                <div className="py-[4px] px-3 rounded-full text-base leading-none text-white font-semibold bg-red-700">5.00</div>
+                                <div className="ml-3 text-green-700 text-base">83 đánh giá</div>
+                            </div>
+                            <h2 className="line-clamp-1 text-sm w-full">
+                                <Link href={""}>
+                                    Tên Truyện Tên Truyện Tên Truyện Tên Truyện Tên Truyện Tên Truyện        
+                                </Link>
+                            </h2>
                         </div>
                     </div>
                     <div className="line-clamp-3 text-gray-600 text-sm">
