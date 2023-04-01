@@ -44,7 +44,7 @@ const HomePage = ({ novelsOutstending, novelsJustUpdated, novelsReading, novelsH
             </Head>
             <main>
 
-                <div className="max-w-7xl mx-auto px-3">
+                <div className="max-w-7xl mx-auto px-3 grid bg-white rounded-xl">
                     <div className="flex flex-col lg:flex-row my-6">
                         <div className="lg:w-8/12">
                             <Outstanding novels={novelsOutstending}/>

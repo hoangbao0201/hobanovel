@@ -16,7 +16,7 @@ const JustCompleted = ({ novels = [] } : JustCompletedProps) => {
             <div className="grid sm:grid-cols-2 grid-cols-1 gap-6 px-4">
     
                 {   
-                    novels.length ? (
+                    novels?.length ? (
                         novels.map((novel : NovelType) => {
                             return (
                                 <div key={novel.novelId} className="flex">

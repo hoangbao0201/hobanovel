@@ -16,7 +16,7 @@ const JustUpdated = ({ novels= [] } : JustUpdatedProps) => {
                 <tbody>
 
                     {
-                        novels.map((novel : NovelType, index) => {
+                        novels?.map((novel : NovelType, index) => {
                             return (
                                 <tr key={novel.novelId} className={`${index%2 && "bg-[#fcfcfa]"} rounded-md hover:bg-slate-100 hover:text-red-800`}>
                                     <td className="p-2 text-sm text-slate-600">
