@@ -1,19 +1,41 @@
 import Link from "next/link";
-import { useState } from "react";
+import { useRouter } from "next/router";
+import { GetServerSideProps } from "next";
+import { ChangeEvent, useState } from "react";
+
 import CustomInput from "@/components/Layout/CustomInput";
+import { connectUserHandle, registerUserHandle } from "@/services/auth.services";
+import { getAccessTokenOnServer } from "@/services/cookies.servies";
 
 
 const RegisterPage = () => {
+    const router = useRouter();
+    const [dataForm, setDataForm] = useState({
+        name: "",
+        username: "",
+        email: "",
+        password: ""
+    });
 
-    const [isActive, setIsActive] = useState(false);
-
-    const handleFocus = () => setIsActive(true);
-    const handleBlur = (e : any) => {
-        if (!e.target.value) setIsActive(false);
+    const eventChangeValueInput = (e: ChangeEvent<HTMLInputElement>) => {
+        setDataForm({
+            ...dataForm,
+            [e.target.name]: e.target.value,
+        });
     };
 
-    const eventSubmitForm = (e : any) => {
+    const eventSubmitForm = async (e : any) => {
         e.preventDefault();
+
+        try {
+            const registerResponse = await registerUserHandle(dataForm as any);
+
+            if (registerResponse?.data.success) {
+                router.push("/auth/login");
+            }
+        } catch (error: any) {
+            console.log(error);
+        }
     }
 
     return (
@@ -35,10 +57,10 @@ const RegisterPage = () => {
                                 Already have an account? <Link className="ml-3 text-blue-700 font-semibold" href="/auth/login">Sign In</Link>
                             </div>
                             <div>
-                                <CustomInput label="Fullname" id="fullnameInputRegister"/>
-                                <CustomInput label="Username" id="usernameInputRegister"/>
-                                <CustomInput label="email" id="emailInputRegister"/>
-                                <CustomInput type="password" label="Password" id="passwordInputRegister"/>
+                                <CustomInput value={dataForm.name} name="name" handleOnchangeValue={eventChangeValueInput} label="Fullname" id="fullnameInputRegister"/>
+                                <CustomInput value={dataForm.email} name="username" handleOnchangeValue={eventChangeValueInput} label="Username" id="usernameInputRegister"/>
+                                <CustomInput value={dataForm.email} name="email" handleOnchangeValue={eventChangeValueInput} label="email" id="emailInputRegister"/>
+                                <CustomInput value={dataForm.password} name="password" handleOnchangeValue={eventChangeValueInput} type="password" label="Password" id="passwordInputRegister"/>
                             </div>
                             <div className="flex items-center mb-3">
                                 <input className="w-6 h-6 mr-3 cursor-pointer rounded-t" type="checkbox"/>
@@ -60,6 +82,25 @@ const RegisterPage = () => {
             </div>
         </>
     )
+}
+
+export const getServerSideProps : GetServerSideProps = async (ctx) => {
+
+    const token = getAccessTokenOnServer(ctx.req.headers.cookie as string)
+    const userResponse = await connectUserHandle(token as string);
+
+    if(userResponse?.data.success) {
+        return {
+            redirect: {
+                destination: "/",
+                permanent: false
+            }
+        }
+    }
+
+    return {
+        props: {}
+    }
 }
 
 export default RegisterPage;

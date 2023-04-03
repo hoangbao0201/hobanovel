@@ -189,4 +189,6 @@ export const getChaptersNovelBySlugHandle = async (slug : any) => {
     }
 };
 
-
+export const getBannerNovelHandle = async () => {
+    
+}

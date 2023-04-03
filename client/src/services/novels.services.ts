@@ -15,3 +15,23 @@ export const getNovelsByPageHandle = async (pageNumber: string) => {
         return null;
     }
 };
+
+export const getNovelBySlugHandle = async (slug: string) => {
+    try {
+        if (!slug) {
+            return null;
+        }
+    
+        const novels = await axios.get(
+            `http://localhost:4000/api/novels/search-by-slug/${slug}`
+        );
+        if (novels.data.success) {
+            return novels;
+        }
+    
+        return null;
+    } catch (error) {
+        console.log(error)
+        return null;
+    }
+};

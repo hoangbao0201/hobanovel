@@ -20,7 +20,7 @@ const JustCompleted = ({ novels = [] } : JustCompletedProps) => {
                         novels.map((novel : NovelType) => {
                             return (
                                 <div key={novel.novelId} className="flex">
-                                    <Link href={`/novel/${novel.slug}`} className="w-20 h-28 overflow-hidden shadow align-middle inline-block">
+                                    <Link href={`/truyen/${novel.slug}`} className="w-20 h-28 overflow-hidden shadow align-middle inline-block">
                                         <BlurImage
                                             width={720}
                                             height={960}
@@ -33,7 +33,7 @@ const JustCompleted = ({ novels = [] } : JustCompletedProps) => {
                                     </Link>
                                     <div className="flex-1 ml-3">
                                         <h2 className="mb-2 text-base line-clamp-1 font-semibold">
-                                            <Link className="block" href={`/novel/${novel.slug}`}>{novel.title}</Link>
+                                            <Link className="block" href={`/truyen/${novel.slug}`}>{novel.title}</Link>
                                         </h2>
                                         <div className="line-clamp-2 text-sm mb-2 text-slate-900">{novel.description.replace(/<[^>]+>/g, '')}</div>
                                         <div className="text-base flex align-middle items-center justify-between">

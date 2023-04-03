@@ -245,3 +245,19 @@ export const getNovelsByUserId = async (req: Request, res: Response) => {
         });
     }
 }
+
+// Get Banner Novels | /api/novels/:slug/chapters
+export const getBannerNovel = async (_req: Request, res: Response) => {
+    try {
+
+        return res.json({
+            success: true,
+            message: "Get banner novel successful",
+        })
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: `Internal server error ${error}`,
+        });
+    }
+}

@@ -68,7 +68,7 @@ export const loginUser = async (req: Request, res: Response) => {
             })
         }
 
-        // // Verify password
+        // Verify password
         const verifyPassword = bcrypt.compareSync(password, existingUser[0].password);
         if(!verifyPassword) {
             return res.status(400).json({
@@ -78,7 +78,7 @@ export const loginUser = async (req: Request, res: Response) => {
             })
         }
 
-        // // JWT
+        // JWT
         const accessToken = await jwt.sign(
             {
                 userId: existingUser[0].userId,
@@ -89,6 +89,7 @@ export const loginUser = async (req: Request, res: Response) => {
         return res.json({
             success: true,
             message: "Login user successful",
+            // accout, password
             accessToken: accessToken,
             userId: existingUser[0].userId
         })

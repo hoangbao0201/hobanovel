@@ -1,9 +1,17 @@
-import { GENRES_VALUE, RANK_VALUE } from "@/constants/data";
-import { useClickOutSide } from "@/hook/useClickOutSide";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react"
 
+import { useDispatch, useSelector } from "react-redux";
+import { useClickOutSide } from "@/hook/useClickOutSide";
+import { GENRES_VALUE, RANK_VALUE } from "@/constants/data";
+import BlurImage from "../Layout/BlurImage";
+import { placeholderBlurhash } from "@/constants";
+import LoadingLayout from "../Layout/LoadingLayout";
+
 const Header = () => {
+
+    const dispatch = useDispatch()
+    const { currentUser, userLoading, isAuthenticated } = useSelector((state : any) => state.user)
 
     const genresDropdownRef = useRef<any>();
     const rankDropdownRef = useRef<any>();
@@ -81,6 +89,42 @@ const Header = () => {
                                         )
                                     })}
                                 </div>
+                            </div>
+                        </div>
+
+                        <div className="ml-auto">
+                            <div className="flex items-center">
+                                {
+                                    userLoading ? (
+                                        <LoadingLayout />
+                                    ) : (
+                                        isAuthenticated ? (
+                                            <div>
+                                                <Link href="/" className="w-9 h-9 rounded-full overflow-hidden shadow align-middle inline-block">
+                                                    <BlurImage
+                                                        width={200}
+                                                        height={200}
+                                                        alt="image-demo"
+                                                        blurDataURL={placeholderBlurhash}
+                                                        className="group-hover:scale-105 group-hover:duration-500 object-cover w-9 h-9"
+                                                        placeholder="blur"
+                                                        src={currentUser.thumbnailUrl || "/images/avatar-default-2.png"}
+                                                    />
+                                                </Link>
+                                            </div>
+                                        ) : (
+                                            <>
+                                                <Link className="mr-1" href="/auth/login">
+                                                    <h2 className="px-3 py-1 rounded hover:bg-gray-200">Đăng nhập</h2>
+                                                </Link>
+                                                {"|"}
+                                                <Link className="ml-1" href="/auth/register">
+                                                    <h2 className="px-3 py-1 rounded hover:bg-gray-200">Đăng kí</h2>
+                                                </Link>
+                                            </>
+                                        )
+                                    )
+                                }
                             </div>
                         </div>
 

@@ -2,7 +2,7 @@ import express from "express"
 const router = express.Router()
 
 import { verifyToken } from "../middleware/verifyToken";
-import { createNovelByData, createNovelByUrl, getChaptersNovelBySlug, getNovelsByPage, getNovelBySlug, getNovelByTitle, getNovelsByUserId } from "../controllers/NovelController";
+import { createNovelByData, createNovelByUrl, getChaptersNovelBySlug, getNovelsByPage, getNovelBySlug, getNovelByTitle, getNovelsByUserId, getBannerNovel } from "../controllers/NovelController";
 
 
 
@@ -16,6 +16,7 @@ router.get("/search-by-userId/:userId", verifyToken, getNovelsByUserId);
 
 
 router.get("/:slug/chapters", getChaptersNovelBySlug)
+router.get("/banner", getBannerNovel)
 
 
 export default router;

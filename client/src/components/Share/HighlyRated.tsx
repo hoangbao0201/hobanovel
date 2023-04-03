@@ -20,7 +20,7 @@ const HighlyRated = ({ novels = [] } : HighlyRatedProps) => {
                         novels.map((novel : NovelType) => {
                             return (
                                 <div key={novel.novelId} className="flex">
-                                    <Link href={`/novel/${novel.slug}`} className="w-20 h-28 overflow-hidden shadow align-middle inline-block">
+                                    <Link href={`/truyen/${novel.slug}`} className="w-20 h-28 overflow-hidden shadow align-middle inline-block">
                                         <BlurImage
                                             width={720}
                                             height={960}
@@ -33,7 +33,7 @@ const HighlyRated = ({ novels = [] } : HighlyRatedProps) => {
                                     </Link>
                                     <div className="flex-1 ml-3">
                                         <h2 className="mb-2 text-base line-clamp-1 font-semibold">
-                                            <Link className="block" href={`/novel/${novel.slug}`}>{novel.title}</Link>
+                                            <Link className="block" href={`/truyen/${novel.slug}`}>{novel.title}</Link>
                                         </h2>
                                         <div className="flex items-center mb-2">
                                             <div className="py-[4px] px-3 rounded-full text-base leading-none text-white font-semibold bg-red-700">5.00</div>

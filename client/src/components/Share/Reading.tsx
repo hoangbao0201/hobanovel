@@ -18,7 +18,7 @@ const Reading = ({ novels } : ReadingProps) => {
                     novels?.map((novel : NovelType, index) => {
                         return (
                             <div key={index} className="flex mb-3">
-                                <Link href={`/novel/${novel.slug}`} className="w-10 h-14 overflow-hidden shadow align-middle inline-block">
+                                <Link href={`/truyen/${novel.slug}`} className="w-10 h-14 overflow-hidden shadow align-middle inline-block">
                                     <BlurImage
                                         width={720}
                                         height={960}
@@ -30,7 +30,7 @@ const Reading = ({ novels } : ReadingProps) => {
                                     />
                                 </Link>
                                 <div className="flex-1 ml-3">
-                                    <Link className="block" href={`/novel/${novel.slug}`}>
+                                    <Link className="block" href={`/truyen/${novel.slug}`}>
                                         <h2 className="mb-1 text-base line-clamp-1 font-semibold">
                                             {novel.title}
                                         </h2>

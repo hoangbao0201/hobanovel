@@ -3,9 +3,8 @@ import { useEffect, useState } from "react";
 import cn from "clsx";
 import { iconHideEye, iconShowEye } from "../../../public/icons";
 
-const CustomInput = ({ label = "", id = "", type = "input", props }: any) => {
+const CustomInput = ({ name, value, handleOnchangeValue, label = "", id = "", type = "input", props }: any) => {
     const [isFocused, setIsFocused] = useState(false);
-    const [valueInput, setValueInput] = useState("");
     const [isShowPassword, setIsShowPassword] = useState(false);
 
     const handleInputFocus = () => {
@@ -13,22 +12,16 @@ const CustomInput = ({ label = "", id = "", type = "input", props }: any) => {
     };
 
     const handleInputBlur = () => {
-        // if(valueInput === "") {
         setIsFocused(false);
-        // }
     };
 
     const eventOnchangeValueInput = (e: any) => {
-        setValueInput(e.target.value);
+        handleOnchangeValue(e);
     };
 
     const eventToggleTypePassword = () => {
         setIsShowPassword((value) => !value);
     };
-
-    useEffect(() => {
-        setValueInput("");
-    }, []);
 
     return (
         <div className="mb-4 grid">
@@ -44,10 +37,11 @@ const CustomInput = ({ label = "", id = "", type = "input", props }: any) => {
             >
                 <input
                     id={id}
+                    name={name}
                     type={`${isShowPassword ? "input" : type}`}
                     onFocus={handleInputFocus}
                     onBlur={handleInputBlur}
-                    defaultValue={valueInput}
+                    defaultValue={value}
                     onChange={eventOnchangeValueInput}
                     autoComplete="off"
                     className="flex-1 border-none outline-none text-base"

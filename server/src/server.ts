@@ -1,6 +1,7 @@
 require("dotenv").config()
 import express from 'express'
 import cors from "cors"
+// import path from "path"
 
 import authRouter from "./routes/auth"
 import userRouter from "./routes/user"
@@ -15,6 +16,7 @@ const PORT = 4000
 app.use(cors())
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+// app.use(express.static(path.join(__dirname, 'src/public'))); 
 
 const main = async () => {
 
