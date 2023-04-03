@@ -5,6 +5,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { logoutUserHandle } from "@/redux/userSlice";
 import { getAccessToken, removeAccessToken } from "@/services/cookies.servies";
 
+import Header from "../partials/Header";
+import Footer from "../partials/Footer";
+
 interface MainLayoutProps {
     children: ReactNode
     isHeader?: boolean
@@ -12,9 +15,9 @@ interface MainLayoutProps {
     isBannerPage?: boolean
 }
 
-const Header = dynamic(() => import('../partials/Header'));
-const Footer = dynamic(() => import('../partials/Footer'));
-const BannerPage = dynamic(() => import('../partials/BannerPage'));
+// const Header = dynamic(() => import('../partials/Header'));
+// const Footer = dynamic(() => import('../partials/Footer'));
+// const BannerPage = dynamic(() => import('../partials/BannerPage'));
 
 
 const MainLayout= ({ children, isHeader = true, isFooter = true, isBannerPage = true } : MainLayoutProps) => {

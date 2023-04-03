@@ -1,6 +1,6 @@
 import Head from "next/head";
 import Link from "next/link";
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 import { GetServerSideProps, GetStaticPaths, GetStaticProps, NextPage } from "next";
 
 import { REVALIDATE_TIME, placeholderBlurhash } from "@/constants";
@@ -11,6 +11,7 @@ import { getNovelBySlugHandle } from "@/services/novels.services";
 import { NovelType } from "@/types";
 import { iconBookmark, iconGlasses, iconStar } from "../../../public/icons";
 import FormIntroduce from "@/components/Share/Home/FormIntroduce";
+import FormListChapters from "@/components/Share/Home/FormListChapters";
 
 interface Params extends ParsedUrlQuery {
     slug: string;
@@ -21,11 +22,37 @@ export interface NovelDetailPageProps {
 }
 
 const NovelDetailPage = ({ novel }: NovelDetailPageProps) => {
+    const [numberTab, setNumberTab] = useState(1);
+
     if (!novel) {
         return <div>123</div>;
     }
 
-    console.log(novel);
+    // console.log(novel);
+
+    const Content = () => {
+        if(numberTab == 2) {
+            return (
+                <div>Đánh giá</div>
+            )
+        }
+        if(numberTab == 3) {
+            return (
+                <FormListChapters slug={novel.slug}/>
+                )
+            }
+        if(numberTab == 4) {
+            return (
+                <div>Bình luận</div>
+            )
+        }
+        if(numberTab == 5) {
+            return (
+                <div>Hâm mộ</div>
+            )
+        }
+        return <FormIntroduce description={novel.description || ""} />
+    }
 
     return (
         <>
@@ -150,8 +177,13 @@ const NovelDetailPage = ({ novel }: NovelDetailPageProps) => {
                                 </Link>
                                 <Link href="/">
                                     <span className="min-w-[160px] text-center bg-yellow-100 hover:bg-yellow-200 text-orange-700 border border-orange-700 rounded-full  py-2 px-6 font-semibold flex items-center justify-center">
-                                        <i style={{ backgroundImage: "url(/emotions/flowerEmotion.svg?v=1)" }} className="w-4 h-5 fill-white mr-1 inline-block bg-no-repeat bg-contain">
-                                        </i>
+                                        <i
+                                            style={{
+                                                backgroundImage:
+                                                    "url(/emotions/flowerEmotion.svg?v=1)",
+                                            }}
+                                            className="w-4 h-5 fill-white mr-1 inline-block bg-no-repeat bg-contain"
+                                        ></i>
                                         Đề cử
                                     </span>
                                 </Link>
@@ -160,17 +192,49 @@ const NovelDetailPage = ({ novel }: NovelDetailPageProps) => {
                     </div>
                     <div className="mb-5">
                         <div className="border-b mb-5 text-xl font-semibold">
-                            <button className="py-5 mr-8">Giới thiệu</button>
-                            <button className="py-5 mr-8">Đánh giá</button>
-                            <button className="py-5 mr-8">D.s chương</button>
-                            <button className="py-5 mr-8">Bình luận</button>
-                            <button className="py-5 mr-8">Hâm mộ</button>
+                            <button
+                                onClick={() => setNumberTab(1)}
+                                className={`py-5 mr-8 hover:text-yellow-600 ${
+                                    numberTab == 1 && "border-b-4 border-yellow-600"
+                                }`}
+                            >
+                                Giới thiệu
+                            </button>
+                            <button
+                                onClick={() => setNumberTab(2)}
+                                className={`py-5 mr-8 hover:text-yellow-600 ${
+                                    numberTab == 2 && "border-b-4 border-yellow-600"
+                                }`}
+                            >
+                                Đánh giá
+                            </button>
+                            <button
+                                onClick={() => setNumberTab(3)}
+                                className={`py-5 mr-8 hover:text-yellow-600 ${
+                                    numberTab == 3 && "border-b-4 border-yellow-600"
+                                }`}
+                            >
+                                D.s chương
+                            </button>
+                            <button
+                                onClick={() => setNumberTab(4)}
+                                className={`py-5 mr-8 hover:text-yellow-600 ${
+                                    numberTab == 4 && "border-b-4 border-yellow-600"
+                                }`}
+                            >
+                                Bình luận
+                            </button>
+                            <button
+                                onClick={() => setNumberTab(5)}
+                                className={`py-5 mr-8 hover:text-yellow-600 ${
+                                    numberTab == 5 && "border-b-4 border-yellow-600"
+                                }`}
+                            >
+                                Hâm mộ
+                            </button>
                         </div>
-                        <div className="flex">
-                            <div className="w-8/12">
-                                <FormIntroduce description={novel.description || ""}/>
-                            </div>
-                            <div className="w-3/12">456</div>
+                        <div className="min-h-[500px]">
+                            <Content />
                         </div>
                     </div>
                 </div>

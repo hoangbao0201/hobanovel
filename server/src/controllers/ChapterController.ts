@@ -52,7 +52,7 @@ export const getChapterDetailBySlug = async (req: Request, res: Response) => {
             })
         }
 
-        chapterNumber = chapterNumber.split("chuong-")[1]
+        chapterNumber = chapterNumber.split("chapter-")[1]
         
         const existingChapter : any = await getChapterDetailHandle({ slug, chapterNumber });
         if(!existingChapter?.length) {

@@ -1,6 +1,9 @@
 
 
 export interface ChapterType {
+
+    novelName: string
+
     chapterId: string
     novelSlug: string
     sourceName: string | undefined
@@ -23,7 +26,7 @@ export interface ChaptersType extends ChapterType {
 // Comic
 export interface NovelType {
     novelId: string
-    slug: string[]
+    slug: string
     title: string
 
     totalChapterCount: number

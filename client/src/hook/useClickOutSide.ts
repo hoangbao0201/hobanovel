@@ -42,6 +42,4 @@ export const useClickOutSide = (node: any, handler: Function) => {
             router.events.off("routeChangeStart", handleRouterChange);
         }
     }, [])
-
-
 }
