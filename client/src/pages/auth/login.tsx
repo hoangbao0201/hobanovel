@@ -58,7 +58,7 @@ const LoginPage = () => {
         }
     };
 
-    console.log(dataForm)
+    // console.log(dataForm)
 
     return (
         <>

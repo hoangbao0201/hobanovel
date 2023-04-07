@@ -35,3 +35,32 @@ export const getNovelBySlugHandle = async (slug: string) => {
         return null;
     }
 };
+
+export const createNovelByUrlHandle = async (url: string, token: string) => {
+    try {
+        if (!url) {
+            return null;
+        }
+    
+        const novel = await axios.post(
+            "http://localhost:4000/api/novels/create/url",
+            {
+                url: url,
+            },
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+    
+        if (novel.data.success) {
+            return novel;
+        }
+    
+        return null;
+    } catch (error) {
+        console.log(error)
+        return null;
+    }
+};

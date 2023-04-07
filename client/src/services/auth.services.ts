@@ -26,7 +26,7 @@ export const connectUserHandle = async (token : string) => {
     }
 }
 
-export const loginUserHandle = async (data: UserType) => {
+export const loginUserHandle = async (data: UserType & { accout: string }) => {
     try {
         if(!data.accout || !data.password) {
             return null

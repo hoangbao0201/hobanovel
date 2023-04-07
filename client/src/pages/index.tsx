@@ -16,17 +16,18 @@ import JustPosted from "@/components/Share/JustPosted";
 
 
 export interface PageHomeProps {
-    novelsOutstending: NovelType[] | []
-    novelsJustUpdated: NovelType[] | []
-    novelsReading: NovelType[] | []
-    novelsHighlyRated: NovelType[] | []
-    novelsLatestReviews: NovelType[] | []
-    novelsJustCompleted: NovelType[] | []
+    novelsOutstending: NovelType[]
+    novelsJustUpdated: NovelType[]
+    novelsReading: NovelType[]
+    novelsHighlyRated: NovelType[]
+    novelsLatestReviews: NovelType[]
+    novelsJustCompleted: NovelType[]
 
     commentsLatestReviews: any
 }
 
 const HomePage = ({ novelsOutstending, novelsJustUpdated, novelsReading, novelsHighlyRated, commentsLatestReviews, novelsJustCompleted } : PageHomeProps ) => {
+
 
     return (
         <>
@@ -50,26 +51,26 @@ const HomePage = ({ novelsOutstending, novelsJustUpdated, novelsReading, novelsH
                             <Outstanding novels={novelsOutstending}/>
                         </div>
                         <div className="lg:w-4/12">
-                            <Reading novels={novelsReading}/>
+                            {/* <Reading novels={novelsReading}/> */}
                         </div>
                     </div>
                     <div className="hidden lg:block">
-                        <JustUpdated novels={novelsJustUpdated}/>
+                        {/* <JustUpdated novels={novelsJustUpdated}/> */}
                     </div>
                     <div className="flex flex-col lg:flex-row my-6">
                         <div className="lg:w-8/12">
-                            <HighlyRated novels={novelsHighlyRated}/>
+                            {/* <HighlyRated novels={novelsHighlyRated}/> */}
                         </div>
                         <div className="lg:w-4/12">
-                            <LatestReviews comments={commentsLatestReviews}/>
+                            {/* <LatestReviews comments={commentsLatestReviews}/> */}
                         </div>
                     </div>
                     <div className="flex flex-col lg:flex-row my-6">
                         <div className="lg:w-4/12">
-                            <JustPosted novels={novelsHighlyRated}/>
+                            {/* <JustPosted novels={novelsHighlyRated}/> */}
                         </div>
                         <div className="lg:w-8/12">
-                            <JustCompleted novels={novelsJustCompleted}/>
+                            {/* <JustCompleted novels={novelsJustCompleted}/> */}
                         </div>
                     </div>
                 </div>

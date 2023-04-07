@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
-import { createChapterByDataHandle, getChapterDetailHandle, getDataChapterByUrlMTCHandle } from "../services/chapter.services";
+import { createChapterByDataHandle, getChapterBasicHandle, getChapterDetailHandle, getDataChapterByUrlMTCHandle, increaseViewChapterHandle } from "../services/chapter.services";
+import { ChapterType } from "../types";
 
 // Create Novel By Data | /create-by-url/:slug/:chapterNumber
 export const createChapterByUrl = async (req: Request, res: Response) => {
@@ -12,7 +13,7 @@ export const createChapterByUrl = async (req: Request, res: Response) => {
             })
         }
 
-        const getDataChapter : any = await getDataChapterByUrlMTCHandle({ slug, chapterNumber: Number(chapterNumber) });
+        const getDataChapter : any | null = await getDataChapterByUrlMTCHandle({ novelSlug: slug, chapterNumber: Number(chapterNumber)} as ChapterType);
         if(!getDataChapter) {
             return res.status(400).json({
                 success: false,
@@ -20,7 +21,7 @@ export const createChapterByUrl = async (req: Request, res: Response) => {
             })
         }
 
-        const createChapter : any = await createChapterByDataHandle({ novelName: res.locals.novel.title, novelId: res.locals.novel.novelId, ...getDataChapter })
+        const createChapter : ChapterType = await createChapterByDataHandle({ novelName: res.locals.novel.title, novelId: res.locals.novel.novelId, ...getDataChapter })
         if(!createChapter) {
             return res.status(400).json({
                 success: false,
@@ -31,7 +32,7 @@ export const createChapterByUrl = async (req: Request, res: Response) => {
         return res.json({
             success: true,
             message: "Create novel successful",
-            // getDataChapter: { novelName: res.locals.novel.title, novelId: res.locals.novel.novelId, ...getDataChapter }
+            getDataChapter
         })
     } catch (error) {
         return res.status(500).json({
@@ -54,7 +55,7 @@ export const getChapterDetailBySlug = async (req: Request, res: Response) => {
 
         chapterNumber = chapterNumber.split("chapter-")[1]
         
-        const existingChapter : any = await getChapterDetailHandle({ slug, chapterNumber });
+        const existingChapter : ChapterType[] | null = await getChapterDetailHandle({ novelSlug: slug, chapterNumber } as ChapterType);
         if(!existingChapter?.length) {
             return res.status(400).json({
                 success: false,
@@ -66,6 +67,41 @@ export const getChapterDetailBySlug = async (req: Request, res: Response) => {
             success: true,
             message: "Get chapters novel successful",
             chapter: existingChapter[0]
+        })
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: `Internal server error ${error}`,
+        });
+    }
+}
+// Increase View Chapter | /api/chapters/increaseViewChapter/:slug/:chapterNumber
+export const increaseViewChapter = async (req: Request, res: Response) => {
+    try {
+        let { slug, chapterNumber } : any = req.params
+        if(!slug || !chapterNumber) {
+            return res.status(400).json({
+                success: false,
+                message: "Data not found"
+            })
+        }
+
+        chapterNumber = chapterNumber.split("chapter-")[1]
+        
+        const existingChapter : ChapterType[] | null = await getChapterBasicHandle({ novelSlug: slug, chapterNumber } as ChapterType);
+        if(!existingChapter?.length) {
+            return res.status(400).json({
+                success: false,
+                message: "Get chapters novel error"
+            })
+        }
+
+        // const increaseViewChapter : any = await increaseViewChapterHandle({ slug, chapterNumber, view: 8 })
+
+        return res.json({
+            success: true,
+            message: "Get chapters novel successful",
+            // chapter: existingChapter[0]
         })
     } catch (error) {
         return res.status(500).json({

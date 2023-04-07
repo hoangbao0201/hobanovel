@@ -29,7 +29,7 @@ const JustUpdated = ({ novels= [] } : JustUpdatedProps) => {
                                     </td>
                                     <td className="w-1/4 pr-2 text-slate-700 font-semibold text-base">
                                         <Link href={`/truyen/${novel.slug}`}>
-                                            <h2 className="line-clamp-1">{novel.newChapterTitle || "Không tìm thấy"}</h2>
+                                            <h2 className="line-clamp-1">{novel.title || "Không tìm thấy"}</h2>
                                         </Link>
                                     </td>
                                     <td className="p-2">

@@ -1,8 +1,9 @@
 import bcrypt from "bcryptjs";
 import pool from "../library/connectMySQL";
+import { UserType } from "../types";
 
 
-export const getUserByUsernameEmailHandle = async ({ username, email }: any) => {
+export const getUserByUsernameEmailHandle = async ({ username, email }: UserType) => {
     try {
         const connection = await pool.getConnection();
 
@@ -14,13 +15,13 @@ export const getUserByUsernameEmailHandle = async ({ username, email }: any) => 
 
         connection.release();
 
-        return rows
+        return rows as UserType[]
     } catch (error) {
         return null
     }
 };
 
-export const createUserHandle = async ({ name, username, email, password }: any) => {
+export const createUserHandle = async ({ name, username, email, password }: UserType) => {
     try {
         const connection = await pool.getConnection();
 
@@ -36,7 +37,7 @@ export const createUserHandle = async ({ name, username, email, password }: any)
 
         connection.release();
 
-        return rows
+        return rows as UserType[]
     } catch (error) {
         return null
     }
@@ -54,13 +55,13 @@ export const getUserByAccoutHandle = async (accout : string) => {
 
         connection.release();
 
-        return rows
+        return rows as UserType[]
     } catch (error) {
         return null
     }
 }
 
-export const getUserByUsernameHandle = async (username : string) => {
+export const getUserByUsernameHandle = async ({ username } : UserType) => {
     try {
         const connection = await pool.getConnection();
 
@@ -73,13 +74,13 @@ export const getUserByUsernameHandle = async (username : string) => {
 
         connection.release();
 
-        return rows
+        return rows as UserType[]
     } catch (error) {
         return null
     }
 }
 
-export const getUserByIdHandle = async (userId : number) => {
+export const getUserByIdHandle = async ({userId} : UserType) => {
     try {
         const connection = await pool.getConnection();
 
@@ -92,7 +93,7 @@ export const getUserByIdHandle = async (userId : number) => {
 
         connection.release();
 
-        return rows
+        return rows as UserType[]
     } catch (error) {
         return null
     }

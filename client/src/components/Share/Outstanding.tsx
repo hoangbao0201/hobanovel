@@ -10,6 +10,8 @@ interface OutstandingProps {
 
 const Outstanding = ({ novels = [] } : OutstandingProps) => {
 
+    console.log(novels)
+
     return (
         <div className="mb-5">
             <h3 className="px-4 mb-5 text-xl font-semibold">Truyện nổi bật</h3>
@@ -28,7 +30,7 @@ const Outstanding = ({ novels = [] } : OutstandingProps) => {
                                             blurDataURL={placeholderBlurhash}
                                             className="group-hover:scale-105 group-hover:duration-500 object-cover w-20 h-28"
                                             placeholder="blur"
-                                            src={novel.thumbnailUrl}
+                                            src={novel.thumbnailUrl || "/images/novel-default.png"}
                                         />
                                     </Link>
                                     <div className="flex-1 ml-3">

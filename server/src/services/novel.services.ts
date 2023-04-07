@@ -3,10 +3,11 @@ import * as cheerio from "cheerio";
 import pool from "../library/connectMySQL";
 
 
+import { NovelType } from "../types";
 import { convertTextToSlug } from "../utils/convertTextToSlug";
 import { uploadThumbnailNovelByUrlHandle } from "./image.services";
 
-export const createNovelByDataHandle = async (data : any, userId : any) => {
+export const createNovelByDataHandle = async (data : NovelType, userId : string) => {
     try {
         const connection = await pool.getConnection();
 
@@ -28,7 +29,7 @@ export const createNovelByDataHandle = async (data : any, userId : any) => {
 
         connection.release();
 
-        return rows
+        return rows as NovelType[]
     } catch (error) {
         return error
     }
@@ -55,8 +56,8 @@ export const getDataNovelByUrlMTCHandle = async (url : string) => {
             return null
         }
 
-        const checkNovel : any = await getNovelByTitleHandle(dataNovel.title);
-        if(checkNovel.length) {
+        const checkNovel : NovelType[] | null = await getNovelByTitleHandle(dataNovel.title as any);
+        if(checkNovel?.length) {
             return null
         }
 
@@ -76,7 +77,7 @@ export const getDataNovelByUrlMTCHandle = async (url : string) => {
     }
 }
 
-export const getNovelByTitleHandle = async (title : any) => {
+export const getNovelByTitleHandle = async ({ title } : NovelType) => {
     try {
         const connection = await pool.getConnection();
 
@@ -90,7 +91,7 @@ export const getNovelByTitleHandle = async (title : any) => {
 
         connection.release();
 
-        return rows
+        return rows as NovelType[]
     } catch (error) {
         return null
     }
@@ -110,13 +111,13 @@ export const getNovelsByPageHandle = async (page : any) => {
 
         connection.release();
 
-        return rows
+        return rows as NovelType[]
     } catch (error) {
         return null
     }
 };
 
-export const getNovelBySlugHandle = async (slug : any) => {
+export const getNovelBySlugHandle = async ({ slug } : NovelType) => {
     try {
         const connection = await pool.getConnection();
 
@@ -144,13 +145,13 @@ export const getNovelBySlugHandle = async (slug : any) => {
 
         connection.release();
 
-        return rows
+        return rows as NovelType[]
     } catch (error) {
         return null
     }
 };
 
-export const getNovelsByUserIdHandle = async (userId : any) => {
+export const getNovelsByUserIdHandle = async ({ userId } : NovelType) => {
     try {
         const connection = await pool.getConnection();
 
@@ -163,18 +164,18 @@ export const getNovelsByUserIdHandle = async (userId : any) => {
 
         connection.release();
 
-        return rows
+        return rows as NovelType[]
     } catch (error) {
         return null
     }
 };
 
-export const getChaptersNovelBySlugHandle = async (slug : any) => {
+export const getChaptersNovelBySlugHandle = async ({ slug } : NovelType) => {
     try {
         const connection = await pool.getConnection();
 
         const qGetNovel = `
-            SELECT chapterId, novelSlug, title, chapterNumber, view, updatedAt, novelId FROM chapters
+            SELECT chapterId, novelSlug, title, chapterNumber, updatedAt, novelId FROM chapters
             WHERE novelSlug = ?
             ORDER BY chapterNumber ASC
         `;
@@ -183,7 +184,7 @@ export const getChaptersNovelBySlugHandle = async (slug : any) => {
 
         connection.release();
 
-        return rows
+        return rows as NovelType[]
     } catch (error) {
         return null
     }

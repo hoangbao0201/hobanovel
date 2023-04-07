@@ -1,8 +1,42 @@
 
 
+export interface ChapterType {
+    chapterId: string
+    novelId: string
+
+    novelName: string
+    novelSlug: string
+    title: string
+    content: string
+    chapterNumber: number
+    createdAt: Date
+    updatedAt: Date
+}
+
+// Novel
+export interface NovelType {
+    novelId: string
+    userId: string
+
+    slug: string
+    title: string
+    chapterNumber: number
+    thumbnailUrl: string | null
+    thumbnailPublicId: string | null
+    description: string
+    author: string
+    category: string
+    personality: string
+    scene: string
+    classify: string
+    viewFrame: string
+    createdAt: Date
+    updatedAt: Date
+}
+
+// User
 export interface UserType {
-    userId: number
-    accout: string
+    userId: string
     name: string
     username: string
     email: string
@@ -10,5 +44,13 @@ export interface UserType {
     description: string
     candy: number
     flower: number
+    avatarUrl: string
+    avatarPublicId: string
     createdAt: Date
+    updatedAt: Date
+}
+
+export interface SelectType {
+    value: string
+    label: string
 }

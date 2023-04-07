@@ -44,3 +44,26 @@ export const getChaptersNovelByUrlHandle = async (slug: string) => {
         return null;
     }
 }
+
+export const createChapterByUrlHandle = async (slug: string, token: string) => {
+    try {
+        if(!slug || !token) {
+            return null
+        }
+    
+        const chapter = await axios.post(`http://localhost:4000/api/chapters/create-by-url/${slug}`, {}, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+    
+        if(chapter.data.success) {
+            return chapter
+        }
+    
+        return null;
+    } catch (error) {
+        console.log(error);
+        return null;
+    }
+}

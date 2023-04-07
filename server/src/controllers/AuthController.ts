@@ -19,7 +19,7 @@ export const registerUser = async (req: Request, res: Response) => {
             })
         }
 
-        const checkUser : any = await getUserByUsernameEmailHandle({ username, email } as UserType)
+        const checkUser : UserType[] | null = await getUserByUsernameEmailHandle({ username, email } as UserType)
         if(checkUser?.length) {
             return res.status(400).json({
                 success: false,
@@ -27,7 +27,7 @@ export const registerUser = async (req: Request, res: Response) => {
             })
         }
 
-        const createUser : any = await createUserHandle({name, username, email, password} as UserType)
+        const createUser : UserType[] | null = await createUserHandle({name, username, email, password} as UserType)
         if(!createUser) {
             return res.status(400).json({
                 success: false,
@@ -60,8 +60,8 @@ export const loginUser = async (req: Request, res: Response) => {
             })
         }
 
-        const existingUser : any = await getUserByAccoutHandle(accout as string);
-        if(!existingUser.length) {
+        const existingUser : UserType[] | null = await getUserByAccoutHandle(accout as string);
+        if(!existingUser?.length) {
             return res.status(400).json({
                 success: false,
                 message: "Wrong password or username!"
@@ -89,7 +89,6 @@ export const loginUser = async (req: Request, res: Response) => {
         return res.json({
             success: true,
             message: "Login user successful",
-            // accout, password
             accessToken: accessToken,
             userId: existingUser[0].userId
         })

@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 
 import { getUserByIdHandle } from "../services/user.services";
+import { UserType } from "src/types";
 
 export const verifyToken = async (
     req: Request,
@@ -36,7 +37,7 @@ export const verifyToken = async (
                     return;
                 }
 
-                const exitingUser : any = await getUserByIdHandle(user.userId);
+                const exitingUser : UserType[] | null = await getUserByIdHandle({ userId: user.userId } as UserType);
                 if(!exitingUser?.length) {
                     res.status(400).json({
                         success: false,

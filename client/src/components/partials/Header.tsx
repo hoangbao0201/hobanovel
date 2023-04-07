@@ -7,6 +7,9 @@ import { GENRES_VALUE, RANK_VALUE } from "@/constants/data";
 import BlurImage from "../Layout/BlurImage";
 import { placeholderBlurhash } from "@/constants";
 import LoadingLayout from "../Layout/LoadingLayout";
+import { logoutUserHandle } from "@/redux/userSlice";
+import { removeAccessToken } from "@/services/cookies.servies";
+import Image from "next/image";
 
 const Header = () => {
     const dispatch = useDispatch();
@@ -14,11 +17,14 @@ const Header = () => {
         (state: any) => state.user
     );
 
+    const userDropdownRef = useRef<any>()
     const genresDropdownRef = useRef<any>();
     const rankDropdownRef = useRef<any>();
+
     const [isHeader, setIsHeader] = useState(true);
     const [isDropdownGenres, setIsDropdownGenres] = useState(false);
     const [isDropdownRank, setIsDropdownRank] = useState(false);
+    const [isDropdownUser, setIsDropdownUser] = useState(false)
 
     useEffect(() => {
         let prevScrollPosition = window.pageYOffset;
@@ -39,13 +45,32 @@ const Header = () => {
         };
     }, []);
 
-    const handleHiddenDropdown = () => {
+    const handleHiddenDropdownGenres = () => {
         setIsDropdownGenres(false);
+    }
+    const handleHiddenDropdownRank = () => {
         setIsDropdownRank(false);
-    };
+    }
+    const handleHiddenDropdownUser = () => {
+        setIsDropdownUser(false);
+    }
 
-    useClickOutSide(genresDropdownRef, handleHiddenDropdown);
-    useClickOutSide(rankDropdownRef, handleHiddenDropdown);
+    const eventLogoutUser = () => {
+        dispatch(logoutUserHandle());
+        removeAccessToken()
+    }
+
+    useClickOutSide(genresDropdownRef, handleHiddenDropdownGenres);
+    useClickOutSide(rankDropdownRef, handleHiddenDropdownRank);
+    useClickOutSide(userDropdownRef, handleHiddenDropdownUser);
+
+    useEffect(() => {
+        if(!isHeader) {
+            setIsDropdownGenres(false);
+            setIsDropdownRank(false);
+            setIsDropdownUser(false);
+        }
+    }, [isHeader])
 
     return (
         <>
@@ -124,24 +149,59 @@ const Header = () => {
                                 {userLoading ? (
                                     <LoadingLayout />
                                 ) : isAuthenticated ? (
-                                    <div>
-                                        <Link
-                                            href="/"
-                                            className="w-9 h-9 rounded-full overflow-hidden shadow align-middle inline-block"
-                                        >
-                                            <BlurImage
-                                                width={200}
-                                                height={200}
-                                                alt="image-demo"
-                                                blurDataURL={placeholderBlurhash}
-                                                className="group-hover:scale-105 group-hover:duration-500 object-cover w-9 h-9"
-                                                placeholder="blur"
-                                                src={
-                                                    currentUser.thumbnailUrl ||
-                                                    "/images/avatar-default-2.png"
-                                                }
-                                            />
-                                        </Link>
+                                    <div className="relative">
+                                        <span className="h-12 flex items-center">
+                                            <button
+                                                onClick={() => setIsDropdownUser(true)}
+                                                className="w-9 h-9 outline-none rounded-full overflow-hidden shadow align-middle inline-block"
+                                            >
+                                                <BlurImage
+                                                    width={200}
+                                                    height={200}
+                                                    alt="image-demo"
+                                                    blurDataURL={placeholderBlurhash}
+                                                    className="group-hover:scale-105 group-hover:duration-500 object-cover w-9 h-9"
+                                                    placeholder="blur"
+                                                    src={
+                                                        currentUser.thumbnailUrl ||
+                                                        "/images/avatar-default-2.png"
+                                                    }
+                                                />
+                                            </button>
+                                        </span>
+                                        {
+                                            isDropdownUser && (
+                                                <div ref={userDropdownRef} className="drop-shadow-lg min-w-[230px] p-3 absolute bg-white top-12 right-0">
+                                                    <div className="flex items-center mb-3">
+                                                        <Image
+                                                            width={100}
+                                                            height={100}
+                                                            alt="image-demo"
+                                                            className="w-11 h-11 object-cover"
+                                                            src={
+                                                                currentUser.thumbnailUrl ||
+                                                                "/images/avatar-default-2.png"
+                                                            }
+                                                        />
+                                                        <div className="ml-3 flex-1 line-clamp-1">{currentUser.username}</div>
+                                                    </div>
+                                                    <div className="dropdown-content">
+                                                        <Link href={`/user/${currentUser.username}`} className="hover:bg-gray-100 py-2 px-2 block cursor-pointer">
+                                                            <span className="block w-full">Hồ sơ</span>
+                                                        </Link>
+                                                        <Link href={`/search`} className="hover:bg-gray-100 py-2 px-2 block cursor-pointer">
+                                                            <span className="block w-full">Tìm truyện</span>
+                                                        </Link>
+                                                        <Link href={`/creator`} target="_blank" className="hover:bg-gray-100 py-2 px-2 block cursor-pointer">
+                                                            <span className="block w-full">Người sánh tạo</span>
+                                                        </Link>
+                                                        <div onClick={eventLogoutUser} className="hover:bg-gray-100 py-2 px-2 block cursor-pointer">
+                                                            Đăng xuất
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            )
+                                        }
                                     </div>
                                 ) : (
                                     <>

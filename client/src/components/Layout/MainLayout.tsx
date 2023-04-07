@@ -41,9 +41,7 @@ const MainLayout= ({ children, isHeader = true, isFooter = true, isBannerPage = 
     };
 
     useEffect(() => {
-        // if (userLoading) {
-            loadUser();
-        // }
+        loadUser();
     }, []);
 
     return (

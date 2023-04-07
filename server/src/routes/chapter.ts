@@ -1,12 +1,14 @@
 import express from "express"
 const router = express.Router()
 
-import { createChapterByUrl, getChapterDetailBySlug } from "../controllers/ChapterController";
+import { createChapterByUrl, getChapterDetailBySlug, increaseViewChapter } from "../controllers/ChapterController";
 
 import { verifyToken } from "../middleware/verifyToken";
 import { checkCreateChapter } from "../middleware/checkCreateChapter";
 
 
+
+router.get("/increase-view/:slug/:chapterNumber", increaseViewChapter);
 
 router.post("/create-by-url/:slug/:chapterNumber", verifyToken, checkCreateChapter, createChapterByUrl);
 

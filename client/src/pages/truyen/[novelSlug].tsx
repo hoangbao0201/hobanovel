@@ -1,58 +1,38 @@
 import Head from "next/head";
 import Link from "next/link";
 import { ReactNode, useState } from "react";
-import { GetServerSideProps, GetStaticPaths, GetStaticProps, NextPage } from "next";
+import { GetServerSideProps } from "next";
 
-import { REVALIDATE_TIME, placeholderBlurhash } from "@/constants";
+import { NovelType } from "@/types";
+import { placeholderBlurhash } from "@/constants";
 import MainLayout from "@/components/Layout/MainLayout";
 import BlurImage from "@/components/Layout/BlurImage";
 import { ParsedUrlQuery } from "querystring";
 import { getNovelBySlugHandle } from "@/services/novels.services";
-import { NovelType } from "@/types";
 import { iconBookmark, iconGlasses, iconStar } from "../../../public/icons";
-import FormIntroduce from "@/components/Share/Home/FormIntroduce";
-import FormListChapters from "@/components/Share/Home/FormListChapters";
+import ContentHome from "@/components/Share/Novel/ContentHome";
 
 interface Params extends ParsedUrlQuery {
     slug: string;
 }
 
-export interface NovelDetailPageProps {
-    novel?: NovelType;
+export interface NovelWithView extends NovelType {
+    newChapterCount: number
+    totalChapterCount: number
 }
 
-const NovelDetailPage = ({ novel }: NovelDetailPageProps) => {
+export interface NovelDetailPageProps {
+    novel?: NovelWithView
+}
+
+const NovelDetailPage = ({novel} : NovelDetailPageProps) => {
     const [numberTab, setNumberTab] = useState(1);
 
     if (!novel) {
         return <div>123</div>;
     }
 
-    // console.log(novel);
-
-    const Content = () => {
-        if(numberTab == 2) {
-            return (
-                <div>Đánh giá</div>
-            )
-        }
-        if(numberTab == 3) {
-            return (
-                <FormListChapters slug={novel.slug}/>
-                )
-            }
-        if(numberTab == 4) {
-            return (
-                <div>Bình luận</div>
-            )
-        }
-        if(numberTab == 5) {
-            return (
-                <div>Hâm mộ</div>
-            )
-        }
-        return <FormIntroduce description={novel.description || ""} />
-    }
+    console.log(novel)
 
     return (
         <>
@@ -90,7 +70,7 @@ const NovelDetailPage = ({ novel }: NovelDetailPageProps) => {
                                     </div>
                                 )}
                                 <div className="border-[#bf2c24] text-[#bf2c24] px-4 py-1 border rounded-full">
-                                    {novel.chapters?.numberChaptersInWeek > 0
+                                    {novel.newChapterCount > 0
                                         ? "Đang ra"
                                         : "Chưa ra chương mới"}
                                 </div>
@@ -122,11 +102,11 @@ const NovelDetailPage = ({ novel }: NovelDetailPageProps) => {
                             </div>
                             <div className="flex gap-9 mb-4">
                                 <div className="text-center">
-                                    <span className="font-semibold">818</span>
+                                    <span className="font-semibold">{novel.totalChapterCount || 0}</span>
                                     <div className="text-base">Chương</div>
                                 </div>
                                 <div className="text-center">
-                                    <span className="font-semibold">818</span>
+                                    <span className="font-semibold">{novel.newChapterCount || 0}</span>
                                     <div className="text-base">Chương/tuần</div>
                                 </div>
                                 <div className="text-center">
@@ -194,7 +174,7 @@ const NovelDetailPage = ({ novel }: NovelDetailPageProps) => {
                         <div className="border-b mb-5 text-xl font-semibold">
                             <button
                                 onClick={() => setNumberTab(1)}
-                                className={`py-5 mr-8 hover:text-yellow-600 ${
+                                className={`py-5 mr-8 outline-none hover:text-yellow-600 ${
                                     numberTab == 1 && "border-b-4 border-yellow-600"
                                 }`}
                             >
@@ -202,7 +182,7 @@ const NovelDetailPage = ({ novel }: NovelDetailPageProps) => {
                             </button>
                             <button
                                 onClick={() => setNumberTab(2)}
-                                className={`py-5 mr-8 hover:text-yellow-600 ${
+                                className={`py-5 mr-8 outline-none hover:text-yellow-600 ${
                                     numberTab == 2 && "border-b-4 border-yellow-600"
                                 }`}
                             >
@@ -210,7 +190,7 @@ const NovelDetailPage = ({ novel }: NovelDetailPageProps) => {
                             </button>
                             <button
                                 onClick={() => setNumberTab(3)}
-                                className={`py-5 mr-8 hover:text-yellow-600 ${
+                                className={`py-5 mr-8 outline-none hover:text-yellow-600 ${
                                     numberTab == 3 && "border-b-4 border-yellow-600"
                                 }`}
                             >
@@ -218,7 +198,7 @@ const NovelDetailPage = ({ novel }: NovelDetailPageProps) => {
                             </button>
                             <button
                                 onClick={() => setNumberTab(4)}
-                                className={`py-5 mr-8 hover:text-yellow-600 ${
+                                className={`py-5 mr-8 outline-none hover:text-yellow-600 ${
                                     numberTab == 4 && "border-b-4 border-yellow-600"
                                 }`}
                             >
@@ -226,7 +206,7 @@ const NovelDetailPage = ({ novel }: NovelDetailPageProps) => {
                             </button>
                             <button
                                 onClick={() => setNumberTab(5)}
-                                className={`py-5 mr-8 hover:text-yellow-600 ${
+                                className={`py-5 mr-8 outline-none hover:text-yellow-600 ${
                                     numberTab == 5 && "border-b-4 border-yellow-600"
                                 }`}
                             >
@@ -234,7 +214,7 @@ const NovelDetailPage = ({ novel }: NovelDetailPageProps) => {
                             </button>
                         </div>
                         <div className="min-h-[500px]">
-                            <Content />
+                            <ContentHome tab={numberTab} slug={novel.slug} description={novel.description}/>
                         </div>
                     </div>
                 </div>

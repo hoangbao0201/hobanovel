@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { getUserByIdHandle, getUserByUsernameHandle } from "../services/user.services";
+import { UserType } from "../types";
 
 // Connect User | /api/users
 export const connectUser = async (_req: Request, res: Response) => {
@@ -26,7 +27,7 @@ export const getUserById = async (req: Request, res: Response) => {
                 message: "Data not found"
             })
         }
-        const existingUser : any = await getUserByIdHandle(Number(id))
+        const existingUser : UserType[] | null = await getUserByIdHandle({ userId: id } as UserType)
         if(!existingUser?.length) {
             return res.status(400).json({
                 success: false,
@@ -37,7 +38,7 @@ export const getUserById = async (req: Request, res: Response) => {
         return res.json({
             success: true,
             message: "Get user successful",
-            user: existingUser?.user[0]
+            user: existingUser[0]
         })
     } catch (error) {
         return res.status(500).json({
@@ -57,7 +58,7 @@ export const getUserByUsername = async (req: Request, res: Response) => {
                 message: "Data not found"
             })
         }
-        const existingUser : any = await getUserByUsernameHandle(username as string)
+        const existingUser : UserType[] | null = await getUserByUsernameHandle({ username } as UserType)
         if(!existingUser?.length) {
             return res.status(400).json({
                 success: false,
@@ -68,7 +69,7 @@ export const getUserByUsername = async (req: Request, res: Response) => {
         return res.json({
             success: true,
             message: "Get user successful",
-            user: existingUser?.user[0]
+            user: existingUser[0]
         })
     } catch (error) {
         return res.status(500).json({

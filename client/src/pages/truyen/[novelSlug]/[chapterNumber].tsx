@@ -4,12 +4,12 @@ import { GetServerSideProps } from "next";
 
 import MainLayout from "@/components/Layout/MainLayout";
 import { ParsedUrlQuery } from "querystring";
-import { getNovelBySlugHandle } from "@/services/novels.services";
-import { ChapterType, NovelType } from "@/types";
+import { ChapterType } from "@/types";
 import { getChapterDetailHandle } from "@/services/chapter.services";
 import Link from "next/link";
-import { iconArrowTop, iconBook, iconBookmark } from "../../../../public/icons";
+import { iconArrowTop, iconBook, iconOclock } from "../../../../public/icons";
 import ScrollOnTop from "@/components/Layout/ScrollOnTop";
+import { convertTime } from "@/utils/convertTime";
 
 interface Params extends ParsedUrlQuery {
     slug: string;
@@ -67,12 +67,18 @@ const ChapterDetailPage = ({ chapter }: ChapterDetailPageProps) => {
                         <div className="text-3xl font-medium mb-6">
                             Chương {chapter.chapterNumber}: {chapter.title}
                         </div>
-                        <div className="mb-4">
+                        <div className="mb-4 flex justify-between">
                             <div className="flex items-center">
                                 <i className="w-4 block">{iconBook}</i>
                                 <Link href={`/truyen/${chapter.novelSlug}`} className="">
                                     <h2 className=" ml-2">{chapter.novelName}</h2>
                                 </Link>
+                            </div>
+                            <div className="flex items-center">
+                                <i className="w-4 block">{iconOclock}</i>
+                                <span className="">
+                                    <h2 className=" ml-2">{convertTime(chapter.updatedAt)}</h2>
+                                </span>
                             </div>
                         </div>
                         <span className="w-36 mx-auto my-5 border-b border-gray-500"></span>
