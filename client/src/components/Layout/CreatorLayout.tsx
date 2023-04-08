@@ -1,4 +1,3 @@
-import dynamic from "next/dynamic";
 import Link from "next/link";
 import { ReactNode } from "react";
 import {
@@ -11,6 +10,8 @@ import {
     iconNotifyError,
     iconSteal,
 } from "../../../public/icons";
+import PerfectScrollbar from "react-perfect-scrollbar";
+import 'react-perfect-scrollbar/dist/css/styles.css';
 
 interface CreatorLayoutProps {
     children?: ReactNode;
@@ -25,7 +26,8 @@ const dataContentSide = [
                 value: "Thêm Bản Thảo",
                 icon: iconAddDraft,
                 title: "Thêm bản thảo",
-                description: "Bạn có thể thêm bản thảo và xuất bản nó ngay lập tức ở đây, hoặc đơn giản chỉ muốn viết một đoạn và để nó tự lưu lại",
+                description:
+                    "Bạn có thể thêm bản thảo và xuất bản nó ngay lập tức ở đây, hoặc đơn giản chỉ muốn viết một đoạn và để nó tự lưu lại",
                 linkItem: "/creator/drafts/new",
             },
             {
@@ -89,7 +91,7 @@ const CreatorLayout = ({ children, tab }: CreatorLayoutProps) => {
                     {children}
                 </div>
             </div>
-            <div className="fixed bg-[#f8f8f8] h-full top-0 left-0 flex w-[260px] flex-col border-r border-gray-300 overflow-y-auto scrollbar-thumb-gray-500 scrollbar-track-gray-300">
+            {/* <div className="fixed bg-[#f8f8f8] h-full top-0 left-0 flex w-[260px] flex-col border-r border-gray-300 overflow-y-auto scrollbar-thumb-gray-500 scrollbar-track-gray-300">
                 <Link href="/">
                     <h2 className="mx-5 my-4">HOBA NOVEL</h2>
                 </Link>
@@ -124,6 +126,47 @@ const CreatorLayout = ({ children, tab }: CreatorLayoutProps) => {
                         );
                     })}
                 </div>
+            </div> */}
+
+            <div className="fixed bg-[#f8f8f8] h-full top-0 left-0 flex w-[260px] flex-col border-r border-gray-300">
+                <PerfectScrollbar
+                    options={{ suppressScrollX: true, wheelPropagation: true, wheelSpeed: 0.5, minScrollbarLength: 10 }}
+                >
+                    <Link href="/">
+                        <h2 className="mx-5 my-4">HOBA NOVEL</h2>
+                    </Link>
+                    <div>
+                        {dataContentSide.map((itemTitle, indexTitle) => {
+                            return (
+                                <div key={indexTitle} className="flex flex-col">
+                                    <div className="ml-[30px] mb-[15px] mt-[30px] uppercase text-sm text-gray-400 font-semibold">
+                                        {itemTitle.title}
+                                    </div>
+                                    {itemTitle.children.map((item, index) => {
+                                        return (
+                                            <div key={index} className="">
+                                                <Link
+                                                    href={item.linkItem}
+                                                    className={`flex items-center px-[15px] py-[10px] mx-[15px] hover:ml-[21px] transition-all duration-300 rounded-lg ${
+                                                        tab == item.linkItem &&
+                                                        "bg-indigo-500 text-white fill-white shadow-sm bg-opacity-90 shadow-indigo-600"
+                                                    }`}
+                                                >
+                                                    <i className="block w-5 mr-4 ">
+                                                        {!!item.icon && item.icon}
+                                                    </i>
+                                                    <span className="text-base line-clamp-1">
+                                                        {item.value}
+                                                    </span>
+                                                </Link>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            );
+                        })}
+                    </div>
+                </PerfectScrollbar>
             </div>
         </div>
     );

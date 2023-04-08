@@ -1,10 +1,9 @@
-import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
-import { ChapterType, NovelType } from "@/types";
-import { getChaptersNovelByUrlHandle } from "@/services/chapter.services";
+import { ChapterType } from "@/types";
 import FormIntroduce from "../Home/FormIntroduce";
 import FormListChapters from "./FormListChapters";
+import FormFeedback from "./FormFeedback";
 
 
 interface ContentNovelProps {
@@ -19,22 +18,12 @@ const ContentNovel = ({ tab, slug, description } : ContentNovelProps) => {
 
     return (
         <>
-            {/* <style jsx>{`
-                .my-custom-hiddent {
-                    display: none;
-                    opacity: 0;
-                }
-                .my-custom-show {
-                    display: block !important;
-                    opacity: 1 !important;
-                }
-            `}</style> */}
             <div className="">
                 <div role="tabpanel" aria-labelledby="nav-tab-intro" className={`transition-opacity duration-300 ease-in-out ${tab==1 ? "block opacity-100" : "invisible h-0 opacity-0"}`}>
                     <FormIntroduce description={description || ""}/>
                 </div>
                 <div role="tabpanel" aria-labelledby="nav-tab-intro" className={`transition-opacity duration-300 ease-in-out ${tab==2 ? "block opacity-100" : "invisible h-0 opacity-0"}`}>
-                    Đánh giá
+                    <FormFeedback />
                 </div>
                 <div role="tabpanel" aria-labelledby="nav-tab-intro" className={`transition-opacity duration-300 ease-in-out ${tab==3 ? "block opacity-100" : "invisible h-0 opacity-0"}`}>
                     <FormListChapters tab={tab} slug={slug}/>

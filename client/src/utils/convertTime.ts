@@ -1,14 +1,4 @@
 export const convertTime = (isoDate : Date) => {
-    // var dateObj = new Date(isoDate);
-    // var year = dateObj.getUTCFullYear();
-    // var month = ("0" + (dateObj.getUTCMonth() + 1)).slice(-2);
-    // var day = ("0" + dateObj.getUTCDate()).slice(-2);
-    // var hours = ("0" + dateObj.getUTCHours()).slice(-2);
-    // var minutes = ("0" + dateObj.getUTCMinutes()).slice(-2);
-    // var seconds = ("0" + dateObj.getUTCSeconds()).slice(-2);
-    // var newIsoDate =
-    //     year + "-" + month + "-" + day + " " + hours + ":" + minutes + ":" + seconds;
-    // return newIsoDate;
 
     const date = new Date(isoDate);
     const year = date.getFullYear();
