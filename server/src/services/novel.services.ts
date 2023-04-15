@@ -121,23 +121,19 @@ export const getNovelBySlugHandle = async ({ slug } : NovelType) => {
     try {
         const connection = await pool.getConnection();
 
-
-        // SELECT COUNT(chapters.chapterId) AS chapterCount, novels.novelId, novels.slug, novels.title, novels.thumbnailUrl, novels.description, novels.author, novels.category, novels.personality, novels.scene, novels.classify, viewFrame FROM
-        //     novels 
-        //     LEFT JOIN chapters ON chapters.novelId = novels.novelId 
-        // WHERE novels.slug = ? 
-        // GROUP BY novels.novelId;
         const qGetNovel = `
-            SELECT novels.novelId, novels.slug, novels.title, novels.thumbnailUrl, novels.description, novels.author, 
+            SELECT novels.novelId, novels.slug, novels.title, novels.thumbnailUrl, novels.description, novels.author,
+                AVG(reviews.mediumScore) AS mediumScore,
                 novels.category, novels.personality, novels.scene, novels.classify, novels.viewFrame,
-
+                
                 COUNT(IF(chapters.createdAt >= DATE_SUB(NOW(), INTERVAL 1 WEEK), 1, NULL)) as newChapterCount,
                 COUNT(chapters.chapterId) as totalChapterCount
-
+            
                 FROM novels
                 LEFT JOIN chapters ON chapters.novelId = novels.novelId
-
-            WHERE novels.slug = ? 
+                LEFT JOIN reviews ON reviews.novelId = novels.novelId
+            
+            WHERE novels.slug = ?
             GROUP BY novels.novelId;
         `;
 

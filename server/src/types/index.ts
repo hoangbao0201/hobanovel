@@ -1,5 +1,22 @@
 
 
+export interface ReviewType {
+    reviewId: string
+
+    mediumScore: number
+    pointStoryline: number
+    pointPersonality: number
+    pointScene: number
+    pointTranslation: number
+    commentText: string
+    createdAt: Date
+    updatedAt: Date
+    isSpoiler: boolean
+    
+    userId: string
+    novelId: string
+}
+
 export interface ChapterType {
     chapterId: string
     novelId: string

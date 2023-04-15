@@ -19,6 +19,7 @@ interface Params extends ParsedUrlQuery {
 export interface NovelWithView extends NovelType {
     newChapterCount: number
     totalChapterCount: number
+    mediumScore: number
 }
 
 export interface NovelDetailPageProps {
@@ -118,7 +119,7 @@ const NovelDetailPage = ({novel} : NovelDetailPageProps) => {
                                     <div className="text-base">Cất giữ</div>
                                 </div>
                             </div>
-                            <div className="flex items-center mb-8">
+                            {/* <div className="flex items-center mb-8">
                                 <div className="flex items-center gap-1">
                                     <span className="w-4 block fill-yellow-400">
                                         {iconStar}
@@ -137,6 +138,52 @@ const NovelDetailPage = ({novel} : NovelDetailPageProps) => {
                                     </span>
                                 </div>
                                 <span className="ml-4">5/5 (9 đánh giá)</span>
+                            </div> */}
+                            <div className="flex items-center mb-4 w">
+                                <div className="gap-1 relative">
+                                    <i className="w-4 mx-1 inline-block fill-yellow-400 opacity-40">
+                                        {iconStar}
+                                    </i>
+                                    <i className="w-4 mx-1 inline-block fill-yellow-400 opacity-40">
+                                        {iconStar}
+                                    </i>
+                                    <i className="w-4 mx-1 inline-block fill-yellow-400 opacity-40">
+                                        {iconStar}
+                                    </i>
+                                    <i className="w-4 mx-1 inline-block fill-yellow-400 opacity-40">
+                                        {iconStar}
+                                    </i>
+                                    <i className="w-4 mx-1 inline-block fill-yellow-400 opacity-40">
+                                        {iconStar}
+                                    </i>
+
+                                    <div
+                                        style={{
+                                            width: `${
+                                                novel
+                                                    ? (novel?.mediumScore * 20) ?? 100
+                                                    : 100
+                                            }%`,
+                                        }}
+                                        className="max-w-full block whitespace-nowrap overflow-hidden absolute gap-1 top-0 left-0 right-0 bottom-0"
+                                    >
+                                        <i className="w-4 mx-1 inline-block fill-yellow-500">
+                                            {iconStar}
+                                        </i>
+                                        <i className="w-4 mx-1 inline-block fill-yellow-500">
+                                            {iconStar}
+                                        </i>
+                                        <i className="w-4 mx-1 inline-block fill-yellow-500">
+                                            {iconStar}
+                                        </i>
+                                        <i className="w-4 mx-1 inline-block fill-yellow-500">
+                                            {iconStar}
+                                        </i>
+                                        <i className="w-4 mx-1 inline-block fill-yellow-500">
+                                            {iconStar}
+                                        </i>
+                                    </div>
+                                </div>
                             </div>
                             <div className="flex gap-3 flex-wrap text-xl">
                                 <Link href="/">
@@ -214,7 +261,7 @@ const NovelDetailPage = ({novel} : NovelDetailPageProps) => {
                             </button>
                         </div>
                         <div className="min-h-[500px]">
-                            <ContentHome tab={numberTab} slug={novel.slug} description={novel.description}/>
+                            <ContentHome tab={numberTab} novel={novel}/>
                         </div>
                     </div>
                 </div>

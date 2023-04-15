@@ -1,0 +1,11 @@
+
+
+.over-editor {
+    padding: 15px;
+}
+
+.comment {
+    --ifm-col-width: 54%;
+    flex: 0 0 var(--ifm-col-width);
+    max-width: var(--ifm-col-width);
+}

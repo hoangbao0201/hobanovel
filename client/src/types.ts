@@ -1,5 +1,34 @@
 
 
+export interface CommentType {
+    commentId: string
+    
+    parentId: string
+    commentText: string
+    createdAt: Date
+    updatedAt: Date
+
+    userId: string
+    chapterId: string
+}
+
+
+export interface ReviewType extends UserType, NovelType {
+    reviewId: string
+    mediumScore: number
+    pointStoryline: number
+    pointPersonality: number
+    pointScene: number
+    pointTranslation: number
+    commentText: string
+    createdAt: Date
+    updatedAt: Date
+    isSpoiler: boolean
+
+    userId: string
+    novelId: string
+}
+
 export interface ChapterType {
     chapterId: string
     novelId: string

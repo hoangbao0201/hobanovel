@@ -1,4 +1,5 @@
-import "@/styles/globals.css";
+import "@/styles/main.scss";
+import "@/styles/globals.scss";
 import { NextPage } from "next";
 import { Router } from "next/router";
 import type { AppProps } from "next/app";

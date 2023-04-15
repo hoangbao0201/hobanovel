@@ -18,3 +18,9 @@ body {
     background-color: #eee;
     font-family: Roboto, system-ui, sans-serif;
 }
+
+/* Input Range */
+
+#my-range::-webkit-slider-thumb {
+    background: #00fd0a;
+}

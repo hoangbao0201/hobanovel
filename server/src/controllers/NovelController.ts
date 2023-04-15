@@ -182,7 +182,7 @@ export const getNovelByTitle = async (req: Request, res: Response) => {
     }
 };
 
-// Get Novels By Slug | /api/novels/search-by-slug/1
+// Get Novels By Slug | /api/novels/search-by-slug/:slug
 export const getNovelBySlug = async (req: Request, res: Response) => {
     try {
         let { slug }: any = req.params;

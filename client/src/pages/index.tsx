@@ -13,6 +13,7 @@ import HighlyRated from "@/components/Share/HighlyRated";
 import LatestReviews from "@/components/Share/LatestReviews";
 import JustCompleted from "@/components/Share/JustCompleted";
 import JustPosted from "@/components/Share/JustPosted";
+import { getReviewsByLatestHandle } from "@/services/review.services";
 
 
 export interface PageHomeProps {
@@ -22,12 +23,11 @@ export interface PageHomeProps {
     novelsHighlyRated: NovelType[]
     novelsLatestReviews: NovelType[]
     novelsJustCompleted: NovelType[]
-
-    commentsLatestReviews: any
 }
 
-const HomePage = ({ novelsOutstending, novelsJustUpdated, novelsReading, novelsHighlyRated, commentsLatestReviews, novelsJustCompleted } : PageHomeProps ) => {
+const HomePage = ({ novelsOutstending, novelsJustUpdated, novelsReading, novelsHighlyRated, novelsLatestReviews, novelsJustCompleted } : PageHomeProps ) => {
 
+    console.log("novelsLatestReviews", novelsLatestReviews)
 
     return (
         <>
@@ -62,7 +62,7 @@ const HomePage = ({ novelsOutstending, novelsJustUpdated, novelsReading, novelsH
                             <HighlyRated novels={novelsHighlyRated}/>
                         </div>
                         <div className="lg:w-4/12">
-                            <LatestReviews comments={commentsLatestReviews}/>
+                            <LatestReviews reviews={novelsLatestReviews}/>
                         </div>
                     </div>
                     <div className="flex flex-col lg:flex-row my-6">
@@ -83,6 +83,7 @@ const HomePage = ({ novelsOutstending, novelsJustUpdated, novelsReading, novelsH
 export const getStaticProps : GetStaticProps = async () => {
 
     const novelsResponse = await getNovelsByPageHandle("1");
+    const reviewsResponse = await getReviewsByLatestHandle("1")
 
     return {
         props: {
@@ -93,7 +94,7 @@ export const getStaticProps : GetStaticProps = async () => {
 
             novelsJustCompleted: novelsResponse?.data.novels || null,
 
-            commentsLatestReviews: null,
+            novelsLatestReviews: reviewsResponse?.data.reviews || null,
         },
         revalidate: REVALIDATE_TIME
     }
