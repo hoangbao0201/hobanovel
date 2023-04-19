@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { NovelType, ReviewType } from "../types";
-import { addReviewByNovelHandle, destroyReviewByNovelHandle, getReviewByLatestHandle, getReviewByNovelHandle } from "../services/review.services";
+import { addReplyReviewHandle, addReviewByNovelHandle, destroyReviewByNovelHandle, getReviewByLatestHandle, getReviewByNovelHandle } from "../services/review.services";
 
 // Register User | /api/auth/register
 export const addReviewByDataNovel = async (req: Request, res: Response) => {
@@ -155,3 +155,31 @@ export const destroyReviewByNovel = async (req: Request, res: Response) => {
     }
 }
 
+export const addReplyReview = async (req: Request, res: Response) => {
+    try {
+        const { novelId, reviewId } = req.params
+        const { commentText } = req.body
+
+        const reviewResponse = await addReplyReviewHandle({novelId, reviewId, userId: res.locals.user.userId, commentText} as ReviewType);
+        if(!reviewResponse.success) {
+            return res.status(400).json({
+                success: false,
+                message: "Get reviews Error",
+                error: reviewResponse.error,
+            })
+        }
+        
+        return res.json({
+            success: true,
+            message: "Delete reviews successful",
+            reviewId: reviewId,
+            commentText: commentText
+        })
+        
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: `Internal server error ${error}`,
+        });
+    }
+}

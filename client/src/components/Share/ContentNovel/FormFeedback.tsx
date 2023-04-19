@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-import { ReviewType } from "@/types";
+import { ReviewItemWith, ReviewType } from "@/types";
 import { useSelector } from "react-redux";
 import { placeholderBlurhash } from "@/constants";
 import BlurImage from "@/components/Layout/BlurImage";
@@ -20,7 +20,7 @@ interface FormFeedbackProps {
 const FormFeedback = ({ tab, novelId }: FormFeedbackProps) => {
     const { currentUser, isAuthenticated } = useSelector((state: any) => state.user);
     // ---
-    const [bodyContent, setBodyContent] = useState<Partial<ReviewType[]>>([]);
+    const [bodyContent, setBodyContent] = useState<Partial<ReviewItemWith[]>>([]);
     const [hasLoadedData, setHasLoadedData] = useState<boolean>(false);
     const [tabRepComment, setTabRepComment] = useState<null | string>(null);
 
@@ -218,7 +218,11 @@ const FormFeedback = ({ tab, novelId }: FormFeedbackProps) => {
                     {bodyContent &&
                         bodyContent?.map((review) => {
                             return (
-                                <ReviewItem key={review?.reviewId} review={review} user={currentUser} handleDeleteReview={handleDestroyReview}/>
+                                review ? (
+                                    <ReviewItem key={review?.reviewId} novelId={novelId} review={review} user={currentUser} handleDeleteReview={handleDestroyReview}/>
+                                ) : (
+                                    <div></div>
+                                )   
                             );
                         })}
                 </div>

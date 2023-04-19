@@ -123,7 +123,7 @@ export const getNovelBySlugHandle = async ({ slug } : NovelType) => {
 
         const qGetNovel = `
             SELECT novels.novelId, novels.slug, novels.title, novels.thumbnailUrl, novels.description, novels.author,
-                AVG(reviews.mediumScore) AS mediumScore,
+                AVG(reviews.mediumScore) AS mediumScore, 
                 novels.category, novels.personality, novels.scene, novels.classify, novels.viewFrame,
                 
                 COUNT(IF(chapters.createdAt >= DATE_SUB(NOW(), INTERVAL 1 WEEK), 1, NULL)) as newChapterCount,
@@ -131,7 +131,7 @@ export const getNovelBySlugHandle = async ({ slug } : NovelType) => {
             
                 FROM novels
                 LEFT JOIN chapters ON chapters.novelId = novels.novelId
-                LEFT JOIN reviews ON reviews.novelId = novels.novelId
+                LEFT JOIN reviews ON reviews.novelId = novels.novelId AND reviews.isRating = True
             
             WHERE novels.slug = ?
             GROUP BY novels.novelId;

@@ -1,10 +1,11 @@
 import express from "express"
 const router = express.Router()
 
-import { addReviewByDataNovel, destroyReviewByNovel, getReviewByLatest, getReviewByNovel } from "../controllers/ReviewController";
+import { addReplyReview, addReviewByDataNovel, destroyReviewByNovel, getReviewByLatest, getReviewByNovel,  } from "../controllers/ReviewController";
 import { verifyToken } from "../middleware/verifyToken";
 
 
+router.post("/add-reply-review/:novelId/:reviewId", verifyToken, addReplyReview)
 
 router.post("/add/:novelId", verifyToken, addReviewByDataNovel)
 

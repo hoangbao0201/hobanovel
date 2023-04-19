@@ -140,7 +140,7 @@ const NovelDetailPage = ({novel} : NovelDetailPageProps) => {
                                     <div
                                         style={{
                                             width: `${
-                                                novel
+                                                novel?.mediumScore
                                                     ? (novel?.mediumScore * 20) ?? 100
                                                     : 100
                                             }%`,

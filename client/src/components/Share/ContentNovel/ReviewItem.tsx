@@ -1,32 +1,52 @@
 import Link from "next/link";
+import Image from "next/image";
 import { useState } from "react";
 
-import { ReviewType, UserType } from "@/types";
+import { ReviewItemWith, ReviewType, UserType } from "@/types";
 import { placeholderBlurhash } from "@/constants";
 import BlurImage from "@/components/Layout/BlurImage";
-import { EditorState, convertFromRaw } from "draft-js";
-import { iconComment, iconPaperPlane, iconSend, iconStar, iconTrash } from "../../../../public/icons";
+import { getAccessToken } from "@/services/cookies.servies";
 import { EditorStyle } from "@/components/Layout/EditorStyle";
-import Image from "next/image";
+import { replyReviewHandle } from "@/services/review.services";
+import { EditorState, convertFromRaw, convertToRaw } from "draft-js";
+import { iconArrowTurnUp, iconComment, iconSend, iconStar, iconTrash } from "../../../../public/icons";
 
 interface ReviewItemProps {
-    review?: ReviewType
+    novelId?: string
     user?: UserType
+    review: ReviewItemWith
     handleDeleteReview: any
 }
 
-const ReviewItem = ({ review, user, handleDeleteReview } : ReviewItemProps) => {
+const ReviewItem = ({ novelId, review, user, handleDeleteReview } : ReviewItemProps) => {
     
     const [isReplyReview, setIsReplyReview] = useState(false);
     const [commentText, setCommentText] = useState(() => EditorState.createEmpty());
 
     const handlReplyReview = async () => {
+        const token = getAccessToken();
+        if (!token) {
+            console.log("Bạn chưa đăng nhập");
+            return;
+        }
+        if (!commentText || !novelId) {
+            console.log("Data not found");
+            return;
+        }
         try {
-            
-            
+            const data = {
+                commentText: JSON.stringify(convertToRaw(commentText.getCurrentContent()))
+            }
+            const reviewResponse = await replyReviewHandle(novelId as string, review?.reviewId as string, data as ReviewType, token as string);
+
+            if(reviewResponse?.data.success) {
+
+            }
+
+            console.log(reviewResponse)
 
         } catch (error) {
-            
+            console.log(error)
         }
     }
 
@@ -126,8 +146,9 @@ const ReviewItem = ({ review, user, handleDeleteReview } : ReviewItemProps) => {
                     </div>
                 </div>
             </div>
-            {isReplyReview && (
-                <div className="ml-20 mb-4">
+            {/* {review?.countReplyReview &&<div>Xem {review?.countReplyReview} câu trả lời</div>} */}
+            <div className="ml-20 mb-4">
+                {isReplyReview ? (
                     <div className="flex gap-2">
                         <Link
                             href={`/user/1`}
@@ -152,8 +173,15 @@ const ReviewItem = ({ review, user, handleDeleteReview } : ReviewItemProps) => {
                             </button>
                         </div>
                     </div>
-                </div>
-            )}
+                ) : (
+                    review?.countReplyReview && (
+                        <button className="p-1 flex items-center cursor-pointer">
+                            <i className="w-3 h-3 mr-2 block translate-y-[1px] rotate-90 fill-gray-700">{iconArrowTurnUp}</i>{review?.countReplyReview} phản hồi
+                        </button>
+                    )
+                    
+                )}
+            </div>
         </div>
     );
 };

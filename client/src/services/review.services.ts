@@ -70,3 +70,24 @@ export const destroyReviewsByNovelHandle = async (reviewId: string, token: strin
         return null;
     }
 };
+
+export const replyReviewHandle = async (novelId: string, reviewId: string, data: ReviewType, token: string) => {
+    try {
+        const reviews = await axios.post(`http://localhost:4000/api/reviews/add-reply-review/${novelId}/${reviewId}`, {
+            ...data
+        }, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+
+        if(reviews.data.success) {
+            return reviews
+        }
+
+        return null;
+    } catch (error) {
+        console.log(error)
+        return null;
+    }
+};

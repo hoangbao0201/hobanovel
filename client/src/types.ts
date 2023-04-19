@@ -12,6 +12,9 @@ export interface CommentType {
     chapterId: string
 }
 
+export interface ReviewItemWith extends ReviewType {
+    countReplyReview: number
+}
 
 export interface ReviewType extends UserType, NovelType {
     reviewId: string
