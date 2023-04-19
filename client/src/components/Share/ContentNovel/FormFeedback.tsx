@@ -7,9 +7,10 @@ import { placeholderBlurhash } from "@/constants";
 import BlurImage from "@/components/Layout/BlurImage";
 import { getAccessToken } from "@/services/cookies.servies";
 import { EditorStyle } from "@/components/Layout/EditorStyle";
-import { iconPaperPlane, iconStar, iconTrash } from "../../../../public/icons";
+import { iconPaperPlane, iconSend, iconShare, iconStar, iconTrash } from "../../../../public/icons";
 import { EditorState, convertFromRaw, convertToRaw } from "draft-js";
 import { addReviewsByDataHandle, destroyReviewsByNovelHandle, getReviewsByNovelHandle } from "@/services/review.services";
+import ReviewItem from "./ReviewItem";
 
 interface FormFeedbackProps {
     tab?: number;
@@ -21,6 +22,7 @@ const FormFeedback = ({ tab, novelId }: FormFeedbackProps) => {
     // ---
     const [bodyContent, setBodyContent] = useState<Partial<ReviewType[]>>([]);
     const [hasLoadedData, setHasLoadedData] = useState<boolean>(false);
+    const [tabRepComment, setTabRepComment] = useState<null | string>(null);
 
     const getListReviews = async () => {
         const reviewsResponse = await getReviewsByNovelHandle(novelId as string);
@@ -205,115 +207,18 @@ const FormFeedback = ({ tab, novelId }: FormFeedbackProps) => {
                         />
                         <button
                             onClick={handleSendReviews}
-                            className="p-3 bg-yellow-600 rounded-full absolute bottom-4 right-4"
+                            className="py-2 px-4 transition-all bg-yellow-600 hover:bg-yellow-700 absolute bottom-4 right-4"
                         >
-                            <i className="w-8 h-8 fill-white block">{iconPaperPlane}</i>
+                            <i className="w-6 h-6 fill-white block translate-x-[1px]">{iconSend}</i>
                         </button>
                     </div>
                 </div>
 
                 <div className="transition-all ease-linear">
-                    {
-                        // JSON.stringify(commentText.getCurrentContent())
-                        // <div dangerouslySetInnerHTML={{__html: convertToHTML(commentText.getCurrentContent())}}></div>
-                        // <div dangerouslySetInnerHTML={{__html: JSON.stringify(convertFromHTML(commentText.getCurrentContent()))}}></div>
-                        // <div>{convertToHTML()}</div>
-                    }
-
                     {bodyContent &&
                         bodyContent?.map((review) => {
                             return (
-                                <div
-                                    key={review?.reviewId || ""}
-                                    className="border-b-2 border-gray-100"
-                                >
-                                    <div className="p-4 rounded-lg bg-gray-100 border my-4">
-                                        <div className="flex mb-6">
-                                            <Link
-                                                href={`/user/1`}
-                                                className="w-11 h-11 mt-2 rounded-full overflow-hidden shadow align-middle inline-block"
-                                            >
-                                                <BlurImage
-                                                    width={500}
-                                                    height={500}
-                                                    alt="image-demo"
-                                                    blurDataURL={placeholderBlurhash}
-                                                    className="group-hover:scale-105 group-hover:duration-500 object-cover w-11 h-11"
-                                                    placeholder="blur"
-                                                    src="/images/avatar-default-2.png"
-                                                />
-                                            </Link>
-                                            <div className="flex-1 ml-4">
-                                                <h2 className="line-clamp-1 text-base w-full font-semibold mb-2">
-                                                    <Link href={""}>{review?.name || ""}</Link>
-                                                </h2>
-                                                <div className="flex items-center mb-4 w">
-                                                    <div className="gap-1 relative">
-                                                        <i className="w-4 mx-1 inline-block fill-yellow-400 opacity-40">
-                                                            {iconStar}
-                                                        </i>
-                                                        <i className="w-4 mx-1 inline-block fill-yellow-400 opacity-40">
-                                                            {iconStar}
-                                                        </i>
-                                                        <i className="w-4 mx-1 inline-block fill-yellow-400 opacity-40">
-                                                            {iconStar}
-                                                        </i>
-                                                        <i className="w-4 mx-1 inline-block fill-yellow-400 opacity-40">
-                                                            {iconStar}
-                                                        </i>
-                                                        <i className="w-4 mx-1 inline-block fill-yellow-400 opacity-40">
-                                                            {iconStar}
-                                                        </i>
-
-                                                        <div
-                                                            style={{
-                                                                width: `${
-                                                                    review
-                                                                        ? (review?.mediumScore * 20) ?? 100
-                                                                        : 100
-                                                                }%`,
-                                                            }}
-                                                            className="max-w-full block whitespace-nowrap overflow-hidden absolute gap-1 top-0 left-0 right-0 bottom-0"
-                                                        >
-                                                            <i className="w-4 mx-1 inline-block fill-yellow-500">
-                                                                {iconStar}
-                                                            </i>
-                                                            <i className="w-4 mx-1 inline-block fill-yellow-500">
-                                                                {iconStar}
-                                                            </i>
-                                                            <i className="w-4 mx-1 inline-block fill-yellow-500">
-                                                                {iconStar}
-                                                            </i>
-                                                            <i className="w-4 mx-1 inline-block fill-yellow-500">
-                                                                {iconStar}
-                                                            </i>
-                                                            <i className="w-4 mx-1 inline-block fill-yellow-500">
-                                                                {iconStar}
-                                                            </i>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div className="text-gray-600 text-base">
-                                                    {convertFromRaw(
-                                                        JSON.parse(review?.commentText || "")
-                                                    ).getPlainText()}
-                                                    {/* <div dangerouslySetInnerHTML={{__html: convertFromRaw(JSON.parse(review?.commentText || "")).getCurrentContent().getPlainText("\n")}} /> */}
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div>
-                                            {
-                                                currentUser?.userId == review?.userId && (
-                                                    <div className="flex justify-end">
-                                                        <button onClick={() => handleDestroyReview(review?.userId as string, review?.reviewId as string)} className="p-2 border rounded">
-                                                            <i className="w-4 h-4 block fill-gray-700">{iconTrash}</i>
-                                                        </button>
-                                                    </div>
-                                                )
-                                            }
-                                        </div>
-                                    </div>
-                                </div>
+                                <ReviewItem key={review?.reviewId} review={review} user={currentUser} handleDeleteReview={handleDestroyReview}/>
                             );
                         })}
                 </div>

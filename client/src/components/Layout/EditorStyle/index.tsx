@@ -16,10 +16,6 @@ interface EditorStyleProps {
 
 export const EditorStyle = ({ name, text, handleOnchange = () => {} } : EditorStyleProps ) => {
     const editorRef = useRef<Editor>(null);
-
-    const handleButtonClick = () => {
-        editorRef.current?.focus();
-    };
     
     return (
         // <PerfectScrollbar style={{ width: "100%" }} onClick={handleButtonClick} options={{ wheelPropagation: true, wheelSpeed: 0.5, minScrollbarLength: 10, suppressScrollX: true }}>

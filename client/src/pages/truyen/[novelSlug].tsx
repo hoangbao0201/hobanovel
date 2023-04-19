@@ -10,7 +10,7 @@ import BlurImage from "@/components/Layout/BlurImage";
 import { ParsedUrlQuery } from "querystring";
 import { getNovelBySlugHandle } from "@/services/novels.services";
 import { iconBookmark, iconGlasses, iconStar } from "../../../public/icons";
-import ContentHome from "@/components/Share/Novel/ContentHome";
+import ContentHome from "@/components/Share/ContentNovel/ContentHome";
 
 interface Params extends ParsedUrlQuery {
     slug: string;
@@ -119,26 +119,6 @@ const NovelDetailPage = ({novel} : NovelDetailPageProps) => {
                                     <div className="text-base">Cất giữ</div>
                                 </div>
                             </div>
-                            {/* <div className="flex items-center mb-8">
-                                <div className="flex items-center gap-1">
-                                    <span className="w-4 block fill-yellow-400">
-                                        {iconStar}
-                                    </span>
-                                    <span className="w-4 block fill-yellow-400">
-                                        {iconStar}
-                                    </span>
-                                    <span className="w-4 block fill-yellow-400">
-                                        {iconStar}
-                                    </span>
-                                    <span className="w-4 block fill-yellow-400">
-                                        {iconStar}
-                                    </span>
-                                    <span className="w-4 block fill-yellow-400">
-                                        {iconStar}
-                                    </span>
-                                </div>
-                                <span className="ml-4">5/5 (9 đánh giá)</span>
-                            </div> */}
                             <div className="flex items-center mb-4 w">
                                 <div className="gap-1 relative">
                                     <i className="w-4 mx-1 inline-block fill-yellow-400 opacity-40">
