@@ -1,16 +1,13 @@
-import Link from "next/link";
 import { useEffect, useState } from "react";
 
-import { ReviewItemWith, ReviewType } from "@/types";
+import ReviewItem from "./ReviewItem";
 import { useSelector } from "react-redux";
-import { placeholderBlurhash } from "@/constants";
-import BlurImage from "@/components/Layout/BlurImage";
+import { ReviewItemWith, ReviewType } from "@/types";
+import { EditorState, convertToRaw } from "draft-js";
 import { getAccessToken } from "@/services/cookies.servies";
 import { EditorStyle } from "@/components/Layout/EditorStyle";
-import { iconPaperPlane, iconSend, iconShare, iconStar, iconTrash } from "../../../../public/icons";
-import { EditorState, convertFromRaw, convertToRaw } from "draft-js";
+import { iconSend, iconStar } from "../../../../public/icons";
 import { addReviewsByDataHandle, destroyReviewsByNovelHandle, getReviewsByNovelHandle } from "@/services/review.services";
-import ReviewItem from "./ReviewItem";
 
 interface FormFeedbackProps {
     tab?: number;
@@ -117,7 +114,7 @@ const FormFeedback = ({ tab, novelId }: FormFeedbackProps) => {
                 const filterReviews = bodyContent.filter((review) => review?.reviewId !== reviewId)
                 setBodyContent(filterReviews);
             }
-
+            console.log(reviewResponse)
         } catch (error) {
             console.log(error)
         }

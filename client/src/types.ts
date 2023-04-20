@@ -14,10 +14,16 @@ export interface CommentType {
 
 export interface ReviewItemWith extends ReviewType {
     countReplyReview: number
+    receiverName: string
+    receiverId: string
+    senderName: string
+    senderId: string
 }
 
 export interface ReviewType extends UserType, NovelType {
     reviewId: string
+
+    isRating: boolean
     mediumScore: number
     pointStoryline: number
     pointPersonality: number
@@ -30,6 +36,7 @@ export interface ReviewType extends UserType, NovelType {
 
     userId: string
     novelId: string
+    parentId: string
 }
 
 export interface ChapterType {

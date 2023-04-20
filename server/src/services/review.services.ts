@@ -115,7 +115,32 @@ export const destroyReviewByNovelHandle = async ({ reviewId, userId } : ReviewTy
 
         const qGetReview = `
             DELETE FROM reviews
-            WHERE reviews.reviewId = ? AND reviews.userId = ?
+            WHERE reviews.reviewId = ? AND reviews.userId = ? AND reviews.isRating = True
+        `;
+
+        const [rows] = await connection.query(qGetReview, [reviewId, userId]);
+
+        connection.release();
+
+        return {
+            success: true,
+            data: rows as ReviewType[],
+        };
+    } catch (error) {
+        return {
+            success: false,
+            error: error,
+        };
+    }
+};
+
+export const destroyReplyReviewByNovelHandle = async ({ reviewId, userId } : ReviewType) => {
+    try {
+        const connection = await pool.getConnection();
+
+        const qGetReview = `
+            DELETE FROM reviews
+            WHERE reviews.reviewId = ? AND reviews.userId = ? AND reviews.isRating = False
         `;
 
         const [rows] = await connection.query(qGetReview, [reviewId, userId]);
@@ -144,6 +169,37 @@ export const addReplyReviewHandle = async ({ novelId, reviewId, userId, commentT
         `;
 
         const [rows] = await connection.query(qGetReview, [false, commentText, reviewId, userId, novelId]);
+
+        connection.release();
+
+        return {
+            success: true,
+            data: rows as ReviewType[],
+        };
+    } catch (error) {
+        return {
+            success: false,
+            error: error,
+        };
+    }
+};
+
+export const getReplyReviewHandle = async (reviewId : string) => {
+    try {
+        const connection = await pool.getConnection();
+
+        const qGetReview = `
+            SELECT reviews.*, us_sender.name as senderName, us_sender.userId as senderId,
+                us_receiver.name as receiverName, us_receiver.userId as receiverId FROM reviews
+                LEFT JOIN users us_sender ON us_sender.userId = reviews.userId
+                LEFT JOIN reviews rv ON rv.reviewId = reviews.parentId
+                LEFT JOIN users us_receiver ON us_receiver.userId = rv.userId
+            WHERE reviews.parentId = ? AND reviews.isRating = False
+            ORDER BY reviews.createdAt ASC
+            LIMIT 5 OFFSET 0
+        `;
+
+        const [rows] = await connection.query(qGetReview, [reviewId]);
 
         connection.release();
 

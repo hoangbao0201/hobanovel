@@ -16,11 +16,11 @@ interface EditorStyleProps {
 
 export const EditorStyle = ({ name, text, handleOnchange = () => {} } : EditorStyleProps ) => {
     const editorRef = useRef<Editor>(null);
-    
+
     return (
         // <PerfectScrollbar style={{ width: "100%" }} onClick={handleButtonClick} options={{ wheelPropagation: true, wheelSpeed: 0.5, minScrollbarLength: 10, suppressScrollX: true }}>
         <div className={name ? name : "wrapper-editor"}>
-            <Editor ref={editorRef} editorState={text ?? EditorState.createEmpty()} onChange={handleOnchange} />
+            <Editor customStyleMap={{ BLUE: { color: 'blue' } }} ref={editorRef} editorState={text ?? EditorState.createEmpty()} onChange={handleOnchange} />
         </div>
         // </PerfectScrollbar>
     )

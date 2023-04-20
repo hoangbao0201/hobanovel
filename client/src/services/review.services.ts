@@ -54,7 +54,7 @@ export const addReviewsByDataHandle = async (novelId: string, data: ReviewType, 
 };
 export const destroyReviewsByNovelHandle = async (reviewId: string, token: string) => {
     try {
-        const reviews = await axios.delete(`http://localhost:4000/api/reviews/destroy/${reviewId}`, {
+        const reviews = await axios.delete(`http://localhost:4000/api/reviews/destroy-review/${reviewId}`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -71,7 +71,26 @@ export const destroyReviewsByNovelHandle = async (reviewId: string, token: strin
     }
 };
 
-export const replyReviewHandle = async (novelId: string, reviewId: string, data: ReviewType, token: string) => {
+export const destroyReplyReviewsByNovelHandle = async (reviewId: string, token: string) => {
+    try {
+        const reviews = await axios.delete(`http://localhost:4000/api/reviews/destroy-replyreview/${reviewId}`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+
+        if(reviews.data.success) {
+            return reviews
+        }
+
+        return null;
+    } catch (error) {
+        console.log(error)
+        return null;
+    }
+};
+
+export const addReplyReviewHandle = async (novelId: string, reviewId: string, data: ReviewType, token: string) => {
     try {
         const reviews = await axios.post(`http://localhost:4000/api/reviews/add-reply-review/${novelId}/${reviewId}`, {
             ...data
@@ -80,6 +99,21 @@ export const replyReviewHandle = async (novelId: string, reviewId: string, data:
                 Authorization: `Bearer ${token}`
             }
         });
+
+        if(reviews.data.success) {
+            return reviews
+        }
+
+        return null;
+    } catch (error) {
+        console.log(error)
+        return null;
+    }
+};
+
+export const getReplyReviewsHandle = async (reviewId: string) => {
+    try {
+        const reviews = await axios.get(`http://localhost:4000/api/reviews/search-by-review/${reviewId}`);
 
         if(reviews.data.success) {
             return reviews
