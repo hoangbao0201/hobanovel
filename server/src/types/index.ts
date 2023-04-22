@@ -1,5 +1,17 @@
 
 
+export interface CommentType {
+    commentId: string
+    commentText: string
+    createdAt: Date
+    updatedAt: Date
+
+    parentId: string
+    userId: string
+    chapterId: string
+    novelId: string
+}
+
 export interface ReviewType {
     reviewId: string
 
@@ -13,6 +25,7 @@ export interface ReviewType {
     updatedAt: Date
     isSpoiler: boolean
     
+    parentId: string
     userId: string
     novelId: string
 }

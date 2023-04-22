@@ -8,6 +8,7 @@ import { getAccessToken } from "@/services/cookies.servies";
 import { EditorStyle } from "@/components/Layout/EditorStyle";
 import { iconSend, iconStar } from "../../../../public/icons";
 import { addReviewsByDataHandle, destroyReviewsByNovelHandle, getReviewsByNovelHandle } from "@/services/review.services";
+import OverlayLayout from "@/components/Layout/OverlayLayout";
 
 interface FormFeedbackProps {
     tab?: number;
@@ -19,7 +20,7 @@ const FormFeedback = ({ tab, novelId }: FormFeedbackProps) => {
     // ---
     const [bodyContent, setBodyContent] = useState<Partial<ReviewItemWith[]>>([]);
     const [hasLoadedData, setHasLoadedData] = useState<boolean>(false);
-    const [tabRepComment, setTabRepComment] = useState<null | string>(null);
+    const [isModalCheckSpoiler, setIsModalCheckSpoiler] = useState(false);
 
     const getListReviews = async () => {
         const reviewsResponse = await getReviewsByNovelHandle(novelId as string);
@@ -55,6 +56,7 @@ const FormFeedback = ({ tab, novelId }: FormFeedbackProps) => {
     };
 
     const handleSendReviews = async () => {
+        // setIsModalCheckSpoiler(value => !value)
         if (!isAuthenticated) {
             console.log("Bạn chưa đăng nhập");
             return;
@@ -208,6 +210,9 @@ const FormFeedback = ({ tab, novelId }: FormFeedbackProps) => {
                         >
                             <i className="w-6 h-6 fill-white block translate-x-[1px]">{iconSend}</i>
                         </button>
+                        
+
+
                     </div>
                 </div>
 
@@ -225,6 +230,10 @@ const FormFeedback = ({ tab, novelId }: FormFeedbackProps) => {
                 </div>
             </div>
             <div className="w-4/12 p-5 -ml-5 relative">r</div>
+            <OverlayLayout isOpen={isModalCheckSpoiler} handleToogle={() => setIsModalCheckSpoiler(false)}>
+                <div className="max-w-lg w-full bg-white p-8">123</div>
+                {/* bao */}
+            </OverlayLayout>
         </div>
     );
 };

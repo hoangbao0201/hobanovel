@@ -4,13 +4,13 @@ import { ReactNode, useState } from "react";
 import { GetServerSideProps } from "next";
 
 import { NovelType } from "@/types";
-import { placeholderBlurhash } from "@/constants";
-import MainLayout from "@/components/Layout/MainLayout";
-import BlurImage from "@/components/Layout/BlurImage";
 import { ParsedUrlQuery } from "querystring";
+import { placeholderBlurhash } from "@/constants";
+import BlurImage from "@/components/Layout/BlurImage";
+import MainLayout from "@/components/Layout/MainLayout";
+import ContentHome from "@/components/Share/ContentNovel";
 import { getNovelBySlugHandle } from "@/services/novels.services";
 import { iconBookmark, iconGlasses, iconStar } from "../../../public/icons";
-import ContentHome from "@/components/Share/ContentNovel/ContentHome";
 
 interface Params extends ParsedUrlQuery {
     slug: string;
@@ -33,7 +33,7 @@ const NovelDetailPage = ({novel} : NovelDetailPageProps) => {
         return <div>123</div>;
     }
 
-    console.log(novel)
+    // console.log(novel)
 
     return (
         <>
