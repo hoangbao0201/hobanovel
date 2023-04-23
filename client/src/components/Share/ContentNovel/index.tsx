@@ -4,6 +4,7 @@ import { ChapterType, NovelType } from "@/types";
 import FormIntroduce from "./FormIntroduce";
 import FormListChapters from "./FormListChapters";
 import FormFeedback from "./FormFeedback";
+import FormComment from "./FormComment";
 
 
 interface ContentNovelProps {
@@ -28,7 +29,7 @@ const ContentNovel = ({ tab, novel } : ContentNovelProps) => {
                     <FormListChapters tab={tab} slug={novel?.slug}/>
                 </div>
                 <div role="tabpanel" aria-labelledby="nav-tab-intro" className={`transition-opacity duration-400 ease-in-out ${tab==4 ? "block opacity-100" : "invisible h-0 opacity-0"}`}>
-                    Bình luận
+                    <FormComment tab={tab} novelId={novel?.novelId}/>
                 </div>
                 <div role="tabpanel" aria-labelledby="nav-tab-intro" className={`transition-opacity duration-400 ease-in-out ${tab==5 ? "block opacity-100" : "invisible h-0 opacity-0"}`}>
                     Hâm mộ

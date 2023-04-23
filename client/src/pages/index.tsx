@@ -6,7 +6,7 @@ import { REVALIDATE_TIME } from "@/constants";
 import MainLayout from "@/components/Layout/MainLayout";
 import { getNovelsByPageHandle } from "@/services/novels.services";
 import Outstanding from "@/components/Share/Outstanding";
-import { NovelType } from "@/types";
+import { NovelType, ReviewType } from "@/types";
 import JustUpdated from "@/components/Share/JustUpdated";
 import Reading from "@/components/Share/Reading";
 import HighlyRated from "@/components/Share/HighlyRated";
@@ -17,12 +17,12 @@ import { getReviewsByLatestHandle } from "@/services/review.services";
 
 
 export interface PageHomeProps {
-    novelsOutstending: NovelType[]
-    novelsJustUpdated: NovelType[]
-    novelsReading: NovelType[]
-    novelsHighlyRated: NovelType[]
-    novelsLatestReviews: NovelType[]
-    novelsJustCompleted: NovelType[]
+    novelsOutstending?: NovelType[]
+    novelsJustUpdated?: NovelType[]
+    novelsReading?: NovelType[]
+    novelsHighlyRated?: NovelType[]
+    novelsLatestReviews?: ReviewType[]
+    novelsJustCompleted?: NovelType[]
 }
 
 const HomePage = ({ novelsOutstending, novelsJustUpdated, novelsReading, novelsHighlyRated, novelsLatestReviews, novelsJustCompleted } : PageHomeProps ) => {

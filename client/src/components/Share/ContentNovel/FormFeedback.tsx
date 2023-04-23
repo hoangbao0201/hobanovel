@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 import ReviewItem from "./ReviewItem";
 import { useSelector } from "react-redux";
-import { ReviewItemWith, ReviewType } from "@/types";
+import { CommentType, ReviewItemWith, ReviewType } from "@/types";
 import { EditorState, convertToRaw } from "draft-js";
 import { getAccessToken } from "@/services/cookies.servies";
 import { EditorStyle } from "@/components/Layout/EditorStyle";
@@ -18,7 +18,7 @@ interface FormFeedbackProps {
 const FormFeedback = ({ tab, novelId }: FormFeedbackProps) => {
     const { currentUser, isAuthenticated } = useSelector((state: any) => state.user);
     // ---
-    const [bodyContent, setBodyContent] = useState<Partial<ReviewItemWith[]>>([]);
+    const [bodyContent, setBodyContent] = useState<ReviewType[]>([]);
     const [hasLoadedData, setHasLoadedData] = useState<boolean>(false);
     const [isModalCheckSpoiler, setIsModalCheckSpoiler] = useState(false);
 

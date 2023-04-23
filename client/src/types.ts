@@ -1,26 +1,41 @@
 
+export interface CommentItemWith {
+    countReplyComment?: string | null
+    receiverName?: string
+    receiverId?: string
+    senderName?: string
+    senderId?: string
 
-export interface CommentType {
+    name?: string   
+    avatarUrl?: string
+    avatarPublicId?: string
+}
+
+export interface CommentType extends CommentItemWith {
     commentId: string
-    
-    parentId: string
     commentText: string
     createdAt: Date
     updatedAt: Date
 
+    parentId?: string | null | undefined
     userId: string
-    chapterId: string
+    chapterId?: string | null | undefined
+    novelId?: string | null | undefined
 }
 
-export interface ReviewItemWith extends ReviewType {
-    countReplyReview: number
-    receiverName: string
-    receiverId: string
-    senderName: string
-    senderId: string
+export interface ReviewItemWith extends NovelType {
+    countReplyReview?: string | null
+    receiverName?: string
+    receiverId?: string
+    senderName?: string
+    senderId?: string
+
+    name?: string   
+    avatarUrl?: string
+    avatarPublicId?: string
 }
 
-export interface ReviewType extends UserType, NovelType {
+export interface ReviewType extends ReviewItemWith {
     reviewId: string
 
     isRating: boolean
@@ -36,7 +51,7 @@ export interface ReviewType extends UserType, NovelType {
 
     userId: string
     novelId: string
-    parentId: string
+    parentId?: string | null
 }
 
 export interface ChapterType {
@@ -80,11 +95,11 @@ export interface UserType {
     username: string
     email: string
     password: string
-    description: string
-    candy: number
-    flower: number
-    avatarUrl: string
-    avatarPublicId: string
+    description?: string
+    candy?: number
+    flower?: number
+    avatarUrl?: string
+    avatarPublicId?: string
     createdAt: Date
     updatedAt: Date
 }

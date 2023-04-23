@@ -1,19 +1,18 @@
 import express from "express"
 const router = express.Router()
 
-import { addReplyComment, addCommentByNovel, destroyReplyCommentByNovel, destroyCommentByNovel, getReplyComment, getCommentByLatest, getCommentByNovel,  } from "../controllers/CommentController";
+import { addReplyComment, addCommentByNovel, destroyReplyCommentByNovel, destroyCommentByNovel, getReplyComment, getCommentByNovel,  } from "../controllers/CommentController";
 import { verifyToken } from "../middleware/verifyToken";
 
 
-router.post("/add-reply-comment/:novelId/:commentId", verifyToken, addReplyComment)
-
-router.post("/add/:novelId", verifyToken, addCommentByNovel)
+router.post("/add/:novelId?", verifyToken, addCommentByNovel)
+router.post("/add/reply/:commentId", verifyToken, addReplyComment)
 
 router.get("/get/:novelId?", getCommentByNovel)
-router.get("/search-by-comment/:commentId", getReplyComment)
+router.get("/get/reply/:commentId", getReplyComment)
 
-router.delete("/destroy-comment/:commentId", verifyToken, destroyCommentByNovel)
-router.delete("/destroy-replycomment/:commentId", verifyToken, destroyReplyCommentByNovel)
+router.delete("/destroy/:commentId", verifyToken, destroyCommentByNovel)
+router.delete("/destroy/reply/:commentId", verifyToken, destroyReplyCommentByNovel)
 
 
 export default router;

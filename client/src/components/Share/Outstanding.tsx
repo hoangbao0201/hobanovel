@@ -5,7 +5,7 @@ import { placeholderBlurhash } from "@/constants";
 import BlurImage from "../Layout/BlurImage";
 
 interface OutstandingProps {
-    novels: NovelType[]
+    novels?: NovelType[]
 }
 
 const Outstanding = ({ novels = [] } : OutstandingProps) => {

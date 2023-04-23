@@ -20,14 +20,14 @@ import {
 interface ReviewItemProps {
     novelId?: string;
     user?: UserType;
-    review: ReviewItemWith;
+    review: ReviewType;
     handleDeleteReview: any;
 }
 
 const ReviewItem = ({ novelId, review, user, handleDeleteReview }: ReviewItemProps) => {
     const [isFormSend, setIsFormSend] = useState<boolean>(false);
     const [isReplyReview, setIsReplyReview] = useState<boolean>(false);
-    const [replyReviews, setReplyReviews] = useState<Partial<ReviewItemWith[]>>([]);
+    const [replyReviews, setReplyReviews] = useState<ReviewType[]>([]);
     const [commentText, setCommentText] = useState(() => EditorState.createEmpty());
 
     const handleAddReplyReview = async () => {

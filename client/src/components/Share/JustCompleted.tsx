@@ -5,7 +5,7 @@ import { placeholderBlurhash } from "@/constants";
 import BlurImage from "../Layout/BlurImage";
 
 interface JustCompletedProps {
-    novels: NovelType[]
+    novels?: NovelType[]
 }
 
 const JustCompleted = ({ novels = [] } : JustCompletedProps) => {

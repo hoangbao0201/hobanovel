@@ -3,10 +3,10 @@ import Link from "next/link";
 import { placeholderBlurhash } from "@/constants";
 import BlurImage from "../Layout/BlurImage";
 import { convertFromRaw } from "draft-js";
-import { ReviewType } from "@/types";
+import { NovelType, ReviewType } from "@/types";
 
 interface LatestReviewsProps {
-    reviews?: any
+    reviews?:  ReviewType[]
 }
 
 const LatestReviews = ({ reviews } : LatestReviewsProps) => {
@@ -19,7 +19,7 @@ const LatestReviews = ({ reviews } : LatestReviewsProps) => {
             <div className="px-4">
 
                 {
-                    reviews?.map((review : ReviewType) => {
+                    reviews?.map((review) => {
                         return (
                             <div key={review.reviewId} className="p-4 rounded-lg bg-gray-100 mb-3">
                                 <div className="flex mb-4 items-center">

@@ -1,21 +1,28 @@
 import { Request, Response } from "express";
 import { CommentType } from "../types";
-import { addReplyCommentHandle, addCommentByNovelHandle, destroyReplyCommentByNovelHandle, destroyCommentByNovelHandle, getReplyCommentHandle, getCommentByLatestHandle, getCommentByNovelHandle } from "../services/comment.services";
+import { addReplyCommentHandle, addCommentByNovelHandle, destroyReplyCommentByNovelHandle, destroyCommentByNovelHandle, getReplyCommentHandle, getCommentByNovelHandle } from "../services/comment.services";
 
 // Register User | /api/auth/register
 export const addCommentByNovel = async (req: Request, res: Response) => {
     try {
 
-        const { chapterId, commentText } = req.body
-        const { novelId } = req.params;
-        if(!novelId || !commentText) {
+        const { commentText = '' } = req.body;
+        const { chapterId = '' } = req.query;
+        const { novelId = '' } = req.params;
+        if(!commentText) {
             return res.status(400).json({
                 success: false,
                 message: "Data not found"
             })
         }
 
-        const commentResult : any = await addCommentByNovelHandle({ novelId, chapterId, userId: res.locals.user.userId, commentText } as CommentType)
+        const dataComment = {
+            userId: res.locals.user.userId,
+            novelId: String(novelId),
+            chapterId: String(chapterId),
+            commentText: String(commentText)
+        }
+        const commentResult : any = await addCommentByNovelHandle(dataComment as CommentType)
         if(!commentResult.success) {
             return res.status(400).json({
                 success: false,
@@ -27,7 +34,10 @@ export const addCommentByNovel = async (req: Request, res: Response) => {
         return res.json({
             success: true,
             message: "Create comment successful",
-            commentId: commentResult.data.insertId
+            data: {
+                commentId: commentResult.data.insertId
+            }
+            // data: commentResult.data
         })
         
     } catch (error) {
@@ -44,8 +54,12 @@ export const getCommentByNovel = async (req: Request, res: Response) => {
         const { novelId = '' } = req.params;
         const { page = 1, chapterId = '' } = req.query
 
-        const dataComments = { novelId: String(novelId) ?? '', chapterId: String(chapterId) ?? '', page: Number(page) ?? 1 };
-        const commentResult = await getCommentByNovelHandle(dataComments as CommentType & { page: number });
+        const dataComments = {
+            novelId: String(novelId),
+            chapterId: String(chapterId),
+            page: Number(page) ?? 1
+        }
+        const commentResult : any = await getCommentByNovelHandle(dataComments as CommentType & { page: number });
         if(!commentResult.success) {
             return res.status(400).json({
                 success: false,
@@ -57,41 +71,8 @@ export const getCommentByNovel = async (req: Request, res: Response) => {
         return res.json({
             success: true,
             message: "Get comments successful",
-            comments: commentResult.data
-        })
-        
-    } catch (error) {
-        return res.status(500).json({
-            success: false,
-            message: `Internal server error ${error}`,
-        });
-    }
-}
-
-export const getCommentByLatest = async (req: Request, res: Response) => {
-    try {
-        const { page = 1 } = req.query
-
-        if(isNaN(Number(page))) {
-            return res.status(400).json({
-                success: false,
-                message: "Data not found"
-            })
-        }
-
-        const commentsResponse = await getCommentByLatestHandle(Number(page))
-        if(!commentsResponse.success) {
-            return res.status(400).json({
-                success: false,
-                message: "Get comments Error",
-                error: commentsResponse.error,
-            })
-        }
-        
-        return res.json({
-            success: true,
-            message: "Get comments successful",
-            comments: commentsResponse.data
+            comments: commentResult.data,
+            // dataComments
         })
         
     } catch (error) {
@@ -171,16 +152,22 @@ export const destroyReplyCommentByNovel = async (req: Request, res: Response) =>
 
 export const addReplyComment = async (req: Request, res: Response) => {
     try {
-        const { commentId } = req.params
-        const { commentText, novelId, chapterId } = req.body
-        if(!novelId || !commentId || !commentText) {
+        const { commentId = '' } = req.params
+        const { commentText = '' } = req.body
+
+        if(!commentText) {
             return res.status(400).json({
                 success: false,
                 message: "Data not found"
             })
         }
 
-        const commentResponse : any = await addReplyCommentHandle({novelId, chapterId, userId: res.locals.user.userId, commentId, commentText} as CommentType);
+        const dataComments : Partial<CommentType> = {
+            userId: res.locals.user.userId,
+            commentId: String(commentId) ??  '',
+            commentText: String(commentText) ??  ''
+        }
+        const commentResponse : any = await addReplyCommentHandle(dataComments as CommentType);
         if(!commentResponse.success) {
             return res.status(400).json({
                 success: false,
@@ -192,9 +179,12 @@ export const addReplyComment = async (req: Request, res: Response) => {
         return res.json({
             success: true,
             message: "Add comments successful",
-            comment: {
-                commentId: commentResponse?.data?.insertId || null,
+            data: {
+                commentId: commentResponse.data.insertId
             }
+            // comment: {
+            //     commentId: commentResponse?.data?.insertId || null,
+            // }
         })
         
     } catch (error) {
@@ -208,14 +198,19 @@ export const addReplyComment = async (req: Request, res: Response) => {
 export const getReplyComment = async (req: Request, res: Response) => {
     try {
         const { commentId } = req.params
+        const { page = 1 } = req.query
+
         if(!commentId) {
             return res.status(400).json({
                 success: false,
                 message: "Data not found"
             })
         }
-
-        const commentResponse = await getReplyCommentHandle(commentId as string);
+        const dataReplyComment = {
+            commentId,
+            page: Number(page) ?? 1
+        }
+        const commentResponse = await getReplyCommentHandle(dataReplyComment as CommentType & { page: number });
         if(!commentResponse.success) {
             return res.status(400).json({
                 success: false,
