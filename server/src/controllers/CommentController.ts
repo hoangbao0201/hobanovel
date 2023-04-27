@@ -106,7 +106,8 @@ export const destroyCommentByNovel = async (req: Request, res: Response) => {
         return res.json({
             success: true,
             message: "Delete comments successful",
-            commentId: commentId
+            // commentId: commentId,
+            // userId: res.locals.user
         })
         
     } catch (error) {

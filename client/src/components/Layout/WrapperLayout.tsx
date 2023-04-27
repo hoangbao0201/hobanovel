@@ -1,15 +1,20 @@
-import dynamic from "next/dynamic";
 import { ReactNode } from "react";
 
-interface WrapperLayoutProps {
+import cn from "clsx"
+import { WithClassName } from "@/types/common";
+
+interface WrapperLayoutProps extends WithClassName {
     children?: ReactNode
 }
 
-const WrapperLayout = ({ children } : WrapperLayoutProps) => {
+const WrapperLayout = (props: WrapperLayoutProps) => {
 
     return (    
-        <div>
-            {children}
+        <div className="max-w-7xl min-h-[300px] mx-auto px-4 grid bg-white rounded-xl">
+            <div className={cn(
+                props.className,
+                "my-4 mb-8"
+            )}>{props.children}</div>
         </div>
     )
 }

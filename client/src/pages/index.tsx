@@ -1,6 +1,6 @@
 import Head from "next/head";
 import { ReactNode } from "react";
-import { GetStaticProps, NextPage } from "next";
+import { GetServerSideProps, GetStaticProps, NextPage } from "next";
 
 import { REVALIDATE_TIME } from "@/constants";
 import MainLayout from "@/components/Layout/MainLayout";
@@ -100,9 +100,29 @@ export const getStaticProps : GetStaticProps = async () => {
     }
 }
 
+// export const getServerSideProps : GetServerSideProps = async () => {
+
+//     const novelsResponse = await getNovelsByPageHandle("1");
+//     const reviewsResponse = await getReviewsByLatestHandle("1")
+
+//     return {
+//         props: {
+//             novelsOutstending: novelsResponse?.data.novels || null,
+//             novelsJustUpdated: novelsResponse?.data.novels || null,
+//             novelsReading: novelsResponse?.data.novels || null,
+//             novelsHighlyRated: novelsResponse?.data.novels || null,
+
+//             novelsJustCompleted: novelsResponse?.data.novels || null,
+
+//             novelsLatestReviews: reviewsResponse?.data.reviews || null,
+//         },
+//         // revalidate: REVALIDATE_TIME
+//     }
+// }
+
 HomePage.getLayout = (page : ReactNode) => {
     return (
-        <MainLayout isBannerPage={false}>{page}</MainLayout>
+        <MainLayout isBannerPage={true}>{page}</MainLayout>
     )
 }
 

@@ -189,6 +189,9 @@ const Header = () => {
                                                         <Link href={`/user/${currentUser.username}`} className="hover:bg-gray-100 py-2 px-2 block cursor-pointer">
                                                             <span className="block w-full">Hồ sơ</span>
                                                         </Link>
+                                                        <Link href={`/account`} className="hover:bg-gray-100 py-2 px-2 block cursor-pointer">
+                                                            <span className="block w-full">Tài khoản</span>
+                                                        </Link>
                                                         <Link href={`/search`} className="hover:bg-gray-100 py-2 px-2 block cursor-pointer">
                                                             <span className="block w-full">Tìm truyện</span>
                                                         </Link>

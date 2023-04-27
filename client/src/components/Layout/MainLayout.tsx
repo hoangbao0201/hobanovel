@@ -7,6 +7,7 @@ import { getAccessToken, removeAccessToken } from "@/services/cookies.servies";
 
 import Header from "../partials/Header";
 import Footer from "../partials/Footer";
+import BannerPage from "../partials/BannerPage";
 
 interface MainLayoutProps {
     children: ReactNode
@@ -49,7 +50,7 @@ const MainLayout= ({ children, isHeader = true, isFooter = true, isBannerPage = 
         
             { isHeader && <Header /> }
 
-            {/* { isBannerPage && <BannerPage /> } */}
+            { isBannerPage && <BannerPage /> }
 
             <div className={`${isBannerPage && "top-0 -translate-y-28"}`}>
                 {children}

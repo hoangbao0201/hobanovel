@@ -83,7 +83,7 @@ export const destroyCommentHandle = async (data : CommentType & { token: string 
     try {
         const { commentId, token } = data
 
-        const comments = await axios.delete(`http://localhost:4000/api/comments/destroy/reply/${commentId}`, {
+        const comments = await axios.delete(`http://localhost:4000/api/comments/destroy/${commentId}`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -103,7 +103,7 @@ export const destroyCommentHandle = async (data : CommentType & { token: string 
 export const destroyReplyCommentHandle = async (data : CommentType & { token: string }) => {
     try {
         const { commentId, token } = data
-        const reviews = await axios.delete(`http://localhost:4000/api/reviews/destroy/${commentId}`, {
+        const reviews = await axios.delete(`http://localhost:4000/api/comments/destroy/reply/${commentId}`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }

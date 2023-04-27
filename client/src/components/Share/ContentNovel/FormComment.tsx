@@ -91,7 +91,7 @@ const FormComment = ({ tab, novelId }: FormCommentProps) => {
         }
     };
 
-    console.log(bodyContent)
+    // console.log(bodyContent)
 
     const handleDestroyComment = async (userId: string, commentId: string) => {
         if(currentUser?.userId !== userId) {
@@ -111,7 +111,7 @@ const FormComment = ({ tab, novelId }: FormCommentProps) => {
                 const filterComments = bodyContent.filter((comment) => comment?.commentId !== commentId)
                 setBodyContent(filterComments);
             }
-            // console.log(reviewResponse)
+            console.log(reviewResponse)
         } catch (error) {
             console.log(error)
         }

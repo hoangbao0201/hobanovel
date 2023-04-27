@@ -5,16 +5,20 @@ import { useState } from "react";
 import { placeholderBlurhash } from "@/constants";
 import BlurImage from "@/components/Layout/BlurImage";
 import { EditorStyle } from "@/components/Layout/EditorStyle";
-import { CommentItemWith, CommentType, UserType } from "@/types";
+import { CommentType, UserType } from "@/types";
 import { EditorState, convertFromRaw, convertToRaw } from "draft-js";
 import {
     iconArrowTurnUp,
     iconComment,
+    iconOclock,
     iconSend,
     iconTrash,
 } from "../../../../public/icons";
 import { getAccessToken } from "@/services/cookies.servies";
-import { addReplyCommentHandle, destroyCommentHandle, getReplyCommentsHandle } from "@/services/comment.services";
+import { addReplyCommentHandle, destroyCommentHandle, destroyReplyCommentHandle, getReplyCommentsHandle } from "@/services/comment.services";
+import { convertTime } from "@/utils/convertTime";
+import moment from "moment";
+import "moment/locale/vi";
 
 interface CommentItemProps {
     novelId?: string;
@@ -105,7 +109,7 @@ const CommentItem = ({ comment, user, handleDeleteComment }: CommentItemProps) =
                 commentId: commentId,
                 token
             }
-            const commentResponse = await destroyCommentHandle(dataReplyComment as CommentType & { token: string });
+            const commentResponse = await destroyReplyCommentHandle(dataReplyComment as CommentType & { token: string });
             if(commentResponse?.data.success) {
                 const filterReplyComments = replyComments.filter((replyComment) => replyComment?.commentId !== commentId)
                 setReplyComments(filterReplyComments);
@@ -118,7 +122,7 @@ const CommentItem = ({ comment, user, handleDeleteComment }: CommentItemProps) =
     }
 
     return (
-        <div key={comment?.commentId || ""} className="border-b-2">
+        <div key={comment?.commentId || ""} className="border-b">
             <div className="rounded-lg my-4 relative">
                 <div className="mb-4 flex">
                     <Link
@@ -147,9 +151,44 @@ const CommentItem = ({ comment, user, handleDeleteComment }: CommentItemProps) =
                         "></span>
 
                         <div className="flex-1 mb-3 p-3 bg-gray-100 border">
-                            <h2 className="line-clamp-1 text-base w-full font-semibold mb-3 border-b pb-2">
-                                <Link href={""}>{comment?.name || ""}</Link>
-                            </h2>
+                            <div className="flex items-center gap-2 pb-3 mb-4 border-b">
+                                <h2 className="line-clamp-1 text-base leading-tight font-semibold">
+                                    <Link href={""}>{comment?.name || ""}</Link>
+                                </h2>
+                                <span> - </span>
+                                <div className="flex items-center mr-auto">
+                                    <i className="w-3 h-3 mr-1 translate-y-[1px] leading-tight block fill-gray-500">{iconOclock}</i>
+                                    <span className="leading-tight whitespace-nowrap text-[13px] text-gray-500">{moment(comment.createdAt).fromNow()}</span>
+                                    <span className="ml-2">{comment.commentId}</span>
+                                </div>
+                                <button
+                                    onClick={() => setIsFormSend(value => !value)}
+                                    className={`drop-shadow-sm border p-2 group rounded ${
+                                        isFormSend && "bg-gray-400"
+                                    }`}
+                                >
+                                    <i className={`w-4 h-4 block ${
+                                            isFormSend
+                                                ? "fill-white"
+                                                : "fill-gray-500 group-hover:fill-gray-600"
+                                        }`}
+                                    >
+                                        {iconComment}
+                                    </i>
+                                </button>
+                                {user?.userId == comment?.userId && (
+                                    <button
+                                        onClick={() =>
+                                            handleDeleteComment(comment?.userId, comment?.commentId)
+                                        }
+                                        className="drop-shadow-sm border p-2 group rounded"
+                                    >
+                                        <i className="w-4 h-4 block fill-gray-500 group-hover:fill-gray-600">
+                                            {iconTrash}
+                                        </i>
+                                    </button>
+                                )}
+                            </div>
                             <div className="text-gray-600 text-base">
                                 {convertFromRaw(
                                     JSON.parse(comment?.commentText || "")
@@ -157,44 +196,15 @@ const CommentItem = ({ comment, user, handleDeleteComment }: CommentItemProps) =
                             </div>
                         </div>
 
-                        <div className="flex gap-2">
-                            <div className="mr-auto">
-                                {
-                                    !!comment.countReplyComment && !isReplyComment && (
-                                        <button onClick={handleGetReplyComments} className="p-1 flex items-center cursor-pointer">
-                                            <i className="w-3 h-3 mr-2 block translate-y-[1px] rotate-90 fill-gray-700">{iconArrowTurnUp}</i>{comment?.countReplyComment} phản hồi
-                                        </button>
-                                    ) 
-                                }
-                            </div>
-                            <button
-                                onClick={() => setIsFormSend(value => !value)}
-                                className={`border p-2 group rounded ${
-                                    isFormSend && "bg-gray-400"
-                                }`}
-                            >
-                                <i className={`w-4 h-4 block ${
-                                        isFormSend
-                                            ? "fill-white"
-                                            : "fill-gray-500 group-hover:fill-gray-600"
-                                    }`}
-                                >
-                                    {iconComment}
-                                </i>
-                            </button>
-                            {user?.userId == comment?.userId && (
-                                <button
-                                    onClick={() =>
-                                        handleDeleteComment(comment?.userId, comment?.commentId)
-                                    }
-                                    className=" border p-2 group rounded"
-                                >
-                                    <i className="w-4 h-4 block fill-gray-500 group-hover:fill-gray-600">
-                                        {iconTrash}
-                                    </i>
+                        
+                        {
+                            !!comment.countReplyComment && !isReplyComment && (
+                                <button onClick={handleGetReplyComments} className="p-1 text-sm flex items-center cursor-pointer">
+                                    <i className="w-3 h-3 mr-2 block translate-y-[1px] rotate-90 fill-gray-700">{iconArrowTurnUp}</i>{comment?.countReplyComment} phản hồi
                                 </button>
-                            )}
-                        </div>
+                            ) 
+                        }
+
 
                         <div>
 
@@ -234,11 +244,46 @@ const CommentItem = ({ comment, user, handleDeleteComment }: CommentItemProps) =
                                                                 border-r-[10px] border-gray-300
                                                                 border-b-[8px] border-b-transparent
                                                             "></span>
-                                                            <h2 className="line-clamp-1 text-base w-full font-semibold mb-3 border-b pb-2">
-                                                                <Link href={`/user/${replyComment?.senderId}`}>
-                                                                    {replyComment?.senderName || ""} - {replyComment?.commentId}
-                                                                </Link>
-                                                            </h2>
+                                                            <div className="flex items-center pb-3 mb-4 border-b gap-2">
+                                                                <h2 className="line-clamp-1 leading-tight text-base font-semibold">
+                                                                    <Link href={`/user/${replyComment?.senderId}`}>
+                                                                        {replyComment?.senderName || ""}
+                                                                    </Link>
+                                                                </h2>
+                                                                <span> - </span>
+                                                                <div className="flex items-center mr-auto">
+                                                                    <i className="w-3 h-3 mr-1 translate-y-[1px] leading-tight block fill-gray-500">{iconOclock}</i>
+                                                                    <span className="mr-auto leading-tight whitespace-nowrap text-[13px] text-gray-500">{moment(replyComment.createdAt).fromNow()}</span>
+                                                                </div>
+                                                                <button
+                                                                    // onClick={() => }
+                                                                    className={`border p-2 group rounded ${
+                                                                        false && "bg-gray-400"
+                                                                    }`}
+                                                                >
+                                                                    <i
+                                                                        className={`w-4 h-4 block ${
+                                                                            false
+                                                                                ? "fill-white"
+                                                                                : "fill-gray-500 group-hover:fill-gray-600"
+                                                                        }`}
+                                                                    >
+                                                                        {iconComment}
+                                                                    </i>
+                                                                </button>
+                                                                {user?.userId == replyComment?.senderId && (
+                                                                    <button
+                                                                        onClick={() =>
+                                                                            handleDestroyReplyComment(replyComment?.commentId)
+                                                                        }
+                                                                        className=" border p-2 group rounded"
+                                                                    >
+                                                                        <i className="w-4 h-4 block fill-gray-500 group-hover:fill-gray-600">
+                                                                            {iconTrash}
+                                                                        </i>
+                                                                    </button>
+                                                                )}
+                                                            </div>
                                                             <div className="flex flex-wrap text-gray-600 text-base">
                                                                 <Link href={`/user/${replyComment?.receiverId}`}>
                                                                     <h2 className="text-blue-600 font-semibold cursor-pointer mr-1">@{replyComment?.receiverName}</h2>
@@ -249,38 +294,6 @@ const CommentItem = ({ comment, user, handleDeleteComment }: CommentItemProps) =
                                                                     )
                                                                 ).getPlainText()}
                                                             </div>
-                                                        </div>
-                                                    </div>
-                                                    <div>
-                                                        <div className="flex justify-end gap-2">
-                                                            <button
-                                                                // onClick={() => }
-                                                                className={`border p-2 group rounded ${
-                                                                    false && "bg-gray-400"
-                                                                }`}
-                                                            >
-                                                                <i
-                                                                    className={`w-4 h-4 block ${
-                                                                        false
-                                                                            ? "fill-white"
-                                                                            : "fill-gray-500 group-hover:fill-gray-600"
-                                                                    }`}
-                                                                >
-                                                                    {iconComment}
-                                                                </i>
-                                                            </button>
-                                                            {user?.userId == replyComment?.senderId && (
-                                                                <button
-                                                                    onClick={() =>
-                                                                        handleDestroyReplyComment(replyComment?.commentId)
-                                                                    }
-                                                                    className=" border p-2 group rounded"
-                                                                >
-                                                                    <i className="w-4 h-4 block fill-gray-500 group-hover:fill-gray-600">
-                                                                        {iconTrash}
-                                                                    </i>
-                                                                </button>
-                                                            )}
                                                         </div>
                                                     </div>
                                                 </div>
@@ -292,35 +305,33 @@ const CommentItem = ({ comment, user, handleDeleteComment }: CommentItemProps) =
 
                             {
                                 isFormSend && (
-                                    <div>
-                                        <div className="flex gap-2">
-                                            <Link
-                                                href={`/user/1`}
-                                                className="w-8 h-8 mt-2 rounded-full overflow-hidden shadow align-middle inline-block"
+                                    <div className="flex">
+                                        <Link
+                                            href={`/user/1`}
+                                            className="w-8 h-8 mt-2 rounded-full overflow-hidden shadow align-middle inline-block"
+                                        >
+                                            <Image
+                                                width={500}
+                                                height={500}
+                                                alt="image-demo"
+                                                className="object-cover w-8 h-8"
+                                                src={`${user?.avatarUrl ?? "/images/50.jpg"}`}
+                                            />
+                                        </Link>
+                                        <div className="flex-1 ml-4 py-3 pl-4 pr-24 border bg-gray-100 border-opacity-5 relative">
+                                            <EditorStyle
+                                                name="comment"
+                                                text={commentText}
+                                                handleOnchange={setCommentText}
+                                            />
+                                            <button
+                                                onClick={handleAddReplyComment}
+                                                className="py-2 px-4 rounded-sm transition-all bg-yellow-600 hover:bg-yellow-700 absolute bottom-4 right-4"
                                             >
-                                                <Image
-                                                    width={500}
-                                                    height={500}
-                                                    alt="image-demo"
-                                                    className="object-cover w-8 h-8"
-                                                    src={`${user?.avatarUrl ?? "/images/50.jpg"}`}
-                                                />
-                                            </Link>
-                                            <div className="flex-1 py-3 pl-4 pr-24 border bg-gray-100 border-opacity-5 rounded-md relative">
-                                                <EditorStyle
-                                                    name="comment"
-                                                    text={commentText}
-                                                    handleOnchange={setCommentText}
-                                                />
-                                                <button
-                                                    onClick={handleAddReplyComment}
-                                                    className="py-2 px-4 rounded-sm transition-all bg-yellow-600 hover:bg-yellow-700 absolute bottom-4 right-4"
-                                                >
-                                                    <i className="w-6 h-6 fill-white block translate-x-[1px]">
-                                                        {iconSend}
-                                                    </i>
-                                                </button>
-                                            </div>
+                                                <i className="w-6 h-6 fill-white block translate-x-[1px]">
+                                                    {iconSend}
+                                                </i>
+                                            </button>
                                         </div>
                                     </div>
                                 )
@@ -329,134 +340,6 @@ const CommentItem = ({ comment, user, handleDeleteComment }: CommentItemProps) =
                         </div>
                     </div>
                 </div>
-            </div>
-            <div className="ml-20 mb-4">
-                
-                {/* {
-                    (
-                        <div>
-                            {
-                                replyComments.length > 0 && (
-                                    <div>
-                                        {replyComments.map((replyComment, index) => {
-                                            return (
-                                                <div
-                                                    key={replyComment?.commentId || index}
-                                                    className="p-4 rounded-lg bg-gray-100 border my-4"
-                                                >
-                                                    <div className="flex mb-6">
-                                                        <Link
-                                                            href={`/user/1`}
-                                                            className="w-8 h-8 mt-2 rounded-full overflow-hidden shadow align-middle inline-block"
-                                                        >
-                                                            <BlurImage
-                                                                width={500}
-                                                                height={500}
-                                                                alt="image-demo"
-                                                                blurDataURL={placeholderBlurhash}
-                                                                className="group-hover:scale-105 group-hover:duration-500 object-cover w-8 h-8"
-                                                                placeholder="blur"
-                                                                src={
-                                                                    replyComment?.avatarUrl ??
-                                                                    "/images/50.jpg"
-                                                                }
-                                                            />
-                                                        </Link>
-                                                        <div className="flex-1 ml-4">
-                                                            <h2 className="line-clamp-1 text-base w-full font-semibold mb-2">
-                                                                <Link href={`/user/${replyComment?.senderId}`}>
-                                                                    {replyComment?.senderName || ""} - {replyComment?.commentId}
-                                                                </Link>
-                                                            </h2>
-                                                            <div className="flex flex-wrap text-gray-600 text-base">
-                                                                <Link href={`/user/${replyComment?.receiverId}`}>
-                                                                    <h2 className="text-blue-600 font-semibold cursor-pointer mr-1">@{replyComment?.receiverName}</h2>
-                                                                </Link>
-                                                                {convertFromRaw(
-                                                                    JSON.parse(
-                                                                        replyComment?.commentText || ""
-                                                                    )
-                                                                ).getPlainText()}
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div>
-                                                        <div className="flex justify-end gap-2">
-                                                            <button
-                                                                // onClick={() => }
-                                                                className={`border p-2 group rounded ${
-                                                                    false && "bg-gray-400"
-                                                                }`}
-                                                            >
-                                                                <i
-                                                                    className={`w-4 h-4 block ${
-                                                                        false
-                                                                            ? "fill-white"
-                                                                            : "fill-gray-500 group-hover:fill-gray-600"
-                                                                    }`}
-                                                                >
-                                                                    {iconComment}
-                                                                </i>
-                                                            </button>
-                                                            {user?.userId == replyComment?.senderId && (
-                                                                <button
-                                                                    onClick={() =>
-                                                                        handleDestroyReplyComment(replyComment?.commentId)
-                                                                    }
-                                                                    className=" border p-2 group rounded"
-                                                                >
-                                                                    <i className="w-4 h-4 block fill-gray-500 group-hover:fill-gray-600">
-                                                                        {iconTrash}
-                                                                    </i>
-                                                                </button>
-                                                            )}
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            );
-                                        })}                   
-                                    </div>
-                                )
-                            }
-                        </div>
-                    )
-                } */}
-
-                {/* {
-                    isFormSend && (
-                        <div>
-                            <div className="flex gap-2">
-                                <Link
-                                    href={`/user/1`}
-                                    className="w-8 h-8 mt-2 rounded-full overflow-hidden shadow align-middle inline-block"
-                                >
-                                    <Image
-                                        width={500}
-                                        height={500}
-                                        alt="image-demo"
-                                        className="object-cover w-8 h-8"
-                                        src={`${user?.avatarUrl ?? "/images/50.jpg"}`}
-                                    />
-                                </Link>
-                                <div className="flex-1 py-3 pl-4 pr-24 border bg-gray-100 border-opacity-5 rounded-md relative">
-                                    <EditorStyle
-                                        name="comment"
-                                        text={commentText}
-                                        handleOnchange={setCommentText}
-                                    />
-                                    <button
-                                        onClick={handleAddReplyComment}
-                                        className="py-2 px-4 rounded-sm transition-all bg-yellow-600 hover:bg-yellow-700 absolute bottom-4 right-4"
-                                    >
-                                        <i className="w-6 h-6 fill-white block translate-x-[1px]">
-                                            {iconSend}
-                                        </i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    )
-                } */}
             </div>
         </div>
     );

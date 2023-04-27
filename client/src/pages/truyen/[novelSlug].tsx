@@ -298,7 +298,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 // }
 
 NovelDetailPage.getLayout = (page: ReactNode) => {
-    return <MainLayout isBannerPage={false}>{page}</MainLayout>;
+    return <MainLayout isBannerPage={true}>{page}</MainLayout>;
 };
 
 export default NovelDetailPage;
