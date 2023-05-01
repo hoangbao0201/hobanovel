@@ -10,6 +10,7 @@ import Link from "next/link";
 import { iconArrowTop, iconBook, iconOclock } from "../../../../public/icons";
 import ScrollOnTop from "@/components/Layout/ScrollOnTop";
 import { convertTime } from "@/utils/convertTime";
+import WrapperLayout from "@/components/Layout/WrapperLayout";
 
 interface Params extends ParsedUrlQuery {
     slug: string;
@@ -36,86 +37,89 @@ const ChapterDetailPage = ({ chapter }: ChapterDetailPageProps) => {
             </Head>
             <main>
                 <ScrollOnTop />
-                <div className="max-w-5xl min-h-[300px] mx-auto px-4 grid bg-[#eae4d3] rounded-xl ">
+                {/* <div className="max-w-5xl min-h-[300px] mx-auto px-4 grid bg-[#eae4d3] rounded-xl ">
                     <div className="my-4 mx-7 grid">
-                        {/* Navigate */}
-                        <div className="flex justify-between mb-12">
-                            <Link
-                                href={`/truyen/${chapter?.novelSlug}/chuong-${
-                                    chapter?.chapterNumber - 1
-                                }`}
-                                className={`${chapter.chapterNumber == 1 && "pointer-events-none text-gray-400 fill-gray-400" }`}
-                            >
-                                <span className="py-2 px-7 border rounded-full flex items-center bg-white bg-opacity-50 font-semibold select-none">
-                                    <i className="-rotate-90 w-3 mr-2 block">{iconArrowTop}</i>
-                                    Chương trước
-                                </span>
-                            </Link>
-                            <Link
-                                href={`/truyen/${chapter?.novelSlug}/chuong-${
-                                    chapter?.chapterNumber + 1
-                                }`}
-                                className={``}
-                            >
-                                <span className="py-2 px-7 border rounded-full flex items-center bg-white bg-opacity-50 font-semibold select-none">
-                                    Chương sau
-                                    <i className="rotate-90 w-3 ml-2 block">{iconArrowTop}</i>
-                                </span>
-                            </Link>
-                        </div>
+                        
+                    </div>
+                </div> */}
+                <WrapperLayout className="bg-[#eae4d3] px-3 py-4 lg:px-3">
+                    {/* Navigate */}
+                    <div className="flex justify-between mb-12">
+                        <Link
+                            href={`/truyen/${chapter?.novelSlug}/chuong-${
+                                chapter?.chapterNumber - 1
+                            }`}
+                            className={`${chapter.chapterNumber == 1 && "pointer-events-none text-gray-400 fill-gray-400" }`}
+                        >
+                            <span className="sm:py-2 sm:px-7 py-2 px-4 border rounded-full flex items-center bg-white bg-opacity-50 sm:text-base text-sm font-semibold select-none">
+                                <i className="-rotate-90 w-3 mr-2 block">{iconArrowTop}</i>
+                                Chương trước
+                            </span>
+                        </Link>
+                        <Link
+                            href={`/truyen/${chapter?.novelSlug}/chuong-${
+                                chapter?.chapterNumber + 1
+                            }`}
+                            className={``}
+                        >
+                            <span className="sm:py-2 sm:px-7 py-2 px-4 border rounded-full flex items-center bg-white bg-opacity-50 sm:text-base text-sm font-semibold select-none">
+                                Chương sau
+                                <i className="rotate-90 w-3 ml-2 block">{iconArrowTop}</i>
+                            </span>
+                        </Link>
+                    </div>
 
-                        <div className="text-3xl font-medium mb-6">
-                            Chương {chapter.chapterNumber}: {chapter.title}
-                        </div>
-                        <div className="mb-4 flex justify-between">
-                            <div className="flex items-center">
-                                <i className="w-4 block">{iconBook}</i>
-                                <Link href={`/truyen/${chapter.novelSlug}`} className="">
-                                    <h2 className=" ml-2">{chapter.novelName}</h2>
-                                </Link>
-                            </div>
-                            <div className="flex items-center">
-                                <i className="w-4 block">{iconOclock}</i>
-                                <span className="">
-                                    <h2 className=" ml-2">{convertTime(chapter.updatedAt)}</h2>
-                                </span>
-                            </div>
-                        </div>
-                        <span className="w-36 mx-auto my-5 border-b border-gray-500"></span>
-                        <div
-                            className="text-2xl leading-relaxed grid"
-                            dangerouslySetInnerHTML={{
-                                __html: chapter?.content || "Lỗi hiển thị",
-                            }}
-                        />
-
-                        {/* Navigate */}
-                        <div className="flex justify-between mt-8 mb-5">
-                            <Link
-                                href={`/truyen/${chapter?.novelSlug}/chuong-${
-                                    chapter?.chapterNumber - 1
-                                }`}
-                                className={`${chapter.chapterNumber == 1 && "pointer-events-none text-gray-400 fill-gray-400" }`}
-                            >
-                                <span className="py-2 px-7 border rounded-full flex items-center bg-white bg-opacity-50 font-semibold select-none">
-                                    <i className="-rotate-90 w-3 mr-2 block">{iconArrowTop}</i>
-                                    Chương trước
-                                </span>
+                    <div className="sm:text-3xl text-xl line-clamp-1 font-medium mb-6">
+                        Chương {chapter.chapterNumber}: {chapter.title}
+                    </div>
+                    <div className="mb-4 flex justify-between">
+                        <div className="flex items-center">
+                            <i className="w-4 block">{iconBook}</i>
+                            <Link href={`/truyen/${chapter.novelSlug}`} className="line-clamp-1">
+                                <h2 className=" ml-2">{chapter.novelName}</h2>
                             </Link>
-                            <Link
-                                href={`/truyen/${chapter?.novelSlug}/chuong-${
-                                    chapter?.chapterNumber + 1
-                                }`}
-                                className={``}
-                            >
-                                <span className="py-2 px-7 border rounded-full flex items-center bg-white bg-opacity-50 font-semibold select-none">
-                                    Chương sau
-                                    <i className="rotate-90 w-3 ml-2 block">{iconArrowTop}</i>
-                                </span>
-                            </Link>
+                        </div>
+                        <div className="flex items-center">
+                            <i className="w-4 block">{iconOclock}</i>
+                            <span className="">
+                                <h2 className="line-clamp-1 sm:text-base text-sm ml-2">{convertTime(chapter.updatedAt)}</h2>
+                            </span>
                         </div>
                     </div>
-                </div>
+                    <span className="w-36 mx-auto my-5 border-b border-gray-500"></span>
+                    <div
+                        className="sm:text-2xl text-xl leading-relaxed grid"
+                        dangerouslySetInnerHTML={{
+                            __html: chapter?.content || "Lỗi hiển thị",
+                        }}
+                    />
+
+                    {/* Navigate */}
+                    <div className="flex justify-between mt-8 mb-5">
+                        <Link
+                            href={`/truyen/${chapter?.novelSlug}/chuong-${
+                                chapter?.chapterNumber - 1
+                            }`}
+                            className={`${chapter.chapterNumber == 1 && "pointer-events-none text-gray-400 fill-gray-400" }`}
+                        >
+                            <span className="sm:py-2 sm:px-7 py-2 px-4 border rounded-full flex items-center bg-white bg-opacity-50 sm:text-base text-sm font-semibold select-none">
+                                <i className="-rotate-90 w-3 mr-2 block">{iconArrowTop}</i>
+                                Chương trước
+                            </span>
+                        </Link>
+                        <Link
+                            href={`/truyen/${chapter?.novelSlug}/chuong-${
+                                chapter?.chapterNumber + 1
+                            }`}
+                            className={``}
+                        >
+                            <span className="sm:py-2 sm:px-7 py-2 px-4 border rounded-full flex items-center bg-white bg-opacity-50 sm:text-base text-sm font-semibold select-none">
+                                Chương sau
+                                <i className="rotate-90 w-3 ml-2 block">{iconArrowTop}</i>
+                            </span>
+                        </Link>
+                    </div>
+                </WrapperLayout>
             </main>
         </>
     );

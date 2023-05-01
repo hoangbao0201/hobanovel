@@ -20,8 +20,8 @@ const Reading = ({ novels } : ReadingProps) => {
                             <div key={index} className="flex mb-3">
                                 <Link href={`/truyen/${novel.slug}`} className="w-10 h-14 overflow-hidden shadow align-middle inline-block">
                                     <BlurImage
-                                        width={720}
-                                        height={960}
+                                        width={38}
+                                        height={54}
                                         alt="image-demo"
                                         blurDataURL={placeholderBlurhash}
                                         className="group-hover:scale-105 group-hover:duration-500 object-cover w-10 h-14"

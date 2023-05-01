@@ -1,5 +1,5 @@
 require("dotenv").config()
-import express from 'express'
+import express, { Request, Response } from 'express'
 import cors from "cors"
 // import path from "path"
 
@@ -13,7 +13,7 @@ import commentRouter from "./routes/comment"
 
 
 const app = express()
-const PORT = 4000
+const PORT = process.env.PORT || 4000
 
 app.use(cors())
 app.use(express.json());
@@ -30,6 +30,10 @@ const main = async () => {
     app.use("/api/chapters", chapterRouter);
     app.use("/api/reviews", reviewRouter);
     app.use("/api/comments", commentRouter);
+
+    app.get("/", async (_req : Request, res : Response) => {
+        res.send("BY HOANGBAO")
+    })
 
     app.listen(PORT, () => {
         console.log(`Server started on port ${PORT}`)

@@ -25,8 +25,8 @@ const LatestReviews = ({ reviews } : LatestReviewsProps) => {
                                 <div className="flex mb-4 items-center">
                                     <Link href={`/user/1`} className="w-12 h-12 rounded-full overflow-hidden shadow align-middle inline-block">
                                         <BlurImage
-                                            width={500}
-                                            height={500}
+                                            width={48}
+                                            height={48}
                                             alt="image-demo"
                                             blurDataURL={placeholderBlurhash}
                                             className="group-hover:scale-105 group-hover:duration-500 object-cover w-12 h-12"
@@ -41,8 +41,8 @@ const LatestReviews = ({ reviews } : LatestReviewsProps) => {
                                             </Link>
                                         </h2>
                                         <div className="flex items-center mb-2">
-                                            <div className="py-[4px] px-3 rounded-full text-base leading-none text-white font-semibold bg-red-700">5.00</div>
-                                            <div className="ml-3 text-green-700 text-base">83 đánh giá</div>
+                                            <div className="py-[3px] lg:px-3 px-2 rounded-full lg:text-base text-sm leading-none text-white font-semibold bg-red-700">5.00</div>
+                                            <div className="ml-3 text-green-700 lg:text-base text-sm font-semibold line-clamp-1">83 đánh giá</div>
                                         </div>
                                         <h2 className="line-clamp-2 font-semibold text-sm w-full">
                                             <Link href={`/truyen/${review.slug}`}>

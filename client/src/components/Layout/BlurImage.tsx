@@ -12,26 +12,13 @@ const BlurImage = (props : BlurImage) => {
     const [isLoading, setLoading] = useState(true);
 
     return (
-        // <Image
-        //     {...props}
-        //     alt={props.alt}
-        //     className={cn(
-        //         props.className,
-        //         props.className,
-        //         "duration-500 ease-in-out",
-        //         isLoading
-        //         ? "grayscale blur-2xl scale-110"
-        //         : "grayscale-0 blur-0 scale-100"
-        //     )}
-        //     onLoadingComplete={() => setLoading(false)}
-        // />
         <Image
             {...props}
             alt={props.alt}
             className={cn(
                 props.className,
                 props.className,
-                "duration-700 ease-in-out",
+                "block duration-700 ease-in-out",
                 isLoading
                 ? "grayscale blur-2xl scale-105"
                 : "grayscale-0 blur-0 scale-100"

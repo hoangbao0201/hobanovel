@@ -51,11 +51,11 @@ const NovelDetailPage = ({novel} : NovelDetailPageProps) => {
                             className="w-52 h-[280px] overflow-hidden shadow align-middle inline-block"
                         >
                             <BlurImage
-                                width={720}
-                                height={960}
+                                width={208}
+                                height={280}
                                 alt="image-demo"
                                 blurDataURL={placeholderBlurhash}
-                                className="group-hover:scale-105 group-hover:duration-500 object-cover"
+                                className="group-hover:scale-105 group-hover:duration-500 object-cover w-52 h-[280px]"
                                 placeholder="blur"
                                 src={novel.thumbnailUrl}
                             />

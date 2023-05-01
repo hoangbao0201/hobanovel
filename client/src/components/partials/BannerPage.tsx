@@ -1,11 +1,8 @@
-import { useState } from "react";
-import Image from "next/image";
 
 import BlurImage from "../Layout/BlurImage";
 import { placeholderBlurhash } from "@/constants";
 
 const BannerPage = () => {
-    const [isLoading, setLoading] = useState(true);
 
     return (
         <>
@@ -22,17 +19,6 @@ const BannerPage = () => {
                             Math.floor(Math.random() * 10) + 1
                         }.jpg`}
                     />
-                    {/* <BlurImage
-                        width={3000}
-                        height={1000}
-                        alt="image-demo"
-                        blurDataURL={placeholderBlurhash}
-                        className="group-hover:scale-105 group-hover:duration-75 object-cover w-full h-[370px]"
-                        placeholder="blur"
-                        src={`/images/banners/banner-${
-                            Math.floor(Math.random() * 10) + 1
-                        }.jpg`}
-                    /> */}
                 </div>
                 <div
                     style={{

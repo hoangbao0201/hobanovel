@@ -1,9 +1,14 @@
 import Head from "next/head";
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useState } from "react";
 import MainLayout from "@/components/Layout/MainLayout";
 import AccountLayout from "@/components/Layout/AccountLayout";
 
+import styled from "styled-components";
+import { Disclosure, Transition } from "@headlessui/react";
+
 const AccountPage = () => {
+    // const [isDrop, setIsDrop] = useState(false)
+    const [isShowing, setIsShowing] = useState(false);
 
     return (
         <>
@@ -15,26 +20,22 @@ const AccountPage = () => {
             </Head>
             <main>
                 <div>
-
-                    Accout
-
+                    Account
                 </div>
             </main>
         </>
     );
-}
+};
 
 export default AccountPage;
 
 AccountPage.getLayout = (page: ReactNode) => {
-
     return (
         <MainLayout isBannerPage={false}>
             <AccountLayout>{page}</AccountLayout>
         </MainLayout>
-    )
-}
-
+    );
+};
 
 // import dynamic from "next/dynamic";
 // import { Datepicker, Input, initTE } from "tw-elements";

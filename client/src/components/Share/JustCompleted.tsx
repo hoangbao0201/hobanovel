@@ -22,8 +22,8 @@ const JustCompleted = ({ novels = [] } : JustCompletedProps) => {
                                 <div key={novel.novelId} className="flex">
                                     <Link href={`/truyen/${novel.slug}`} className="w-20 h-28 overflow-hidden shadow align-middle inline-block">
                                         <BlurImage
-                                            width={720}
-                                            height={960}
+                                            width={80}
+                                            height={120}
                                             alt="image-demo"
                                             blurDataURL={placeholderBlurhash}
                                             className="group-hover:scale-105 group-hover:duration-500 object-cover w-20 h-28"
@@ -37,8 +37,8 @@ const JustCompleted = ({ novels = [] } : JustCompletedProps) => {
                                         </h2>
                                         <div className="line-clamp-2 text-sm mb-2 text-slate-900">{novel.description.replace(/<[^>]+>/g, '')}</div>
                                         <div className="text-base flex align-middle items-center justify-between">
-                                            <span className="max-w-[60%] text-base inline-block line-clamp-1 align-middle">{novel.author}</span>
-                                            <span className="px-2 text-xs text-orange-700 inline-block line-clamp-1 align-middle text-center border rounded border-orange-700">{novel.category}</span>
+                                            <span className="max-w-[60%] text-base line-clamp-1 align-middle">{novel.author}</span>
+                                            <span className="px-2 text-xs text-orange-700 line-clamp-1 align-middle text-center border rounded border-orange-700">{novel.category}</span>
                                         </div>
                                     </div>
                                 </div>

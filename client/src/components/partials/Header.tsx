@@ -78,7 +78,7 @@ const Header = () => {
             <header
                 className={`transition-all ${
                     isHeader ? "opacity-100" : "opacity-0 pointer-events-none"
-                } bg-neutral-100 fixed top-0 left-0 right-0 z-50 drop-shadow-sm`}
+                } bg-white fixed top-0 left-0 right-0 z-50 drop-shadow-sm`}
             >
                 <div className={`w-full`}>
                     <div className="max-w-7xl mx-auto flex items-center h-12 px-3">
@@ -86,60 +86,62 @@ const Header = () => {
                             <Link href="/">HOBANOVEL</Link>
                         </h2>
 
-                        <div className="ml-4 relative">
-                            <div
-                                onClick={() => setIsDropdownGenres(true)}
-                                className={`h-12 px-3 flex items-center justify-center cursor-pointer ${isDropdownGenres && "bg-slate-200"}`}
-                            >
-                                Thể loại
-                            </div>
-                            <div
-                                ref={genresDropdownRef}
-                                className={`absolute w-[500px] p-4 bg-white drop-shadow-lg ${
-                                    isDropdownGenres ? "block" : "hidden"
-                                }`}
-                            >
-                                <div className="grid grid-cols-2">
-                                    {GENRES_VALUE.map((item) => {
-                                        return (
-                                            <Link
-                                                key={item.id}
-                                                className="px-4 py-2 block hover:bg-gray-100 cursor-pointer"
-                                                href="/"
-                                            >
-                                                <span className="">{item.value}</span>
-                                            </Link>
-                                        );
-                                    })}
+                        <div className="hidden lg:flex items-center">
+                            <div className="ml-4 relative">
+                                <div
+                                    onClick={() => setIsDropdownGenres(true)}
+                                    className={`h-12 px-3 flex items-center justify-center cursor-pointer ${isDropdownGenres && "bg-slate-200"}`}
+                                >
+                                    Thể loại
+                                </div>
+                                <div
+                                    ref={genresDropdownRef}
+                                    className={`absolute w-[500px] p-4 bg-white drop-shadow-lg ${
+                                        isDropdownGenres ? "block" : "hidden"
+                                    }`}
+                                >
+                                    <div className="grid grid-cols-2">
+                                        {GENRES_VALUE.map((item) => {
+                                            return (
+                                                <Link
+                                                    key={item.id}
+                                                    className="px-4 py-2 block hover:bg-gray-100 cursor-pointer"
+                                                    href="/"
+                                                >
+                                                    <span className="">{item.value}</span>
+                                                </Link>
+                                            );
+                                        })}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-
-                        <div className="ml-4 relative">
-                            <div
-                                onClick={() => setIsDropdownRank(true)}
-                                className={`h-12 px-3 flex items-center justify-center cursor-pointer ${isDropdownRank && "bg-slate-200"}`}
-                            >
-                                Bảng xếp hạng
-                            </div>
-                            <div
-                                ref={rankDropdownRef}
-                                className={`absolute w-[160px] p-4 bg-white drop-shadow-lg ${
-                                    isDropdownRank ? "block" : "hidden"
-                                }`}
-                            >
-                                <div className="grid grid-cols-1">
-                                    {RANK_VALUE.map((item) => {
-                                        return (
-                                            <Link
-                                                key={item.id}
-                                                className="px-4 py-2 block hover:bg-gray-100 cursor-pointer"
-                                                href="/"
-                                            >
-                                                <span className="">{item.value}</span>
-                                            </Link>
-                                        );
-                                    })}
+    
+                            <div className="ml-4 relative">
+                                <div
+                                    onClick={() => setIsDropdownRank(true)}
+                                    className={`h-12 px-3 flex items-center justify-center cursor-pointer ${isDropdownRank && "bg-slate-200"}`}
+                                >
+                                    Bảng xếp hạng
+                                </div>
+                                <div
+                                    ref={rankDropdownRef}
+                                    className={`absolute w-[160px] p-4 bg-white drop-shadow-lg ${
+                                        isDropdownRank ? "block" : "hidden"
+                                    }`}
+                                >
+                                    <div className="grid grid-cols-1">
+                                        {RANK_VALUE.map((item) => {
+                                            return (
+                                                <Link
+                                                    key={item.id}
+                                                    className="px-4 py-2 block hover:bg-gray-100 cursor-pointer"
+                                                    href="/"
+                                                >
+                                                    <span className="">{item.value}</span>
+                                                </Link>
+                                            );
+                                        })}
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -156,8 +158,8 @@ const Header = () => {
                                                 className="w-9 h-9 outline-none rounded-full overflow-hidden shadow align-middle inline-block"
                                             >
                                                 <BlurImage
-                                                    width={200}
-                                                    height={200}
+                                                    width={36}
+                                                    height={36}
                                                     alt="image-demo"
                                                     blurDataURL={placeholderBlurhash}
                                                     className="group-hover:scale-105 group-hover:duration-500 object-cover w-9 h-9"
@@ -174,8 +176,8 @@ const Header = () => {
                                                 <div ref={userDropdownRef} className="drop-shadow-lg min-w-[230px] p-3 absolute bg-white top-12 right-0">
                                                     <div className="flex items-center mb-3">
                                                         <Image
-                                                            width={100}
-                                                            height={100}
+                                                            width={44}
+                                                            height={44}
                                                             alt="image-demo"
                                                             className="w-11 h-11 object-cover"
                                                             src={

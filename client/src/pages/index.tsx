@@ -14,6 +14,7 @@ import LatestReviews from "@/components/Share/LatestReviews";
 import JustCompleted from "@/components/Share/JustCompleted";
 import JustPosted from "@/components/Share/JustPosted";
 import { getReviewsByLatestHandle } from "@/services/review.services";
+import WrapperLayout from "@/components/Layout/WrapperLayout";
 
 
 export interface PageHomeProps {
@@ -45,12 +46,12 @@ const HomePage = ({ novelsOutstending, novelsJustUpdated, novelsReading, novelsH
             </Head>
             <main>
 
-                <div className="max-w-7xl min-h-[300px] mx-auto px-4 grid bg-white rounded-xl">
-                    <div className="flex flex-col lg:flex-row my-6">
+                <WrapperLayout>
+                    <div className="flex flex-col lg:flex-row">
                         <div className="lg:w-8/12">
                             <Outstanding novels={novelsOutstending}/>
                         </div>
-                        <div className="lg:w-4/12">
+                        <div className="lg:w-4/12 hidden lg:block">
                             <Reading novels={novelsReading}/>
                         </div>
                     </div>
@@ -73,7 +74,7 @@ const HomePage = ({ novelsOutstending, novelsJustUpdated, novelsReading, novelsH
                             <JustCompleted novels={novelsJustCompleted}/>
                         </div>
                     </div>
-                </div>
+                </WrapperLayout>
 
             </main>
         </>
