@@ -4,13 +4,15 @@ import Image from "next/image";
 import { Swiper, SwiperSlide } from "swiper/react";
 import 'swiper/css';
 import "swiper/css/effect-coverflow";
-import "swiper/css/pagination";
 
 
-import { EffectCoverflow, Pagination } from "swiper";
+
+import { EffectCoverflow } from "swiper";
 import dynamic from "next/dynamic";
 import { useState } from "react";
 import Link from "next/link";
+import styled from "styled-components";
+import { Transition } from "@headlessui/react";
 
 
 const SwiperButton = dynamic( () => import('../Buttons/SwiperButton') )
@@ -26,76 +28,148 @@ interface dataNovelProps {
     genres: string
 }
 
+const GridSwiperStyled = styled.div`
+    .swiper-slide {
+        opacity: 0.5;
+        box-shadow: 0 3px 10px 0 rgba(0,0,0,.25);
+        background-color: #eee;
+        transition: all .2s ease-in-out;
+    }
+    .swiper-slide-active {
+        opacity: 1;
+    }
+`
+
 const JustPosted = ({ novels = [] } : JustPostedProps) => {
 
-    const [dataNovel, setDataNovel] = useState<dataNovelProps>({ title: novels[0].title, description: novels[0].description, author: novels[0].author, genres: novels[0].category })
+    const [indexActiveNovel, setIndexActiveNovel] = useState(1)
 
     return (
-        <div className="px-4">
-            <div className="p-4 rounded-lg bg-gray-100 mb-3">
+        <div className="px-4 relative overflow-hidden">
+            <div className="p-4 rounded-lg bg-gray-100 mb-3 min-h-[500px]">
                 <h3 className="mb-5 text-xl font-semibold">Mới đăng</h3>
 
-                <div className="relative">
+                <GridSwiperStyled className="relative">
                     <Swiper
                         loop={true}
-                        autoplay={{delay: 2500}}
+                        centeredSlides
+                        slidesPerView={2}
                         spaceBetween={10}
-                        slidesPerView={3}
-                        effect="coverflow"
+                        effect={"coverflow"}
                         coverflowEffect={{
                             rotate: 50,
                             stretch: 0,
-                            depth: 100,
+                            depth: 200,
                             modifier: 1,
-                            slideShadows: false,
+                            slideShadows: true,
                         }}
                         modules={[EffectCoverflow]}
-                        className=""
+                        
+                        onSlideChangeTransitionStart={(swiper) => {
+                            setIndexActiveNovel(swiper.realIndex);
+                        }}
                     >
+
                         <div className="absolute w-full top-1/2 -translate-y-1/2 z-40 flex justify-between">
                             <SwiperButton
                                 type="prev"
-                                styleButton="p-3 bg-slate-50 rounded-full border left-0"
+                                styleButton="p-3 focus:bg-slate-100 bg-slate-50 rounded-full border left-0"
                                 styleIcon="h-4 w-4 fill-slate-400 stroke-slate-600"   
                             />
                             <SwiperButton
                                 type="next"
-                                styleButton="p-3 bg-slate-50 rounded-full border right-0"
+                                styleButton="p-3 focus:bg-slate-100 bg-slate-50 rounded-full border right-0"
                                 styleIcon="h-4 w-4 fill-slate-400 stroke-slate-600"   
                             />
                         </div>
     
                         {
-                            // novels && novels.length > 0 ? (
-                                novels.map((novel) => {
-                                    return (
-                                        <SwiperSlide key={novel.novelId} className="">
-                                            <Link className="block relative" href={`/truyen/${novel.slug}`}>
-                                                <Image
-                                                    width={120}
-                                                    height={120}
-                                                    alt="banner thumbnail novel"
-                                                    className="w-36 h-36 block object-cover"
-                                                    src={novel.thumbnailUrl}
-                                                />
-                                            </Link>
-                                        </SwiperSlide>
-                                    )
-                                })
-                            // ) : (
-                            //     <div></div>
-                            // )
+                            novels.map((novel, index) => {
+                                return ( 
+                                    <SwiperSlide data-novel-id={novel.slug} key={index} className="">
+                                        <Link className="block relative" href={`/truyen/${novel.slug}`}>
+                                            <Image
+                                                width={180}
+                                                height={240}
+                                                alt="banner thumbnail novel"
+                                                className="h-full w-full inset-0 block object-cover"
+                                                src={novel.thumbnailUrl}
+                                            />
+                                        </Link>
+
+                                    </SwiperSlide>
+                                )
+                            })
                         }
     
                     </Swiper>
+                </GridSwiperStyled>
+
+                <div className="w-full flex items-center overflow-hidden relative">
+                    <Transition
+                        // show={index === indexActiveNovel ? true : false}
+                        show={true}
+                        enter="transition ease-in-out duration-2000 transform"
+                        enterFrom=""
+                        enterTo=""
+                        leave="transition ease-in-out duration-2000 transform"
+                        leaveFrom=""
+                        leaveTo=""
+
+                        className="overflow-hidden"
+                    >
+                        <div className="mt-8 min-w-full flex-1">
+                            <h3 className="text-center mb-4 font-semibold text-lg">{novels[indexActiveNovel].title}</h3>
+                            <span className="line-clamp-2 mb-5 text-gray-500">{novels[indexActiveNovel].description.replace(/<[^>]+>/g, '')}</span>
+                            <div className="text-base flex align-middle items-center justify-between">
+                                <span className="w-[60%] text-base mr-3 line-clamp-1 align-middle">{novels[indexActiveNovel].author}</span>
+                                <span className="px-2 text-xs text-orange-700 line-clamp-1 align-middle text-center border rounded border-orange-700">{novels[indexActiveNovel].category}</span>
+                            </div>
+                        </div>
+                    </Transition>
                 </div>
-                <div>
-                    <h3>{dataNovel.title}</h3>
-                    <span className="line-clamp-2">{dataNovel.description.replace(/<[^>]+>/g, '')}</span>
-                </div>
+
+
             </div>
+
         </div>
     )
 }
+
+{/* <SwiperSlide><div className="bg-red-500 w-22 h-36"></div></SwiperSlide>
+<SwiperSlide><div className="bg-red-500 w-22 h-36"></div></SwiperSlide>
+<SwiperSlide><div className="bg-red-500 w-22 h-36"></div></SwiperSlide>
+<SwiperSlide><div className="bg-red-500 w-22 h-36"></div></SwiperSlide>
+<SwiperSlide><div className="bg-red-500 w-22 h-36"></div></SwiperSlide>
+<SwiperSlide><div className="bg-red-500 w-22 h-36"></div></SwiperSlide>
+<SwiperSlide><div className="bg-red-500 w-22 h-36"></div></SwiperSlide>
+<SwiperSlide><div className="bg-red-500 w-22 h-36"></div></SwiperSlide>
+<SwiperSlide><div className="bg-red-500 w-22 h-36"></div></SwiperSlide> */}
+
+
+
+{/* <div className="w-full flex items-center overflow-hidden">
+<Transition
+    // show={index === indexActiveNovel ? true : false}
+    show={true}
+    enter="transition ease-in-out duration-2000 transform"
+    enterFrom=""
+    enterTo=""
+    leave="transition ease-in-out duration-2000 transform"
+    leaveFrom=""
+    leaveTo=""
+
+    className="overflow-hidden"
+>
+    <div className="mt-8 min-w-full flex-1">
+        <h3 className="text-center mb-4 font-semibold text-lg">{novels[indexActiveNovel].title}</h3>
+        <span className="line-clamp-2 mb-5 text-gray-500">{novels[indexActiveNovel].description.replace(/<[^>]+>/g, '')}</span>
+        <div className="text-base flex align-middle items-center justify-between">
+            <span className="w-[60%] text-base mr-3 line-clamp-1 align-middle">{novels[indexActiveNovel].author}</span>
+            <span className="px-2 text-xs text-orange-700 line-clamp-1 align-middle text-center border rounded border-orange-700">{novels[indexActiveNovel].category}</span>
+        </div>
+    </div>
+</Transition>
+</div> */}
 
 export default JustPosted;

@@ -31,10 +31,10 @@ const Reading = ({ novels } : ReadingProps) => {
                                 </Link>
                                 <div className="flex-1 ml-3">
                                     <Link className="block" href={`/truyen/${novel.slug}`}>
-                                        <h2 className="mb-1 text-base line-clamp-1 font-semibold">
+                                        <h2 className="mb-1 text-sm line-clamp-1 font-semibold">
                                             {novel.title}
                                         </h2>
-                                        <div className="text-slate-600">Đã đọc: 0/1466</div>
+                                        <div className="text-slate-600 text-sm">Đã đọc: 0/1466</div>
                                     </Link>
                                 </div>
                             </div>

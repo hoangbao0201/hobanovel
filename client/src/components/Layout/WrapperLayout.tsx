@@ -10,7 +10,7 @@ interface WrapperLayoutProps extends WithClassName {
 const WrapperLayout = (props: WrapperLayoutProps) => {
 
     return (    
-        <div className="max-w-7xl min-h-[300px] mx-auto lg:px-4 grid bg-white rounded-xl">
+        <div className="max-w-6xl min-h-[300px] mx-auto lg:px-4 grid bg-white rounded-xl">
             <div className={cn(
                 props.className,
                 "mt-6 my-4 mb-8 "

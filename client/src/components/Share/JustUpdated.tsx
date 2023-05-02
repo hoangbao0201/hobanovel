@@ -8,12 +8,14 @@ interface JustUpdatedProps {
 
 const JustUpdated = ({ novels= [] } : JustUpdatedProps) => {
 
+    console.log("J: ", novels)
+
     return (
         <>
             <h3 className="px-4 mb-5 text-xl font-semibold">Truyện mới cập nhật</h3>
 
-            <table className="w-full my-6 pt-1 border-t">
-                <tbody>
+            <table className="block relative my-6 mx-3 pt-1 border-t">
+                <tbody className="overflow-x-auto">
 
                     {
                         novels?.map((novel : NovelType, index) => {

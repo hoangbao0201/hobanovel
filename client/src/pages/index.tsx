@@ -55,7 +55,7 @@ const HomePage = ({ novelsOutstending, novelsJustUpdated, novelsReading, novelsH
                             <Reading novels={novelsReading}/>
                         </div>
                     </div>
-                    <div className="hidden lg:block">
+                    <div className="hidden xl:block">
                         <JustUpdated novels={novelsJustUpdated}/>
                     </div>
                     <div className="flex flex-col lg:flex-row my-6">
@@ -66,7 +66,7 @@ const HomePage = ({ novelsOutstending, novelsJustUpdated, novelsReading, novelsH
                             <LatestReviews reviews={novelsLatestReviews}/>
                         </div>
                     </div>
-                    <div className="flex flex-col lg:flex-row my-6">
+                    <div className="hidden lg:flex flex-col lg:flex-row my-6">
                         <div className="lg:w-4/12">
                             <JustPosted novels={novelsHighlyRated}/>
                         </div>
