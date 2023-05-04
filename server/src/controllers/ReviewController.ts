@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { NovelType, ReviewType } from "../types";
-import { addReplyReviewHandle, addReviewByNovelHandle, destroyReplyReviewByNovelHandle, destroyReviewByNovelHandle, getReplyReviewHandle, getReviewByLatestHandle, getReviewByNovelHandle } from "../services/review.services";
+import { addReplyReviewHandle, addReviewByNovelHandle, destroyReplyReviewByNovelHandle, destroyReviewByNovelHandle, getReplyReviewHandle, getReviewsByNovelHandle } from "../services/review.services";
 
 // Register User | /api/auth/register
 export const addReviewByDataNovel = async (req: Request, res: Response) => {
@@ -54,31 +54,65 @@ export const addReviewByDataNovel = async (req: Request, res: Response) => {
     }
 }
 
-export const getReviewByNovel = async (req: Request, res: Response) => {
+// export const getReviewByNovel = async (req: Request, res: Response) => {
+//     try {
+
+//         const { novelId } = req.params;
+//         const { page = 1 } = req.query
+//         if(!novelId || isNaN(Number(page))) {
+//             return res.status(400).json({
+//                 success: false,
+//                 message: "Data not found"
+//             })
+//         }
+
+//         const reviewResult = await getReviewByNovelHandle({ novelId: novelId, page: Number(page)} as NovelType & { page: any })
+//         if(!reviewResult.success) {
+//             return res.status(400).json({
+//                 success: false,
+//                 message: "Get reviews Error",
+//                 error: reviewResult.error,
+//             })
+//         }
+        
+//         return res.json({
+//             success: true,
+//             message: "Get reviews successful",
+//             reviews: reviewResult.data
+//         })
+        
+//     } catch (error) {
+//         return res.status(500).json({
+//             success: false,
+//             message: `Internal server error ${error}`,
+//         });
+//     }
+// }
+export const getReviewsByNovel = async (req: Request, res: Response) => {
     try {
 
-        const { novelId } = req.params;
-        const { page = 1 } = req.query
-        if(!novelId || isNaN(Number(page))) {
-            return res.status(400).json({
-                success: false,
-                message: "Data not found"
-            })
-        }
+        const { novelId = '' } = req.params;
+        const { page = 1, reviewId = ''} = req.query
 
-        const reviewResult = await getReviewByNovelHandle({ novelId: novelId, page: Number(page)} as NovelType & { page: any })
-        if(!reviewResult.success) {
+        const dataReviews = {
+            novelId: String(novelId),
+            reviewId: String(reviewId),
+            page: Number(page) ?? 1
+        }
+        const reviewsResult : any = await getReviewsByNovelHandle(dataReviews as ReviewType & { page: number });
+        if(!reviewsResult.success) {
             return res.status(400).json({
                 success: false,
                 message: "Get reviews Error",
-                error: reviewResult.error,
+                error: reviewsResult.error,
             })
         }
         
         return res.json({
             success: true,
             message: "Get reviews successful",
-            reviews: reviewResult.data
+            reviews: reviewsResult.data,
+            // datareviews
         })
         
     } catch (error) {
@@ -88,39 +122,39 @@ export const getReviewByNovel = async (req: Request, res: Response) => {
         });
     }
 }
-export const getReviewByLatest = async (req: Request, res: Response) => {
-    try {
-        const { page = 1 } = req.params
+// export const getReviewByLatest = async (req: Request, res: Response) => {
+//     try {
+//         const { page = 1 } = req.params
 
-        if(isNaN(Number(page))) {
-            return res.status(400).json({
-                success: false,
-                message: "Data not found"
-            })
-        }
+//         if(isNaN(Number(page))) {
+//             return res.status(400).json({
+//                 success: false,
+//                 message: "Data not found"
+//             })
+//         }
 
-        const reviewsResponse = await getReviewByLatestHandle(Number(page))
-        if(!reviewsResponse.success) {
-            return res.status(400).json({
-                success: false,
-                message: "Get reviews Error",
-                error: reviewsResponse.error,
-            })
-        }
+//         const reviewsResponse = await getReviewByLatestHandle(Number(page))
+//         if(!reviewsResponse.success) {
+//             return res.status(400).json({
+//                 success: false,
+//                 message: "Get reviews Error",
+//                 error: reviewsResponse.error,
+//             })
+//         }
         
-        return res.json({
-            success: true,
-            message: "Get reviews successful",
-            reviews: reviewsResponse.data
-        })
+//         return res.json({
+//             success: true,
+//             message: "Get reviews successful",
+//             reviews: reviewsResponse.data
+//         })
         
-    } catch (error) {
-        return res.status(500).json({
-            success: false,
-            message: `Internal server error ${error}`,
-        });
-    }
-}
+//     } catch (error) {
+//         return res.status(500).json({
+//             success: false,
+//             message: `Internal server error ${error}`,
+//         });
+//     }
+// }
 
 export const destroyReviewByNovel = async (req: Request, res: Response) => {
     try {

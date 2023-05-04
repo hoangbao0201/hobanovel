@@ -13,7 +13,7 @@ import HighlyRated from "@/components/Share/HighlyRated";
 import LatestReviews from "@/components/Share/LatestReviews";
 import JustCompleted from "@/components/Share/JustCompleted";
 import JustPosted from "@/components/Share/JustPosted";
-import { getReviewsByLatestHandle } from "@/services/review.services";
+import { getReviewsByLatestHandle, getReviewsByNovelHandle } from "@/services/review.services";
 import WrapperLayout from "@/components/Layout/WrapperLayout";
 
 
@@ -83,8 +83,10 @@ const HomePage = ({ novelsOutstending, novelsJustUpdated, novelsReading, novelsH
 
 export const getStaticProps : GetStaticProps = async () => {
 
+    const data = { page: 1 }
+
     const novelsResponse = await getNovelsByPageHandle("1");
-    const reviewsResponse = await getReviewsByLatestHandle("1")
+    const reviewsResponse = await getReviewsByNovelHandle(data as ReviewType & { page: number })
 
     return {
         props: {

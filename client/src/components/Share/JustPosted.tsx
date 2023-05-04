@@ -107,7 +107,6 @@ const JustPosted = ({ novels = [] } : JustPostedProps) => {
 
                 <div className="w-full flex items-center overflow-hidden relative">
                     <Transition
-                        // show={index === indexActiveNovel ? true : false}
                         show={true}
                         enter="transition ease-in-out duration-2000 transform"
                         enterFrom=""
@@ -119,7 +118,7 @@ const JustPosted = ({ novels = [] } : JustPostedProps) => {
                         className="overflow-hidden"
                     >
                         <div className="mt-8 min-w-full flex-1">
-                            <h3 className="text-center mb-4 font-semibold text-lg">{novels[indexActiveNovel].title}</h3>
+                            <Link href={`/truyen/${novels[indexActiveNovel].slug}`}><h3 className="text-center mb-4 font-semibold text-lg">{novels[indexActiveNovel].title}</h3></Link>
                             <span className="line-clamp-2 mb-5 text-gray-500">{novels[indexActiveNovel].description.replace(/<[^>]+>/g, '')}</span>
                             <div className="text-base flex align-middle items-center justify-between">
                                 <span className="w-[60%] text-base mr-3 line-clamp-1 align-middle">{novels[indexActiveNovel].author}</span>

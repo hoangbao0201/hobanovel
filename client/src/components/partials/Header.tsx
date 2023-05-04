@@ -74,14 +74,14 @@ const Header = () => {
 
     return (
         <>
-            <div className="w-full h-12"></div>
+            <div className="w-full h-14"></div>
             <header
                 className={`transition-all ${
                     isHeader ? "opacity-100" : "opacity-0 pointer-events-none"
-                } bg-white fixed top-0 left-0 right-0 z-50 drop-shadow-sm`}
+                } bg-gray-100 fixed top-0 left-0 right-0 z-50 drop-shadow-sm`}
             >
                 <div className={`w-full`}>
-                    <div className="max-w-7xl mx-auto flex items-center h-12 px-3">
+                    <div className="max-w-7xl mx-auto flex items-center h-14 px-3">
                         <h2 className="text-center align-middle font-semibold text-xl">
                             <Link href="/">HOBANOVEL</Link>
                         </h2>
@@ -90,7 +90,7 @@ const Header = () => {
                             <div className="ml-4 relative">
                                 <div
                                     onClick={() => setIsDropdownGenres(true)}
-                                    className={`h-12 px-3 flex items-center justify-center cursor-pointer ${isDropdownGenres && "bg-slate-200"}`}
+                                    className={`h-14 px-3 flex items-center justify-center cursor-pointer ${isDropdownGenres && "bg-slate-200"}`}
                                 >
                                     Thể loại
                                 </div>
@@ -119,7 +119,7 @@ const Header = () => {
                             <div className="ml-4 relative">
                                 <div
                                     onClick={() => setIsDropdownRank(true)}
-                                    className={`h-12 px-3 flex items-center justify-center cursor-pointer ${isDropdownRank && "bg-slate-200"}`}
+                                    className={`h-14 px-3 flex items-center justify-center cursor-pointer ${isDropdownRank && "bg-slate-200"}`}
                                 >
                                     Bảng xếp hạng
                                 </div>
@@ -152,7 +152,7 @@ const Header = () => {
                                     <LoadingLayout />
                                 ) : isAuthenticated ? (
                                     <div className="relative">
-                                        <span className="h-12 flex items-center">
+                                        <span className="h-14 flex items-center">
                                             <button
                                                 onClick={() => setIsDropdownUser(true)}
                                                 className="w-9 h-9 outline-none rounded-full overflow-hidden shadow align-middle inline-block"

@@ -1,3 +1,4 @@
+import { ReviewSearchConditions } from "../middleware/conditionsQuery";
 import pool from "../library/connectMySQL";
 
 import { NovelType, ReviewType } from "../types";
@@ -41,60 +42,55 @@ export const addReviewByNovelHandle = async ({
     }
 };
 
-export const getReviewByLatestHandle = async (page : number) => {
+// export const getReviewByLatestHandle = async (page : number) => {
+//     try {
+//         const connection = await pool.getConnection();
+
+//         const qGetReview = `
+//             SELECT reviews.*, users.name, users.userId, novels.title, novels.slug FROM reviews
+//                 LEFT JOIN users ON users.userId = reviews.userId
+//                 LEFT JOIN novels ON novels.novelId = reviews.novelId
+//             WHERE reviews.isRating = True
+//             ORDER BY reviews.createdAt DESC
+//             LIMIT 3 OFFSET ?
+//         `;
+
+//         const [rows] = await connection.query(qGetReview, [(Number(page) - 1) * 3]);
+
+//         connection.release();
+
+//         return {
+//             success: true,
+//             data: rows as ReviewType[],
+//         };
+//     } catch (error) {
+//         return {
+//             success: false,
+//             error: error,
+//         };
+//     }
+// };
+export const getReviewsByNovelHandle = async (data : ReviewType & { page: number }) => {
     try {
         const connection = await pool.getConnection();
 
-        const qGetReview = `
-            SELECT reviews.*, users.name, users.userId, novels.title, novels.slug FROM reviews
-                LEFT JOIN users ON users.userId = reviews.userId
-                LEFT JOIN novels ON novels.novelId = reviews.novelId
-            WHERE reviews.isRating = True
-            ORDER BY reviews.createdAt DESC
-            LIMIT 3 OFFSET ?
-        `;
-
-        const [rows] = await connection.query(qGetReview, [(Number(page) - 1) * 3]);
-
-        connection.release();
-
-        return {
-            success: true,
-            data: rows as ReviewType[],
-        };
-    } catch (error) {
-        return {
-            success: false,
-            error: error,
-        };
-    }
-};
-export const getReviewByNovelHandle = async ({
-    novelId,
-    page,
-}: NovelType & { page: number }) => {
-    try {
-        const connection = await pool.getConnection();
-
-        const qGetReview = `
+        const { conditions, params } = ReviewSearchConditions(data);
+        
+        const qGetComment = `
             SELECT reviews.*, users.name, users.userId, countReplyReview.count AS countReplyReview
             FROM reviews
             INNER JOIN users ON users.userId = reviews.userId
             LEFT JOIN (
-                SELECT COUNT(*) AS count, reviews.parentId
-                FROM reviews
-                WHERE reviews.isRating = False
+                SELECT COUNT(*) AS count, reviews.parentId FROM reviews
+                WHERE reviews.parentId IS NOT NULL
                 GROUP BY reviews.parentId
-            ) AS countReplyReview ON countReplyReview.parentId = reviews.reviewId
-            WHERE reviews.novelId = ? AND reviews.isRating = True
+            ) AS countReplyReview ON countReplyReview.parentId = reviews.novelId
+            ${conditions.length>0 ? ( "WHERE " + conditions) : 'WHERE reviews.parentId IS NULL'}
             ORDER BY reviews.createdAt DESC
-            LIMIT 10 OFFSET ?
+            LIMIT 3 OFFSET ?;
         `;
 
-        const [rows] = await connection.query(qGetReview, [
-            Number(novelId),
-            [(Number(page) - 1) * 10],
-        ]);
+        const [rows] = await connection.query(qGetComment, [...params, (Number(data.page) - 1) * 10]);
 
         connection.release();
 
@@ -109,6 +105,46 @@ export const getReviewByNovelHandle = async ({
         };
     }
 };
+// export const getReviewsByNovelHandle = async ({
+//     novelId,
+//     page,
+// }: NovelType & { page: number }) => {
+//     try {
+//         const connection = await pool.getConnection();
+
+//         const qGetReview = `
+//             SELECT reviews.*, users.name, users.userId, countReplyReview.count AS countReplyReview
+//             FROM reviews
+//             INNER JOIN users ON users.userId = reviews.userId
+//             LEFT JOIN (
+//                 SELECT COUNT(*) AS count, reviews.parentId
+//                 FROM reviews
+//                 WHERE reviews.isRating = False
+//                 GROUP BY reviews.parentId
+//             ) AS countReplyReview ON countReplyReview.parentId = reviews.reviewId
+//             WHERE reviews.novelId = ? AND reviews.isRating = True
+//             ORDER BY reviews.createdAt DESC
+//             LIMIT 10 OFFSET ?
+//         `;
+
+//         const [rows] = await connection.query(qGetReview, [
+//             Number(novelId),
+//             [(Number(page) - 1) * 10],
+//         ]);
+
+//         connection.release();
+
+//         return {
+//             success: true,
+//             data: rows as ReviewType[],
+//         };
+//     } catch (error) {
+//         return {
+//             success: false,
+//             error: error,
+//         };
+//     }
+// };
 export const destroyReviewByNovelHandle = async ({ reviewId, userId } : ReviewType) => {
     try {
         const connection = await pool.getConnection();
