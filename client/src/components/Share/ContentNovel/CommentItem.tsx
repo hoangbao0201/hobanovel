@@ -15,8 +15,7 @@ import {
     iconTrash,
 } from "../../../../public/icons";
 import { getAccessToken } from "@/services/cookies.servies";
-import { addReplyCommentHandle, destroyCommentHandle, destroyReplyCommentHandle, getReplyCommentsHandle } from "@/services/comment.services";
-import { convertTime } from "@/utils/convertTime";
+import { addReplyCommentHandle, destroyReplyCommentHandle, getReplyCommentsHandle } from "@/services/comment.services";
 import moment from "moment";
 import "moment/locale/vi";
 
@@ -76,7 +75,6 @@ const CommentItem = ({ comment, user, handleDeleteComment }: CommentItemProps) =
     };
 
     const handleGetReplyComments = async () => {
-        console.log(123)
         setIsReplyComment(true)
         setIsFormSend(true)
         try {
@@ -114,8 +112,6 @@ const CommentItem = ({ comment, user, handleDeleteComment }: CommentItemProps) =
                 const filterReplyComments = replyComments.filter((replyComment) => replyComment?.commentId !== commentId)
                 setReplyComments(filterReplyComments);
             }
-
-            console.log(commentResponse);
         } catch (error) {
             console.log(error)
         }

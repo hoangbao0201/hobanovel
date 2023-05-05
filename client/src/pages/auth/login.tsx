@@ -41,8 +41,6 @@ const LoginPage = () => {
 
                 const userResponse = await connectUserHandle(loginResponse.data.accessToken);
 
-                // console.log(userResponse?.data);
-
                 if (userResponse?.data.success) {
                     dispatch(addUserHandle(userResponse.data.user));
                     router.back();

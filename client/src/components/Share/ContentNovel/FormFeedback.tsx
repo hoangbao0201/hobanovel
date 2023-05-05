@@ -23,7 +23,10 @@ const FormFeedback = ({ tab, novelId }: FormFeedbackProps) => {
     const [isModalCheckSpoiler, setIsModalCheckSpoiler] = useState(false);
 
     const getListReviews = async () => {
-        const reviewsResponse = await getReviewsByNovelHandle(novelId as string);
+        if(!novelId) {
+            return
+        }
+        const reviewsResponse = await getReviewsByNovelHandle({ novelId } as ReviewType & { page?: number });
         if (reviewsResponse?.data.success) {
             console.log(reviewsResponse.data.reviews);
             setBodyContent(reviewsResponse.data.reviews);

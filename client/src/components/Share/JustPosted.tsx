@@ -70,17 +70,17 @@ const JustPosted = ({ novels = [] } : JustPostedProps) => {
                         }}
                     >
 
+                        <SwiperButton
+                            type="prev"
+                            styleButton="absolute top-1/2 -translate-y-1/2 z-40 p-3 focus:bg-slate-100 bg-slate-50 rounded-full border left-0"
+                            styleIcon="h-4 w-4 fill-slate-400 stroke-slate-600"   
+                        />
+                        <SwiperButton
+                            type="next"
+                            styleButton="absolute top-1/2 -translate-y-1/2 z-40 p-3 focus:bg-slate-100 bg-slate-50 rounded-full border right-0"
+                            styleIcon="h-4 w-4 fill-slate-400 stroke-slate-600"   
+                        />
                         <div className="absolute w-full top-1/2 -translate-y-1/2 z-40 flex justify-between">
-                            <SwiperButton
-                                type="prev"
-                                styleButton="p-3 focus:bg-slate-100 bg-slate-50 rounded-full border left-0"
-                                styleIcon="h-4 w-4 fill-slate-400 stroke-slate-600"   
-                            />
-                            <SwiperButton
-                                type="next"
-                                styleButton="p-3 focus:bg-slate-100 bg-slate-50 rounded-full border right-0"
-                                styleIcon="h-4 w-4 fill-slate-400 stroke-slate-600"   
-                            />
                         </div>
     
                         {

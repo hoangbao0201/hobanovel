@@ -2,12 +2,13 @@ import { ReactNode, useEffect } from "react";
 import dynamic from "next/dynamic";
 
 import { useDispatch, useSelector } from "react-redux";
-import { logoutUserHandle } from "@/redux/userSlice";
+import { addUserHandle, logoutUserHandle } from "@/redux/userSlice";
 import { getAccessToken, removeAccessToken } from "@/services/cookies.servies";
 
 import Header from "../partials/Header";
 import Footer from "../partials/Footer";
 import BannerPage from "../partials/BannerPage";
+import { connectUserHandle } from "@/services/auth.services";
 
 interface MainLayoutProps {
     children: ReactNode
@@ -36,6 +37,16 @@ const MainLayout= ({ children, isHeader = true, isFooter = true, isBannerPage = 
                 removeAccessToken();
                 return;
             }
+
+            const connectUser = await connectUserHandle(token);
+
+            if (connectUser?.data.success) {
+                dispatch(addUserHandle(connectUser.data.user));
+                return;
+            }
+            
+            dispatch(logoutUserHandle());
+            removeAccessToken();
         } catch (error) {
             console.log(error);
         }

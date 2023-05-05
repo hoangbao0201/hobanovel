@@ -1,8 +1,8 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
-import { useSelector } from "react-redux";
-import { CommentItemWith, CommentType } from "@/types";
+import { useDispatch, useSelector } from "react-redux";
+import { CommentType } from "@/types";
 import { EditorState, convertToRaw } from "draft-js";
 import { EditorStyle } from "@/components/Layout/EditorStyle";
 import { iconSend } from "../../../../public/icons";
@@ -10,6 +10,8 @@ import { addCommentHandle, destroyCommentHandle, getCommentsHandle } from "@/ser
 import Link from "next/link";
 import CommentItem from "./CommentItem";
 import { getAccessToken } from "@/services/cookies.servies";
+import { CommentSliceType, addCommentsRDHandle, setCommentsRDHandle } from "@/redux/commentSlice";
+import { LoadingForm } from "@/components/Layout/LoadingLayout";
 
 interface FormCommentProps {
     tab?: number;
@@ -17,20 +19,27 @@ interface FormCommentProps {
 }
 
 const FormComment = ({ tab, novelId }: FormCommentProps) => {
+    const dispatch = useDispatch();
     const { currentUser, isAuthenticated } = useSelector((state: any) => state.user);
+    const { isLoading, comments } : CommentSliceType = useSelector(
+        (state: any) => state.comment
+    );
+
     // ---
-    const [bodyContent, setBodyContent] = useState<CommentType[]>([]);
     const [hasLoadedData, setHasLoadedData] = useState<boolean>(false);
 
     const getListComments = async () => {
 
         const dataComments = { novelId }
         const commentsResponse = await getCommentsHandle(dataComments as CommentType);
-        if (commentsResponse?.data.success) {
-            // console.log(commentsResponse.data.comments);
-            setBodyContent(commentsResponse.data.comments);
-        }
-        setHasLoadedData(true);
+
+        setTimeout(() => {
+            if (commentsResponse?.data.success) {
+                dispatch(setCommentsRDHandle(Array.from((commentsResponse.data.comments))))
+            }
+            setHasLoadedData(true);
+        }, 2000)
+
     };
 
     useEffect(() => {
@@ -64,24 +73,21 @@ const FormComment = ({ tab, novelId }: FormCommentProps) => {
                 commentText: JSON.stringify(convertToRaw(commentText.getCurrentContent())),
             };
 
+            
             const reviewResponse = await addCommentHandle(data as CommentType & { token: string });
             if (reviewResponse?.data.success) {
-                setBodyContent([
-                    {
-                        commentId: reviewResponse.data.data.commentId,
-                        commentText: String(data.commentText),
-                        countReplyComment: null,
-                        novelId: String(novelId),
-                        chapterId: null,
-                        parentId: null,
-                        userId: currentUser.name,
-                        name: currentUser?.name,
-                        createdAt: new Date(),
-                        updatedAt: new Date(),
-                    },
-                    ...bodyContent,
-                ]);
-                // console.log(reviewResponse.data);
+                dispatch(addCommentsRDHandle({
+                    commentId: reviewResponse.data.data.commentId,
+                    commentText: String(data.commentText),
+                    countReplyComment: null,
+                    novelId: String(novelId),
+                    chapterId: null,
+                    parentId: null,
+                    userId: currentUser.name,
+                    name: currentUser?.name,
+                    createdAt: String(new Date()),
+                    updatedAt: String(new Date()),
+                }));
             }
 
             setCommentText(EditorState.createEmpty());
@@ -90,8 +96,6 @@ const FormComment = ({ tab, novelId }: FormCommentProps) => {
             console.log(error);
         }
     };
-
-    // console.log(bodyContent)
 
     const handleDestroyComment = async (userId: string, commentId: string) => {
         if(currentUser?.userId !== userId) {
@@ -108,8 +112,8 @@ const FormComment = ({ tab, novelId }: FormCommentProps) => {
             }
             const reviewResponse = await destroyCommentHandle(dataComment as CommentType & { token: string });
             if(reviewResponse?.data.success) {
-                const filterComments = bodyContent.filter((comment) => comment?.commentId !== commentId)
-                setBodyContent(filterComments);
+                const filterComments = comments.filter((comment) => comment?.commentId !== commentId);
+                dispatch(setCommentsRDHandle(filterComments))
             }
             console.log(reviewResponse)
         } catch (error) {
@@ -151,16 +155,21 @@ const FormComment = ({ tab, novelId }: FormCommentProps) => {
                 </div>
 
                 <div className="transition-all ease-linear">
-                    {bodyContent &&
-                        bodyContent?.map((comment) => {
-                            return (
-                                comment ? (
-                                    <CommentItem key={comment?.commentId} comment={comment} user={currentUser} handleDeleteComment={handleDestroyComment}/>
-                                ) : (
-                                    <div></div>
-                                )   
-                            );
-                        })}
+                    {
+                        isLoading ? (
+                            <LoadingForm theme="dark"/>
+                        ) : (
+                            comments.length === 0 ? (
+                                <span>Hãy là người đầu tiên bình luận</span>
+                            ) : (
+                                comments?.map((comment) => {
+                                    return (
+                                        <CommentItem key={comment?.commentId} comment={comment} user={currentUser} handleDeleteComment={handleDestroyComment}/> 
+                                    );
+                                })
+                            )
+                        )
+                    }
                 </div>
             </div>
             <div className="w-4/12 p-5 -ml-5 relative">r</div>

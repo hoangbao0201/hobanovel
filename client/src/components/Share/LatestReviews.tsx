@@ -41,7 +41,7 @@ const LatestReviews = ({ reviews } : LatestReviewsProps) => {
                                             </Link>
                                         </h2>
                                         <div className="flex items-center mb-2">
-                                            <div className="py-[3px] lg:px-3 px-2 rounded-full lg:text-base text-sm leading-none text-white font-semibold bg-red-700">5.00</div>
+                                            <div className="py-[3px] lg:px-3 px-2 rounded-full lg:text-base text-sm leading-none text-white font-semibold bg-red-700">{review.mediumScore}</div>
                                             <div className="ml-3 text-green-700 lg:text-base text-sm font-semibold line-clamp-1">83 đánh giá</div>
                                         </div>
                                         <h2 className="line-clamp-2 font-semibold text-sm w-full">
