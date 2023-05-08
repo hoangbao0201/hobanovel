@@ -10,6 +10,7 @@ export interface CommentType {
     userId: string
     chapterId: string
     novelId: string
+    receiverId: string
 }
 
 export interface ReviewType {

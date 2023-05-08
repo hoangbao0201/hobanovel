@@ -158,8 +158,8 @@ const Header = () => {
                                                 className="w-9 h-9 outline-none rounded-full overflow-hidden shadow align-middle inline-block"
                                             >
                                                 <BlurImage
-                                                    width={36}
-                                                    height={36}
+                                                    width={40}
+                                                    height={40}
                                                     alt="image-demo"
                                                     blurDataURL={placeholderBlurhash}
                                                     className="group-hover:scale-105 group-hover:duration-500 object-cover w-9 h-9"
@@ -188,9 +188,17 @@ const Header = () => {
                                                         <div className="ml-3 flex-1 line-clamp-1">{currentUser.username}</div>
                                                     </div>
                                                     <div className="dropdown-content">
-                                                        <Link href={`/user/${currentUser.username}`} className="hover:bg-gray-100 py-2 px-2 block cursor-pointer">
-                                                            <span className="block w-full">Hồ sơ</span>
-                                                        </Link>
+                                                        {
+                                                            currentUser.username === "admin" ? (
+                                                                <Link href={`/admin`} className="hover:bg-gray-100 py-2 px-2 block cursor-pointer">
+                                                                    <span className="block w-full">Admin</span>
+                                                                </Link>
+                                                            ) : (
+                                                                <Link href={`/user/${currentUser.username}`} className="hover:bg-gray-100 py-2 px-2 block cursor-pointer">
+                                                                    <span className="block w-full">Hồ sơ</span>
+                                                                </Link>
+                                                            )
+                                                        }
                                                         <Link href={`/account`} className="hover:bg-gray-100 py-2 px-2 block cursor-pointer">
                                                             <span className="block w-full">Tài khoản</span>
                                                         </Link>

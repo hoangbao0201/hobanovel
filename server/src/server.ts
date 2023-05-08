@@ -1,7 +1,6 @@
 require("dotenv").config()
 import express, { Request, Response } from 'express'
 import cors from "cors"
-// import path from "path"
 
 import authRouter from "./routes/auth"
 import userRouter from "./routes/user"
@@ -14,13 +13,36 @@ import commentRouter from "./routes/comment"
 
 const app = express()
 const PORT = process.env.PORT || 4000
-
 app.use(cors())
+
+
+import http from "http"
+import { Server } from "socket.io"
+const server = http.createServer(app);
+
+const io = new Server(server, { 
+    cors: {
+        origin: [
+            "http://localhost:3000",
+        ],
+    },
+});
+
+io.on("connection" , (socket) => {
+    
+    socket.on("send_message", (message) => {
+        socket.broadcast.emit("comment_receive", message)
+    });
+})
+
+// ---
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-// app.use(express.static(path.join(__dirname, 'src/public'))); 
+
 
 const main = async () => {
+
 
     // Routes
     app.use("/api/auth", authRouter);
@@ -33,13 +55,12 @@ const main = async () => {
 
     app.get("/", async (_req : Request, res : Response) => {
         res.send("BY HOANGBAO")
-    })
+    }) 
 
-    app.listen(PORT, () => {
+    server.listen(PORT, () => {
         console.log(`Server started on port ${PORT}`)
     })
-
 }
 
-main().catch((error) => console.log(error)) 
 
+main().catch((error) => console.log(error)) 

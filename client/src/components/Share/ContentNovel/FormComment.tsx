@@ -1,10 +1,10 @@
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
 import { CommentType } from "@/types";
 import { EditorState, convertToRaw } from "draft-js";
-import { EditorStyle } from "@/components/Layout/EditorStyle";
+// import { EditorStyle } from "@/components/Layout/EditorStyle";
 import { iconSend } from "../../../../public/icons";
 import { addCommentHandle, destroyCommentHandle, getCommentsHandle } from "@/services/comment.services";
 import Link from "next/link";
@@ -12,6 +12,15 @@ import CommentItem from "./CommentItem";
 import { getAccessToken } from "@/services/cookies.servies";
 import { CommentSliceType, addCommentsRDHandle, setCommentsRDHandle } from "@/redux/commentSlice";
 import { LoadingForm } from "@/components/Layout/LoadingLayout";
+// import { socket } from "@/socket";
+// import { io, Socket } from "socket.io-client";
+import { EditorStyle } from "@/components/Layout/EditorStyle";
+
+// import { CKEditor } from '@ckeditor/ckeditor5-react';
+
+// import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+// const CKEditor = dynamic(import("@ckeditor/ckeditor5-react"))
+
 
 interface FormCommentProps {
     tab?: number;
@@ -26,6 +35,13 @@ const FormComment = ({ tab, novelId }: FormCommentProps) => {
     );
 
     // ---
+
+
+    const [value, setValue] = useState('123');
+
+
+    // ---
+    // const socket = useRef<Socket>(io("http://localhost:4000"));
     const [hasLoadedData, setHasLoadedData] = useState<boolean>(false);
 
     const getListComments = async () => {
@@ -72,11 +88,11 @@ const FormComment = ({ tab, novelId }: FormCommentProps) => {
                 novelId,
                 commentText: JSON.stringify(convertToRaw(commentText.getCurrentContent())),
             };
-
+            
             
             const reviewResponse = await addCommentHandle(data as CommentType & { token: string });
             if (reviewResponse?.data.success) {
-                dispatch(addCommentsRDHandle({
+                const newComment = {
                     commentId: reviewResponse.data.data.commentId,
                     commentText: String(data.commentText),
                     countReplyComment: null,
@@ -87,7 +103,9 @@ const FormComment = ({ tab, novelId }: FormCommentProps) => {
                     name: currentUser?.name,
                     createdAt: String(new Date()),
                     updatedAt: String(new Date()),
-                }));
+                }
+                dispatch(addCommentsRDHandle(newComment));
+                // socket.current.emit("send_message", newComment);
             }
 
             setCommentText(EditorState.createEmpty());
@@ -96,6 +114,9 @@ const FormComment = ({ tab, novelId }: FormCommentProps) => {
             console.log(error);
         }
     };
+
+    // ---
+    
 
     const handleDestroyComment = async (userId: string, commentId: string) => {
         if(currentUser?.userId !== userId) {
@@ -121,9 +142,29 @@ const FormComment = ({ tab, novelId }: FormCommentProps) => {
         }
     }
 
+
+    // ---
+
+    const editorRef = useRef<{ CKEditor: any, ClassicEditor: any } | null>(null);
+    const { CKEditor, ClassicEditor } = editorRef.current || {};
+
+    useEffect(() => {
+        editorRef.current = {
+        CKEditor: require("@ckeditor/ckeditor5-react").CKEditor, // v3+
+        ClassicEditor: require("@ckeditor/ckeditor5-build-classic")
+        };
+    }, []);
+
+
     return (
         <div className="flex">
             <div className="w-8/12 p-5 -ml-5 relative">
+
+                {/* <CKEditorWrapper />
+                <code>
+                    {value}
+                </code> */}
+
                 <div className="flex mb-16">
                     <Link
                         href={`/user/1`}
