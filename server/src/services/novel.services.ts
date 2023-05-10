@@ -6,6 +6,7 @@ import pool from "../library/connectMySQL";
 import { NovelType } from "../types";
 import { convertTextToSlug } from "../utils/convertTextToSlug";
 import { uploadThumbnailNovelByUrlHandle } from "./image.services";
+import { getBlurDataURL } from "../utils/getBlurDataURL";
 
 export const createNovelByDataHandle = async (data : NovelType, userId : string) => {
     try {
@@ -102,7 +103,7 @@ export const getNovelsByPageHandle = async (page : any) => {
         const connection = await pool.getConnection();
 
         const qGetNovel = `
-            SELECT novelId, slug, title, LEFT(description, 150) as description, thumbnailUrl, thumbnailPublicId, author, category, personality, scene, classify, viewFrame FROM novels
+            SELECT novelId, slug, title, LEFT(description, 150) as description, thumbnailUrl, imageBlurHash, thumbnailPublicId, author, category, personality, scene, classify, viewFrame FROM novels
             ORDER BY createdAt DESC
             LIMIT 6 OFFSET ?;
         `;
@@ -122,7 +123,7 @@ export const getNovelBySlugHandle = async ({ slug } : NovelType) => {
         const connection = await pool.getConnection();
 
         const qGetNovel = `
-            SELECT novels.novelId, novels.slug, novels.title, novels.thumbnailUrl, novels.description, novels.author,
+            SELECT novels.novelId, novels.slug, novels.title, novels.thumbnailUrl, novels.imageBlurHash, novels.description, novels.author,
                 AVG(reviews.mediumScore) AS mediumScore, 
                 novels.category, novels.personality, novels.scene, novels.classify, novels.viewFrame,
                 
@@ -186,6 +187,70 @@ export const getChaptersNovelBySlugHandle = async ({ slug } : NovelType) => {
     }
 };
 
-export const getBannerNovelHandle = async () => {
-    
-}
+export const updateBlurImageNovelHandle = async ({ novelId, imageBlurHash } : NovelType) => {
+    try {
+        const connection = await pool.getConnection();
+
+        const qGetBanners = `
+            UPDATE novels
+            SET imageBlurHash = ?
+            WHERE novelId = ?
+        `;
+
+        const [rows] = await connection.query(qGetBanners, [imageBlurHash, novelId]);
+
+        connection.release();
+
+        return {
+            success: true,
+            data: rows as NovelType[]
+        }
+
+    } catch (error) {
+        return null
+    }
+};
+
+export const updateAllBlurImageNovelHandle = async () => {
+    try {
+
+        const connection = await pool.getConnection();
+
+        const qGetAllNovel = `
+            SELECT novels.novelId, novels.thumbnailUrl FROM novels
+            WHERE novels.imageBlurHash IS NULL
+        `;
+
+        const [rows] : any = await connection.query(qGetAllNovel);
+
+        
+        connection.release();
+        
+        for(const novel of rows) {
+            const hashUrl = await getBlurDataURL(novel.thumbnailUrl) || "";
+            if(!hashUrl) {
+                continue;
+                // return {
+                //     success: true,
+                //     data: hashUrl
+                // }
+            }
+            // return {
+            //     success: true,
+            //     data: hashUrl
+            // }
+            await updateBlurImageNovelHandle({ novelId: novel.novelId, imageBlurHash: hashUrl } as NovelType);
+        }
+
+        return {
+            success: true,
+            data: "123"
+        }
+
+    } catch (error) {
+        return {
+            success: false,
+            error: error
+        }
+    }
+};

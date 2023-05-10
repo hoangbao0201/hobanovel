@@ -12,15 +12,16 @@ import {
 import storage from "redux-persist/lib/storage";
 import userReducer from "./userSlice";
 import commentReducer from "./commentSlice";
+import bannersReducer from "./bannersSlice";
 
 const persistConfig = {
     key: "root",
     version: 1,
     storage,
-    blacklist: ['comment']
+    blacklist: ['comment', 'banners']
 };
 
-const rootReducer = combineReducers({ user: userReducer, comment: commentReducer });
+const rootReducer = combineReducers({ user: userReducer, comment: commentReducer, banners: bannersReducer });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 

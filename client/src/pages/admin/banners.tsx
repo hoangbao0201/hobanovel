@@ -1,11 +1,71 @@
 import Head from "next/head";
+import Image from "next/image"
 import { ReactNode, useState } from "react";
-import MainLayout from "@/components/Layout/MainLayout";
 import AdminLayout from "@/components/Layout/AdminLayout";
+import { addBannersHandle, getMultipleBannersHandle } from "@/services/banners.services";
+import { getAccessToken } from "@/services/cookies.servies";
+import { BannersType } from "@/types";
+import { GetServerSideProps } from "next";
+import { LoadingButton } from "@/components/Layout/LoadingLayout";
+import { randomInt } from "crypto";
 
-const AdminBannersPage = () => {
-    // const [isDrop, setIsDrop] = useState(false)
+type BannersCreateType = Pick<BannersType, 'novelId' | 'bannersId' | 'bannersUrl' | 'bannersPublicId' | 'createdAt' | 'updatedAt'>;
+
+interface AdminBannersPageProps {
+    banners: BannersCreateType[]
+}
+
+const AdminBannersPage = ({ banners } : AdminBannersPageProps) => {
+
+    const [dataImage, setDataImage] = useState(null)
     const [isShowing, setIsShowing] = useState(false);
+    const [isLoadingButton, setIsLoadingButton] = useState(false);
+    const [urlNewImage, setUrlNewImage] = useState<null | string>(null);
+
+    const eventOnChangeBanners = async (e : any) => {
+        const dataImage = e.target.files[0] 
+        setDataImage(dataImage);
+        setUrlNewImage(URL.createObjectURL(dataImage))
+    }
+
+    const handleUploadBanners = async () => {
+        const token = getAccessToken();
+        if(!dataImage || !token) {
+            console.log("Data not found")
+            return;
+        }
+        
+        setIsLoadingButton(true);
+
+        const formData = new FormData();
+        formData.append("file", dataImage);
+        
+        try {
+            const dataBanners = {
+                novelId: String(1),
+                token,
+                formData
+            }
+            const uploadBanners : any = await addBannersHandle(dataBanners as BannersType & { token: string, formData: FormData })
+
+            if(uploadBanners?.data?.success) {{
+                banners.unshift({
+                    novelId: uploadBanners.banners.bannersId,
+                    bannersId: uploadBanners.banners.bannersId,
+                    bannersUrl: uploadBanners.banners.bannerUrl,
+                    bannersPublicId: uploadBanners.banners.bannersPublicId,
+                    createdAt: new Date(),
+                    updatedAt: new Date(),
+                })
+            }}
+
+
+            setIsLoadingButton(false);
+        } catch (error) {
+            console.log(error)
+            setIsLoadingButton(false)
+        }
+    }
 
     return (
         <>
@@ -17,7 +77,42 @@ const AdminBannersPage = () => {
             </Head>
             <main>
                 <div>
-                    Banners
+                    <label htmlFor="inputUploadBanners" className="w-40 h-24 block object-cover border rounded-md overflow-hidden">
+                        {
+                            urlNewImage ? (
+                                <Image
+                                    width={180}
+                                    height={180}
+                                    src={urlNewImage}
+                                    alt="image new banners"
+                                    className="w-40 h-24 block object-cover"
+                                />
+                            ) : (
+                                <span>+</span>
+                            )
+                        }
+                    </label>
+                    <input id="inputUploadBanners" className="hidden" onChange={eventOnChangeBanners} type="file"/>
+                    <button className="py-1 px-2 border bg-blue-600 flex items-center" onClick={handleUploadBanners}>
+                        {isLoadingButton && <LoadingButton />} Upload
+                    </button>
+                    <div className="mt-5 flex gap-2 flex-nowrap">
+                        {
+                            banners && banners.map((itemBanner) => {
+                                return (
+                                    <div key={itemBanner.bannersId} className="w-40 h-24 block border rounded-md overflow-hidden">
+                                        <Image
+                                            width={180}
+                                            height={180}
+                                            src={itemBanner.bannersUrl}
+                                            alt={itemBanner.novelId}
+                                            className="w-40 h-24 block object-cover"
+                                        />
+                                    </div>
+                                )
+                            })
+                        }
+                    </div>
                 </div>
             </main>
         </>
@@ -25,6 +120,23 @@ const AdminBannersPage = () => {
 };
 
 export default AdminBannersPage;
+
+export const getServerSideProps: GetServerSideProps = async () => {
+    try {
+        const bannersResponse = await getMultipleBannersHandle();
+
+        if (bannersResponse) {
+            return {
+                props: {
+                    banners: JSON.parse(JSON.stringify(bannersResponse.data?.banners)),
+                },
+            };
+        }
+        return { notFound: true };
+    } catch (error) {
+        return { notFound: true };
+    }
+};
 
 AdminBannersPage.getLayout = (page: ReactNode) => {
     return (

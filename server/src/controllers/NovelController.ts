@@ -7,6 +7,8 @@ import {
     getNovelBySlugHandle,
     getChaptersNovelBySlugHandle,
     getNovelsByUserIdHandle,
+    updateBlurImageNovelHandle,
+    updateAllBlurImageNovelHandle,
 } from "../services/novel.services";
 import { NovelType } from "../types";
 
@@ -84,7 +86,7 @@ export const createNovelByUrl = async (req: Request, res: Response) => {
             });
         }
 
-        const dataNovel: any | null = await getDataNovelByUrlMTCHandle(url as string);
+        const dataNovel : any | null = await getDataNovelByUrlMTCHandle(url as string);
         if (!dataNovel) {
             return res.status(400).json({
                 success: false,
@@ -92,7 +94,7 @@ export const createNovelByUrl = async (req: Request, res: Response) => {
             });
         }
 
-        const createNovel: NovelType | null = await createNovelByDataHandle(
+        const createNovel: any = await createNovelByDataHandle(
             dataNovel,
             res.locals.user.userId
         );
@@ -106,9 +108,10 @@ export const createNovelByUrl = async (req: Request, res: Response) => {
         return res.json({
             success: true,
             message: "Create novel successful",
-            createNovel,
             novel: {
+                novelId: createNovel.insertId,
                 slug: dataNovel.slug,
+                thumbnailUrl: dataNovel.thumbnailUrl
             },
         });
     } catch (error) {
@@ -292,3 +295,58 @@ export const getBannerNovel = async (_req: Request, res: Response) => {
         });
     }
 };
+
+// Update Image Blur Novel | /api/update/image/blur/novel/:id
+export const updateBlurImageNovel = async (req: Request, res: Response) => {
+    try {
+        const { imageBlurHash } = req.body
+        const { id } = req.params
+
+        const novelResponse : any = await updateBlurImageNovelHandle({ novelId: id, imageBlurHash } as NovelType)
+        if(!novelResponse.success) {
+            return res.status(400).json({
+                success: false,
+                message: "Update blur image Error",
+                error: novelResponse.error,
+            })
+        }
+
+        return res.json({
+            success: true,
+            message: "Update blur image successful",
+            novel: novelResponse.data
+        })
+        
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: `Internal server error ${error}`,
+        });
+    }
+}
+
+// Update All Image Blur Novel | /api/update/all/image/blur/novel/:id
+export const updateAllBlurImageNovel = async (_req: Request, res: Response) => {
+    try {
+        const novelResponse : any = await updateAllBlurImageNovelHandle();
+        if(!novelResponse.success) {
+            return res.status(400).json({
+                success: false,
+                message: "Update all blur image Error",
+                error: novelResponse.error,
+            })
+        }
+
+        return res.json({
+            success: true,
+            message: "Update all blur image successful",
+            novel: novelResponse.data
+        })
+        
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: `Internal server error ${error}`,
+        });
+    }
+}

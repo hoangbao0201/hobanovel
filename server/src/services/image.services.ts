@@ -13,3 +13,17 @@ export const uploadThumbnailNovelByUrlHandle = async (url: string) => {
     
     return image;
 };
+
+export const uploadBannersDataHandle = async (data: string) => {
+    const image = await cloudinary.uploader.upload(data, {
+        public_id: `${Date.now()}`,
+        resource_type: "auto",
+        folder: "hobanovel/admin/banners",
+    });
+
+    if (!image) {
+        return null;
+    }
+    
+    return image;
+};

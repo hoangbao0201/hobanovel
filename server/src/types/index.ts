@@ -1,4 +1,11 @@
-
+export interface BannersType extends NovelType {
+    bannersId: string
+    bannersUrl: string
+    imageBlurHash: string
+    bannersPublicId: string
+    createdAt: Date
+    updatedAt: Date
+}
 
 export interface CommentType {
     commentId: string
@@ -53,6 +60,7 @@ export interface NovelType {
     title: string
     chapterNumber: number
     thumbnailUrl: string | null
+    imageBlurHash: string | null
     thumbnailPublicId: string | null
     description: string
     author: string

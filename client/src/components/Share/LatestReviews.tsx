@@ -11,7 +11,7 @@ interface LatestReviewsProps {
 
 const LatestReviews = ({ reviews } : LatestReviewsProps) => {
 
-    console.log("reviews: ", reviews)
+    // console.log("reviews: ", reviews)
 
     return (
         <div className="mb-5">

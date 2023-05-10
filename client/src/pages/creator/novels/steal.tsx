@@ -5,6 +5,9 @@ import { getAccessToken } from "@/services/cookies.servies";
 import CreatorLayout from "@/components/Layout/CreatorLayout";
 import { createNovelByUrlHandle } from "@/services/novels.services";
 import { createChapterByUrlHandle } from "@/services/chapter.services";
+import { updateBlurImageNovelHandle } from "@/services/update.services";
+import { getBlurDataURL } from "@/utils/getBlurDataURL";
+import { NovelType } from "@/types";
 
 interface StealNovelPageProps {
     children?: ReactNode
@@ -34,6 +37,7 @@ const StealNovelPage = ({ children } : StealNovelPageProps) => {
         e.preventDefault();
 
         if(!urlInput || isProgress) {
+            console.log("lỗi ")
             return
         }
         
@@ -49,16 +53,29 @@ const StealNovelPage = ({ children } : StealNovelPageProps) => {
             const novelResponse = await createNovelByUrlHandle(urlInput as string, token as string);
             if(novelResponse?.data.success) {
 
+                // console.log(novelResponse.data.novel.thumbnailUrl)
+
+                // Upload Blur Image
+                const dataUpdateBlurImageHandle : Pick<NovelType, 'novelId' | 'imageBlurHash'> & { token: string } = {
+                    token,
+                    novelId: novelResponse.data.novel.novelId,
+                    imageBlurHash: (await getBlurDataURL(novelResponse.data.novel.thumbnailUrl)) || ""
+                }
+                updateBlurImageNovelHandle(dataUpdateBlurImageHandle)
+
+                // SET STATE START RUN
                 setIsProgress(true)
 
                 setDataMessageProgress(value => [...value, { id: 1, message: "Creact Novel - Thành công" }])
                 setDataMessageProgress(value => [...value, { id: 2, message: "Upload Thumbnail Novel - Thành công" }])
                 setProgress(1)
 
-                for (let i = 1; i <= 99; i++) {
-                    console.log(`${novelResponse?.data.novel.slug}/${i}`)
-                    const chapterResponse = await createChapterByUrlHandle(`${novelResponse?.data.novel.slug}/${i}` as string, token as string)
+                for (let i = 1; i <= 10; i++) {
+                    // console.log(`${novelResponse?.data.novel.slug}/${i}`);
+                    // console.log(novelResponse?.data);
+                    const chapterResponse = await createChapterByUrlHandle(`${novelResponse?.data.novel.slug}/${i}` as string, token as string);
 
+                    // SET DEFAULT STATE
                     if(chapterResponse?.data.success) {
                         setDataMessageProgress(value => [ ...value, { id: i+2, message: `Upload Chương ${i} - Thành công` } ])
                         setProgress(value => value + 1)
@@ -68,7 +85,6 @@ const StealNovelPage = ({ children } : StealNovelPageProps) => {
                         setProgress(0)
                         return
                     }
-                    
                 }
             }
 
@@ -93,6 +109,16 @@ const StealNovelPage = ({ children } : StealNovelPageProps) => {
     useEffect(() => {
         scrollToBottom();
     }, [dataMessageProgress]);
+
+    // const hadnle = async () => {
+    //     const url = "http://res.cloudinary.com/djrbd6ftt/image/upload/v1683736340/hobanovel/novel/thumbnail/1683736339630.jpg"
+    //     const hash = await getBlurDataURL(url)
+    //     console.log(hash)
+    // }
+
+    // useEffect(() => {
+    //     hadnle()
+    // }, [])
 
     return (    
         <div className="">
@@ -133,7 +159,7 @@ const StealNovelPage = ({ children } : StealNovelPageProps) => {
                 <button onClick={handleSubmitButtonCreatNovel} className="border border-gray-300 rounded-lg py-2 px-8">
                     Cập nhật {isProgress && " - loading"}
                 </button>
-
+                
             </div>
         </div>
     )

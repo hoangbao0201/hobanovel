@@ -23,7 +23,7 @@ const Reading = ({ novels } : ReadingProps) => {
                                         width={38}
                                         height={54}
                                         alt="image-demo"
-                                        blurDataURL={placeholderBlurhash}
+                                        blurDataURL={novel.imageBlurHash ?? placeholderBlurhash}
                                         className="group-hover:scale-105 group-hover:duration-500 object-cover w-10 h-14"
                                         placeholder="blur"
                                         src={novel.thumbnailUrl}

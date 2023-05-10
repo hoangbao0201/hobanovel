@@ -8,7 +8,7 @@ interface JustUpdatedProps {
 
 const JustUpdated = ({ novels= [] } : JustUpdatedProps) => {
 
-    console.log("J: ", novels)
+    // console.log("J: ", novels)
 
     return (
         <>

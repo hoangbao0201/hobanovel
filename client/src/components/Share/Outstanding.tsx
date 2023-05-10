@@ -10,7 +10,7 @@ interface OutstandingProps {
 
 const Outstanding = ({ novels = [] } : OutstandingProps) => {
 
-    console.log(novels)
+    // console.log(novels)
 
     return (
         <div className="mb-5">
@@ -22,13 +22,13 @@ const Outstanding = ({ novels = [] } : OutstandingProps) => {
                         novels.map((novel : NovelType) => {
                             return (
                                 <div key={novel.novelId} className="flex">
-                                    <Link href={`/truyen/${novel.slug}`} className="w-20 h-28 overflow-hidden shadow align-middle inline-block">
+                                    <Link href={`/truyen/${novel.slug}`} className="relative w-20 h-28 overflow-hidden shadow">
                                         <BlurImage
-                                            width={80}
-                                            height={120}
+                                            width={85}
+                                            height={125}
                                             alt="image-demo"
-                                            blurDataURL={placeholderBlurhash}
-                                            className="group-hover:scale-105 group-hover:duration-500 object-cover w-20 h-28"
+                                            blurDataURL={novel.imageBlurHash ?? placeholderBlurhash}
+                                            className="group-hover:scale-105 group-hover:duration-500 object-cover h-full w-full"
                                             placeholder="blur"
                                             src={novel.thumbnailUrl || "/images/novel-default.png"}
                                         />

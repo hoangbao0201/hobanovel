@@ -4,17 +4,8 @@ interface LoadingProps {
     w?: string
     h?: string
     theme?: string
+    className?: string
 }
-
-const LoadingLayout = ({ w, h } : LoadingProps) => {
-
-
-    return <div style={{ width: `${w || "80px"}`, height: `${h || "28px"}` }} className="">Loading</div>
-}
-
-export default LoadingLayout
-
-
 
 const LoadingFormStyle = styled.span`
     &, &:before, &:after {
@@ -51,13 +42,39 @@ const LoadingFormStyle = styled.span`
         40% { box-shadow: 0 2.5em 0 0 }
     }
 ` 
-
-
 export const LoadingForm = ({ theme } : LoadingProps) => {
 
     return (
         <div className="flex pt-2 pb-6">
             <LoadingFormStyle className={`mx-auto ${theme === 'dark' ? "" : ""}`}></LoadingFormStyle>
         </div>
+    )
+}
+
+const LoadingButtonStyle = styled.span`
+    & {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        display: inline-block;
+        border-top: 2px solid #FFF;
+        border-right: 2px solid transparent;
+        box-sizing: border-box;
+        animation: rotation 1s linear infinite;
+    }
+
+    @keyframes rotation {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+    } 
+`
+export const LoadingButton = ({ theme, className } : LoadingProps) => {
+
+    return (
+        <LoadingButtonStyle className={`mr-2 ${theme === 'dark' ? "" : ""} ${className}`}></LoadingButtonStyle>
     )
 }

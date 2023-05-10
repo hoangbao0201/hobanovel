@@ -6,10 +6,10 @@ import { useClickOutSide } from "@/hook/useClickOutSide";
 import { GENRES_VALUE, RANK_VALUE } from "@/constants/data";
 import BlurImage from "../Layout/BlurImage";
 import { placeholderBlurhash } from "@/constants";
-import LoadingLayout from "../Layout/LoadingLayout";
 import { logoutUserHandle } from "@/redux/userSlice";
 import { removeAccessToken } from "@/services/cookies.servies";
 import Image from "next/image";
+import { LoadingForm } from "../Layout/LoadingLayout";
 
 const Header = () => {
     const dispatch = useDispatch();
@@ -149,7 +149,7 @@ const Header = () => {
                         <div className="ml-auto">
                             <div className="flex items-center">
                                 {userLoading ? (
-                                    <LoadingLayout />
+                                    <LoadingForm />
                                 ) : isAuthenticated ? (
                                     <div className="relative">
                                         <span className="h-14 flex items-center">

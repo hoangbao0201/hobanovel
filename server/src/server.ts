@@ -9,6 +9,8 @@ import testRouter from "./routes/test"
 import chapterRouter from "./routes/chapter"
 import reviewRouter from "./routes/review"
 import commentRouter from "./routes/comment"
+import bannerRouter from "./routes/banner"
+import updateRouter from "./routes/update"
 
 
 const app = express()
@@ -17,23 +19,23 @@ app.use(cors())
 
 
 import http from "http"
-import { Server } from "socket.io"
+// import { Server } from "socket.io"
 const server = http.createServer(app);
 
-const io = new Server(server, { 
-    cors: {
-        origin: [
-            "http://localhost:3000",
-        ],
-    },
-});
+// const io = new Server(server, { 
+//     cors: {
+//         origin: [
+//             "http://localhost:3000",
+//         ],
+//     },
+// });
 
-io.on("connection" , (socket) => {
+// io.on("connection" , (socket) => {
     
-    socket.on("send_message", (message) => {
-        socket.broadcast.emit("comment_receive", message)
-    });
-})
+//     socket.on("send_message", (message) => {
+//         socket.broadcast.emit("comment_receive", message)
+//     });
+// })
 
 // ---
 
@@ -52,6 +54,8 @@ const main = async () => {
     app.use("/api/chapters", chapterRouter);
     app.use("/api/reviews", reviewRouter);
     app.use("/api/comments", commentRouter);
+    app.use("/api/banners", bannerRouter);
+    app.use("/api/update", updateRouter);
 
     app.get("/", async (_req : Request, res : Response) => {
         res.send("BY HOANGBAO")
