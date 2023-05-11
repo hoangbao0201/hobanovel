@@ -1,3 +1,4 @@
+import { NovelType } from "@/types";
 import axios from "axios";
 
 
@@ -56,6 +57,24 @@ export const createNovelByUrlHandle = async (url: string, token: string) => {
     
         if (novel.data.success) {
             return novel;
+        }
+    
+        return null;
+    } catch (error) {
+        console.log(error)
+        return null;
+    }
+};
+
+export const getNovelsByDataHandle = async (data: Pick<NovelType, "novelId" | "userId" | "title"> & { page: number }) => {
+    try {
+        const { novelId = '', title = '', userId = '', page = 1 } = data;
+    
+        const novels = await axios.get(
+            `http://localhost:4000/api/novels/get/${novelId}?title=${title}&userId=${userId}&page=${page}`
+        );
+        if (novels.data.success) {
+            return novels;
         }
     
         return null;

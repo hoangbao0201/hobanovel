@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
-import { addBannerHandle, getMultipleBannerHandle, getSingleBannerHandle, updateBlurImageBannersHandle } from "../services/banners.services";
+import { addBannerHandle, getMultipleBannerHandle, getSingleBannerHandle, updateAllBlurImageBannersHandle, updateBlurImageBannersHandle } from "../services/banners.services";
 import { BannersType } from "../types";
 import { uploadBannersDataHandle } from "../services/image.services";
+import { getBlurDataURL } from "../utils/getBlurDataURL";
 
 
 // Add Banners | /api/add
@@ -24,7 +25,9 @@ export const addBanners = async (req: Request, res: Response) => {
             })
         }
 
-        const bannersResponse : any = await addBannerHandle({ novelId, bannersUrl: dataImage.url, bannersPublicId: dataImage.public_id } as BannersType);
+        const hashUrl = await getBlurDataURL(dataImage.url)
+
+        const bannersResponse : any = await addBannerHandle({ novelId, bannersUrl: dataImage.url, imageBlurHash: hashUrl, bannersPublicId: dataImage.public_id } as BannersType);
         if(!bannersResponse.success) {
             return res.status(400).json({
                 success: false,
@@ -37,9 +40,10 @@ export const addBanners = async (req: Request, res: Response) => {
             success: true,
             message: "Create banners successful",
             banners: {
-                bannersId: bannersResponse.insertId,
+                bannersId: bannersResponse.data.insertId,
                 bannersUrl: dataImage.url,
-                bannersPublicId: dataImage.public_id
+                bannersPublicId: dataImage.public_id,
+                imageBlurHash: hashUrl
             } 
         })
         
@@ -68,7 +72,7 @@ export const getBanners = async (req: Request, res: Response) => {
         return res.json({
             success: true,
             message: "Get banners successful",
-            banners: bannersResponse.data
+            banners: (type === 'single' ? bannersResponse.data[0] : (bannersResponse.data)) || null
         })
         
     } catch (error) {
@@ -97,6 +101,32 @@ export const updateBlurImageBanners = async (req: Request, res: Response) => {
         return res.json({
             success: true,
             message: "Update blur image successful",
+            banners: bannersResponse.data
+        })
+        
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: `Internal server error ${error}`,
+        });
+    }
+}
+
+// Update All Image Blur Banners | /api/update/all/image/blur/banners
+export const updateAllBlurImageBanners = async (_req: Request, res: Response) => {
+    try {
+        const bannersResponse : any = await updateAllBlurImageBannersHandle()
+        if(!bannersResponse.success) {
+            return res.status(400).json({
+                success: false,
+                message: "Update all blur image Error",
+                error: bannersResponse.error,
+            })
+        }
+
+        return res.json({
+            success: true,
+            message: "Update all blur image successful",
             banners: bannersResponse.data
         })
         

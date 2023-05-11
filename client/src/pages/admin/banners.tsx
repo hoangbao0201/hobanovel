@@ -1,71 +1,181 @@
 import Head from "next/head";
-import Image from "next/image"
-import { ReactNode, useState } from "react";
+import Image from "next/image";
+import { ReactNode, useEffect, useState } from "react";
 import AdminLayout from "@/components/Layout/AdminLayout";
 import { addBannersHandle, getMultipleBannersHandle } from "@/services/banners.services";
 import { getAccessToken } from "@/services/cookies.servies";
-import { BannersType } from "@/types";
+import { BannersType, NovelType } from "@/types";
 import { GetServerSideProps } from "next";
-import { LoadingButton } from "@/components/Layout/LoadingLayout";
-import { randomInt } from "crypto";
+import { LoadingButton, LoadingSearch } from "@/components/Layout/LoadingLayout";
+import BlurImage from "@/components/Layout/BlurImage";
+import { placeholderBlurhash } from "@/constants";
+import { useDebounce } from "@/hook/useDebounce";
+import { getNovelsByDataHandle } from "@/services/novels.services";
+import { iconClose } from "../../../public/icons";
 
-type BannersCreateType = Pick<BannersType, 'novelId' | 'bannersId' | 'bannersUrl' | 'bannersPublicId' | 'createdAt' | 'updatedAt'>;
+import Select from "react-select";
+import styled from "styled-components";
+
+type BannersCreateType = Pick<
+    BannersType,
+    | "novelId"
+    | "bannersId"
+    | "bannersUrl"
+    | "imageBlurHash"
+    | "bannersPublicId"
+    | "createdAt"
+    | "updatedAt"
+    | "title"
+>;
+
+const Checkbox = ({ children, ...props }: JSX.IntrinsicElements["input"]) => (
+    <label style={{ marginRight: "1em" }}>
+        <input type="checkbox" {...props} />
+        {children}
+    </label>
+);
 
 interface AdminBannersPageProps {
-    banners: BannersCreateType[]
+    banners: BannersCreateType[];
 }
 
-const AdminBannersPage = ({ banners } : AdminBannersPageProps) => {
+const dataConditionSearchNovel = [
+    { label: "TÊN TRUYỆN", value: "title" },
+    { label: "ID TRUYỆN", value: "novelId" },
+    { label: "ID TÁC GIẢ", value: "userId" },
+];
 
-    const [dataImage, setDataImage] = useState(null)
+const AdminBannersPage = ({ banners }: AdminBannersPageProps) => {
+    const [dataImage, setDataImage] = useState(null);
     const [isShowing, setIsShowing] = useState(false);
+    const [listBanners, setListBanners] = useState<BannersCreateType[]>(banners || []);
     const [isLoadingButton, setIsLoadingButton] = useState(false);
     const [urlNewImage, setUrlNewImage] = useState<null | string>(null);
 
-    const eventOnChangeBanners = async (e : any) => {
-        const dataImage = e.target.files[0] 
+    const [optionSearchNovel, setOptionSearchNovel] = useState<string>("title");
+    const [valueInputSearch, setValueInputSearch] = useState("");
+    const [resultListNovelsSearch, setResultListNovelsSearch] = useState<NovelType[]>([]);
+    const [isLoadingSearch, setIsLoadingSearch] = useState(false);
+    const [isDropdown, setIsDropdown] = useState(true);
+
+    const textDebounce = useDebounce(valueInputSearch, 500);
+
+    //------
+
+    const eventOnChangeBanners = async (e: any) => {
+        const dataImage = e.target.files[0];
         setDataImage(dataImage);
-        setUrlNewImage(URL.createObjectURL(dataImage))
-    }
+        setUrlNewImage(URL.createObjectURL(dataImage));
+    };
 
     const handleUploadBanners = async () => {
         const token = getAccessToken();
-        if(!dataImage || !token) {
-            console.log("Data not found")
+        if (!dataImage || !token) {
+            console.log("Data not found");
             return;
         }
-        
+
         setIsLoadingButton(true);
 
         const formData = new FormData();
         formData.append("file", dataImage);
-        
+
         try {
             const dataBanners = {
                 novelId: String(1),
                 token,
-                formData
+                formData,
+            };
+            const uploadBanners: any = await addBannersHandle(
+                dataBanners as BannersType & { token: string; formData: FormData }
+            );
+            console.log(uploadBanners);
+
+            if (uploadBanners?.data?.success) {
+                // banners.unshift({
+                //     novelId: uploadBanners.banners.bannersId,
+                //     bannersId: uploadBanners.banners.bannersId,
+                //     bannersUrl: uploadBanners.banners.bannerUrl,
+                //     imageBlurHash: uploadBanners.banners.imageBlurHash,
+                //     bannersPublicId: uploadBanners.banners.bannersPublicId,
+                //     createdAt: new Date(),
+                //     updatedAt: new Date(),
+                // })
+                // setListBanners([
+                //     {
+                //         novelId: uploadBanners.banners.bannersId,
+                //         bannersId: uploadBanners.banners.bannersId,
+                //         bannersUrl: uploadBanners.banners.bannerUrl,
+                //         imageBlurHash: uploadBanners.banners.imageBlurHash,
+                //         bannersPublicId: uploadBanners.banners.bannersPublicId,
+                //         createdAt: new Date(),
+                //         updatedAt: new Date(),
+                //     },
+                //     ...listBanners,
+                // ]);
             }
-            const uploadBanners : any = await addBannersHandle(dataBanners as BannersType & { token: string, formData: FormData })
+            // console.log([
+            //     {
+            //         novelId: uploadBanners.banners.bannersId,
+            //         bannersId: uploadBanners.banners.bannersId,
+            //         bannersUrl: uploadBanners.banners.bannerUrl,
+            //         imageBlurHash: uploadBanners.banners.imageBlurHash,
+            //         bannersPublicId: uploadBanners.banners.bannersPublicId,
+            //         createdAt: new Date(),
+            //         updatedAt: new Date(),
+            //     },
+            //     ...listBanners,
+            // ])
 
-            if(uploadBanners?.data?.success) {{
-                banners.unshift({
-                    novelId: uploadBanners.banners.bannersId,
-                    bannersId: uploadBanners.banners.bannersId,
-                    bannersUrl: uploadBanners.banners.bannerUrl,
-                    bannersPublicId: uploadBanners.banners.bannersPublicId,
-                    createdAt: new Date(),
-                    updatedAt: new Date(),
-                })
-            }}
-
-
+            // SET STATE DEFAULT
             setIsLoadingButton(false);
+            setUrlNewImage(null);
+            setDataImage(null);
         } catch (error) {
-            console.log(error)
-            setIsLoadingButton(false)
+            console.log(error);
+            setIsLoadingButton(false);
         }
-    }
+    };
+
+    // search novels
+    const eventSearchNovels = async (value: string) => {
+        try {
+            setIsLoadingSearch(true);
+            const dataNovel : Partial<NovelType> & { page: number } = {
+                [optionSearchNovel]: value,
+                page: 1,
+            };
+            const novelsRes = await getNovelsByDataHandle(dataNovel as any);
+            
+            if (novelsRes?.data?.success) {
+                setResultListNovelsSearch(novelsRes?.data.novels);
+                console.log(dataNovel)
+                // setIsDropdown(true);
+            }
+
+            setIsLoadingSearch(false);
+        } catch (error) {
+            setIsLoadingSearch(false);
+            console.log(error);
+        }
+    };
+    useEffect(() => {
+        if ( textDebounce === "") {
+            setResultListNovelsSearch([]);
+        } else if (isDropdown && textDebounce) {
+            eventSearchNovels(textDebounce);
+        }
+
+        // setLoadingSearch(false);
+    }, [textDebounce]);
+    const eventDeleteValueInputSearch = () => {
+        setValueInputSearch("");
+        setResultListNovelsSearch([]);
+        setIsLoadingSearch(false);
+    };
+    // ----
+
+    console.log(optionSearchNovel)
 
     return (
         <>
@@ -77,41 +187,175 @@ const AdminBannersPage = ({ banners } : AdminBannersPageProps) => {
             </Head>
             <main>
                 <div>
-                    <label htmlFor="inputUploadBanners" className="w-40 h-24 block object-cover border rounded-md overflow-hidden">
-                        {
-                            urlNewImage ? (
-                                <Image
-                                    width={180}
-                                    height={180}
-                                    src={urlNewImage}
-                                    alt="image new banners"
-                                    className="w-40 h-24 block object-cover"
-                                />
-                            ) : (
-                                <span>+</span>
-                            )
-                        }
-                    </label>
-                    <input id="inputUploadBanners" className="hidden" onChange={eventOnChangeBanners} type="file"/>
-                    <button className="py-1 px-2 border bg-blue-600 flex items-center" onClick={handleUploadBanners}>
-                        {isLoadingButton && <LoadingButton />} Upload
-                    </button>
-                    <div className="mt-5 flex gap-2 flex-nowrap">
-                        {
-                            banners && banners.map((itemBanner) => {
-                                return (
-                                    <div key={itemBanner.bannersId} className="w-40 h-24 block border rounded-md overflow-hidden">
-                                        <Image
-                                            width={180}
-                                            height={180}
-                                            src={itemBanner.bannersUrl}
-                                            alt={itemBanner.novelId}
-                                            className="w-40 h-24 block object-cover"
-                                        />
+                    <div className="">
+                        <div className="mr-8 mb-7 max-w-2xl w-full">
+                            <h3 className="mb-2">Tìm kiếm truyện</h3>
+                            <div className="relative">
+                                <div className="flex w-full mt-8">
+                                    <Select
+                                        name="color"
+                                        className="border-blue-600 outline-blue-600 shadow-none w-[160px] h-10 text-sm cursor-pointer"
+                                        classNamePrefix="title"
+                                        defaultValue={dataConditionSearchNovel[0]}
+                                        options={dataConditionSearchNovel}
+                                        isSearchable={false}
+                                        styles={{
+                                            control: (provided, state) => ({
+                                                ...provided,
+                                                outline: "none",
+                                                boxShadow: "none",
+                                                borderRadius: "0px",
+                                                height: "40px",
+                                            }),
+                                        }}
+                                        onChange={(select : any) => setOptionSearchNovel(select?.value)}
+                                    />
+
+                                    <input
+                                        type="text"
+                                        className="group relative border border-gray-300 flex-1 w-full h-10 px-4 focus:border-blue-500 focus:outline-none"
+                                        value={valueInputSearch}
+                                        onFocus={() => setIsDropdown(true)}
+                                        // onBlur={() => setIsDropdown(false)}
+                                        onChange={(e: any) =>{
+                                            setValueInputSearch(e.target.value);
+                                            setResultListNovelsSearch([]);
+                                        }}
+                                    />
+                                    <span className="absolute transition-all w-10 h-10 flex items-center justify-center right-0">
+                                        {valueInputSearch !== "" &&
+                                            (!isLoadingSearch ? (
+                                                <button
+                                                    onClick={eventDeleteValueInputSearch}
+                                                    className=""
+                                                >
+                                                    <i className="w-3 fill-gray-600 block">
+                                                        {iconClose}
+                                                    </i>
+                                                </button>
+                                            ) : (
+                                                <LoadingSearch />
+                                            ))}
+                                    </span>
+                                </div>
+                                {valueInputSearch && (
+                                    <div
+                                        style={{ display: `${isDropdown ? "block" : "none"}` }}
+                                        className="absolute transition-all top-12 z-10 min-h-[50px] w-full border rounded-md bg-white shadow-md px-2 py-2"
+                                    >
+                                        {resultListNovelsSearch.length > 0 ? (
+                                            <div>
+                                                {resultListNovelsSearch.map((novel) => {
+                                                    return (
+                                                        <div
+                                                            onClick={() => {
+                                                                // console.log(novel.title)
+                                                                setValueInputSearch(
+                                                                    novel.title
+                                                                );
+                                                                setIsDropdown(false)
+                                                                setIsLoadingSearch(false);
+                                                            }}
+                                                            key={novel.novelId}
+                                                            className="transition-all flex cursor-pointer hover:bg-gray-100 p-3"
+                                                        >
+                                                            <div className="relative w-10 h-16 overflow-hidden shadow">
+                                                                <BlurImage
+                                                                    width={85}
+                                                                    height={125}
+                                                                    alt="image-demo"
+                                                                    blurDataURL={
+                                                                        novel.imageBlurHash ??
+                                                                        placeholderBlurhash
+                                                                    }
+                                                                    className="group-hover:scale-105 group-hover:duration-500 object-cover h-full w-full"
+                                                                    placeholder="blur"
+                                                                    src={
+                                                                        novel.thumbnailUrl ||
+                                                                        "/images/novel-default.png"
+                                                                    }
+                                                                />
+                                                            </div>
+                                                            <div className="ml-3">
+                                                                <h3 className="uppercase font-semibold">{novel.title}</h3>
+                                                                <span>{JSON.stringify(novel.novelId)}</span>
+                                                            </div>
+                                                        </div>
+                                                    );
+                                                })}
+                                            </div>
+                                        ) : (
+                                            valueInputSearch && <div>Không tìm thấy kết quả!</div>
+                                        )}
                                     </div>
-                                )
-                            })
-                        }
+                                )}
+                            </div>
+                        </div>
+
+                        <div className="">
+                            <label
+                                htmlFor="inputUploadBanners"
+                                className="relative w-64 h-28 flex justify-center items-center cursor-pointer mb-3 border-dashed border-2 rounded-md shadow overflow-hidden"
+                            >
+                                {urlNewImage ? (
+                                    <Image
+                                        width={400}
+                                        height={200}
+                                        src={urlNewImage}
+                                        alt="image new banners"
+                                        className="object-cover h-full w-full"
+                                    />
+                                ) : (
+                                    <span>+</span>
+                                )}
+                            </label>
+                            <input
+                                id="inputUploadBanners"
+                                className="hidden"
+                                onChange={eventOnChangeBanners}
+                                type="file"
+                            />
+
+                            <button
+                                className="py-1 px-2 border rounded-md text-white bg-blue-500 flex items-center"
+                                onClick={handleUploadBanners}
+                            >
+                                {isLoadingButton && <LoadingButton />} Upload
+                            </button>
+                        </div>
+                    </div>
+
+                    <div className="mt-5 grid grid-cols-2 gap-6">
+                        {banners &&
+                            listBanners.map((itemBanner) => {
+                                return (
+                                    <div key={itemBanner.bannersId} className="border-b pb-3">
+                                        <div
+                                            key={itemBanner.bannersId}
+                                            className="relative w-68 h-28 block border rounded-md shadow overflow-hidden"
+                                        >
+                                            <BlurImage
+                                                width={400}
+                                                height={200}
+                                                alt="image-demo"
+                                                blurDataURL={
+                                                    itemBanner.imageBlurHash ??
+                                                    placeholderBlurhash
+                                                }
+                                                className="group-hover:scale-105 group-hover:duration-500 object-cover h-full w-full"
+                                                placeholder="blur"
+                                                src={
+                                                    itemBanner.bannersUrl ||
+                                                    "/images/novel-default.png"
+                                                }
+                                            />
+                                        </div>
+                                        <h3 className="text-gray-900 text-base text-center font-semibold mt-1">
+                                            {itemBanner.title}
+                                        </h3>
+                                    </div>
+                                );
+                            })}
                     </div>
                 </div>
             </main>
@@ -125,7 +369,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
     try {
         const bannersResponse = await getMultipleBannersHandle();
 
-        if (bannersResponse) {
+        if (bannersResponse?.data.success) {
             return {
                 props: {
                     banners: JSON.parse(JSON.stringify(bannersResponse.data?.banners)),
@@ -139,7 +383,5 @@ export const getServerSideProps: GetServerSideProps = async () => {
 };
 
 AdminBannersPage.getLayout = (page: ReactNode) => {
-    return (
-        <AdminLayout>{page}</AdminLayout>
-    );
+    return <AdminLayout>{page}</AdminLayout>;
 };

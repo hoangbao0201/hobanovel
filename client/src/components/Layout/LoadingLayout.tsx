@@ -1,14 +1,16 @@
-import styled from "styled-components"
+import styled from "styled-components";
 
 interface LoadingProps {
-    w?: string
-    h?: string
-    theme?: string
-    className?: string
+    w?: string;
+    h?: string;
+    theme?: string;
+    className?: string;
 }
 
 const LoadingFormStyle = styled.span`
-    &, &:before, &:after {
+    &,
+    &:before,
+    &:after {
         border-radius: 50%;
         width: 12px;
         height: 12px;
@@ -25,7 +27,7 @@ const LoadingFormStyle = styled.span`
     }
     &:before,
     &:after {
-        content: '';
+        content: "";
         position: absolute;
         top: 0;
     }
@@ -38,18 +40,25 @@ const LoadingFormStyle = styled.span`
     }
 
     @keyframes bblFadInOut {
-        0%, 80%, 100% { box-shadow: 0 2.5em 0 -1.3em }
-        40% { box-shadow: 0 2.5em 0 0 }
+        0%,
+        80%,
+        100% {
+            box-shadow: 0 2.5em 0 -1.3em;
+        }
+        40% {
+            box-shadow: 0 2.5em 0 0;
+        }
     }
-` 
-export const LoadingForm = ({ theme } : LoadingProps) => {
-
+`;
+export const LoadingForm = ({ theme }: LoadingProps) => {
     return (
         <div className="flex pt-2 pb-6">
-            <LoadingFormStyle className={`mx-auto ${theme === 'dark' ? "" : ""}`}></LoadingFormStyle>
+            <LoadingFormStyle
+                className={`mx-auto ${theme === "dark" ? "" : ""}`}
+            ></LoadingFormStyle>
         </div>
-    )
-}
+    );
+};
 
 const LoadingButtonStyle = styled.span`
     & {
@@ -57,7 +66,7 @@ const LoadingButtonStyle = styled.span`
         height: 12px;
         border-radius: 50%;
         display: inline-block;
-        border-top: 2px solid #FFF;
+        border-top: 2px solid #fff;
         border-right: 2px solid transparent;
         box-sizing: border-box;
         animation: rotation 1s linear infinite;
@@ -70,11 +79,43 @@ const LoadingButtonStyle = styled.span`
         100% {
             transform: rotate(360deg);
         }
-    } 
-`
-export const LoadingButton = ({ theme, className } : LoadingProps) => {
-
+    }
+`;
+export const LoadingButton = ({ theme, className }: LoadingProps) => {
     return (
-        <LoadingButtonStyle className={`mr-2 ${theme === 'dark' ? "" : ""} ${className}`}></LoadingButtonStyle>
-    )
-}
+        <LoadingButtonStyle
+            className={`mr-2 ${theme === "dark" ? "" : ""} ${className}`}
+        ></LoadingButtonStyle>
+    );
+};
+
+const LoadingSearchStyle = styled.span`
+    & {
+        width: 20px;
+        height: 20px;
+        display: inline-block;
+        position: relative;
+        background: #ccc;
+        box-sizing: border-box;
+        animation: flipX 1s linear infinite;
+    }
+
+    @keyframes flipX {
+        0% {
+            transform: perspective(200px) rotateX(0deg) rotateY(0deg);
+        }
+        50% {
+            transform: perspective(200px) rotateX(-180deg) rotateY(0deg);
+        }
+        100% {
+            transform: perspective(200px) rotateX(-180deg) rotateY(-180deg);
+        }
+    }
+`;
+export const LoadingSearch = ({ theme, className }: LoadingProps) => {
+    return (
+        <LoadingSearchStyle
+            className={`${theme === "dark" ? "" : ""} ${className}`}
+        ></LoadingSearchStyle>
+    );
+};

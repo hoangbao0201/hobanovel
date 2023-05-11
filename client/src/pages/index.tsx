@@ -5,16 +5,10 @@ import { GetServerSideProps, GetStaticProps, NextPage } from "next";
 import { REVALIDATE_TIME } from "@/constants";
 import MainLayout from "@/components/Layout/MainLayout";
 import { getNovelsByPageHandle } from "@/services/novels.services";
-import Outstanding from "@/components/Share/Outstanding";
 import { NovelType, ReviewType } from "@/types";
-import JustUpdated from "@/components/Share/JustUpdated";
-import Reading from "@/components/Share/Reading";
-import HighlyRated from "@/components/Share/HighlyRated";
-import LatestReviews from "@/components/Share/LatestReviews";
-import JustCompleted from "@/components/Share/JustCompleted";
-import JustPosted from "@/components/Share/JustPosted";
-import { getReviewsByLatestHandle, getReviewsByNovelHandle } from "@/services/review.services";
+import { getReviewsByNovelHandle } from "@/services/review.services";
 import WrapperLayout from "@/components/Layout/WrapperLayout";
+import dynamic from "next/dynamic";
 
 
 export interface PageHomeProps {
@@ -25,6 +19,45 @@ export interface PageHomeProps {
     novelsLatestReviews?: ReviewType[]
     novelsJustCompleted?: NovelType[]
 }
+
+
+const Outstanding = dynamic(
+    () => import("@/components/Share/Outstanding", {
+        ssr: false,
+    } as ImportCallOptions)
+)
+const JustUpdated = dynamic(
+    () => import("@/components/Share/JustUpdated", {
+        ssr: false,
+    } as ImportCallOptions)
+)
+
+const Reading = dynamic(
+    () => import("@/components/Share/Reading", {
+        ssr: false,
+    } as ImportCallOptions)
+)
+const HighlyRated = dynamic(
+    () => import("@/components/Share/HighlyRated", {
+        ssr: false,
+    } as ImportCallOptions)
+)
+const LatestReviews = dynamic(
+    () => import("@/components/Share/LatestReviews", {
+        ssr: false,
+    } as ImportCallOptions)
+)
+const JustPosted = dynamic(
+    () => import("@/components/Share/JustPosted", {
+        ssr: false,
+    } as ImportCallOptions)
+)
+const JustCompleted = dynamic(
+    () => import("@/components/Share/JustCompleted", {
+        ssr: false,
+    } as ImportCallOptions)
+)
+
 
 const HomePage = ({ novelsOutstending, novelsJustUpdated, novelsReading, novelsHighlyRated, novelsLatestReviews, novelsJustCompleted } : PageHomeProps ) => {
 
@@ -46,7 +79,7 @@ const HomePage = ({ novelsOutstending, novelsJustUpdated, novelsReading, novelsH
             </Head>
             <main>
 
-                <WrapperLayout>
+                <WrapperLayout className="min-h-screen">
                     <div className="flex flex-col lg:flex-row">
                         <div className="lg:w-8/12">
                             <Outstanding novels={novelsOutstending}/>

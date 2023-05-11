@@ -7,6 +7,7 @@ import { NovelType } from "../types";
 import { convertTextToSlug } from "../utils/convertTextToSlug";
 import { uploadThumbnailNovelByUrlHandle } from "./image.services";
 import { getBlurDataURL } from "../utils/getBlurDataURL";
+import { NovelSearchConditions } from "../middleware/conditionsQuery";
 
 export const createNovelByDataHandle = async (data : NovelType, userId : string) => {
     try {
@@ -230,15 +231,7 @@ export const updateAllBlurImageNovelHandle = async () => {
             const hashUrl = await getBlurDataURL(novel.thumbnailUrl) || "";
             if(!hashUrl) {
                 continue;
-                // return {
-                //     success: true,
-                //     data: hashUrl
-                // }
             }
-            // return {
-            //     success: true,
-            //     data: hashUrl
-            // }
             await updateBlurImageNovelHandle({ novelId: novel.novelId, imageBlurHash: hashUrl } as NovelType);
         }
 
@@ -247,6 +240,36 @@ export const updateAllBlurImageNovelHandle = async () => {
             data: "123"
         }
 
+    } catch (error) {
+        return {
+            success: false,
+            error: error
+        }
+    }
+};
+
+export const getNovelsByDataHanle = async (data : NovelType & { page: number }) => {
+    try {
+        const { conditions, params } = NovelSearchConditions(data);
+
+        const connection = await pool.getConnection();
+
+        const qGetNovel = `
+            SELECT novelId, title, slug, thumbnailUrl, imageBlurHash FROM novels
+            ${conditions.length>0 ? ( "WHERE " + conditions) : ''}
+            ORDER BY createdAt ASC
+            LIMIT 5 OFFSET ?;
+        `;
+
+        const [rows] = await connection.query(qGetNovel, [...params, (Number(data.page) - 1) * 5]);
+
+        connection.release();
+
+        return {
+            success: true,
+            data: rows as NovelType[],
+            // data: qGetNovel
+        }
     } catch (error) {
         return {
             success: false,

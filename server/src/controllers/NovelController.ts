@@ -9,6 +9,7 @@ import {
     getNovelsByUserIdHandle,
     updateBlurImageNovelHandle,
     updateAllBlurImageNovelHandle,
+    getNovelsByDataHanle,
 } from "../services/novel.services";
 import { NovelType } from "../types";
 
@@ -341,6 +342,43 @@ export const updateAllBlurImageNovel = async (_req: Request, res: Response) => {
             success: true,
             message: "Update all blur image successful",
             novel: novelResponse.data
+        })
+        
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: `Internal server error ${error}`,
+        });
+    }
+}
+
+//Get novels /api/novels/get/:novelId?
+export const getNovelsByData = async (req: Request, res: Response) => {
+    try {
+
+        const { novelId = '' } = req.params;
+        const { page = 1, title = '', userId = '' } = req.query
+
+        const dataNovel = {
+            novelId: novelId,
+            title: title,
+            userId: userId,
+            page: Number(page) ?? 1
+        }
+        const novelsRes : any = await getNovelsByDataHanle(dataNovel as NovelType & { page: number })
+        if(!novelsRes.success) {
+            return res.status(400).json({
+                success: false,
+                message: "Get novels Error",
+                error: novelsRes.error,
+            })
+        }
+        
+        return res.json({
+            success: true,
+            message: "Get novels successful",
+            novels: novelsRes.data,
+            // dataNovel
         })
         
     } catch (error) {

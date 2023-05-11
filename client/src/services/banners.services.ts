@@ -20,7 +20,7 @@ export const addBannersHandle = async (data : BannersType & { token: string, for
         
         return null;
     } catch (error) {
-        return null;
+        return error;
     }
 }
 export const getSingleBannersHandle = async () => {
@@ -33,7 +33,7 @@ export const getSingleBannersHandle = async () => {
         
         return null;
     } catch (error) {
-        return null;
+        return error;
     }
 }
 export const getMultipleBannersHandle = async () => {

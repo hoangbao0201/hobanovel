@@ -1,4 +1,4 @@
-import { CommentType, ReviewType } from "../types";
+import { CommentType, NovelType, ReviewType } from "../types";
 
 export const CommentSearchConditions = (data : Partial<CommentType>) => {
     const { novelId = '', chapterId = '', commentId = '', userId = '', receiverId = '', commentText = '' } = data
@@ -70,6 +70,36 @@ export const ReviewSearchConditions = (data : Partial<ReviewType>) => {
         values.push("commentText")
         conditions.push('reviews.commentText = ?');
         params.push(String(commentText));
+    }
+
+    const conbinedConditions = conditions.length > 0 ? conditions.join(" AND ") : conditions
+    const conbinedValues = values.length > 0 ? values.join(',') : values
+
+    return { conditions: conbinedConditions, params, values: conbinedValues }
+}
+
+export const NovelSearchConditions = (data : Partial<NovelType>) => {
+    const { novelId = '', userId = '', title = '' } = data
+
+    const values : string[] = []
+    const conditions : string[] = []
+    const params : Array<string | number> = []
+
+    if (userId !== '') {
+        values.push("userId")
+        conditions.push('novels.userId = ?');
+        params.push(String(userId));
+    }
+    if (novelId !== '') {
+        values.push("novelId")
+        conditions.push('novels.novelId = ?');
+        params.push(String(novelId));
+    }
+
+    if (title !== '') {
+        values.push("title")
+        conditions.push('novels.title LIKE ?');
+        params.push(String(`%${title}%`).trim());
     }
 
     const conbinedConditions = conditions.length > 0 ? conditions.join(" AND ") : conditions

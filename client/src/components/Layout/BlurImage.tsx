@@ -23,6 +23,7 @@ const BlurImage = (props : BlurImage) => {
                 ? "grayscale blur-2xl scale-105"
                 : "grayscale-0 blur-0 scale-100"
             )}
+            loading="lazy"
             onLoadingComplete={() => setLoading(false)}
         />
     )
