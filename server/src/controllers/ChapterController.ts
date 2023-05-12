@@ -14,25 +14,27 @@ export const createChapterByUrl = async (req: Request, res: Response) => {
         }
 
         const getDataChapter : any | null = await getDataChapterByUrlMTCHandle({ novelSlug: slug, chapterNumber: Number(chapterNumber)} as ChapterType);
-        if(!getDataChapter) {
+        if(!getDataChapter.success) {
             return res.status(400).json({
                 success: false,
-                message: "Value invalid"
+                error: getDataChapter.error
             })
         }
 
-        const createChapter : ChapterType = await createChapterByDataHandle({ novelName: res.locals.novel.title, novelId: res.locals.novel.novelId, ...getDataChapter })
-        if(!createChapter) {
+        // // createChapterByDataHandle({ novelName: res.locals.novel.title, novelId: res.locals.novel.novelId, ...getDataChapter });
+        const createChapterResponse = await createChapterByDataHandle({ novelSlug: slug, novelName: res.locals.novel.title, novelId: res.locals.novel.novelId, ...getDataChapter.data });
+        if(!createChapterResponse.success) {
             return res.status(400).json({
                 success: false,
-                message: "Create chapter error"
+                message: "Create chapter error",
+                error: createChapterResponse.error
             })
         }
 
         return res.json({
             success: true,
             message: "Create novel successful",
-            getDataChapter
+            data: { novelName: res.locals.novel.title, novelId: res.locals.novel.novelId, ...getDataChapter }
         })
     } catch (error) {
         return res.status(500).json({

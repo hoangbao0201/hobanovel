@@ -165,7 +165,7 @@ const Header = () => {
                                                     className="group-hover:scale-105 group-hover:duration-500 object-cover w-9 h-9"
                                                     placeholder="blur"
                                                     src={
-                                                        currentUser.thumbnailUrl ||
+                                                        currentUser.avatarUrl ||
                                                         "/images/avatar-default-2.png"
                                                     }
                                                 />

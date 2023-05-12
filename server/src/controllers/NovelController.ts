@@ -109,9 +109,11 @@ export const createNovelByUrl = async (req: Request, res: Response) => {
         return res.json({
             success: true,
             message: "Create novel successful",
+            // dataNovel
             novel: {
                 novelId: createNovel.insertId,
                 slug: dataNovel.slug,
+                chapterNumber: dataNovel.chapterNumber,
                 thumbnailUrl: dataNovel.thumbnailUrl
             },
         });

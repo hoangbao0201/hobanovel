@@ -57,6 +57,7 @@ export const getMultipleBannerHandle = async () => {
             SELECT banners.*, novels.title FROM banners
             INNER JOIN novels ON novels.novelId = banners.bannersId
             ORDER BY createdAt DESC
+            LIMIT 6
         `;
 
         const [rows] = await connection.query(qGetBanners);

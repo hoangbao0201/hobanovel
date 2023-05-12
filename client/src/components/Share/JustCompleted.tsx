@@ -25,7 +25,7 @@ const JustCompleted = ({ novels = [] } : JustCompletedProps) => {
                                             width={80}
                                             height={120}
                                             alt="image-demo"
-                                            blurDataURL={novel.imageBlurHash ?? placeholderBlurhash}
+                                            blurDataURL={novel.imageBlurHash || placeholderBlurhash}
                                             className="group-hover:scale-105 group-hover:duration-500 object-cover w-20 h-28"
                                             placeholder="blur"
                                             src={novel.thumbnailUrl}

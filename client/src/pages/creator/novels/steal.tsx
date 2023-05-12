@@ -27,6 +27,7 @@ const StealNovelPage = ({ children } : StealNovelPageProps) => {
     const [progress, setProgress] = useState<number>(0);
     const [isProgress, setIsProgress] = useState<boolean>(false);
     const [dataMessageProgress, setDataMessageProgress] = useState<Message[]>([])
+    const [numberGetChapters, setNumberGetChapters] = useState<number | null>(null);
 
     // Value Form
     const eventOnChangeInputUrl = (e: any) => {
@@ -51,9 +52,8 @@ const StealNovelPage = ({ children } : StealNovelPageProps) => {
             }
 
             const novelResponse = await createNovelByUrlHandle(urlInput as string, token as string);
+            console.log(novelResponse)
             if(novelResponse?.data.success) {
-
-                // console.log(novelResponse.data.novel.thumbnailUrl)
 
                 // Upload Blur Image
                 const dataUpdateBlurImageHandle : Pick<NovelType, 'novelId' | 'imageBlurHash'> & { token: string } = {
@@ -61,7 +61,7 @@ const StealNovelPage = ({ children } : StealNovelPageProps) => {
                     novelId: novelResponse.data.novel.novelId,
                     imageBlurHash: (await getBlurDataURL(novelResponse.data.novel.thumbnailUrl)) || ""
                 }
-                updateBlurImageNovelHandle(dataUpdateBlurImageHandle)
+                updateBlurImageNovelHandle(dataUpdateBlurImageHandle);
 
                 // SET STATE START RUN
                 setIsProgress(true)
@@ -70,15 +70,15 @@ const StealNovelPage = ({ children } : StealNovelPageProps) => {
                 setDataMessageProgress(value => [...value, { id: 2, message: "Upload Thumbnail Novel - Thành công" }])
                 setProgress(1)
 
-                for (let i = 1; i <= 10; i++) {
-                    // console.log(`${novelResponse?.data.novel.slug}/${i}`);
-                    // console.log(novelResponse?.data);
+                const numberChapter = novelResponse.data.novel.chapterNumber
+                const stepProgress = 100 / numberChapter;
+                for (let i = 1; i <= numberChapter; i++) {
                     const chapterResponse = await createChapterByUrlHandle(`${novelResponse?.data.novel.slug}/${i}` as string, token as string);
 
                     // SET DEFAULT STATE
                     if(chapterResponse?.data.success) {
                         setDataMessageProgress(value => [ ...value, { id: i+2, message: `Upload Chương ${i} - Thành công` } ])
-                        setProgress(value => value + 1)
+                        setProgress(value => value + stepProgress)
                     }
                     else {
                         setIsProgress(false);

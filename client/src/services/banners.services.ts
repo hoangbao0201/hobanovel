@@ -1,7 +1,7 @@
 import axios from "axios"; 
 import { BannersType } from "@/types";
 
-export const addBannersHandle = async (data : BannersType & { token: string, formData: FormData }) => {
+export const addBannersHandle = async (data : Partial<Pick<BannersType, 'novelId'>> & { token: string, formData: FormData }) => {
     try {
         const { novelId, token, formData } = data;
         if(!token) {

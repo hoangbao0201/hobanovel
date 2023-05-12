@@ -27,7 +27,7 @@ const Outstanding = ({ novels = [] } : OutstandingProps) => {
                                             width={85}
                                             height={125}
                                             alt="image-demo"
-                                            blurDataURL={novel.imageBlurHash ?? placeholderBlurhash}
+                                            blurDataURL={novel.imageBlurHash || placeholderBlurhash}
                                             className="group-hover:scale-105 group-hover:duration-500 object-cover h-full w-full"
                                             placeholder="blur"
                                             src={novel.thumbnailUrl || "/images/novel-default.png"}

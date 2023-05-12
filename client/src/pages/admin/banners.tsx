@@ -1,6 +1,6 @@
 import Head from "next/head";
 import Image from "next/image";
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
 import AdminLayout from "@/components/Layout/AdminLayout";
 import { addBannersHandle, getMultipleBannersHandle } from "@/services/banners.services";
 import { getAccessToken } from "@/services/cookies.servies";
@@ -12,9 +12,10 @@ import { placeholderBlurhash } from "@/constants";
 import { useDebounce } from "@/hook/useDebounce";
 import { getNovelsByDataHandle } from "@/services/novels.services";
 import { iconClose } from "../../../public/icons";
-
 import Select from "react-select";
+
 import styled from "styled-components";
+import Tippy from "@tippyjs/react";
 
 type BannersCreateType = Pick<
     BannersType,
@@ -28,21 +29,14 @@ type BannersCreateType = Pick<
     | "title"
 >;
 
-const Checkbox = ({ children, ...props }: JSX.IntrinsicElements["input"]) => (
-    <label style={{ marginRight: "1em" }}>
-        <input type="checkbox" {...props} />
-        {children}
-    </label>
-);
-
 interface AdminBannersPageProps {
     banners: BannersCreateType[];
 }
 
 const dataConditionSearchNovel = [
-    { label: "TÊN TRUYỆN", value: "title" },
-    { label: "ID TRUYỆN", value: "novelId" },
-    { label: "ID TÁC GIẢ", value: "userId" },
+    { label: "TÊN TRUYỆN", text: "tên truyện", value: "title" },
+    { label: "ID TRUYỆN", text: "id truyện",  value: "novelId" },
+    { label: "ID TÁC GIẢ", text: "id tác giả", value: "userId" },
 ];
 
 const AdminBannersPage = ({ banners }: AdminBannersPageProps) => {
@@ -52,11 +46,16 @@ const AdminBannersPage = ({ banners }: AdminBannersPageProps) => {
     const [isLoadingButton, setIsLoadingButton] = useState(false);
     const [urlNewImage, setUrlNewImage] = useState<null | string>(null);
 
-    const [optionSearchNovel, setOptionSearchNovel] = useState<string>("title");
-    const [valueInputSearch, setValueInputSearch] = useState("");
-    const [resultListNovelsSearch, setResultListNovelsSearch] = useState<NovelType[]>([]);
+    const [optionSearchNovel, setOptionSearchNovel] = useState<{
+        value: string;
+        text: string
+        label: string;
+    }>({ label: "TÊN TRUYỆN", text: "tên truyện", value: "title" });
+    const [valueInputSearch, setValueInputSearch] = useState<string>("");
+    const [idNovelSelect, setIdNovelSelect] = useState<string | null>(null)
+    const [resultListNovelsSearch, setResultListNovelsSearch] = useState<NovelType[] | null>(null);
     const [isLoadingSearch, setIsLoadingSearch] = useState(false);
-    const [isDropdown, setIsDropdown] = useState(true);
+    const [isDropdown, setIsDropdown] = useState<boolean>(false);
 
     const textDebounce = useDebounce(valueInputSearch, 500);
 
@@ -70,7 +69,7 @@ const AdminBannersPage = ({ banners }: AdminBannersPageProps) => {
 
     const handleUploadBanners = async () => {
         const token = getAccessToken();
-        if (!dataImage || !token) {
+        if (!dataImage || !token || !valueInputSearch || !idNovelSelect) {
             console.log("Data not found");
             return;
         }
@@ -82,50 +81,31 @@ const AdminBannersPage = ({ banners }: AdminBannersPageProps) => {
 
         try {
             const dataBanners = {
-                novelId: String(1),
+                novelId: idNovelSelect,
                 token,
                 formData,
             };
             const uploadBanners: any = await addBannersHandle(
-                dataBanners as BannersType & { token: string; formData: FormData }
+                dataBanners as Pick<BannersType, 'novelId'> & { token: string; formData: FormData }
             );
             console.log(uploadBanners);
 
             if (uploadBanners?.data?.success) {
-                // banners.unshift({
-                //     novelId: uploadBanners.banners.bannersId,
-                //     bannersId: uploadBanners.banners.bannersId,
-                //     bannersUrl: uploadBanners.banners.bannerUrl,
-                //     imageBlurHash: uploadBanners.banners.imageBlurHash,
-                //     bannersPublicId: uploadBanners.banners.bannersPublicId,
-                //     createdAt: new Date(),
-                //     updatedAt: new Date(),
-                // })
-                // setListBanners([
-                //     {
-                //         novelId: uploadBanners.banners.bannersId,
-                //         bannersId: uploadBanners.banners.bannersId,
-                //         bannersUrl: uploadBanners.banners.bannerUrl,
-                //         imageBlurHash: uploadBanners.banners.imageBlurHash,
-                //         bannersPublicId: uploadBanners.banners.bannersPublicId,
-                //         createdAt: new Date(),
-                //         updatedAt: new Date(),
-                //     },
-                //     ...listBanners,
-                // ]);
+                const banners  = uploadBanners;
+                setListBanners([
+                    {   
+                        title: valueInputSearch || "Lỗi hiển thị",
+                        novelId: idNovelSelect || "1",
+                        bannersId: banners.bannersId,
+                        bannersUrl: urlNewImage || "",
+                        imageBlurHash: banners.imageBlurHash,
+                        bannersPublicId: banners.bannersPublicId,
+                        createdAt: new Date(),
+                        updatedAt: new Date(),
+                    },
+                    ...listBanners,
+                ]) as any;
             }
-            // console.log([
-            //     {
-            //         novelId: uploadBanners.banners.bannersId,
-            //         bannersId: uploadBanners.banners.bannersId,
-            //         bannersUrl: uploadBanners.banners.bannerUrl,
-            //         imageBlurHash: uploadBanners.banners.imageBlurHash,
-            //         bannersPublicId: uploadBanners.banners.bannersPublicId,
-            //         createdAt: new Date(),
-            //         updatedAt: new Date(),
-            //     },
-            //     ...listBanners,
-            // ])
 
             // SET STATE DEFAULT
             setIsLoadingButton(false);
@@ -141,41 +121,65 @@ const AdminBannersPage = ({ banners }: AdminBannersPageProps) => {
     const eventSearchNovels = async (value: string) => {
         try {
             setIsLoadingSearch(true);
-            const dataNovel : Partial<NovelType> & { page: number } = {
-                [optionSearchNovel]: value,
+            const dataNovel: Partial<NovelType> & { page: number } = {
+                [optionSearchNovel.value]: value,
                 page: 1,
             };
             const novelsRes = await getNovelsByDataHandle(dataNovel as any);
-            
+
             if (novelsRes?.data?.success) {
                 setResultListNovelsSearch(novelsRes?.data.novels);
-                console.log(dataNovel)
-                // setIsDropdown(true);
             }
-
+            else {
+                setResultListNovelsSearch([])
+            }
             setIsLoadingSearch(false);
+            
         } catch (error) {
             setIsLoadingSearch(false);
+            setResultListNovelsSearch([])
             console.log(error);
         }
     };
     useEffect(() => {
-        if ( textDebounce === "") {
-            setResultListNovelsSearch([]);
+        if (textDebounce === "") {
+            setResultListNovelsSearch(null);
+            setIdNovelSelect(null);
         } else if (isDropdown && textDebounce) {
             eventSearchNovels(textDebounce);
+            setIsLoadingSearch(true);
+            setIdNovelSelect(null);
         }
 
-        // setLoadingSearch(false);
     }, [textDebounce]);
     const eventDeleteValueInputSearch = () => {
         setValueInputSearch("");
-        setResultListNovelsSearch([]);
+        setResultListNovelsSearch(null);
         setIsLoadingSearch(false);
+        setIdNovelSelect(null)
     };
     // ----
 
-    console.log(optionSearchNovel)
+
+    const dropdownRef = useRef<HTMLDivElement>(null);
+    const inputRef = useRef<HTMLInputElement>(null);
+
+    useEffect(() => {
+        const handleClickOutside = (event : any) => {
+        if (
+            dropdownRef.current && !dropdownRef.current?.contains(event.target) &&
+            inputRef.current && !inputRef.current?.contains(event.target)
+        ) {
+            setIsDropdown(false);
+          }
+        };
+    
+        document.addEventListener('mousedown', handleClickOutside);
+    
+        return () => {
+          document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
 
     return (
         <>
@@ -189,16 +193,14 @@ const AdminBannersPage = ({ banners }: AdminBannersPageProps) => {
                 <div>
                     <div className="">
                         <div className="mr-8 mb-7 max-w-2xl w-full">
-                            <h3 className="mb-2">Tìm kiếm truyện</h3>
+                            <h3 className="mb-2 ml-2 font-semibold">Tìm kiếm truyện</h3>
                             <div className="relative">
-                                <div className="flex w-full mt-8">
+                                <div className="flex w-full">
                                     <Select
-                                        name="color"
-                                        className="border-blue-600 outline-blue-600 shadow-none w-[160px] h-10 text-sm cursor-pointer"
-                                        classNamePrefix="title"
-                                        defaultValue={dataConditionSearchNovel[0]}
-                                        options={dataConditionSearchNovel}
                                         isSearchable={false}
+                                        defaultValue={dataConditionSearchNovel[0]}
+                                        className="h-10 max-w-[160px] w-full text-base"
+                                        options={dataConditionSearchNovel}
                                         styles={{
                                             control: (provided, state) => ({
                                                 ...provided,
@@ -208,88 +210,99 @@ const AdminBannersPage = ({ banners }: AdminBannersPageProps) => {
                                                 height: "40px",
                                             }),
                                         }}
-                                        onChange={(select : any) => setOptionSearchNovel(select?.value)}
-                                    />
-
-                                    <input
-                                        type="text"
-                                        className="group relative border border-gray-300 flex-1 w-full h-10 px-4 focus:border-blue-500 focus:outline-none"
-                                        value={valueInputSearch}
-                                        onFocus={() => setIsDropdown(true)}
-                                        // onBlur={() => setIsDropdown(false)}
-                                        onChange={(e: any) =>{
-                                            setValueInputSearch(e.target.value);
-                                            setResultListNovelsSearch([]);
+                                        onChange={(select: any) =>{
+                                            setOptionSearchNovel(select)
+                                            setValueInputSearch("")
                                         }}
                                     />
-                                    <span className="absolute transition-all w-10 h-10 flex items-center justify-center right-0">
-                                        {valueInputSearch !== "" &&
-                                            (!isLoadingSearch ? (
-                                                <button
-                                                    onClick={eventDeleteValueInputSearch}
-                                                    className=""
-                                                >
-                                                    <i className="w-3 fill-gray-600 block">
-                                                        {iconClose}
-                                                    </i>
-                                                </button>
-                                            ) : (
-                                                <LoadingSearch />
-                                            ))}
-                                    </span>
-                                </div>
-                                {valueInputSearch && (
-                                    <div
-                                        style={{ display: `${isDropdown ? "block" : "none"}` }}
-                                        className="absolute transition-all top-12 z-10 min-h-[50px] w-full border rounded-md bg-white shadow-md px-2 py-2"
-                                    >
-                                        {resultListNovelsSearch.length > 0 ? (
-                                            <div>
-                                                {resultListNovelsSearch.map((novel) => {
-                                                    return (
-                                                        <div
-                                                            onClick={() => {
-                                                                // console.log(novel.title)
-                                                                setValueInputSearch(
-                                                                    novel.title
-                                                                );
-                                                                setIsDropdown(false)
-                                                                setIsLoadingSearch(false);
-                                                            }}
-                                                            key={novel.novelId}
-                                                            className="transition-all flex cursor-pointer hover:bg-gray-100 p-3"
-                                                        >
-                                                            <div className="relative w-10 h-16 overflow-hidden shadow">
-                                                                <BlurImage
-                                                                    width={85}
-                                                                    height={125}
-                                                                    alt="image-demo"
-                                                                    blurDataURL={
-                                                                        novel.imageBlurHash ??
-                                                                        placeholderBlurhash
-                                                                    }
-                                                                    className="group-hover:scale-105 group-hover:duration-500 object-cover h-full w-full"
-                                                                    placeholder="blur"
-                                                                    src={
-                                                                        novel.thumbnailUrl ||
-                                                                        "/images/novel-default.png"
-                                                                    }
-                                                                />
-                                                            </div>
-                                                            <div className="ml-3">
-                                                                <h3 className="uppercase font-semibold">{novel.title}</h3>
-                                                                <span>{JSON.stringify(novel.novelId)}</span>
-                                                            </div>
-                                                        </div>
-                                                    );
-                                                })}
-                                            </div>
-                                        ) : (
-                                            valueInputSearch && <div>Không tìm thấy kết quả!</div>
-                                        )}
+
+                                    {/* INPUT SEARCH */}
+                                    <div className="flex-1">
+                                        <input
+                                            type="text"
+                                            ref={inputRef}
+                                            className="group relative border border-gray-300 flex-1 w-full h-10 px-4 focus:border-blue-500 focus:outline-none"
+                                            value={valueInputSearch}
+                                            placeholder={`Tìm kiếm theo ${optionSearchNovel.text}`}
+                                            onFocus={() => setIsDropdown(true)}
+                                            onChange={(e: any) =>{
+                                                setValueInputSearch(e.target.value);
+                                            }}
+                                        />
+                                        <span className="absolute transition-all w-10 h-10 flex items-center justify-center top-0 right-0">
+                                            {valueInputSearch !== "" &&
+                                                (!isLoadingSearch ? (
+                                                    <button
+                                                        onClick={() => {
+                                                            eventDeleteValueInputSearch();
+                                                            inputRef.current?.focus()
+                                                        }}
+                                                        className=""
+                                                    >
+                                                        <i className="w-3 fill-gray-600 block">
+                                                            {iconClose}
+                                                        </i>
+                                                    </button>
+                                                ) : (
+                                                    <LoadingSearch />
+                                                ))}
+                                        </span>
                                     </div>
-                                )}
+                                    {/* DROPDOWN LIST NOVELS */}
+                                    {
+                                        resultListNovelsSearch && textDebounce && isDropdown && (
+                                            <div
+                                                ref={dropdownRef}
+                                                className="absolute transition-all top-12 z-10 min-h-[50px] w-full border rounded-md bg-white shadow-md px-2 py-2"
+                                            >
+                                                {
+                                                    resultListNovelsSearch.length > 0 ? (
+                                                        <div>
+                                                            {resultListNovelsSearch.map((novel) => {
+                                                                return (
+                                                                    <div
+                                                                        onClick={() => {
+                                                                            setValueInputSearch(novel.title);
+                                                                            setIsDropdown(false)
+                                                                            setResultListNovelsSearch([novel])
+                                                                            setIdNovelSelect(novel.novelId)
+                                                                        }}
+                                                                        key={novel.novelId}
+                                                                        className="transition-all flex cursor-pointer hover:bg-gray-100 p-3"
+                                                                    >
+                                                                        <div className="relative w-10 h-16 overflow-hidden shadow">
+                                                                            <Image
+                                                                                width={85}
+                                                                                height={125}
+                                                                                alt="Image-novel"
+                                                                                className="object-cover h-full w-full"
+                                                                                src={
+                                                                                    novel.thumbnailUrl ||
+                                                                                    "/images/novel-default.png"
+                                                                                }
+                                                                            />
+                                                                        </div>
+                                                                        <div className="ml-3">
+                                                                            <h3 className="uppercase font-semibold">{novel.title}</h3>
+                                                                            <span>{JSON.stringify(novel.novelId)}</span>
+                                                                        </div>
+                                                                    </div>
+                                                                );
+                                                            })}
+                                                        </div>
+                                                    ) : (
+                                                        <div>Không tìm thấy truyện</div>
+                                                    )
+                                                }
+                                            </div>
+                                        )
+                                    }
+                                </div>
                             </div>
+                        </div>
+
+                        <div>
+                            {idNovelSelect ? "được" : "không được"}
                         </div>
 
                         <div className="">
@@ -331,7 +344,6 @@ const AdminBannersPage = ({ banners }: AdminBannersPageProps) => {
                                 return (
                                     <div key={itemBanner.bannersId} className="border-b pb-3">
                                         <div
-                                            key={itemBanner.bannersId}
                                             className="relative w-68 h-28 block border rounded-md shadow overflow-hidden"
                                         >
                                             <BlurImage
@@ -339,7 +351,7 @@ const AdminBannersPage = ({ banners }: AdminBannersPageProps) => {
                                                 height={200}
                                                 alt="image-demo"
                                                 blurDataURL={
-                                                    itemBanner.imageBlurHash ??
+                                                    itemBanner.imageBlurHash ||
                                                     placeholderBlurhash
                                                 }
                                                 className="group-hover:scale-105 group-hover:duration-500 object-cover h-full w-full"

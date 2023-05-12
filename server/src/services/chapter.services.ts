@@ -12,21 +12,34 @@ export const getDataChapterByUrlMTCHandle = async ({ novelSlug, chapterNumber } 
         const response = await axios.get(urlChapter);
         const $1 = cheerio.load(response.data);
 
-        let title = $1('div.nh-read__title').text()
+        const checkChapter : string = $1('.unlock-chapter__title').text()
+        if(checkChapter === "— Chương Bị Khoá —") {
+            return {
+                success: false,
+                error: "Chapter bị khóa"
+            }
+        }
+
+        const title = $1('div.nh-read__title').text()
         const titleIndex = title.indexOf(":")
         const convertTitle = title.slice(titleIndex+1).trim();
 
         const dataChapter = {
-            novelSlug: novelSlug,
             title: convertTitle,
             content: $1('div#article').html(),
             chapterNumber: Number(chapterNumber),
         }
 
-        return dataChapter
+        return {
+            success: true,
+            data: dataChapter
+        }
 
     } catch (error) {
-        return null
+        return {
+            success: false,
+            error: error
+        }
     }
 }
 
@@ -35,23 +48,29 @@ export const createChapterByDataHandle = async (data : ChapterType) => {
         const connection = await pool.getConnection();
 
         const {
-            novelSlug, novelName, title, content, chapterNumber, novelId
+            novelSlug, novelName, novelId, title, content, chapterNumber
         } = data
         
         const qCreateChapter = `
-            INSERT INTO chapters(novelSlug, novelName, title, content, chapterNumber, novelId)
+            INSERT INTO chapters(novelSlug, novelName, novelId, title, content, chapterNumber )
             VALUES (?)
         `;
 
-        const values = [ novelSlug, novelName, title, content, chapterNumber, novelId ]
+        const values = [ novelSlug, novelName, novelId, title, content, chapterNumber ]
 
         const [rows] = await connection.query(qCreateChapter, [values]);
 
         connection.release();
 
-        return rows
+        return {
+            success: true,
+            data: rows
+        }
     } catch (error) {
-        return error
+        return {
+            success: false,
+            error: error
+        }
     }
 };
 

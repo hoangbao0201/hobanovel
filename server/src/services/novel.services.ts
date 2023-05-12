@@ -19,11 +19,10 @@ export const createNovelByDataHandle = async (data : NovelType, userId : string)
         `;
 
         const {
-            title, description, author, category, personality, scene, classify, viewFrame
+            slug, title, description, author, category, personality, scene, classify, viewFrame
         } = data
          
-        const hashTitle = convertTextToSlug(title as string)
-        const values = [hashTitle, title, data?.thumbnailUrl || null, data?.thumbnailPublicId || null, description, author, category, personality, scene, classify, viewFrame, userId]
+        const values = [slug, title, data?.thumbnailUrl || null, data?.thumbnailPublicId || null, description, author, category, personality, scene, classify, viewFrame, userId]
 
         // return values
 
@@ -44,7 +43,8 @@ export const getDataNovelByUrlMTCHandle = async (url : string) => {
 
         const dataNovel = {
             title: $1('h1.h3.mr-2>a').text().trim(),
-            slug: convertTextToSlug($1('h1.h3.mr-2>a').text()),
+            // slug: convertTextToSlug($1('h1.h3.mr-2>a').text()),
+            slug: url.split("com/truyen/")[1],
             description: $1('div.content').html(),
             author: $1('ul.list-unstyled.mb-4>li').eq(0).find('a').text().trim(),
             category: $1('ul.list-unstyled.mb-4>li').eq(2).find('a').text().trim(),
@@ -52,6 +52,7 @@ export const getDataNovelByUrlMTCHandle = async (url : string) => {
             scene: $1('ul.list-unstyled.mb-4>li').eq(4).find('a').text().trim(),
             classify: $1('ul.list-unstyled.mb-4>li').eq(5).find('a').text().trim(),
             viewFrame: $1('ul.list-unstyled.mb-4>li').eq(6).find('a').text().trim(),
+            chapterNumber: $1('#nav-tab-chap .counter').text()
         }
 
         if(!dataNovel.title || !dataNovel.slug || !dataNovel.description || !dataNovel.author) {
