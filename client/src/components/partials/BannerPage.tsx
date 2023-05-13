@@ -7,12 +7,12 @@ import BlurImage from "../Layout/BlurImage";
 import { placeholderBlurhash } from "@/constants";
 // import { getSingleBannersHandle } from "@/services/banners.services";
 import { useEffect, useState } from "react";
+import Link from "next/link";
 
-interface BannerPageProps {
-    banners?: BannersType
-}
+type ResBannerProps = Pick<BannersType, 'bannersId' | 'bannersUrl' | 'imageBlurHash' | 'slug'>
 
-const getSingleBannersHandle = async (): Promise<{ success: boolean, message: string, banners: BannersType }> => {
+
+const getSingleBannersHandle = async (): Promise<{ success: boolean, message: string, banners: ResBannerProps }> => {
     const response = await fetch("http://localhost:4000/api/banners/get/single");
     const data = await response.json();
     return data;
@@ -20,7 +20,7 @@ const getSingleBannersHandle = async (): Promise<{ success: boolean, message: st
   
 
 const BannerPage = () => {
-    const { data, error } = useSWR<{ success: boolean, message: string, banners: BannersType }>(
+    const { data, error } = useSWR<{ success: boolean, message: string, banners: ResBannerProps }>(
         "http://localhost:4000/api/banners/get/single",
         getSingleBannersHandle
     );
@@ -30,21 +30,23 @@ const BannerPage = () => {
     return (
         <>
             <div className="w-full relative">
-                <div className="w-full h-[370px] overflow-hidden align-middle inline-block">
-                    {
-                        data && (
-                            <BlurImage
-                                width={3000}
-                                height={1000}
-                                alt="image-demo"
-                                blurDataURL={data?.banners?.imageBlurHash || placeholderBlurhash}
-                                className="group-hover:scale-105 group-hover:duration-500 object-cover w-full h-[370px]"
-                                placeholder="blur"
-                                src={data?.banners?.bannersUrl ?? "/images/banners-default.jpg"}
-                            />
-                        )
-                    }
-                </div>
+                    <div className="w-full h-[370px] overflow-hidden align-middle inline-block">
+                        {
+                            data && (
+                                <Link href={`/truyen/${data?.banners.slug}`}>
+                                    <BlurImage
+                                        width={3000}
+                                        height={1000}
+                                        alt="image-demo"
+                                        blurDataURL={data?.banners?.imageBlurHash || placeholderBlurhash}
+                                        className="group-hover:scale-105 group-hover:duration-500 object-cover w-full h-full"
+                                        placeholder="blur"
+                                        src={data?.banners?.bannersUrl ?? "/images/banners-default.jpg"}
+                                    />
+                                </Link>
+                            )
+                        }
+                    </div>
                 <div
                     style={{
                         background:

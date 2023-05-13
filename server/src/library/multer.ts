@@ -10,6 +10,7 @@ export const storage = multer({
             ext !== ".JPG" &&
             ext !== ".png" &&
             ext !== ".PNG"
+            
         ) {
             cb(new Error("File type is not supported"), false);
             return;

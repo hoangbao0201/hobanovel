@@ -31,7 +31,8 @@ export const getSingleBannerHandle = async () => {
         const connection = await pool.getConnection();
 
         const qGetBanners = `
-            SELECT * FROM banners
+            SELECT banners.bannersId, banners.bannersUrl, banners.imageBlurHash, novels.slug FROM banners
+                LEFT JOIN novels ON novels.novelId = banners.novelId
             ORDER BY RAND()
             LIMIT 1
         `;

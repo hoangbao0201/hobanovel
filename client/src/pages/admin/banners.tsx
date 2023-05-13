@@ -11,7 +11,7 @@ import BlurImage from "@/components/Layout/BlurImage";
 import { placeholderBlurhash } from "@/constants";
 import { useDebounce } from "@/hook/useDebounce";
 import { getNovelsByDataHandle } from "@/services/novels.services";
-import { iconClose } from "../../../public/icons";
+import { iconClose, iconPlus } from "../../../public/icons";
 import Select from "react-select";
 
 import styled from "styled-components";
@@ -199,7 +199,7 @@ const AdminBannersPage = ({ banners }: AdminBannersPageProps) => {
                                     <Select
                                         isSearchable={false}
                                         defaultValue={dataConditionSearchNovel[0]}
-                                        className="h-10 max-w-[160px] w-full text-base"
+                                        className="h-10 max-w-[150px] w-full text-sm"
                                         options={dataConditionSearchNovel}
                                         styles={{
                                             control: (provided, state) => ({
@@ -261,13 +261,13 @@ const AdminBannersPage = ({ banners }: AdminBannersPageProps) => {
                                                             {resultListNovelsSearch.map((novel) => {
                                                                 return (
                                                                     <div
+                                                                        key={novel.novelId}
                                                                         onClick={() => {
                                                                             setValueInputSearch(novel.title);
                                                                             setIsDropdown(false)
                                                                             setResultListNovelsSearch([novel])
                                                                             setIdNovelSelect(novel.novelId)
                                                                         }}
-                                                                        key={novel.novelId}
                                                                         className="transition-all flex cursor-pointer hover:bg-gray-100 p-3"
                                                                     >
                                                                         <div className="relative w-10 h-16 overflow-hidden shadow">
@@ -301,14 +301,10 @@ const AdminBannersPage = ({ banners }: AdminBannersPageProps) => {
                             </div>
                         </div>
 
-                        <div>
-                            {idNovelSelect ? "được" : "không được"}
-                        </div>
-
-                        <div className="">
+                        <div className="select-none">
                             <label
                                 htmlFor="inputUploadBanners"
-                                className="relative w-64 h-28 flex justify-center items-center cursor-pointer mb-3 border-dashed border-2 rounded-md shadow overflow-hidden"
+                                className={`${idNovelSelect !== null ? "group hover:bg-gray-200 hover:border-[#888] bg-gray-100 cursor-pointer" : "group bg-gray-200"} transition-all relative w-64 h-28 flex justify-center items-center mb-3 border-dashed border-2 rounded-md overflow-hidden`}
                             >
                                 {urlNewImage ? (
                                     <Image
@@ -319,15 +315,17 @@ const AdminBannersPage = ({ banners }: AdminBannersPageProps) => {
                                         className="object-cover h-full w-full"
                                     />
                                 ) : (
-                                    <span>+</span>
+                                    <span className={`${idNovelSelect !== null ? "group-hover:scale-125 fill-gray-500" : "fill-gray-400"} transition-all ease-linear  w-4`}>{iconPlus}</span>
                                 )}
                             </label>
-                            <input
-                                id="inputUploadBanners"
-                                className="hidden"
-                                onChange={eventOnChangeBanners}
-                                type="file"
-                            />
+                            {idNovelSelect !== null ? (
+                                <input
+                                    id="inputUploadBanners"
+                                    className="hidden"
+                                    onChange={eventOnChangeBanners}
+                                    type="file"
+                                />
+                            ) : null}
 
                             <button
                                 className="py-1 px-2 border rounded-md text-white bg-blue-500 flex items-center"
@@ -363,7 +361,7 @@ const AdminBannersPage = ({ banners }: AdminBannersPageProps) => {
                                             />
                                         </div>
                                         <h3 className="text-gray-900 text-base text-center font-semibold mt-1">
-                                            {itemBanner.title}
+                                            {itemBanner.title} - {itemBanner.bannersId}
                                         </h3>
                                     </div>
                                 );

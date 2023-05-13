@@ -4,7 +4,6 @@ import pool from "../library/connectMySQL";
 
 
 import { NovelType } from "../types";
-import { convertTextToSlug } from "../utils/convertTextToSlug";
 import { uploadThumbnailNovelByUrlHandle } from "./image.services";
 import { getBlurDataURL } from "../utils/getBlurDataURL";
 import { NovelSearchConditions } from "../middleware/conditionsQuery";

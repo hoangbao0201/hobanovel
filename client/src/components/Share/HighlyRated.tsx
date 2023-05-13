@@ -41,8 +41,8 @@ const HighlyRated = ({ novels = [] } : HighlyRatedProps) => {
                                         </div>
                                         <div className="line-clamp-2 text-sm mb-2 text-slate-900">{novel.description.replace(/<[^>]+>/g, '')}</div>
                                         <div className="text-base flex align-middle items-center justify-between">
-                                            <span className="max-w-[60%] text-base line-clamp-1 align-middle">{novel.author}</span>
-                                            <span className="px-2 text-xs text-orange-700 line-clamp-1 align-middle text-center border rounded border-orange-700">{novel.category}</span>
+                                            <span className="max-w-[55%] text-base line-clamp-1 align-middle">{novel.author}</span>
+                                            <span className="px-2 text-xs text-orange-700 line-clamp-1 align-middle text-center border border-orange-700">{novel.category}</span>
                                         </div>
                                     </div>
                                 </div>

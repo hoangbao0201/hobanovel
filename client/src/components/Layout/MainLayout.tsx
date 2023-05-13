@@ -9,6 +9,7 @@ import Header from "../partials/Header";
 import Footer from "../partials/Footer";
 import BannerPage from "../partials/BannerPage";
 import { connectUserHandle } from "@/services/auth.services";
+import Head from "next/head";
 
 interface MainLayoutProps {
     children: ReactNode
@@ -58,7 +59,16 @@ const MainLayout= ({ children, isHeader = true, isFooter = true, isBannerPage = 
 
     return (
         <>
-        
+            <Head>
+                <style>
+                    {`
+                        body {
+                            background-color: #ffff;
+                        }
+                    `}
+                </style>
+            </Head>
+
             { isHeader && <Header /> }
 
             { isBannerPage && <BannerPage /> }
