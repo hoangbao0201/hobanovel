@@ -188,6 +188,63 @@ export const getChaptersNovelBySlugHandle = async ({ slug } : NovelType) => {
     }
 };
 
+export const getNovelsByOutstandingHandle = async (page : number) => {
+    try {
+        const connection = await pool.getConnection();
+
+        const qGetNovel = `
+            SELECT N.novelId, N.slug, N.title, N.thumbnailUrl, N.imageBlurHash, LEFT(N.description, 150) as description, N.author, N.category, N.createdAt, SUM(chapterDetail.views) AS views FROM novels N
+                INNER JOIN chapters ON chapters.novelId = N.novelId
+                INNER JOIN chapterDetail ON chapterDetail.chapterId = chapters.chapterId
+            GROUP BY N.novelId, N.slug, N.title, N.thumbnailUrl, N.imageBlurHash, description, N.author, N.category, N.createdAt
+            ORDER BY views DESC
+            LIMIT 6 OFFSET ?
+        `;
+
+        const [rows] = await connection.query(qGetNovel, ((page-1)*6));
+
+        connection.release();
+
+        return {
+            success: true,
+            data: rows as NovelType[]
+        }
+    } catch (error) {
+        return {
+            success: false,
+            error: error
+        }
+    }
+};
+
+export const getNovelsByHighlyRatedHandle = async (page : number) => {
+    try {
+        const connection = await pool.getConnection();
+
+        const qGetNovel = `
+            SELECT N.novelId, N.slug, N.title, N.thumbnailUrl, N.imageBlurHash, LEFT(N.description, 150) as description, N.author, N.category, N.createdAt, FORMAT(AVG(reviews.mediumScore), 1) AS mediumScore FROM novels N
+                INNER JOIN reviews ON reviews.novelId = N.novelId
+            GROUP BY N.novelId, N.slug, N.title, N.thumbnailUrl, N.imageBlurHash, description, N.author, N.category, N.createdAt
+            ORDER BY mediumScore DESC
+            LIMIT 10 OFFSET ?
+        `;
+
+        const [rows] = await connection.query(qGetNovel, ((page-1)*6));
+
+        connection.release();
+
+        return {
+            success: true,
+            data: rows as NovelType[]
+        }
+    } catch (error) {
+        return {
+            success: false,
+            error: error
+        }
+    }
+};
+
 export const updateBlurImageNovelHandle = async ({ novelId, imageBlurHash } : NovelType) => {
     try {
         const connection = await pool.getConnection();
@@ -219,8 +276,8 @@ export const updateAllBlurImageNovelHandle = async () => {
 
         const qGetAllNovel = `
             SELECT novels.novelId, novels.thumbnailUrl FROM novels
-            WHERE novels.imageBlurHash IS NULL
         `;
+            // WHERE novels.imageBlurHash IS NULL
 
         const [rows] : any = await connection.query(qGetAllNovel);
 
@@ -268,7 +325,6 @@ export const getNovelsByDataHanle = async (data : NovelType & { page: number }) 
         return {
             success: true,
             data: rows as NovelType[],
-            // data: qGetNovel
         }
     } catch (error) {
         return {

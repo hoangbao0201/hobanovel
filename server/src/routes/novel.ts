@@ -12,10 +12,15 @@ import {
     getNovelsByUserId,
     getBannerNovel,
     getNovelsByData,
+    getNovelsByOutstanding,
+    getNovelsByHighlyRated,
 } from "../controllers/NovelController";
 
 router.post("/create/data", verifyToken, createNovelByData);
 router.post("/create/url", verifyToken, createNovelByUrl);
+
+router.get("/get/outstanding", getNovelsByOutstanding)
+router.get("/get/highlyrated", getNovelsByHighlyRated)
 
 router.get("/search-by-page/:page", getNovelsByPage);
 router.get("/search-by-title/:title", getNovelByTitle);

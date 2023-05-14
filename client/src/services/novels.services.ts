@@ -83,3 +83,37 @@ export const getNovelsByDataHandle = async (data: Pick<NovelType, "novelId" | "u
         return null;
     }
 };
+
+export const getNovelsByOutstandingHandle = async (page: number) => {
+    try {
+    
+        const novels = await axios.get(
+            `http://localhost:4000/api/novels/get/outstanding?page=${page || 1}`
+        );
+        if (novels.data.success) {
+            return novels;
+        }
+    
+        return null;
+    } catch (error) {
+        console.log(error)
+        return null;
+    }
+};
+
+export const getNovelsByHighlyRatedHandle = async (page: number) => {
+    try {
+    
+        const novels = await axios.get(
+            `http://localhost:4000/api/novels/get/highlyrated?page=${page || 1}`
+        );
+        if (novels.data.success) {
+            return novels;
+        }
+    
+        return null;
+    } catch (error) {
+        console.log(error)
+        return null;
+    }
+};

@@ -33,7 +33,8 @@ const NovelDetailPage = ({novel} : NovelDetailPageProps) => {
         return <div>123</div>;
     }
 
-    // console.log(novel)
+    console.log("NovelDetailPage: ", novel)
+    console.log(123)
 
     return (
         <>

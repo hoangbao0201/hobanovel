@@ -4,18 +4,23 @@ import { GetServerSideProps, GetStaticProps, NextPage } from "next";
 
 import { REVALIDATE_TIME } from "@/constants";
 import MainLayout from "@/components/Layout/MainLayout";
-import { getNovelsByPageHandle } from "@/services/novels.services";
+import { getNovelsByHighlyRatedHandle, getNovelsByOutstandingHandle, getNovelsByPageHandle } from "@/services/novels.services";
 import { NovelType, ReviewType } from "@/types";
 import { getReviewsByNovelHandle } from "@/services/review.services";
 import WrapperLayout from "@/components/Layout/WrapperLayout";
 import dynamic from "next/dynamic";
 
+type NovelHighlyRated = NovelType & { mediumScore: number }
+interface HighlyRatedProps {
+    novels?: NovelHighlyRated[]
+}
 
 export interface PageHomeProps {
+    data: any
     novelsOutstending?: NovelType[]
     novelsJustUpdated?: NovelType[]
     novelsReading?: NovelType[]
-    novelsHighlyRated?: NovelType[]
+    novelsHighlyRated?: HighlyRatedProps[]
     novelsLatestReviews?: ReviewType[]
     novelsJustCompleted?: NovelType[]
 }
@@ -59,9 +64,11 @@ const JustCompleted = dynamic(
 )
 
 
-const HomePage = ({ novelsOutstending, novelsJustUpdated, novelsReading, novelsHighlyRated, novelsLatestReviews, novelsJustCompleted } : PageHomeProps ) => {
+const HomePage = ({ data = [], novelsOutstending = [], novelsJustUpdated = [], novelsReading = [], novelsHighlyRated = [], novelsLatestReviews = [], novelsJustCompleted = [] } : PageHomeProps ) => {
 
-    console.log("novelsLatestReviews", novelsLatestReviews)
+    if(novelsHighlyRated) {
+        console.log("novelsHighlyRated", novelsHighlyRated)
+    }
 
     return (
         <>
@@ -93,7 +100,7 @@ const HomePage = ({ novelsOutstending, novelsJustUpdated, novelsReading, novelsH
                     </div>
                     <div className="flex flex-col lg:flex-row my-6">
                         <div className="lg:w-8/12">
-                            <HighlyRated novels={novelsHighlyRated}/>
+                            <HighlyRated novels={novelsHighlyRated as NovelHighlyRated[]}/>
                         </div>
                         <div className="lg:w-4/12">
                             <LatestReviews reviews={novelsLatestReviews}/>
@@ -101,7 +108,7 @@ const HomePage = ({ novelsOutstending, novelsJustUpdated, novelsReading, novelsH
                     </div>
                     <div className="hidden lg:flex flex-col lg:flex-row my-6">
                         <div className="lg:w-4/12">
-                            <JustPosted novels={novelsHighlyRated}/>
+                            <JustPosted novels={novelsOutstending}/>
                         </div>
                         <div className="lg:w-8/12">
                             <JustCompleted novels={novelsJustCompleted}/>
@@ -114,23 +121,28 @@ const HomePage = ({ novelsOutstending, novelsJustUpdated, novelsReading, novelsH
     );
 }
 
-export const getStaticProps : GetStaticProps = async () => {
+export const getStaticProps : GetStaticProps = async (ctx) => {
 
+    const query = ctx;
     const data = { page: 1 }
 
     const novelsResponse = await getNovelsByPageHandle("1");
+    const novelsOutstandingResponse = await getNovelsByOutstandingHandle(1);
+    const novelsHighlyRatedResponse = await getNovelsByHighlyRatedHandle(1);
     const reviewsResponse = await getReviewsByNovelHandle(data as ReviewType & { page: number })
 
     return {
         props: {
-            novelsOutstending: novelsResponse?.data.novels || null,
+            novelsOutstending: novelsOutstandingResponse?.data.novels || null,
             novelsJustUpdated: novelsResponse?.data.novels || null,
             novelsReading: novelsResponse?.data.novels || null,
-            novelsHighlyRated: novelsResponse?.data.novels || null,
+            novelsHighlyRated: novelsHighlyRatedResponse?.data.novels || null,
 
             novelsJustCompleted: novelsResponse?.data.novels || null,
 
             novelsLatestReviews: reviewsResponse?.data.reviews || null,
+
+            // data: JSON.stringify(query.params) || null
         },
         revalidate: REVALIDATE_TIME
     }

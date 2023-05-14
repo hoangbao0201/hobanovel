@@ -3,9 +3,10 @@ import { NovelType } from "@/types";
 import Link from "next/link";
 import BlurImage from "../Layout/BlurImage";
 
+type NovelHighlyRated = NovelType & { mediumScore: number }
 
 interface HighlyRatedProps {
-    novels?: NovelType[]
+    novels?: NovelHighlyRated[]
 }
 
 const HighlyRated = ({ novels = [] } : HighlyRatedProps) => {
@@ -17,7 +18,7 @@ const HighlyRated = ({ novels = [] } : HighlyRatedProps) => {
     
                 {   
                     novels?.length ? (
-                        novels.map((novel : NovelType) => {
+                        novels.map((novel) => {
                             return (
                                 <div key={novel.novelId} className="flex">
                                     <Link href={`/truyen/${novel.slug}`} className="w-20 h-28 mt-2 overflow-hidden shadow align-middle inline-block">
@@ -36,8 +37,8 @@ const HighlyRated = ({ novels = [] } : HighlyRatedProps) => {
                                             <Link className="block" href={`/truyen/${novel.slug}`}>{novel.title}</Link>
                                         </h2>
                                         <div className="flex items-center mb-2">
-                                            <div className="py-[3px] lg:px-3 px-2 rounded-full lg:text-base text-sm leading-none text-white font-semibold bg-red-700">5.00</div>
-                                            <div className="ml-3 text-green-700 lg:text-base text-sm font-semibold line-clamp-1">83 đánh giá</div>
+                                            <div className="py-[3px] lg:px-3 px-2 rounded-full lg:text-base text-sm leading-none text-white font-semibold bg-red-700">{novel.mediumScore}</div>
+                                            <div className="ml-3 text-green-700 lg:text-base text-sm font-semibold line-clamp-1">{}</div>
                                         </div>
                                         <div className="line-clamp-2 text-sm mb-2 text-slate-900">{novel.description.replace(/<[^>]+>/g, '')}</div>
                                         <div className="text-base flex align-middle items-center justify-between">

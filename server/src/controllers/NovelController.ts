@@ -10,6 +10,8 @@ import {
     updateBlurImageNovelHandle,
     updateAllBlurImageNovelHandle,
     getNovelsByDataHanle,
+    getNovelsByOutstandingHandle,
+    getNovelsByHighlyRatedHandle,
 } from "../services/novel.services";
 import { NovelType } from "../types";
 
@@ -381,6 +383,62 @@ export const getNovelsByData = async (req: Request, res: Response) => {
             message: "Get novels successful",
             novels: novelsRes.data,
             // dataNovel
+        })
+        
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: `Internal server error ${error}`,
+        });
+    }
+}
+
+//Get novels outstanding /api/novels/get/outstanding
+export const getNovelsByOutstanding = async (req: Request, res: Response) => {
+    try {
+        const { page = 1 } = req.query
+        
+        const novelsRes : any = await getNovelsByOutstandingHandle(Number(page))
+        if(!novelsRes.success) {
+            return res.status(400).json({
+                success: false,
+                message: "Get novels Error",
+                error: novelsRes.error,
+            })
+        }
+        
+        return res.json({
+            success: true,
+            message: "Get novels successful 1",
+            novels: novelsRes.data,
+        })
+        
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: `Internal server error ${error}`,
+        });
+    }
+}
+
+//Get novels highlyrated /api/novels/get/highlyrated
+export const getNovelsByHighlyRated = async (req: Request, res: Response) => {
+    try {
+        const { page = 1 } = req.query
+        
+        const novelsRes : any = await getNovelsByHighlyRatedHandle(Number(page))
+        if(!novelsRes.success) {
+            return res.status(400).json({
+                success: false,
+                message: "Get novels Error",
+                error: novelsRes.error,
+            })
+        }
+        
+        return res.json({
+            success: true,
+            message: "Get novels successful 1",
+            novels: novelsRes.data,
         })
         
     } catch (error) {
