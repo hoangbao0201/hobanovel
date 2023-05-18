@@ -1,6 +1,7 @@
 import "@/styles/main.scss";
 import "@/styles/globals.scss";
 import { NextPage } from "next";
+import { Inter } from 'next/font/google';
 import { Router } from "next/router";
 import type { AppProps } from "next/app";
 import { ReactElement, ReactNode } from "react";
@@ -25,10 +26,21 @@ Router.events.on("routeChangeComplete", () => NProgress.done());
 Router.events.on("routeChangeError", () => NProgress.done());
 NProgress.configure({ showSpinner: false });
 
+// FONT
+
+const inter = Inter({ subsets: ['latin'] });
+
+
 export default function App({ Component, pageProps }: AppPropsWithlayout) {
     const getLayout = Component.getLayout || ((page) => page);
+
     return (
         <>
+            <style jsx global>{`
+                html {
+                    font-family: ${inter.style.fontFamily};
+                }
+            `}</style>
             <Provider store={store}>
                 <PersistGate loading={true} persistor={persistor}>
                     {getLayout(<Component {...pageProps} />)}

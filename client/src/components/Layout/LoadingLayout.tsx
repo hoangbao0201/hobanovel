@@ -1,8 +1,11 @@
 import styled from "styled-components";
+import { WithClassName } from "@/types/common";
+import cn from "clsx"
 
-interface LoadingProps {
+interface LoadingProps extends WithClassName {
     w?: string;
     h?: string;
+    color?: string
     theme?: string;
     className?: string;
 }
@@ -64,12 +67,15 @@ const LoadingButtonStyle = styled.span`
     & {
         width: 12px;
         height: 12px;
+        top: 50%;
+        margin-right: 3px;
+        transform: translateY(-50%);
         border-radius: 50%;
         display: inline-block;
-        border-top: 2px solid #fff;
+        border-top: 2px solid ${(props) => props.color};
         border-right: 2px solid transparent;
         box-sizing: border-box;
-        animation: rotation 1s linear infinite;
+        animation: rotation 1.4s linear infinite;
     }
 
     @keyframes rotation {
@@ -81,10 +87,13 @@ const LoadingButtonStyle = styled.span`
         }
     }
 `;
-export const LoadingButton = ({ theme, className }: LoadingProps) => {
+export const LoadingButton = (props : LoadingProps) => {
     return (
         <LoadingButtonStyle
-            className={`mr-2 ${theme === "dark" ? "" : ""} ${className}`}
+            color={props.color}
+            className={cn(
+                props.className
+            )}
         ></LoadingButtonStyle>
     );
 };

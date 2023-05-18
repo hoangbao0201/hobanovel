@@ -1,23 +1,23 @@
 import Head from "next/head";
-import { ReactNode } from "react";
+import Link from "next/link";
+import { ReactNode, useEffect } from "react";
 import { GetServerSideProps } from "next";
 
 import MainLayout from "@/components/Layout/MainLayout";
 import { ParsedUrlQuery } from "querystring";
-import { ChapterType } from "@/types";
-import { getChapterDetailHandle } from "@/services/chapter.services";
-import Link from "next/link";
-import { iconArrowTop, iconBook, iconOclock } from "../../../../public/icons";
-import ScrollOnTop from "@/components/Layout/ScrollOnTop";
+import { ChapterDetailResType } from "@/types";
+import { getChapterDetailHandle, increaseViewChapterHandle } from "@/services/chapter.services";
+import { iconArrowTop, iconAuthor, iconBook, iconOclock, iconT } from "../../../../public/icons";
 import { convertTime } from "@/utils/convertTime";
 import WrapperLayout from "@/components/Layout/WrapperLayout";
+import { getCountWords } from "@/utils/getCountWords";
 
 interface Params extends ParsedUrlQuery {
     slug: string;
 }
 
 export interface ChapterDetailPageProps {
-    chapter?: ChapterType;
+    chapter?: ChapterDetailResType;
 }
 
 const ChapterDetailPage = ({ chapter }: ChapterDetailPageProps) => {
@@ -26,6 +26,16 @@ const ChapterDetailPage = ({ chapter }: ChapterDetailPageProps) => {
     if (!chapter) {
         return null;
     }
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            increaseViewChapterHandle(chapter.chapterId);
+          }, 30000);
+
+        return () => {
+            clearTimeout(timer)
+        }
+    }, [])
 
     return (
         <>
@@ -36,12 +46,8 @@ const ChapterDetailPage = ({ chapter }: ChapterDetailPageProps) => {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             <main>
-                <ScrollOnTop />
-                {/* <div className="max-w-5xl min-h-[300px] mx-auto px-4 grid bg-[#eae4d3] rounded-xl ">
-                    <div className="my-4 mx-7 grid">
-                        
-                    </div>
-                </div> */}
+                {/* <ScrollOnTop /> */}
+                
                 <WrapperLayout className="bg-[#eae4d3] px-3 py-4 lg:px-3">
                     {/* Navigate */}
                     <div className="flex justify-between mb-12">
@@ -78,6 +84,18 @@ const ChapterDetailPage = ({ chapter }: ChapterDetailPageProps) => {
                             <Link href={`/truyen/${chapter.novelSlug}`} className="line-clamp-1">
                                 <h2 className=" ml-2">{chapter.novelName}</h2>
                             </Link>
+                        </div>
+                        <div className="flex items-center">
+                            <i className="w-4 block">{iconAuthor}</i>
+                            <span className="">
+                                <h2 className="line-clamp-1 sm:text-base text-sm ml-2">{chapter.creator}</h2>
+                            </span>
+                        </div>
+                        <div className="flex items-center">
+                            <i className="w-4 block">{iconT}</i>
+                            <span className="">
+                                <h2 className="line-clamp-1 sm:text-base text-sm ml-2">{getCountWords(chapter.content)}</h2>
+                            </span>
                         </div>
                         <div className="flex items-center">
                             <i className="w-4 block">{iconOclock}</i>
@@ -133,8 +151,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query, res }) => 
         novelSlug,
         chapterNumber.split("chuong-")[1]
     );
-    // increaseViewChapterHandle(slug, chapterNumber)
-
+    
     if (!chapterResponse) {
         return {
             props: {

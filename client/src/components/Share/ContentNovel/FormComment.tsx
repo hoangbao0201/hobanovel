@@ -59,7 +59,7 @@ const FormComment = ({ tab, novelId }: FormCommentProps) => {
     };
 
     useEffect(() => {
-        if (tab === 4 && !hasLoadedData) {
+        if (tab === 3 && !hasLoadedData) {
             getListComments();
             setHasLoadedData(true);
         }

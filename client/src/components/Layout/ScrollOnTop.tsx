@@ -24,17 +24,17 @@ const ScrollOnTop = () => {
     };
 
     return (
-        <>
+        <div className="">
             {showButton ? (
                 <button
                     ref={buttonRef}
                     onClick={eventOnTop}
                     className="fixed right-7 bottom-7 z-50 border border-gray-300 rounded text-center flex flex-col justify-center items-center p-2"
                 >
-                    <i className="w-6 block">{iconArrowTop}</i>
+                    <i className="w-6 block fill-pink-500">{iconArrowTop}</i>
                 </button>
             ) : null}
-        </>
+        </div>
     );
 };
 

@@ -9,6 +9,7 @@ import { EditorStyle } from "@/components/Layout/EditorStyle";
 import { iconSend, iconStar } from "../../../../public/icons";
 import { addReviewsByDataHandle, destroyReviewsByNovelHandle, getReviewsByNovelHandle } from "@/services/review.services";
 import OverlayLayout from "@/components/Layout/OverlayLayout";
+import { ListStarLayout } from "@/components/Layout/ListStarLayout";
 
 interface FormFeedbackProps {
     tab?: number;
@@ -35,7 +36,7 @@ const FormFeedback = ({ tab, novelId }: FormFeedbackProps) => {
     };
 
     useEffect(() => {
-        if (tab === 2 && !hasLoadedData) {
+        if (tab === 1 && !hasLoadedData) {
             getListReviews();
             setHasLoadedData(true);
         }
@@ -126,8 +127,8 @@ const FormFeedback = ({ tab, novelId }: FormFeedbackProps) => {
     }
 
     return (
-        <div className="flex">
-            <div className="w-8/12 p-5 -ml-5 relative">
+        <div className="flex gap-4">
+            <div className="w-8/12 relative">
                 <div className="bg-orange-800 bg-opacity-5 mb-7">
                     <div className="p-5">
                         <div className="flex items-center transition-all ease-linear mb-4">
@@ -232,7 +233,50 @@ const FormFeedback = ({ tab, novelId }: FormFeedbackProps) => {
                         })}
                 </div>
             </div>
-            <div className="w-4/12 p-5 -ml-5 relative">r</div>
+            <div className="w-4/12 relative">
+                <div className="bg-pink-100 px-5 py-4 mb-7">
+                    <div className="flex items-center py-2 text-base">
+                        <span>Đã có 3 đánh giá</span>
+                        <ListStarLayout className="ml-auto mr-2"/>
+                        <span className="w-9 text-end">5.00</span>
+                    </div>
+                    <div className="flex items-center py-2 text-sm">
+                        <span>Tính cách nhân vật</span>
+                        <ListStarLayout className="ml-auto mr-2"/>
+                        <span className="w-9 text-end">4.71</span>
+                    </div>
+                    <div className="flex items-center py-2 text-sm">
+                        <span>Nội dung cốt truyện</span>
+                        <ListStarLayout className="ml-auto mr-2"/>
+                        <span className="w-9 text-end">4.78</span>
+                    </div>
+                    <div className="flex items-center py-2 text-sm">
+                        <span>Bố cục thế giới</span>
+                        <ListStarLayout className="ml-auto mr-2"/>
+                        <span className="w-9 text-end">4.85</span>
+                    </div>
+                    <div className="flex items-center py-2 text-sm">
+                        <span>Chất lượng bản dịch</span>
+                        <ListStarLayout className="ml-auto mr-2"/>
+                        <span className="w-9 text-end">4.98</span>
+                    </div>
+                </div>
+
+                <div className="bg-pink-100 px-5 py-4 text-sm">
+                    <h3 className="mb-5 text-base font-semibold">Lưu ý khi đánh giá</h3>
+                    <h4 className="mb-5">1. Không được dẫn link hoặc nhắc đến website khác</h4>
+
+                    <h4 className="mb-5">2. Không được có những từ ngữ gay gắt, đả kích, xúc phạm người khác</h4>
+
+                    <h4 className="mb-5">3. Đánh giá hoặc bình luận không liên quan tới truyện sẽ bị xóa</h4>
+
+                    <h4 className="mb-5">4. Đánh giá hoặc bình luận chê truyện một cách chung chung không mang lại giá trị cho người đọc sẽ bị xóa</h4>
+
+                    <h4 className="mb-5">5. Đánh giá có điểm số sai lệch với nội dung sẽ bị xóa</h4>
+
+                    <i>Vui lòng xem và tuân theo đầy đủ các quy định tại Điều Khoản Dịch Vụ khi sử dụng website</i>
+                </div>
+            </div>
             <OverlayLayout isOpen={isModalCheckSpoiler} handleToogle={() => setIsModalCheckSpoiler(false)}>
                 <div className="max-w-lg w-full bg-white p-8">123</div>
                 {/* bao */}

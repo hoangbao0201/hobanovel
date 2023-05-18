@@ -42,6 +42,7 @@ export interface ChapterType {
     chapterId: string
     novelId: string
 
+    views: string
     novelName: string
     novelSlug: string
     title: string

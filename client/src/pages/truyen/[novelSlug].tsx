@@ -1,40 +1,38 @@
 import Head from "next/head";
 import Link from "next/link";
 import { ReactNode, useState } from "react";
-import { GetServerSideProps } from "next";
+import { GetServerSideProps, GetStaticPaths, GetStaticProps } from "next";
 
-import { NovelType } from "@/types";
+import { NovelBySlugType } from "@/types";
 import { ParsedUrlQuery } from "querystring";
-import { placeholderBlurhash } from "@/constants";
+import { REVALIDATE_TIME, placeholderBlurhash } from "@/constants";
 import BlurImage from "@/components/Layout/BlurImage";
 import MainLayout from "@/components/Layout/MainLayout";
-import ContentHome from "@/components/Share/ContentNovel";
 import { getNovelBySlugHandle } from "@/services/novels.services";
-import { iconBookmark, iconGlasses, iconStar } from "../../../public/icons";
+import { iconBookmark, iconGlasses } from "../../../public/icons";
+import WrapperLayout from "@/components/Layout/WrapperLayout";
+import { Tab, Transition } from "@headlessui/react";
+import FormIntroduce from "@/components/Share/ContentNovel/FormIntroduce";
+import FormFeedback from "@/components/Share/ContentNovel/FormFeedback";
+import FormListChapters from "@/components/Share/ContentNovel/FormListChapters";
+import FormComment from "@/components/Share/ContentNovel/FormComment";
+import { convertViewsCount } from "@/utils/convertViewsCount";
+import { ListStarLayout } from "@/components/Layout/ListStarLayout";
 
 interface Params extends ParsedUrlQuery {
-    slug: string;
-}
-
-export interface NovelWithView extends NovelType {
-    newChapterCount: number
-    totalChapterCount: number
-    mediumScore: number
+    novelSlug: string;
 }
 
 export interface NovelDetailPageProps {
-    novel?: NovelWithView
+    novel?: NovelBySlugType;
 }
 
-const NovelDetailPage = ({novel} : NovelDetailPageProps) => {
-    const [numberTab, setNumberTab] = useState(1);
+const NovelDetailPage = ({ novel }: NovelDetailPageProps) => {
+    const [numberTab, setNumberTab] = useState(0);
 
     if (!novel) {
-        return <div>123</div>;
+        return <div></div>;
     }
-
-    console.log("NovelDetailPage: ", novel)
-    console.log(123)
 
     return (
         <>
@@ -45,74 +43,79 @@ const NovelDetailPage = ({novel} : NovelDetailPageProps) => {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             <main>
-                <div className="max-w-7xl min-h-[300px] mx-auto px-4 grid bg-white rounded-xl">
-                    <div className="my-4 mb-8 flex">
+                <WrapperLayout>
+                    <div className="flex">
                         <Link
                             href={`/truyen/${novel.slug}`}
-                            className="w-52 h-[280px] overflow-hidden shadow align-middle inline-block"
+                            className="w-52 h-[280px] overflow-hidden shadow relative"
                         >
                             <BlurImage
                                 width={208}
                                 height={280}
                                 alt="image-demo"
                                 blurDataURL={novel.imageBlurHash || placeholderBlurhash}
-                                className="group-hover:scale-105 group-hover:duration-500 object-cover w-52 h-[280px]"
+                                className="group-hover:scale-105 group-hover:duration-500 object-cover w-full h-full"
                                 placeholder="blur"
                                 src={novel.thumbnailUrl}
                             />
                         </Link>
-                        <div className="ml-5">
+                        <div className="ml-5 min-h-[280px] relative flex-1 flex flex-col justify-between">
                             <Link href={`/truyen/${novel.slug}`}>
                                 <h2 className="mb-6 text-2xl font-semibold">{novel.title}</h2>
                             </Link>
                             <div className="flex items-center flex-wrap gap-2 text-sm mb-4">
                                 {novel.author && (
-                                    <div className="border-[#666] text-[#666] px-4 py-1 border rounded-full">
+                                    <div className="border-[#666] text-[#666] px-3 py-1 border rounded-full ">
                                         {novel.author}
                                     </div>
                                 )}
-                                <div className="border-[#bf2c24] text-[#bf2c24] px-4 py-1 border rounded-full">
+                                <div className="border-[#bf2c24] text-[#bf2c24] px-3 py-1 border rounded-full ">
                                     {novel.newChapterCount > 0
                                         ? "Đang ra"
                                         : "Chưa ra chương mới"}
                                 </div>
                                 {novel.category && (
-                                    <div className="border-[#b78a28] text-[#b78a28] px-4 py-1 border rounded-full">
+                                    <div className="border-[#b78a28] text-[#b78a28] px-3 py-1 border rounded-full ">
                                         {novel.category}
                                     </div>
                                 )}
                                 {novel.personality && (
-                                    <div className="border-[#088860] text-[#088860] px-4 py-1 border rounded-full">
+                                    <div className="border-[#088860] text-[#088860] px-3 py-1 border rounded-full ">
                                         {novel.personality}
                                     </div>
                                 )}
                                 {novel.scene && (
-                                    <div className="border-[#088860] text-[#088860] px-4 py-1 border rounded-full">
+                                    <div className="border-[#088860] text-[#088860] px-3 py-1 border rounded-full ">
                                         {novel.scene}
                                     </div>
                                 )}
                                 {novel.classify && (
-                                    <div className="border-[#088860] text-[#088860] px-4 py-1 border rounded-full">
+                                    <div className="border-[#088860] text-[#088860] px-3 py-1 border rounded-full ">
                                         {novel.classify}
                                     </div>
                                 )}
                                 {novel.viewFrame && (
-                                    <div className="border-[#088860] text-[#088860] px-4 py-1 border rounded-full">
+                                    <div className="border-[#088860] text-[#088860] px-3 py-1 border rounded-full ">
                                         {novel.viewFrame}
                                     </div>
                                 )}
                             </div>
                             <div className="flex gap-9 mb-4">
                                 <div className="text-center">
-                                    <span className="font-semibold">{novel.totalChapterCount || 0}</span>
+                                    <span className="font-semibold">
+                                        {novel.totalChapterCount || 0}
+                                    </span>
                                     <div className="text-base">Chương</div>
                                 </div>
                                 <div className="text-center">
-                                    <span className="font-semibold">{novel.newChapterCount || 0}</span>
+                                    <span className="font-semibold">
+                                        {novel.newChapterCount || 0}
+                                    </span>
                                     <div className="text-base">Chương/tuần</div>
                                 </div>
                                 <div className="text-center">
-                                    <span className="font-semibold">818</span>
+                                    {/* <span className="font-semibold">{convertViewsCount(novel.views)}</span> */}
+                                    <span className="font-semibold">{(novel.views)}</span>
                                     <div className="text-base">Lượt đọc</div>
                                 </div>
                                 <div className="text-center">
@@ -120,52 +123,9 @@ const NovelDetailPage = ({novel} : NovelDetailPageProps) => {
                                     <div className="text-base">Cất giữ</div>
                                 </div>
                             </div>
-                            <div className="flex items-center mb-4 w">
-                                <div className="gap-1 relative">
-                                    <i className="w-4 mx-1 inline-block fill-yellow-400 opacity-40">
-                                        {iconStar}
-                                    </i>
-                                    <i className="w-4 mx-1 inline-block fill-yellow-400 opacity-40">
-                                        {iconStar}
-                                    </i>
-                                    <i className="w-4 mx-1 inline-block fill-yellow-400 opacity-40">
-                                        {iconStar}
-                                    </i>
-                                    <i className="w-4 mx-1 inline-block fill-yellow-400 opacity-40">
-                                        {iconStar}
-                                    </i>
-                                    <i className="w-4 mx-1 inline-block fill-yellow-400 opacity-40">
-                                        {iconStar}
-                                    </i>
 
-                                    <div
-                                        style={{
-                                            width: `${
-                                                novel?.mediumScore
-                                                    ? (novel?.mediumScore * 20) ?? 100
-                                                    : 100
-                                            }%`,
-                                        }}
-                                        className="max-w-full block whitespace-nowrap overflow-hidden absolute gap-1 top-0 left-0 right-0 bottom-0"
-                                    >
-                                        <i className="w-4 mx-1 inline-block fill-yellow-500">
-                                            {iconStar}
-                                        </i>
-                                        <i className="w-4 mx-1 inline-block fill-yellow-500">
-                                            {iconStar}
-                                        </i>
-                                        <i className="w-4 mx-1 inline-block fill-yellow-500">
-                                            {iconStar}
-                                        </i>
-                                        <i className="w-4 mx-1 inline-block fill-yellow-500">
-                                            {iconStar}
-                                        </i>
-                                        <i className="w-4 mx-1 inline-block fill-yellow-500">
-                                            {iconStar}
-                                        </i>
-                                    </div>
-                                </div>
-                            </div>
+                            <ListStarLayout className="mb-4" numb={novel.mediumScore}/>
+
                             <div className="flex gap-3 flex-wrap text-xl">
                                 <Link href="/">
                                     <span className="min-w-[120px] text-center bg-yellow-500 hover:bg-yellow-600 border-yellow-500 rounded-full py-2 px-6 text-white font-semibold flex items-center justify-center">
@@ -198,105 +158,187 @@ const NovelDetailPage = ({novel} : NovelDetailPageProps) => {
                             </div>
                         </div>
                     </div>
+
                     <div className="mb-5">
-                        <div className="border-b mb-5 text-xl font-semibold">
-                            <button
-                                onClick={() => setNumberTab(1)}
-                                className={`py-5 mr-8 outline-none hover:text-yellow-600 ${
-                                    numberTab == 1 && "border-b-4 border-yellow-600"
-                                }`}
-                            >
-                                Giới thiệu
-                            </button>
-                            <button
-                                onClick={() => setNumberTab(2)}
-                                className={`py-5 mr-8 outline-none hover:text-yellow-600 ${
-                                    numberTab == 2 && "border-b-4 border-yellow-600"
-                                }`}
-                            >
-                                Đánh giá
-                            </button>
-                            <button
-                                onClick={() => setNumberTab(3)}
-                                className={`py-5 mr-8 outline-none hover:text-yellow-600 ${
-                                    numberTab == 3 && "border-b-4 border-yellow-600"
-                                }`}
-                            >
-                                D.s chương
-                            </button>
-                            <button
-                                onClick={() => setNumberTab(4)}
-                                className={`py-5 mr-8 outline-none hover:text-yellow-600 ${
-                                    numberTab == 4 && "border-b-4 border-yellow-600"
-                                }`}
-                            >
-                                Bình luận
-                            </button>
-                            <button
-                                onClick={() => setNumberTab(5)}
-                                className={`py-5 mr-8 outline-none hover:text-yellow-600 ${
-                                    numberTab == 5 && "border-b-4 border-yellow-600"
-                                }`}
-                            >
-                                Hâm mộ
-                            </button>
-                        </div>
-                        <div className="min-h-[500px]">
-                            <ContentHome tab={numberTab} novel={novel}/>
-                        </div>
+                        <Tab.Group
+                            defaultIndex={0}
+                            selectedIndex={numberTab}
+                            onChange={(index: number) => setNumberTab(index)}
+                        >
+                            <Tab.List className="border-b mb-5 text-xl font-semibold">
+                                <Tab
+                                    className={`py-5 mr-8 outline-none hover:text-yellow-600 ${
+                                        numberTab == 0 && "border-b-4 border-yellow-600"
+                                    }`}
+                                >
+                                    Giới thiệu
+                                </Tab>
+                                <Tab
+                                    className={`py-5 mr-8 outline-none hover:text-yellow-600 ${
+                                        numberTab == 1 && "border-b-4 border-yellow-600"
+                                    }`}
+                                >
+                                    Đánh giá
+                                </Tab>
+                                <Tab
+                                    className={`py-5 mr-8 outline-none hover:text-yellow-600 ${
+                                        numberTab == 2 && "border-b-4 border-yellow-600"
+                                    }`}
+                                >
+                                    D.s chương
+                                </Tab>
+                                <Tab
+                                    className={`py-5 mr-8 outline-none hover:text-yellow-600 ${
+                                        numberTab == 3 && "border-b-4 border-yellow-600"
+                                    }`}
+                                >
+                                    Bình luận
+                                </Tab>
+                                <Tab
+                                    className={`py-5 mr-8 outline-none hover:text-yellow-600 ${
+                                        numberTab == 4 && "border-b-4 border-yellow-600"
+                                    }`}
+                                >
+                                    Hâm mộ
+                                </Tab>
+                            </Tab.List>
+                            <Tab.Panels className="min-h-[400px]">
+                                {/* <ContentHome tab={numberTab} novel={novel}/> */}
+
+                                <Tab.Panel>
+                                    <Transition
+                                        appear
+                                        show={numberTab == 0}
+                                        enter="transition-opacity duration-500"
+                                        enterFrom="opacity-0"
+                                        enterTo="opacity-100"
+                                        leave="transition-opacity duration-500"
+                                        leaveFrom="opacity-100"
+                                        leaveTo="opacity-0"
+                                    >
+                                        <FormIntroduce
+                                            description={novel?.description || ""}
+                                        />
+                                    </Transition>
+                                </Tab.Panel>
+                                <Tab.Panel>
+                                    <Transition
+                                        appear
+                                        show={numberTab == 1}
+                                        enter="transition-opacity duration-500"
+                                        enterFrom="opacity-0"
+                                        enterTo="opacity-100"
+                                        leave="transition-opacity duration-500"
+                                        leaveFrom="opacity-100"
+                                        leaveTo="opacity-0"
+                                    >
+                                        <FormFeedback
+                                            tab={numberTab}
+                                            novelId={novel?.novelId}
+                                        />
+                                    </Transition>
+                                </Tab.Panel>
+                                <Tab.Panel>
+                                    <Transition
+                                        appear
+                                        show={numberTab == 2}
+                                        enter="transition-opacity duration-500"
+                                        enterFrom="opacity-0"
+                                        enterTo="opacity-100"
+                                        leave="transition-opacity duration-500"
+                                        leaveFrom="opacity-100"
+                                        leaveTo="opacity-0"
+                                    >
+                                        <FormListChapters tab={numberTab} slug={novel?.slug} />
+                                    </Transition>
+                                </Tab.Panel>
+                                <Tab.Panel>
+                                    <Transition
+                                        appear
+                                        show={numberTab == 3}
+                                        enter="transition-opacity duration-500"
+                                        enterFrom="opacity-0"
+                                        enterTo="opacity-100"
+                                        leave="transition-opacity duration-500"
+                                        leaveFrom="opacity-100"
+                                        leaveTo="opacity-0"
+                                    >
+                                        <FormComment
+                                            tab={numberTab}
+                                            novelId={novel?.novelId}
+                                        />
+                                    </Transition>
+                                </Tab.Panel>
+                                <Tab.Panel>
+                                    <Transition
+                                        appear
+                                        show={numberTab == 4}
+                                        enter="transition-opacity duration-500"
+                                        enterFrom="opacity-0"
+                                        enterTo="opacity-100"
+                                        leave="transition-opacity duration-500"
+                                        leaveFrom="opacity-100"
+                                        leaveTo="opacity-0"
+                                    >
+                                        <div>Hâm mộ</div>
+                                    </Transition>
+                                </Tab.Panel>
+                            </Tab.Panels>
+                        </Tab.Group>
                     </div>
-                </div>
+                </WrapperLayout>
             </main>
         </>
     );
 };
 
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-    try {
-        const { novelSlug } = ctx.params as Params;
-
-        const novelResponse = await getNovelBySlugHandle(novelSlug as string);
-
-        if (novelResponse) {
-            return {
-                props: {
-                    novel: JSON.parse(JSON.stringify(novelResponse.data?.novel)),
-                },
-            };
-        }
-        return { notFound: true };
-    } catch (error) {
-        return { notFound: true };
-    }
-};
-
-// export const getStaticProps : GetStaticProps<NovelDetailPageProps, Params> = async (ctx) => {
+// export const getServerSideProps: GetServerSideProps = async (ctx) => {
 //     try {
-//         const { novelSlug } = ctx.params as Params
+//         const { novelSlug } = ctx.params as Params;
 
-//         const novelResponse = await getNovelBySlugHandle(novelSlug as string)
+//         const novelResponse = await getNovelBySlugHandle(novelSlug as string);
 
-//         if(novelResponse) {
+//         if (novelResponse) {
 //             return {
 //                 props: {
-//                     novel: novelResponse?.data.novel || null,
+//                     novel: JSON.parse(JSON.stringify(novelResponse.data?.novel)),
 //                 },
-//                 revalidate: REVALIDATE_TIME,
 //             };
 //         }
 //         return { notFound: true };
-
 //     } catch (error) {
 //         return { notFound: true };
 //     }
-// }
+// };
 
-// export const getStaticPaths : GetStaticPaths<Params> = () => {
-//     return {
-//         paths: [],
-//         fallback: true
-//     }
-// }
+export const getStaticProps : GetStaticProps<NovelDetailPageProps, Params> = async (context) => {
+    try {
+        const { novelSlug } = context.params as Params
+
+        const novelResponse = await getNovelBySlugHandle(novelSlug as string)
+
+        if(novelResponse) {
+            return {
+                props: {
+                    novel: novelResponse?.data.novel || null,
+                    // tab: req.url.split('#')[1] || 'intro'
+                },
+                revalidate: REVALIDATE_TIME,
+            };
+        }
+        return { notFound: true };
+
+    } catch (error) {
+        return { notFound: true };
+    }
+}
+
+export const getStaticPaths : GetStaticPaths<Params> = () => {
+    return {
+        paths: [],
+        fallback: true
+    }
+}
 
 NovelDetailPage.getLayout = (page: ReactNode) => {
     return <MainLayout isBannerPage={true}>{page}</MainLayout>;

@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { createChapterByDataHandle, getChapterBasicHandle, getChapterDetailHandle, getDataChapterByUrlMTCHandle } from "../services/chapter.services";
+import { createChapterByDataHandle, getChapterBasicHandle, getChapterDetailHandle, getDataChapterByUrlMTCHandle, increaseViewChapterHandle } from "../services/chapter.services";
 import { ChapterType } from "../types";
 
 // Create Novel By Data | /create-by-url/:slug/:chapterNumber
@@ -77,33 +77,29 @@ export const getChapterDetailBySlug = async (req: Request, res: Response) => {
         });
     }
 }
-// Increase View Chapter | /api/chapters/increaseViewChapter/:slug/:chapterNumber
+// Increase View Chapter | /api/chapters/increase/view/:chapterId
 export const increaseViewChapter = async (req: Request, res: Response) => {
     try {
-        let { slug, chapterNumber } : any = req.params
-        if(!slug || !chapterNumber) {
+        let { chapterId } : any = req.params
+        if(!chapterId) {
             return res.status(400).json({
                 success: false,
                 message: "Data not found"
             })
         }
-
-        chapterNumber = chapterNumber.split("chapter-")[1]
         
-        const existingChapter : ChapterType[] | null = await getChapterBasicHandle({ novelSlug: slug, chapterNumber } as ChapterType);
-        if(!existingChapter?.length) {
+        const existingChapter = await increaseViewChapterHandle({ chapterId } as ChapterType);
+        if(!existingChapter.success) {
             return res.status(400).json({
                 success: false,
-                message: "Get chapters novel error"
+                message: "Increase view novel error",
+                error: existingChapter.error
             })
         }
 
-        // const increaseViewChapter : any = await increaseViewChapterHandle({ slug, chapterNumber, view: 8 })
-
         return res.json({
             success: true,
-            message: "Get chapters novel successful",
-            // chapter: existingChapter[0]
+            message: "Increase view novel successful",
         })
     } catch (error) {
         return res.status(500).json({

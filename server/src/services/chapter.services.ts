@@ -79,9 +79,11 @@ export const getChapterDetailHandle = async ({ novelSlug, chapterNumber } : Chap
         const connection = await pool.getConnection();
 
         const qCreateChapter = `
-            SELECT chapters.chapterId, chapters.novelName, chapters.novelSlug, chapters.title, chapters.content, chapters.chapterNumber, chapters.updatedAt, chapters.novelId, chapterdetail.views, chapterdetail.love, chapterdetail.like, chapterdetail.fun, chapterdetail.sad, chapterdetail.angry, chapterdetail.attack
-                FROM chapters
-                LEFT JOIN chapterdetail ON chapterdetail.chapterId = chapters.chapterId
+            SELECT chapters.chapterId, chapters.novelName, chapters.novelSlug, chapters.title, users.name AS creator, users.userId AS creatorId,
+                chapters.content, chapters.chapterNumber, chapters.updatedAt, chapters.novelId, chapters.views
+            FROM chapters
+                LEFT JOIN users ON users.userId = chapters.userId
+
             WHERE chapters.novelSlug = ? AND chapters.chapterNumber = ?;
         `;
 
@@ -100,7 +102,7 @@ export const getChapterBasicHandle = async ({ novelSlug, chapterNumber } : Chapt
         const connection = await pool.getConnection();
 
         const qCreateChapter = `
-            SELECT chapterId, novelName, novelSlug, title, chapterNumber, updatedAt, novelId FROM chapters
+            SELECT chapterId, novelName, novelSlug, title, chapterNumber, chapters.views, updatedAt, novelId FROM chapters
             WHERE novelSlug = ? AND chapterNumber = ?
         `;
 
@@ -114,22 +116,29 @@ export const getChapterBasicHandle = async ({ novelSlug, chapterNumber } : Chapt
     }
 };
 
-export const increaseViewChapterHandle = async ({ novelSlug, chapterNumber, views } : ChapterType & { views: number }) => {
+export const increaseViewChapterHandle = async ({ chapterId } : ChapterType) => {
     try {
         const connection = await pool.getConnection();
 
         const qCreateChapter = `
-            SELECT views = ? FROM chapters
-            WHERE novelSlug = ? AND chapterNumber = ?
+            UPDATE chapters
+            SET views = views + 1
+            WHERE chapterId = ?
         `;
 
-        const [rows] = await connection.query(qCreateChapter, [novelSlug, chapterNumber, views+1]);
+        const [rows] = await connection.query(qCreateChapter, chapterId);
 
         connection.release();
 
-        return rows
+        return {
+            success: true,
+            data: rows
+        }
     } catch (error) {
-        return error
+        return {
+            success: false,
+            error: error
+        }
     }
 };
 

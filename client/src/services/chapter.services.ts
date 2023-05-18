@@ -17,14 +17,15 @@ export const getChapterDetailHandle = async (slug: string, chapterNumber: string
     }
 }
 
-export const increaseViewChapterHandle = (slug: string, chapterNumber: string) => {
+export const increaseViewChapterHandle = (chapterId : string) => {
     try {
-        if(!slug || !chapterNumber) {
+        if(!chapterId) {
             return null
         }
-        axios.get(`http://localhost:4000/api/chapters/increase-view/${slug}/${chapterNumber}`)
+        axios.post(`http://localhost:4000/api/chapters/increase/view/${chapterId}`)
     } catch (error) {
         console.log(error)
+        return error
     }
 }
 

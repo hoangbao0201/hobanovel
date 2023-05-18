@@ -69,6 +69,7 @@ export interface ChapterType {
     chapterId: string
     novelId: string
 
+    views: string
     novelName: string
     novelSlug: string
     title: string
@@ -119,4 +120,20 @@ export interface UserType {
 export interface SelectType {
     value: string
     label: string
+}
+
+
+
+// ----------------------------------------------- //
+
+export type NovelBySlugType = Pick<NovelType, 'novelId' | 'slug' | 'title' | 'thumbnailUrl' | 'imageBlurHash' | 'description' | 'author' | 'category' | 'personality' | 'scene' | 'classify' | 'viewFrame'> & {
+    newChapterCount: number;
+    totalChapterCount: number;
+    mediumScore: number;
+    views: number
+}
+
+export type ChapterDetailResType = Pick<ChapterType, 'chapterId' | 'novelName' | 'novelSlug' | 'title' | 'content' | 'chapterNumber' | 'updatedAt' | 'novelId'> & {
+    creator: string
+    creatorId: string
 }

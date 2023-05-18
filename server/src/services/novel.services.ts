@@ -129,7 +129,8 @@ export const getNovelBySlugHandle = async ({ slug } : NovelType) => {
                 novels.category, novels.personality, novels.scene, novels.classify, novels.viewFrame,
                 
                 COUNT(IF(chapters.createdAt >= DATE_SUB(NOW(), INTERVAL 1 WEEK), 1, NULL)) as newChapterCount,
-                COUNT(chapters.chapterId) as totalChapterCount
+                COUNT(chapters.chapterId) as totalChapterCount,
+                SUM(chapters.views) AS views
             
                 FROM novels
                 LEFT JOIN chapters ON chapters.novelId = novels.novelId
@@ -173,7 +174,7 @@ export const getChaptersNovelBySlugHandle = async ({ slug } : NovelType) => {
         const connection = await pool.getConnection();
 
         const qGetNovel = `
-            SELECT chapterId, novelSlug, title, chapterNumber, updatedAt, novelId FROM chapters
+            SELECT chapterId, novelSlug, title, chapterNumber, createdAt FROM chapters
             WHERE novelSlug = ?
             ORDER BY chapterNumber ASC
         `;
@@ -193,9 +194,8 @@ export const getNovelsByOutstandingHandle = async (page : number) => {
         const connection = await pool.getConnection();
 
         const qGetNovel = `
-            SELECT N.novelId, N.slug, N.title, N.thumbnailUrl, N.imageBlurHash, LEFT(N.description, 150) as description, N.author, N.category, N.createdAt, SUM(chapterDetail.views) AS views FROM novels N
+            SELECT N.novelId, N.slug, N.title, N.thumbnailUrl, N.imageBlurHash, LEFT(N.description, 150) as description, N.author, N.category, N.createdAt, SUM(chapters.views) AS views FROM novels N
                 INNER JOIN chapters ON chapters.novelId = N.novelId
-                INNER JOIN chapterDetail ON chapterDetail.chapterId = chapters.chapterId
             GROUP BY N.novelId, N.slug, N.title, N.thumbnailUrl, N.imageBlurHash, description, N.author, N.category, N.createdAt
             ORDER BY views DESC
             LIMIT 6 OFFSET ?
@@ -226,7 +226,7 @@ export const getNovelsByHighlyRatedHandle = async (page : number) => {
                 INNER JOIN reviews ON reviews.novelId = N.novelId
             GROUP BY N.novelId, N.slug, N.title, N.thumbnailUrl, N.imageBlurHash, description, N.author, N.category, N.createdAt
             ORDER BY mediumScore DESC
-            LIMIT 10 OFFSET ?
+            LIMIT 6 OFFSET ?
         `;
 
         const [rows] = await connection.query(qGetNovel, ((page-1)*6));

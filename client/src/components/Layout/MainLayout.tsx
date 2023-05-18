@@ -10,6 +10,7 @@ import Footer from "../partials/Footer";
 import BannerPage from "../partials/BannerPage";
 import { connectUserHandle } from "@/services/auth.services";
 import Head from "next/head";
+import ScrollOnTop from "./ScrollOnTop";
 
 interface MainLayoutProps {
     children: ReactNode
@@ -69,11 +70,14 @@ const MainLayout= ({ children, isHeader = true, isFooter = true, isBannerPage = 
                 </style>
             </Head>
 
+            <ScrollOnTop />
+            
             { isHeader && <Header /> }
 
             { isBannerPage && <BannerPage /> }
 
-            <div className={`${isBannerPage && "top-0 -translate-y-28"}`}>
+
+            <div className={`${isBannerPage && "w-full min-h-[500px] top-0 -translate-y-28"}`}>
                 {children}
             </div>
 
