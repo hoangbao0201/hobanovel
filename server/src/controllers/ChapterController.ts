@@ -22,7 +22,7 @@ export const createChapterByUrl = async (req: Request, res: Response) => {
         }
 
         // // createChapterByDataHandle({ novelName: res.locals.novel.title, novelId: res.locals.novel.novelId, ...getDataChapter });
-        const createChapterResponse = await createChapterByDataHandle({ novelSlug: slug, novelName: res.locals.novel.title, novelId: res.locals.novel.novelId, ...getDataChapter.data });
+        const createChapterResponse = await createChapterByDataHandle({ userId: res.locals.user.userId, novelSlug: slug, novelName: res.locals.novel.title, novelId: res.locals.novel.novelId, ...getDataChapter.data });
         if(!createChapterResponse.success) {
             return res.status(400).json({
                 success: false,

@@ -48,15 +48,15 @@ export const createChapterByDataHandle = async (data : ChapterType) => {
         const connection = await pool.getConnection();
 
         const {
-            novelSlug, novelName, novelId, title, content, chapterNumber
+            userId, novelSlug, novelName, novelId, title, content, chapterNumber
         } = data
         
         const qCreateChapter = `
-            INSERT INTO chapters(novelSlug, novelName, novelId, title, content, chapterNumber )
+            INSERT INTO chapters(userId, novelSlug, novelName, novelId, title, content, chapterNumber )
             VALUES (?)
         `;
 
-        const values = [ novelSlug, novelName, novelId, title, content, chapterNumber ]
+        const values = [ userId, novelSlug, novelName, novelId, title, content, chapterNumber ]
 
         const [rows] = await connection.query(qCreateChapter, [values]);
 

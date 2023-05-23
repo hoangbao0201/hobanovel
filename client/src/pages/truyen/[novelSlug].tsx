@@ -1,7 +1,12 @@
 import Head from "next/head";
 import Link from "next/link";
 import { ReactNode, useState } from "react";
-import { GetServerSideProps, GetStaticPaths, GetStaticProps } from "next";
+import {
+    GetServerSideProps,
+    GetStaticPaths,
+    GetStaticProps,
+    GetStaticPropsContext,
+} from "next";
 
 import { NovelBySlugType } from "@/types";
 import { ParsedUrlQuery } from "querystring";
@@ -18,22 +23,27 @@ import FormListChapters from "@/components/Share/ContentNovel/FormListChapters";
 import FormComment from "@/components/Share/ContentNovel/FormComment";
 import { convertViewsCount } from "@/utils/convertViewsCount";
 import { ListStarLayout } from "@/components/Layout/ListStarLayout";
+import { getAccessTokenOnServer } from "@/services/cookies.servies";
 
 interface Params extends ParsedUrlQuery {
     novelSlug: string;
 }
 
 export interface NovelDetailPageProps {
+    token?: any
+    tab?: string;
     novel?: NovelBySlugType;
 }
 
-const NovelDetailPage = ({ novel }: NovelDetailPageProps) => {
+const NovelDetailPage = ({ token, tab, novel }: NovelDetailPageProps) => {
     const [numberTab, setNumberTab] = useState(0);
 
     if (!novel) {
         return <div></div>;
     }
 
+    console.log("token: ", token)
+    
     return (
         <>
             <Head>
@@ -103,7 +113,7 @@ const NovelDetailPage = ({ novel }: NovelDetailPageProps) => {
                             <div className="flex gap-9 mb-4">
                                 <div className="text-center">
                                     <span className="font-semibold">
-                                        {novel.totalChapterCount || 0}
+                                        {novel.chapterCount || 0}
                                     </span>
                                     <div className="text-base">Chương</div>
                                 </div>
@@ -114,8 +124,10 @@ const NovelDetailPage = ({ novel }: NovelDetailPageProps) => {
                                     <div className="text-base">Chương/tuần</div>
                                 </div>
                                 <div className="text-center">
-                                    {/* <span className="font-semibold">{convertViewsCount(novel.views)}</span> */}
-                                    <span className="font-semibold">{(novel.views)}</span>
+                                    <span className="font-semibold">
+                                        {convertViewsCount(novel.views)}
+                                    </span>
+                                    {/* <span className="font-semibold">{(novel.views)}</span> */}
                                     <div className="text-base">Lượt đọc</div>
                                 </div>
                                 <div className="text-center">
@@ -124,10 +136,10 @@ const NovelDetailPage = ({ novel }: NovelDetailPageProps) => {
                                 </div>
                             </div>
 
-                            <ListStarLayout className="mb-4" numb={novel.mediumScore}/>
+                            <ListStarLayout className="mb-4" numb={novel.mediumScore} />
 
                             <div className="flex gap-3 flex-wrap text-xl">
-                                <Link href="/">
+                                <Link href={`/truyen/${novel.slug}/chuong-${novel?.chapterRead || 1}`}>
                                     <span className="min-w-[120px] text-center bg-yellow-500 hover:bg-yellow-600 border-yellow-500 rounded-full py-2 px-6 text-white font-semibold flex items-center justify-center">
                                         <i className="w-5 block fill-white mr-2">
                                             {iconGlasses}
@@ -292,53 +304,59 @@ const NovelDetailPage = ({ novel }: NovelDetailPageProps) => {
     );
 };
 
-// export const getServerSideProps: GetServerSideProps = async (ctx) => {
-//     try {
-//         const { novelSlug } = ctx.params as Params;
-
-//         const novelResponse = await getNovelBySlugHandle(novelSlug as string);
-
-//         if (novelResponse) {
-//             return {
-//                 props: {
-//                     novel: JSON.parse(JSON.stringify(novelResponse.data?.novel)),
-//                 },
-//             };
-//         }
-//         return { notFound: true };
-//     } catch (error) {
-//         return { notFound: true };
-//     }
-// };
-
-export const getStaticProps : GetStaticProps<NovelDetailPageProps, Params> = async (context) => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
     try {
-        const { novelSlug } = context.params as Params
+        const { novelSlug } = context.params as Params;
+        // const token = getAccessTokenOnServer(context.req.headers.cookie as string)
 
-        const novelResponse = await getNovelBySlugHandle(novelSlug as string)
+        const novelResponse = await getNovelBySlugHandle(novelSlug as string);
 
-        if(novelResponse) {
-            return {
-                props: {
-                    novel: novelResponse?.data.novel || null,
-                    // tab: req.url.split('#')[1] || 'intro'
-                },
-                revalidate: REVALIDATE_TIME,
-            };
+        if(!novelResponse) {
+            return { notFound: true };
         }
-        return { notFound: true };
 
+        return {
+            props: {
+                novel: JSON.parse(JSON.stringify(novelResponse.data?.novel)),
+                tab: context.params?.hash?.toString() || "intro",
+            },
+        };
     } catch (error) {
         return { notFound: true };
     }
-}
+};
 
-export const getStaticPaths : GetStaticPaths<Params> = () => {
-    return {
-        paths: [],
-        fallback: true
-    }
-}
+// export const getStaticProps: GetStaticProps<NovelDetailPageProps, Params> = async (
+//     context: GetStaticPropsContext<Params>
+// ) => {
+//     try {
+//         const { novelSlug } = context.params as Params;
+
+//         const novelResponse = await getNovelBySlugHandle(novelSlug as string);
+
+//         if (!novelResponse) {
+//             return { notFound: true, props: { novel: null, tab: "intro" } };
+//         }
+
+
+//         return {
+//             props: {
+//                 novel: novelResponse?.data.novel || null,
+//                 tab: context.params?.hash?.toString() || "intro",
+//             },
+//             revalidate: REVALIDATE_TIME,
+//         };
+
+//     } catch (error) {
+//         return { notFound: true, props: { novel: null, tab: "intro" } };
+//     }
+// };
+// export const getStaticPaths: GetStaticPaths<Params> = () => {
+//     return {
+//         paths: [],
+//         fallback: true,
+//     };
+// };
 
 NovelDetailPage.getLayout = (page: ReactNode) => {
     return <MainLayout isBannerPage={true}>{page}</MainLayout>;

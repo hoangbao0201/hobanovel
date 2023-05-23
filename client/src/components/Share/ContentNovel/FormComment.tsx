@@ -37,8 +37,6 @@ const FormComment = ({ tab, novelId }: FormCommentProps) => {
     // ---
 
 
-    const [value, setValue] = useState('123');
-
 
     // ---
     // const socket = useRef<Socket>(io("http://localhost:4000"));

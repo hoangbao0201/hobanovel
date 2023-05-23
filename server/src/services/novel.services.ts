@@ -3,7 +3,7 @@ import * as cheerio from "cheerio";
 import pool from "../library/connectMySQL";
 
 
-import { NovelType } from "../types";
+import { HistoryReadingType, NovelType } from "../types";
 import { uploadThumbnailNovelByUrlHandle } from "./image.services";
 import { getBlurDataURL } from "../utils/getBlurDataURL";
 import { NovelSearchConditions } from "../middleware/conditionsQuery";
@@ -104,7 +104,8 @@ export const getNovelsByPageHandle = async (page : any) => {
         const connection = await pool.getConnection();
 
         const qGetNovel = `
-            SELECT novelId, slug, title, LEFT(description, 150) as description, thumbnailUrl, imageBlurHash, thumbnailPublicId, author, category, personality, scene, classify, viewFrame FROM novels
+            SELECT novelId, slug, title, LEFT(description, 150) as description, thumbnailUrl, imageBlurHash, 
+                thumbnailPublicId, author, category, personality, scene, classify, viewFrame FROM novels
             ORDER BY createdAt DESC
             LIMIT 6 OFFSET ?;
         `;
@@ -129,24 +130,34 @@ export const getNovelBySlugHandle = async ({ slug } : NovelType) => {
                 novels.category, novels.personality, novels.scene, novels.classify, novels.viewFrame,
                 
                 COUNT(IF(chapters.createdAt >= DATE_SUB(NOW(), INTERVAL 1 WEEK), 1, NULL)) as newChapterCount,
-                COUNT(chapters.chapterId) as totalChapterCount,
-                SUM(chapters.views) AS views
+                chapterCount,
+                SUM(chapters.views) AS views,
+                history_reading.chapterRead
             
                 FROM novels
                 LEFT JOIN chapters ON chapters.novelId = novels.novelId
                 LEFT JOIN reviews ON reviews.novelId = novels.novelId AND reviews.isRating = True
+                LEFT JOIN history_reading ON history_reading.novelId = novels.novelId AND history_reading.userId = 1
             
             WHERE novels.slug = ?
             GROUP BY novels.novelId;
         `;
+                // LEFT JOIN history_reading ON history_reading.novelId = novels.novelId AND history_reading.userId = novels.novelId
+                // history_reading.chapterRead
 
         const [rows] = await connection.query(qGetNovel, [slug]);
 
         connection.release();
 
-        return rows as NovelType[]
+        return {
+            success: true,
+            data: rows as NovelType[]
+        }
     } catch (error) {
-        return null
+        return {
+            success: false,
+            error: error
+        }
     }
 };
 
@@ -326,6 +337,68 @@ export const getNovelsByDataHanle = async (data : NovelType & { page: number }) 
             success: true,
             data: rows as NovelType[],
         }
+    } catch (error) {
+        return {
+            success: false,
+            error: error
+        }
+    }
+};
+
+export const readingNovelHandle = async ({ novelId, userId, chapterRead } : HistoryReadingType) => {
+    try {
+        const connection = await pool.getConnection();
+
+        const qUpdateReadingNovel = `
+            UPDATE history_reading
+            SET chapterRead = GREATEST(chapterRead, ?)
+            WHERE novelId = ? AND userId = ?
+        `;
+
+        const [result] : any = await connection.query(qUpdateReadingNovel, [chapterRead, novelId, userId]);
+
+        if (result.affectedRows === 0) {
+            const qCreateReadingNovel = `
+                INSERT INTO history_reading (novelId, userId, chapterRead)
+                VALUES (?, ?, ?)
+            `;
+
+            await connection.query(qCreateReadingNovel, [novelId, userId, chapterRead]);
+        }
+
+        connection.release();
+
+        return {
+            success: true,
+        };
+    } catch (error) {
+        return {
+            success: false,
+            error: error
+        }
+    }
+};
+
+export const getReadingNovelHandle = async ({ userId, page } : HistoryReadingType & { page: number }) => {
+    try {
+        const connection = await pool.getConnection();
+
+        const qUpdateReadingNovel = `
+            SELECT history_reading.*, novels.slug, novels.title, novels.chapterCount, novels.imageBlurHash, novels.thumbnailUrl FROM history_reading
+                LEFT JOIN novels ON novels.novelId = history_reading.novelId
+            WHERE history_reading.userId = ?
+            ORDER BY updatedAt DESC
+            LIMIT 5 OFFSET ?
+        `;
+
+        const [rows] : any = await connection.query(qUpdateReadingNovel, [userId, (page-1)*5]);
+
+        connection.release();
+
+        return {
+            success: true,
+            data: rows as HistoryReadingType[]
+        };
     } catch (error) {
         return {
             success: false,

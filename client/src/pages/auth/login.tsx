@@ -64,7 +64,7 @@ const LoginPage = () => {
                 <div className="mx-auto max-w-[500px]">
                     <div className="py-10 flex justify-center">
                         <Link className="" href="/">
-                            <div>Logo</div>
+                            <div>HOBANOVEL</div>
                         </Link>
                     </div>
 

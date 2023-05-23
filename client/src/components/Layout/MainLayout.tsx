@@ -11,8 +11,10 @@ import BannerPage from "../partials/BannerPage";
 import { connectUserHandle } from "@/services/auth.services";
 import Head from "next/head";
 import ScrollOnTop from "./ScrollOnTop";
+import { setScrollPosition } from "@/redux/scrollSlice";
 
 interface MainLayoutProps {
+    bg?: string
     children: ReactNode
     isHeader?: boolean
     isFooter?: boolean
@@ -24,11 +26,17 @@ interface MainLayoutProps {
 // const BannerPage = dynamic(() => import('../partials/BannerPage'));
 
 
-const MainLayout= ({ children, isHeader = true, isFooter = true, isBannerPage = true } : MainLayoutProps) => {
+const MainLayout= ({ bg = "#ffff", children, isHeader = true, isFooter = true, isBannerPage = true } : MainLayoutProps) => {
     const dispatch = useDispatch();
-    const { userLoading } = useSelector(
-        (state: any) => state.user
-    );
+    const scrollPosition = useSelector((state : any) => state.scroll.position);
+
+    useEffect(() => {
+        window.scrollTo(0, scrollPosition);
+
+        return () => {
+            dispatch(setScrollPosition(window.pageYOffset));
+        };
+    }, []);
 
     const loadUser = async () => {
         try {
@@ -64,7 +72,7 @@ const MainLayout= ({ children, isHeader = true, isFooter = true, isBannerPage = 
                 <style>
                     {`
                         body {
-                            background-color: #ffff;
+                            background-color: ${bg};
                         }
                     `}
                 </style>

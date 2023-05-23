@@ -1,5 +1,11 @@
 
-
+export interface HistoryReadingType {
+    historyReadingId: string
+    chapterRead: string
+    novelId: string
+    userId: string
+    updatedAt: Date
+}
 
 export interface BannersType extends NovelType {
     bannersId: string
@@ -86,7 +92,7 @@ export interface NovelType {
 
     slug: string
     title: string
-    chapterNumber: number
+    chapterCount: number
     thumbnailUrl: string
     imageBlurHash: string
     thumbnailPublicId: string
@@ -126,11 +132,11 @@ export interface SelectType {
 
 // ----------------------------------------------- //
 
-export type NovelBySlugType = Pick<NovelType, 'novelId' | 'slug' | 'title' | 'thumbnailUrl' | 'imageBlurHash' | 'description' | 'author' | 'category' | 'personality' | 'scene' | 'classify' | 'viewFrame'> & {
+export type NovelBySlugType = Pick<NovelType, 'novelId' | 'slug' | 'title' | 'chapterCount' | 'thumbnailUrl' | 'imageBlurHash' | 'description' | 'author' | 'category' | 'personality' | 'scene' | 'classify' | 'viewFrame'> & {
     newChapterCount: number;
-    totalChapterCount: number;
     mediumScore: number;
     views: number
+    chapterRead: number
 }
 
 export type ChapterDetailResType = Pick<ChapterType, 'chapterId' | 'novelName' | 'novelSlug' | 'title' | 'content' | 'chapterNumber' | 'updatedAt' | 'novelId'> & {

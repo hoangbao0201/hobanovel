@@ -1,3 +1,11 @@
+export interface HistoryReadingType {
+    historyReadingId: string
+    chapterRead: string
+    novelId: string
+    userId: string
+    updatedAt: Date
+}
+
 export interface BannersType extends NovelType {
     bannersId: string
     bannersUrl: string
@@ -42,6 +50,7 @@ export interface ChapterType {
     chapterId: string
     novelId: string
 
+    userId: string
     views: string
     novelName: string
     novelSlug: string
@@ -59,7 +68,7 @@ export interface NovelType {
 
     slug: string
     title: string
-    chapterNumber: number
+    chapterCount: number
     thumbnailUrl: string | null
     imageBlurHash: string | null
     thumbnailPublicId: string | null

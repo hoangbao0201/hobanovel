@@ -1,7 +1,7 @@
 import "@/styles/main.scss";
 import "@/styles/globals.scss";
 import { NextPage } from "next";
-import { Inter } from 'next/font/google';
+import { Inter } from "next/font/google";
 import { Router } from "next/router";
 import type { AppProps } from "next/app";
 import { ReactElement, ReactNode } from "react";
@@ -28,8 +28,7 @@ NProgress.configure({ showSpinner: false });
 
 // FONT
 
-const inter = Inter({ subsets: ['latin'] });
-
+const inter = Inter({ subsets: ["latin"] });
 
 export default function App({ Component, pageProps }: AppPropsWithlayout) {
     const getLayout = Component.getLayout || ((page) => page);

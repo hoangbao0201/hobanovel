@@ -1,5 +1,6 @@
-import { NovelType } from "@/types";
+import { HistoryReadingType, NovelType } from "@/types";
 import axios from "axios";
+import { getAccessToken } from "./cookies.servies";
 
 
 export const getNovelsByPageHandle = async (pageNumber: string) => {
@@ -24,7 +25,11 @@ export const getNovelBySlugHandle = async (slug: string) => {
         }
     
         const novels = await axios.get(
-            `http://localhost:4000/api/novels/search-by-slug/${slug}`
+            `http://localhost:4000/api/novels/search-by-slug/${slug}`, {
+                // headers: {
+                //     Authorization: `Bearer ${token}`,
+                // },
+            }
         );
         if (novels.data.success) {
             return novels;
@@ -109,6 +114,55 @@ export const getNovelsByHighlyRatedHandle = async (page: number) => {
         );
         if (novels.data.success) {
             return novels;
+        }
+    
+        return null;
+    } catch (error) {
+        console.log(error)
+        return null;
+    }
+};
+export const readingNovelHandle = async (data: Pick<HistoryReadingType, 'novelId' | 'chapterRead'> & { token: string }) => {
+    try {
+        const { novelId, chapterRead } = data
+        if(!novelId || !chapterRead) {
+            return null
+        }
+
+        const readingNovelRes = await axios.post(
+            `http://localhost:4000/api/novels/reading/${novelId}/${chapterRead}`, {}, {
+                headers: {
+                    Authorization: `Bearer ${data.token}`,
+                },
+            });
+        if (readingNovelRes.data.success) {
+            return readingNovelRes;
+        }
+    
+        return null;
+    } catch (error) {
+        console.log(error)
+        return null;
+    }
+};
+
+export const getReadingNovelHandle = async (page: number) => {
+    try {
+        const token = getAccessToken();
+        return token
+
+        if(!token) {
+            return null
+        }
+
+        const readingNovelRes = await axios.post(
+            `http://localhost:4000/api/novels/reading?page=${page || 1}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+        if (readingNovelRes.data.success) {
+            return readingNovelRes;
         }
     
         return null;

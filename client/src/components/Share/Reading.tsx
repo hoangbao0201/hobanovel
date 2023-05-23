@@ -3,43 +3,63 @@ import Link from "next/link";
 import { NovelType } from "@/types";
 import { placeholderBlurhash } from "@/constants";
 import BlurImage from "../Layout/BlurImage";
+import { useSelector } from "react-redux";
 
 interface ReadingProps {
-    novels?: NovelType[] | []
+    readingNovel?: any
 }
 
-const Reading = ({ novels } : ReadingProps) => {
+const Reading = ({ readingNovel } : ReadingProps) => {
+    const { isAuthenticated } = useSelector((state : any) => state.user)
 
     return (
         <div className="mb-5">
             <h3 className="px-4 mb-5 text-xl font-semibold">Truyện đang đọc</h3>
             <div className="px-4">
                 {
-                    novels?.map((novel : NovelType, index) => {
-                        return (
-                            <div key={index} className="flex mb-3">
-                                <Link href={`/truyen/${novel.slug}`} className="w-10 h-14 overflow-hidden shadow align-middle inline-block">
-                                    <BlurImage
-                                        width={38}
-                                        height={54}
-                                        alt="image-demo"
-                                        blurDataURL={novel.imageBlurHash || placeholderBlurhash}
-                                        className="group-hover:scale-105 group-hover:duration-500 object-cover w-10 h-14"
-                                        placeholder="blur"
-                                        src={novel.thumbnailUrl}
-                                    />
-                                </Link>
-                                <div className="flex-1 ml-3">
-                                    <Link className="block" href={`/truyen/${novel.slug}`}>
-                                        <h2 className="mb-1 text-sm line-clamp-1 font-semibold">
-                                            {novel.title}
-                                        </h2>
-                                        <div className="text-slate-600 text-sm">Đã đọc: 0/1466</div>
-                                    </Link>
-                                </div>
-                            </div>
+                    isAuthenticated ? (
+                        readingNovel ? (
+                            readingNovel.length > 0 ? (
+                                readingNovel?.map((novel : any, index: number) => {
+                                    return (
+                                        <div key={index} className="flex mb-3">
+                                            <Link href={`/truyen/${novel.slug}`} className="w-10 h-14 overflow-hidden shadow align-middle inline-block">
+                                                <BlurImage
+                                                    width={38}
+                                                    height={54}
+                                                    alt="image-demo"
+                                                    blurDataURL={novel.imageBlurHash || placeholderBlurhash}
+                                                    className="group-hover:scale-105 group-hover:duration-500 object-cover w-full h-full"
+                                                    placeholder="blur"
+                                                    src={novel.thumbnailUrl}
+                                                />
+                                            </Link>
+                                            <div className="flex-1 ml-3">
+                                                <Link className="block" href={`/truyen/${novel.slug}`}>
+                                                    <h2 className="mb-1 text-sm line-clamp-1 font-semibold">
+                                                        {novel.title}
+                                                    </h2>
+                                                </Link>
+                                                <div className="flex items-center justify-between">
+                                                    <div className="text-slate-600 text-sm">Đã đọc: {novel?.chapterRead || 1}/{novel.chapterCount}</div>
+                                                    <Link className="text-sm text-orange-700 p-1 font-semibold" href={`/truyen/${novel.slug}/chuong-${novel?.chapterRead || 1}`}>Đọc tiếp</Link>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )
+                                })
+                            ) : (
+                                <span>Bạn chưa đọc truyện nào, hãy bắt đầu với những bộ đầu tiên nào!</span>
+                            )
+                        ) : (
+                            <span>Loading</span>
                         )
-                    })
+                    ) : (
+                        <div>
+                            <span>Bạn chưa đăng nhập! </span>
+                            <Link href="/auth/login" className="text-blue-800">Đăng nhập ngay</Link>
+                        </div>
+                    )
                 }
             </div>
         </div>

@@ -12,8 +12,12 @@ import {
     getNovelsByDataHanle,
     getNovelsByOutstandingHandle,
     getNovelsByHighlyRatedHandle,
+    readingNovelHandle,
+    getReadingNovelHandle,
 } from "../services/novel.services";
-import { NovelType } from "../types";
+import { HistoryReadingType, NovelType } from "../types";
+import jwt from "jsonwebtoken";
+
 
 // Create Novel By Data | /api/novels/create/data
 export const createNovelByData = async (req: Request, res: Response) => {
@@ -201,18 +205,27 @@ export const getNovelBySlug = async (req: Request, res: Response) => {
             });
         }
 
-        const existingNovel: NovelType[] | null = await getNovelBySlugHandle({ slug } as NovelType);
-        if (!existingNovel?.length) {
+        // const authHeader = req.headers.authorization;
+        // let token = authHeader && authHeader.split(" ")[1];
+        // // const userId = 1
+        // if(!token) {
+        //    token = "123123v1"
+        // }
+
+        const existingNovel : any = await getNovelBySlugHandle({ slug } as NovelType);
+        if (!existingNovel.success) {
             return res.status(400).json({
                 success: false,
                 message: "Get novels error",
+                error: existingNovel.error
             });
         }
 
         return res.json({
             success: true,
             message: "Get novels successful",
-            novel: existingNovel[0],
+            novel: existingNovel.data[0],
+            // token: jwt.verify(token, process.env.ACCESS_TOKEN_SETCRET as string)
         });
     } catch (error) {
         return res.status(500).json({
@@ -439,6 +452,68 @@ export const getNovelsByHighlyRated = async (req: Request, res: Response) => {
             success: true,
             message: "Get novels successful 1",
             novels: novelsRes.data,
+        })
+        
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: `Internal server error ${error}`,
+        });
+    }
+}
+
+// reading novel /api/novels/reading/:novelId
+export const readingNovel = async (req: Request, res: Response) => {
+    try {
+        const { novelId, chapterRead } = req.params
+        if(!novelId || !chapterRead) {{
+            return res.status(400).json({
+                success: false,
+                message: "Data not found",
+            });
+        }}
+        
+        const readingNovelRes : any = await readingNovelHandle({ novelId, userId: res.locals.user.userId, chapterRead } as HistoryReadingType)
+        if(!readingNovelRes.success) {
+            return res.status(400).json({
+                success: false,
+                message: "Reading novels Error",
+                error: readingNovelRes.error,
+            })
+        }
+        
+        return res.json({
+            success: true,
+            message: "Reading novels successful",
+            // data: { novelId, userId: res.locals.user.userId, chapterRead }
+        })
+        
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: `Internal server error ${error}`,
+        });
+    }
+}
+
+// get reading novel /api/novels/reading
+export const getReadingNovel = async (req: Request, res: Response) => {
+    try {
+        const { page = 1 } = req.query
+        
+        const readingNovelRes : any = await getReadingNovelHandle({ userId: res.locals.user.userId, page: page } as HistoryReadingType & { page: number })
+        if(!readingNovelRes.success) {
+            return res.status(400).json({
+                success: false,
+                message: "Get reading novels Error",
+                error: readingNovelRes.error,
+            })
+        }
+        
+        return res.json({
+            success: true,
+            message: "Get reading novels successful",
+            readingNovel: readingNovelRes.data
         })
         
     } catch (error) {

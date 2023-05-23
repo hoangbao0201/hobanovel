@@ -13,6 +13,7 @@ import storage from "redux-persist/lib/storage";
 import userReducer from "./userSlice";
 import commentReducer from "./commentSlice";
 import bannersReducer from "./bannersSlice";
+import scrollReducer from "./scrollSlice";
 
 const persistConfig = {
     key: "root",
@@ -21,7 +22,7 @@ const persistConfig = {
     blacklist: ['comment', 'banners']
 };
 
-const rootReducer = combineReducers({ user: userReducer, comment: commentReducer, banners: bannersReducer });
+const rootReducer = combineReducers({ user: userReducer, comment: commentReducer, banners: bannersReducer, scroll: scrollReducer });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 

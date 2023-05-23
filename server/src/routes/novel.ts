@@ -14,6 +14,8 @@ import {
     getNovelsByData,
     getNovelsByOutstanding,
     getNovelsByHighlyRated,
+    readingNovel,
+    getReadingNovel,
 } from "../controllers/NovelController";
 
 router.post("/create/data", verifyToken, createNovelByData);
@@ -27,6 +29,9 @@ router.get("/search-by-title/:title", getNovelByTitle);
 router.get("/search-by-slug/:slug", getNovelBySlug);
 router.get("/search-by-userId/:userId", verifyToken, getNovelsByUserId);
 router.get("/get/:novelId?", getNovelsByData);
+
+router.post("/reading/:novelId/:chapterRead", verifyToken, readingNovel)
+router.get("/reading", verifyToken, getReadingNovel)
 
 router.get("/:slug/chapters", getChaptersNovelBySlug);
 router.get("/banner", getBannerNovel);

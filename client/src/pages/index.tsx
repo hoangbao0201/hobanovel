@@ -4,11 +4,14 @@ import { GetServerSideProps, GetStaticProps, NextPage } from "next";
 
 import { REVALIDATE_TIME } from "@/constants";
 import MainLayout from "@/components/Layout/MainLayout";
-import { getNovelsByHighlyRatedHandle, getNovelsByOutstandingHandle, getNovelsByPageHandle } from "@/services/novels.services";
+import { getNovelsByHighlyRatedHandle, getNovelsByOutstandingHandle, getNovelsByPageHandle, getReadingNovelHandle } from "@/services/novels.services";
 import { NovelType, ReviewType } from "@/types";
 import { getReviewsByNovelHandle } from "@/services/review.services";
 import WrapperLayout from "@/components/Layout/WrapperLayout";
 import dynamic from "next/dynamic";
+import { getAccessToken, getAccessTokenOnServer } from "@/services/cookies.servies";
+import useSWR from "swr";
+import axios from "axios";
 
 type NovelHighlyRated = NovelType & { mediumScore: number }
 interface HighlyRatedProps {
@@ -66,9 +69,28 @@ const JustCompleted = dynamic(
 
 const HomePage = ({ data = [], novelsOutstending = [], novelsJustUpdated = [], novelsReading = [], novelsHighlyRated = [], novelsLatestReviews = [], novelsJustCompleted = [] } : PageHomeProps ) => {
 
-    if(novelsHighlyRated) {
-        console.log("novelsHighlyRated", novelsHighlyRated)
-    }
+    const fetchReadingNovel = async (query: string) => {
+        const token = getAccessToken();
+        if(!token) {
+            return null
+        }
+        const res = await axios.get(`http://localhost:4000/api/novels/reading${query}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+      
+        if (res.data.success) {
+          return res.data.readingNovel;
+        }
+      
+        return null;
+    };
+    
+    const { data: readingNovel, error } = useSWR<{ readingNovel: any }>(`?page=1`, fetchReadingNovel);
+    
+    console.log("123 readingNovel:", readingNovel, error);
+ 
 
     return (
         <>
@@ -92,7 +114,7 @@ const HomePage = ({ data = [], novelsOutstending = [], novelsJustUpdated = [], n
                             <Outstanding novels={novelsOutstending}/>
                         </div>
                         <div className="lg:w-4/12 hidden lg:block">
-                            <Reading novels={novelsReading}/>
+                            <Reading readingNovel={readingNovel}/>
                         </div>
                     </div>
                     <div className="hidden xl:block">
@@ -121,21 +143,22 @@ const HomePage = ({ data = [], novelsOutstending = [], novelsJustUpdated = [], n
     );
 }
 
-export const getStaticProps : GetStaticProps = async (ctx) => {
+export const getStaticProps : GetStaticProps = async (context) => {
 
-    const query = ctx;
+    const query = context;
     const data = { page: 1 }
 
     const novelsResponse = await getNovelsByPageHandle("1");
     const novelsOutstandingResponse = await getNovelsByOutstandingHandle(1);
     const novelsHighlyRatedResponse = await getNovelsByHighlyRatedHandle(1);
     const reviewsResponse = await getReviewsByNovelHandle(data as ReviewType & { page: number })
+    const novelReading = await getReadingNovelHandle(1)
 
     return {
         props: {
             novelsOutstending: novelsOutstandingResponse?.data.novels || null,
             novelsJustUpdated: novelsResponse?.data.novels || null,
-            novelsReading: novelsResponse?.data.novels || null,
+            novelsReading: context.locale || null,
             novelsHighlyRated: novelsHighlyRatedResponse?.data.novels || null,
 
             novelsJustCompleted: novelsResponse?.data.novels || null,
@@ -148,24 +171,32 @@ export const getStaticProps : GetStaticProps = async (ctx) => {
     }
 }
 
-// export const getServerSideProps : GetServerSideProps = async () => {
+// export const getServerSideProps : GetServerSideProps = async (ctx) => {
+
+//     const query = ctx;
+//     const data = { page: 1 }
 
 //     const novelsResponse = await getNovelsByPageHandle("1");
-//     const reviewsResponse = await getReviewsByLatestHandle("1")
+//     const novelsOutstandingResponse = await getNovelsByOutstandingHandle(1);
+//     const novelsHighlyRatedResponse = await getNovelsByHighlyRatedHandle(1);
+//     const reviewsResponse = await getReviewsByNovelHandle(data as ReviewType & { page: number })
 
 //     return {
 //         props: {
-//             novelsOutstending: novelsResponse?.data.novels || null,
+//             novelsOutstending: novelsOutstandingResponse?.data.novels || null,
 //             novelsJustUpdated: novelsResponse?.data.novels || null,
 //             novelsReading: novelsResponse?.data.novels || null,
-//             novelsHighlyRated: novelsResponse?.data.novels || null,
+//             novelsHighlyRated: novelsHighlyRatedResponse?.data.novels || null,
 
 //             novelsJustCompleted: novelsResponse?.data.novels || null,
 
 //             novelsLatestReviews: reviewsResponse?.data.reviews || null,
+
+//             // data: JSON.stringify(query.params) || null
 //         },
-//         // revalidate: REVALIDATE_TIME
+//         revalidate: REVALIDATE_TIME
 //     }
+
 // }
 
 HomePage.getLayout = (page : ReactNode) => {
