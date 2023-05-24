@@ -44,6 +44,10 @@ const JustPosted = ({ novels = [] } : JustPostedProps) => {
 
     const [indexActiveNovel, setIndexActiveNovel] = useState(1)
 
+    if(!novels) {
+        return <div>Không có truyện</div>
+    }
+
     return (
         <div className="px-4 relative overflow-hidden">
             <div className="p-4 rounded-lg bg-gray-100 mb-3 min-h-[500px]">

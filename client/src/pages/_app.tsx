@@ -11,6 +11,7 @@ import NProgress from "nprogress";
 import { Provider } from "react-redux";
 import { persistor, store } from "@/redux/store";
 import { PersistGate } from "redux-persist/integration/react";
+import useScrollRestoration from "@/hook/useScrollRestoration";
 
 export type NextPageWithLayout = NextPage & {
     getLayout?: (page: ReactElement) => ReactNode;
@@ -30,8 +31,10 @@ NProgress.configure({ showSpinner: false });
 
 const inter = Inter({ subsets: ["latin"] });
 
-export default function App({ Component, pageProps }: AppPropsWithlayout) {
+export default function App({ Component, pageProps, router }: AppPropsWithlayout) {
     const getLayout = Component.getLayout || ((page) => page);
+
+    useScrollRestoration(router);
 
     return (
         <>

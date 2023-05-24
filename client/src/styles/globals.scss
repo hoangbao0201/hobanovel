@@ -25,3 +25,19 @@ body {
 #my-range::-webkit-slider-thumb {
     background: #00fd0a;
 }
+
+// ---
+
+html {
+    -webkit-tap-highlight-color: transparent;
+    scroll-behavior: smooth;
+    scroll-snap-type: y mandatory;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    @apply rounded-2xl bg-gray-400;
+}

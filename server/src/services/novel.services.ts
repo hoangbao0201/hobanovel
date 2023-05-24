@@ -351,13 +351,13 @@ export const readingNovelHandle = async ({ novelId, userId, chapterRead } : Hist
 
         const qUpdateReadingNovel = `
             UPDATE history_reading
-            SET chapterRead = GREATEST(chapterRead, ?)
+            SET chapterRead = IF(chapterRead > ?, chapterRead, ?)
             WHERE novelId = ? AND userId = ?
         `;
 
-        const [result] : any = await connection.query(qUpdateReadingNovel, [chapterRead, novelId, userId]);
+        const [rows] : any = await connection.query(qUpdateReadingNovel, [chapterRead, chapterRead, novelId, userId]);
 
-        if (result.affectedRows === 0) {
+        if (rows.affectedRows === 0) {
             const qCreateReadingNovel = `
                 INSERT INTO history_reading (novelId, userId, chapterRead)
                 VALUES (?, ?, ?)
@@ -370,6 +370,7 @@ export const readingNovelHandle = async ({ novelId, userId, chapterRead } : Hist
 
         return {
             success: true,
+            data: rows.affectedRows === 0  ? "Tạo reading" : "Update Reading",
         };
     } catch (error) {
         return {

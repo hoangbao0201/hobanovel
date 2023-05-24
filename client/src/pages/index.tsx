@@ -22,7 +22,6 @@ export interface PageHomeProps {
     data: any
     novelsOutstending?: NovelType[]
     novelsJustUpdated?: NovelType[]
-    novelsReading?: NovelType[]
     novelsHighlyRated?: HighlyRatedProps[]
     novelsLatestReviews?: ReviewType[]
     novelsJustCompleted?: NovelType[]
@@ -67,29 +66,65 @@ const JustCompleted = dynamic(
 )
 
 
-const HomePage = ({ data = [], novelsOutstending = [], novelsJustUpdated = [], novelsReading = [], novelsHighlyRated = [], novelsLatestReviews = [], novelsJustCompleted = [] } : PageHomeProps ) => {
+const HomePage = ({ data = [], novelsOutstending = [], novelsJustUpdated = [], novelsHighlyRated = [], novelsLatestReviews = [], novelsJustCompleted = [] } : PageHomeProps ) => {
 
-    const fetchReadingNovel = async (query: string) => {
-        const token = getAccessToken();
-        if(!token) {
-            return null
-        }
-        const res = await axios.get(`http://localhost:4000/api/novels/reading${query}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+    // const fetchReadingNovel = async (query: string) => {
+    //     const token = getAccessToken();
+    //     if(!token) {
+    //         return null
+    //     }
+    //     const res = await axios.get(`http://localhost:4000/api/novels/reading${query}`, {
+    //       headers: {
+    //         Authorization: `Bearer ${token}`,
+    //       },
+    //     });
       
-        if (res.data.success) {
-          return res.data.readingNovel;
-        }
+    //     if (res.data.success) {
+    //       return res.data.readingNovel;
+    //     }
       
-        return null;
-    };
+    //     return null;
+    // };
     
-    const { data: readingNovel, error } = useSWR<{ readingNovel: any }>(`?page=1`, fetchReadingNovel);
+    const { data: novelReading } = useSWR<{ novels: any }>(
+        `?page=1`, 
+        async (query) => {
+            const token = getAccessToken();
+            if(!token) {
+                throw new Error();
+            }
+            const res = await axios.get(`http://localhost:4000/api/novels/reading${query}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+            });
+
+            if(!res.data.success || !res) {
+                console.log("lỗi: ", 2)
+                throw new Error();
+            }
+            
+            console.log("lỗi: ", res.data.novels)
+            return {
+                novels: res.data.novels
+            }
+        },
+        {
+            onErrorRetry: (error, _, __, revalidate, { retryCount }) => {
+                if(error.status === 404) {
+                    return
+                }
+                if(retryCount >= 1) {
+                    return
+                }
+                setTimeout(() => {
+                    revalidate({ retryCount })
+                }, 2000)
+            }
+        }
+    );
     
-    console.log("123 readingNovel:", readingNovel, error);
+    console.log("novelReading: ", novelReading?.novels);
  
 
     return (
@@ -114,7 +149,7 @@ const HomePage = ({ data = [], novelsOutstending = [], novelsJustUpdated = [], n
                             <Outstanding novels={novelsOutstending}/>
                         </div>
                         <div className="lg:w-4/12 hidden lg:block">
-                            <Reading readingNovel={readingNovel}/>
+                            <Reading readingNovel={novelReading?.novels}/>
                         </div>
                     </div>
                     <div className="hidden xl:block">

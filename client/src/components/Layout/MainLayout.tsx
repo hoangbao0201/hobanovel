@@ -11,7 +11,7 @@ import BannerPage from "../partials/BannerPage";
 import { connectUserHandle } from "@/services/auth.services";
 import Head from "next/head";
 import ScrollOnTop from "./ScrollOnTop";
-import { setScrollPosition } from "@/redux/scrollSlice";
+// import { setScrollPosition } from "@/redux/scrollSlice";
 
 interface MainLayoutProps {
     bg?: string
@@ -28,15 +28,15 @@ interface MainLayoutProps {
 
 const MainLayout= ({ bg = "#ffff", children, isHeader = true, isFooter = true, isBannerPage = true } : MainLayoutProps) => {
     const dispatch = useDispatch();
-    const scrollPosition = useSelector((state : any) => state.scroll.position);
+    // const scrollPosition = useSelector((state : any) => state.scroll.position);
 
-    useEffect(() => {
-        window.scrollTo(0, scrollPosition);
+    // useEffect(() => {
+    //     window.scrollTo(0, scrollPosition);
 
-        return () => {
-            dispatch(setScrollPosition(window.pageYOffset));
-        };
-    }, []);
+    //     return () => {
+    //         dispatch(setScrollPosition(window.pageYOffset));
+    //     };
+    // }, []);
 
     const loadUser = async () => {
         try {

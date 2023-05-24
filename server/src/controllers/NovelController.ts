@@ -485,6 +485,7 @@ export const readingNovel = async (req: Request, res: Response) => {
         return res.json({
             success: true,
             message: "Reading novels successful",
+            data: readingNovelRes.data
             // data: { novelId, userId: res.locals.user.userId, chapterRead }
         })
         
@@ -513,7 +514,7 @@ export const getReadingNovel = async (req: Request, res: Response) => {
         return res.json({
             success: true,
             message: "Get reading novels successful",
-            readingNovel: readingNovelRes.data
+            novels: readingNovelRes.data
         })
         
     } catch (error) {
