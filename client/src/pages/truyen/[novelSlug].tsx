@@ -25,6 +25,9 @@ import { convertViewsCount } from "@/utils/convertViewsCount";
 import { ListStarLayout } from "@/components/Layout/ListStarLayout";
 import { getAccessTokenOnServer } from "@/services/cookies.servies";
 
+import Tippy from "@tippyjs/react";
+import 'tippy.js/dist/tippy.css'; // optional
+
 interface Params extends ParsedUrlQuery {
     novelSlug: string;
 }
@@ -42,7 +45,7 @@ const NovelDetailPage = ({ token, tab, novel }: NovelDetailPageProps) => {
         return <div></div>;
     }
 
-    console.log("token: ", token)
+    // console.log("token: ", token)
     
     return (
         <>
@@ -123,13 +126,20 @@ const NovelDetailPage = ({ token, tab, novel }: NovelDetailPageProps) => {
                                     </span>
                                     <div className="text-base">Chương/tuần</div>
                                 </div>
-                                <div className="text-center">
-                                    <span className="font-semibold">
-                                        {convertViewsCount(novel.views)}
-                                    </span>
+                                    <Tippy
+                                        theme="light"
+                                        arrow={true}
+                                        delay={[500,0]}
+                                        content={novel.views}
+                                    >
+                                        <div className="text-center cursor-default">
+                                            <span className="font-semibold">
+                                                {convertViewsCount(novel.views)}
+                                            </span>
+                                            <div className="text-base">Lượt đọc</div>
+                                        </div>
+                                    </Tippy>
                                     {/* <span className="font-semibold">{(novel.views)}</span> */}
-                                    <div className="text-base">Lượt đọc</div>
-                                </div>
                                 <div className="text-center">
                                     <span className="font-semibold">818</span>
                                     <div className="text-base">Cất giữ</div>

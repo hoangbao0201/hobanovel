@@ -11,6 +11,7 @@ import BannerPage from "../partials/BannerPage";
 import { connectUserHandle } from "@/services/auth.services";
 import Head from "next/head";
 import ScrollOnTop from "./ScrollOnTop";
+import { useMediaQuery } from "usehooks-ts";
 // import { setScrollPosition } from "@/redux/scrollSlice";
 
 interface MainLayoutProps {
@@ -27,6 +28,9 @@ interface MainLayoutProps {
 
 
 const MainLayout= ({ bg = "#ffff", children, isHeader = true, isFooter = true, isBannerPage = true } : MainLayoutProps) => {
+
+    const matchesMobile = useMediaQuery('(max-width: 640px)') 
+
     const dispatch = useDispatch();
     // const scrollPosition = useSelector((state : any) => state.scroll.position);
 
@@ -85,7 +89,7 @@ const MainLayout= ({ bg = "#ffff", children, isHeader = true, isFooter = true, i
             { isBannerPage && <BannerPage /> }
 
 
-            <div className={`${isBannerPage && "w-full min-h-[500px] top-0 -translate-y-28"}`}>
+            <div className={`${isBannerPage && `w-full min-h-[500px] top-0 ${ !matchesMobile && "-translate-y-28" }`}`}>
                 {children}
             </div>
 

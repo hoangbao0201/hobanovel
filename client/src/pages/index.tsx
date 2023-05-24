@@ -12,6 +12,7 @@ import dynamic from "next/dynamic";
 import { getAccessToken, getAccessTokenOnServer } from "@/services/cookies.servies";
 import useSWR from "swr";
 import axios from "axios";
+import { useMediaQuery } from "usehooks-ts";
 
 type NovelHighlyRated = NovelType & { mediumScore: number }
 interface HighlyRatedProps {
@@ -68,23 +69,7 @@ const JustCompleted = dynamic(
 
 const HomePage = ({ data = [], novelsOutstending = [], novelsJustUpdated = [], novelsHighlyRated = [], novelsLatestReviews = [], novelsJustCompleted = [] } : PageHomeProps ) => {
 
-    // const fetchReadingNovel = async (query: string) => {
-    //     const token = getAccessToken();
-    //     if(!token) {
-    //         return null
-    //     }
-    //     const res = await axios.get(`http://localhost:4000/api/novels/reading${query}`, {
-    //       headers: {
-    //         Authorization: `Bearer ${token}`,
-    //       },
-    //     });
-      
-    //     if (res.data.success) {
-    //       return res.data.readingNovel;
-    //     }
-      
-    //     return null;
-    // };
+    const matchesMobile = useMediaQuery('(max-width: 640px)') 
     
     const { data: novelReading } = useSWR<{ novels: any }>(
         `?page=1`, 
@@ -94,17 +79,17 @@ const HomePage = ({ data = [], novelsOutstending = [], novelsJustUpdated = [], n
                 throw new Error();
             }
             const res = await axios.get(`http://localhost:4000/api/novels/reading${query}`, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
             });
 
             if(!res.data.success || !res) {
-                console.log("lỗi: ", 2)
+                // console.log("lỗi: ", 2)
                 throw new Error();
             }
             
-            console.log("lỗi: ", res.data.novels)
+            // console.log("lỗi: ", res.data.novels)
             return {
                 novels: res.data.novels
             }
@@ -124,7 +109,7 @@ const HomePage = ({ data = [], novelsOutstending = [], novelsJustUpdated = [], n
         }
     );
     
-    console.log("novelReading: ", novelReading?.novels);
+    // console.log("novelReading: ", novelReading?.novels);
  
 
     return (
@@ -163,6 +148,18 @@ const HomePage = ({ data = [], novelsOutstending = [], novelsJustUpdated = [], n
                             <LatestReviews reviews={novelsLatestReviews}/>
                         </div>
                     </div>
+                    {/* {
+                        !matchesMobile && (
+                            <div className="lg:flex flex-col lg:flex-row my-6">
+                                <div className="lg:w-4/12">
+                                    <JustPosted novels={novelsOutstending}/>
+                                </div>
+                                <div className="lg:w-8/12">
+                                    <JustCompleted novels={novelsJustCompleted}/>
+                                </div>
+                            </div>
+                        ) 
+                    } */}
                     <div className="hidden lg:flex flex-col lg:flex-row my-6">
                         <div className="lg:w-4/12">
                             <JustPosted novels={novelsOutstending}/>
