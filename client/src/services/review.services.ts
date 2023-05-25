@@ -43,16 +43,19 @@ export const addReviewsByDataHandle = async (novelId: string, data: ReviewType, 
             }
         });
 
-        if(reviews.data.success) {
-            return reviews
-        }
-
-        return null;
+        return reviews.data;
     } catch (error) {
-        console.log(error)
-        return null;
+        if(axios.isAxiosError(error) && error.response?.data) {
+            return error.response.data;
+        } else {
+            return {
+                success: false,
+                message: (error as Error).message
+            };
+        }
     }
 };
+
 export const destroyReviewsByNovelHandle = async (reviewId: string, token: string) => {
     try {
         const reviews = await axios.delete(`http://localhost:4000/api/reviews/destroy-review/${reviewId}`, {
@@ -93,7 +96,7 @@ export const destroyReplyReviewsByNovelHandle = async (reviewId: string, token: 
 
 export const addReplyReviewHandle = async (novelId: string, reviewId: string, data: ReviewType, token: string) => {
     try {
-        const reviews = await axios.post(`http://localhost:4000/api/reviews/add-reply-review/${novelId}/${reviewId}`, {
+        const reviews = await axios.post(`http://localhost:4000/api/reviews/add/reply/${novelId}/${reviewId}`, {
             ...data
         }, {
             headers: {

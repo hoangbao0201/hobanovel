@@ -194,7 +194,7 @@ const FormListChapters = ({ tab, slug }: FormListChaptersProps) => {
                         <>
 
                             <div className="border py-2 px-1 min-h-[500px]">
-                                <div className="grid gap-x-5 grid-cols-3">
+                                <div className="grid gap-x-5 lg:grid-cols-3 grid-cols-1">
                                     {bodyContent.slice(0, isShowMoreChapters)?.map((chapter) => {
                                         return (
                                             <Link

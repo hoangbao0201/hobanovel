@@ -86,108 +86,112 @@ const ChapterDetailPage = ({ chapter }: ChapterDetailPageProps) => {
                 {/* <ScrollOnTop /> */}
 
                 <WrapperLayout bg="bg-[#eae4d3]" className="">
-                    {/* Navigate */}
-                    <div className="flex justify-between mb-12">
-                        <Link
-                            href={`/truyen/${chapter?.novelSlug}/chuong-${
-                                chapter?.chapterNumber - 1
-                            }`}
-                            className={`${
-                                chapter.chapterNumber == 1 &&
-                                "pointer-events-none text-gray-400 fill-gray-400"
-                            }`}
-                        >
-                            <span className="sm:py-2 sm:px-7 py-2 px-4 border rounded-full flex items-center bg-white bg-opacity-50 sm:text-base text-sm font-semibold select-none">
-                                <i className="-rotate-90 w-3 mr-2 block">{iconArrowTop}</i>
-                                Chương trước
-                            </span>
-                        </Link>
-                        <Link
-                            href={`/truyen/${chapter?.novelSlug}/chuong-${
-                                chapter?.chapterNumber + 1
-                            }`}
-                            className={``}
-                        >
-                            <span className="sm:py-2 sm:px-7 py-2 px-4 border rounded-full flex items-center bg-white bg-opacity-50 sm:text-base text-sm font-semibold select-none">
-                                Chương sau
-                                <i className="rotate-90 w-3 ml-2 block">{iconArrowTop}</i>
-                            </span>
-                        </Link>
-                    </div>
-
-                    <div className="sm:text-3xl text-xl line-clamp-1 font-medium mb-6">
-                        Chương {chapter.chapterNumber}: {chapter.title}
-                    </div>
-                    <div className="mb-4 flex justify-between">
-                        <div className="flex items-center">
-                            <i className="w-4 block">{iconBook}</i>
+                    <div className="px-3 py-4">
+                        {/* Navigate */}
+                        <div className="flex justify-between mb-12">
                             <Link
-                                href={`/truyen/${chapter.novelSlug}`}
-                                className="line-clamp-1"
+                                href={`/truyen/${chapter?.novelSlug}/chuong-${
+                                    chapter?.chapterNumber - 1
+                                }`}
+                                className={`${
+                                    chapter.chapterNumber == 1 &&
+                                    "pointer-events-none text-gray-400 fill-gray-400"
+                                }`}
                             >
-                                <h2 className=" ml-2">{chapter.novelName}</h2>
+                                <span className="sm:py-2 sm:px-7 py-2 px-4 border rounded-full flex items-center bg-white bg-opacity-50 sm:text-base text-sm font-semibold select-none">
+                                    <i className="-rotate-90 w-3 mr-2 block">{iconArrowTop}</i>
+                                    Chương trước
+                                </span>
+                            </Link>
+                            <Link
+                                href={`/truyen/${chapter?.novelSlug}/chuong-${
+                                    chapter?.chapterNumber + 1
+                                }`}
+                                className={``}
+                            >
+                                <span className="sm:py-2 sm:px-7 py-2 px-4 border rounded-full flex items-center bg-white bg-opacity-50 sm:text-base text-sm font-semibold select-none">
+                                    Chương sau
+                                    <i className="rotate-90 w-3 ml-2 block">{iconArrowTop}</i>
+                                </span>
                             </Link>
                         </div>
-                        <div className="flex items-center">
-                            <i className="w-4 block">{iconAuthor}</i>
-                            <span className="">
-                                <h2 className="line-clamp-1 sm:text-base text-sm ml-2">
-                                    {chapter.creator}
-                                </h2>
-                            </span>
+    
+                        <div className="sm:text-3xl text-xl line-clamp-1 font-medium mb-6">
+                            Chương {chapter.chapterNumber}: {chapter.title}
                         </div>
-                        <div className="flex items-center">
-                            <i className="w-4 block">{iconT}</i>
-                            <span className="">
-                                <h2 className="line-clamp-1 sm:text-base text-sm ml-2">
-                                    {getCountWords(chapter.content)}
-                                </h2>
-                            </span>
+    
+                        <div className="mb-4 flex justify-between">
+                            <div className="flex items-center">
+                                <i className="w-4 block">{iconBook}</i>
+                                <Link
+                                    href={`/truyen/${chapter.novelSlug}`}
+                                    className="line-clamp-1"
+                                >
+                                    <h2 className=" ml-2">{chapter.novelName}</h2>
+                                </Link>
+                            </div>
+                            <div className="flex items-center">
+                                <i className="w-4 block">{iconAuthor}</i>
+                                <span className="">
+                                    <h2 className="line-clamp-1 sm:text-base text-sm ml-2">
+                                        {chapter.creator}
+                                    </h2>
+                                </span>
+                            </div>
+                            <div className="flex items-center">
+                                <i className="w-4 block">{iconT}</i>
+                                <span className="">
+                                    <h2 className="line-clamp-1 sm:text-base text-sm ml-2">
+                                        {getCountWords(chapter.content)}
+                                    </h2>
+                                </span>
+                            </div>
+                            <div className="flex items-center">
+                                <i className="w-4 block">{iconOclock}</i>
+                                <span className="">
+                                    <h2 className="line-clamp-1 sm:text-base text-sm ml-2">
+                                        {convertTime(chapter.updatedAt)}
+                                    </h2>
+                                </span>
+                            </div>
                         </div>
-                        <div className="flex items-center">
-                            <i className="w-4 block">{iconOclock}</i>
-                            <span className="">
-                                <h2 className="line-clamp-1 sm:text-base text-sm ml-2">
-                                    {convertTime(chapter.updatedAt)}
-                                </h2>
-                            </span>
+    
+                        <span className="w-36 mx-auto my-5 border-b border-gray-500"></span>
+                        <div
+                            className="sm:text-2xl text-xl leading-relaxed grid"
+                            dangerouslySetInnerHTML={{
+                                __html: chapter?.content || "Lỗi hiển thị",
+                            }}
+                        />
+    
+                        {/* Navigate */}
+                        <div className="flex justify-between mt-8 mb-5">
+                            <Link
+                                href={`/truyen/${chapter?.novelSlug}/chuong-${
+                                    chapter?.chapterNumber - 1
+                                }`}
+                                className={`${
+                                    chapter.chapterNumber == 1 &&
+                                    "pointer-events-none text-gray-400 fill-gray-400"
+                                }`}
+                            >
+                                <span className="sm:py-2 sm:px-7 py-2 px-4 border rounded-full flex items-center bg-white bg-opacity-50 sm:text-base text-sm font-semibold select-none">
+                                    <i className="-rotate-90 w-3 mr-2 block">{iconArrowTop}</i>
+                                    Chương trước
+                                </span>
+                            </Link>
+                            <Link
+                                href={`/truyen/${chapter?.novelSlug}/chuong-${
+                                    chapter?.chapterNumber + 1
+                                }`}
+                                className={``}
+                            >
+                                <span className="sm:py-2 sm:px-7 py-2 px-4 border rounded-full flex items-center bg-white bg-opacity-50 sm:text-base text-sm font-semibold select-none">
+                                    Chương sau
+                                    <i className="rotate-90 w-3 ml-2 block">{iconArrowTop}</i>
+                                </span>
+                            </Link>
                         </div>
-                    </div>
-                    <span className="w-36 mx-auto my-5 border-b border-gray-500"></span>
-                    <div
-                        className="sm:text-2xl text-xl leading-relaxed grid"
-                        dangerouslySetInnerHTML={{
-                            __html: chapter?.content || "Lỗi hiển thị",
-                        }}
-                    />
-
-                    {/* Navigate */}
-                    <div className="flex justify-between mt-8 mb-5">
-                        <Link
-                            href={`/truyen/${chapter?.novelSlug}/chuong-${
-                                chapter?.chapterNumber - 1
-                            }`}
-                            className={`${
-                                chapter.chapterNumber == 1 &&
-                                "pointer-events-none text-gray-400 fill-gray-400"
-                            }`}
-                        >
-                            <span className="sm:py-2 sm:px-7 py-2 px-4 border rounded-full flex items-center bg-white bg-opacity-50 sm:text-base text-sm font-semibold select-none">
-                                <i className="-rotate-90 w-3 mr-2 block">{iconArrowTop}</i>
-                                Chương trước
-                            </span>
-                        </Link>
-                        <Link
-                            href={`/truyen/${chapter?.novelSlug}/chuong-${
-                                chapter?.chapterNumber + 1
-                            }`}
-                            className={``}
-                        >
-                            <span className="sm:py-2 sm:px-7 py-2 px-4 border rounded-full flex items-center bg-white bg-opacity-50 sm:text-base text-sm font-semibold select-none">
-                                Chương sau
-                                <i className="rotate-90 w-3 ml-2 block">{iconArrowTop}</i>
-                            </span>
-                        </Link>
                     </div>
                 </WrapperLayout>
             </main>

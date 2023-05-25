@@ -4,20 +4,21 @@ import cn from "clsx"
 
 interface ListStarLayoutProps extends WithClassName {
     numb?: number | 5
+    size?: number
 }
 
 export const ListStarLayout = (props : ListStarLayoutProps) => {
     return (
         <div className={cn(
             props.className,
-            "flex items-center"
+            "flex items-center -ml-1"
         )}>
             <div className="gap-1 relative">
-                <i className="w-4 mx-1 inline-block fill-yellow-400 opacity-40">{iconStar}</i>
-                <i className="w-4 mx-1 inline-block fill-yellow-400 opacity-40">{iconStar}</i>
-                <i className="w-4 mx-1 inline-block fill-yellow-400 opacity-40">{iconStar}</i>
-                <i className="w-4 mx-1 inline-block fill-yellow-400 opacity-40">{iconStar}</i>
-                <i className="w-4 mx-1 inline-block fill-yellow-400 opacity-40">{iconStar}</i>
+                <i className={`w-${props.size || 4} mx-1 inline-block fill-yellow-400 opacity-40`}>{iconStar}</i>
+                <i className={`w-${props.size || 4} mx-1 inline-block fill-yellow-400 opacity-40`}>{iconStar}</i>
+                <i className={`w-${props.size || 4} mx-1 inline-block fill-yellow-400 opacity-40`}>{iconStar}</i>
+                <i className={`w-${props.size || 4} mx-1 inline-block fill-yellow-400 opacity-40`}>{iconStar}</i>
+                <i className={`w-${props.size || 4} mx-1 inline-block fill-yellow-400 opacity-40`}>{iconStar}</i>
 
                 <div
                     style={{
@@ -25,11 +26,11 @@ export const ListStarLayout = (props : ListStarLayoutProps) => {
                     }}
                     className="max-w-full block whitespace-nowrap overflow-hidden absolute gap-1 top-0 left-0 right-0 bottom-0"
                 >
-                    <i className="w-4 mx-1 inline-block fill-yellow-500">{iconStar}</i>
-                    <i className="w-4 mx-1 inline-block fill-yellow-500">{iconStar}</i>
-                    <i className="w-4 mx-1 inline-block fill-yellow-500">{iconStar}</i>
-                    <i className="w-4 mx-1 inline-block fill-yellow-500">{iconStar}</i>
-                    <i className="w-4 mx-1 inline-block fill-yellow-500">{iconStar}</i>
+                    <i className={`w-${props.size || 4} mx-1 inline-block fill-yellow-500`}>{iconStar}</i>
+                    <i className={`w-${props.size || 4} mx-1 inline-block fill-yellow-500`}>{iconStar}</i>
+                    <i className={`w-${props.size || 4} mx-1 inline-block fill-yellow-500`}>{iconStar}</i>
+                    <i className={`w-${props.size || 4} mx-1 inline-block fill-yellow-500`}>{iconStar}</i>
+                    <i className={`w-${props.size || 4} mx-1 inline-block fill-yellow-500`}>{iconStar}</i>
                 </div>
             </div>
         </div>

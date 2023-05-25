@@ -13,6 +13,8 @@ const LatestReviews = ({ reviews } : LatestReviewsProps) => {
 
     // console.log("reviews: ", reviews)
 
+    console.log(reviews)
+
     return (
         <div className="mb-5">
             <h3 className="px-4 mb-5 text-xl font-semibold">Mới đánh giá</h3>

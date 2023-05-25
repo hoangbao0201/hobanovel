@@ -3,11 +3,12 @@ const router = express.Router()
 
 import { addReplyReview, addReviewByDataNovel, destroyReplyReviewByNovel, destroyReviewByNovel, getReplyReview, getReviewsByNovel,  } from "../controllers/ReviewController";
 import { verifyToken } from "../middleware/verifyToken";
+import { checkReview } from "../middleware/checkReview";
 
 
-router.post("/add-reply-review/:novelId/:reviewId", verifyToken, addReplyReview)
+router.post("/add/reply/:novelId/:reviewId", verifyToken, addReplyReview)
 
-router.post("/add/:novelId", verifyToken, addReviewByDataNovel)
+router.post("/add/:novelId", verifyToken, checkReview, addReviewByDataNovel)
 
 router.get("/get/:novelId?", getReviewsByNovel)
 

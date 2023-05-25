@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useState } from "react";
 import {
     iconAddNewNovel,
     iconChart,

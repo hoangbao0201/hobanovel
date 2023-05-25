@@ -97,7 +97,7 @@ const FormComment = ({ tab, novelId }: FormCommentProps) => {
                     novelId: String(novelId),
                     chapterId: null,
                     parentId: null,
-                    userId: currentUser.name,
+                    userId: currentUser.userId,
                     name: currentUser?.name,
                     createdAt: String(new Date()),
                     updatedAt: String(new Date()),

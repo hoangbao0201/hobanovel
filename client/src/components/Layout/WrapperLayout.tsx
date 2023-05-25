@@ -13,7 +13,7 @@ const WrapperLayout = (props: WrapperLayoutProps) => {
     return (
         <div className={cn(
             props.className,
-            `max-w-6xl min-h-[300px] mx-auto lg:px-4 grid bg-white rounded-xl py-7 my-4 mb-8`
+            `transition-all max-w-6xl min-h-[300px] mx-auto grid bg-white rounded-xl`
         )}>{props.children}</div>
     )
 }

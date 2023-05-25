@@ -137,12 +137,12 @@ const BannerPage = () => {
                             >
                                 <SwiperButton
                                     type="prev"
-                                    styleButton="absolute top-1/2 -translate-y-1/2 z-40 p-3 active:bg-opacity-80 bg-slate-50 rounded-sm bg-opacity-50 border left-0"
+                                    styleButton="absolute top-1/2 -translate-y-1/2 z-40 p-4 active:bg-opacity-80 bg-slate-50 rounded-sm bg-opacity-50 border left-0"
                                     styleIcon="h-4 w-4 fill-slate-400 stroke-slate-600"   
                                 />
                                 <SwiperButton
                                     type="next"
-                                    styleButton="absolute top-1/2 -translate-y-1/2 z-40 p-3 active:bg-opacity-80 bg-slate-50 rounded-sm bg-opacity-50 border right-0"
+                                    styleButton="absolute top-1/2 -translate-y-1/2 z-40 p-4 active:bg-opacity-80 bg-slate-50 rounded-sm bg-opacity-50 border right-0"
                                     styleIcon="h-4 w-4 fill-slate-400 stroke-slate-600"   
                                 />
                                 {
@@ -154,8 +154,8 @@ const BannerPage = () => {
                                             >
                                                 <Link href={`/truyen/${banner?.slug}`} className="w-full h-[180px] rounded-md overflow-hidden align-middle inline-block">
                                                     <BlurImage
-                                                        width={160}
-                                                        height={200}
+                                                        width={500}
+                                                        height={500}
                                                         alt="image-demo"
                                                         blurDataURL={banner?.imageBlurHash || placeholderBlurhash}
                                                         className="block object-cover w-full h-full"

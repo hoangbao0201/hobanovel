@@ -100,7 +100,7 @@ const LoginPage = () => {
                                     onClick={eventSubmitForm}
                                     className=" transition-all w-full text-center py-3 rounded bg-blue-600 hover:bg-blue-700 active:bg-blue-800 active:shadow-xl text-white"
                                 >
-                                    Sign Up
+                                    Đăng nhập
                                 </button>
                             </div>
                         </div>

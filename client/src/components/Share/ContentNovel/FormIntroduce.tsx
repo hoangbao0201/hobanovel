@@ -8,7 +8,7 @@ interface FormIntroduceProps {
 const FormIntroduce = ({ description } : FormIntroduceProps) => {
 
     return (
-        <div>
+        <div className="px-4">
             <div className="" dangerouslySetInnerHTML={{
                 __html: description
             }}/>

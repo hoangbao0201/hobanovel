@@ -128,7 +128,7 @@ const HomePage = ({ data = [], novelsOutstending = [], novelsJustUpdated = [], n
             </Head>
             <main>
 
-                <WrapperLayout className="min-h-screen">
+                <WrapperLayout className="min-h-screen pt-5">
                     <div className="flex flex-col lg:flex-row">
                         <div className="lg:w-8/12">
                             <Outstanding novels={novelsOutstending}/>

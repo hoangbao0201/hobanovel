@@ -12,6 +12,7 @@ import { Provider } from "react-redux";
 import { persistor, store } from "@/redux/store";
 import { PersistGate } from "redux-persist/integration/react";
 import useScrollRestoration from "@/hook/useScrollRestoration";
+import { ToastContainer } from "react-toastify";
 
 export type NextPageWithLayout = NextPage & {
     getLayout?: (page: ReactElement) => ReactNode;
@@ -32,12 +33,19 @@ NProgress.configure({ showSpinner: false });
 const inter = Inter({ subsets: ["latin"] });
 
 export default function App({ Component, pageProps, router }: AppPropsWithlayout) {
-    const getLayout = Component.getLayout || ((page) => page);
+    const getLayout = Component.getLayout || ((page) => {
+        return (
+            <>
+                {page}
+            </>
+        )
+    });
 
     useScrollRestoration(router);
 
     return (
         <>
+            <ToastContainer />
             <style jsx global>{`
                 html {
                     font-family: ${inter.style.fontFamily};
