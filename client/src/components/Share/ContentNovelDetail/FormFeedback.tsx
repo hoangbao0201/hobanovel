@@ -51,7 +51,7 @@ const FormFeedback = ({ tab, novelId }: FormFeedbackProps) => {
         if(!novelId) {
             return
         }
-        const reviewsResponse = await getReviewsByNovelHandle({ novelId } as ReviewType & { page?: number });
+        const reviewsResponse = await getReviewsByNovelHandle(`${novelId}?page=1`);
         if (reviewsResponse?.data.success) {
             console.log(reviewsResponse.data.reviews);
             setBodyContent(reviewsResponse.data.reviews);
@@ -158,7 +158,7 @@ const FormFeedback = ({ tab, novelId }: FormFeedbackProps) => {
     return (
         <>
             <div className="flex">
-                <div className="lg:w-8/12 relative">
+                <div className="lg:w-8/12 relative flex-1">
                     <div className="px-3">
 
                         <div className="bg-orange-800/5">
@@ -277,7 +277,7 @@ const FormFeedback = ({ tab, novelId }: FormFeedbackProps) => {
 
                     </div>
     
-                    <div className="transition-all ease-linear px-3">
+                    <div className="transition-all ease-linear px-3 grid">
                         {bodyContent &&
                             bodyContent?.map((review) => {
                                 return (

@@ -1,48 +1,43 @@
-import { placeholderBlurhash } from "@/constants";
-import { NovelType } from "@/types";
 import Link from "next/link";
-import BlurImage from "../Layout/BlurImage";
 
-type NovelHighlyRated = NovelType & { mediumScore: number }
+import { NovelType } from "@/types";
+import { placeholderBlurhash } from "@/constants";
+import BlurImage from "@/components/Layout/BlurImage";
 
-interface HighlyRatedProps {
-    novels?: NovelHighlyRated[]
+interface OutstandingProps {
+    novels?: NovelType[]
 }
 
-const HighlyRated = ({ novels = [] } : HighlyRatedProps) => {
+const Outstanding = ({ novels = [] } : OutstandingProps) => {
 
     return (
         <div className="mb-5">
-            <h3 className="px-4 mb-5 text-xl font-semibold">Truyện đánh giá cao</h3>
-            <div className="grid sm:grid-cols-2 grid-cols-1 gap-6 px-4">
+            <h3 className="px-4 mb-5 text-xl font-semibold">Truyện nổi bật</h3>
+            <div className="grid md:grid-cols-2 grid-cols-1 gap-6 px-4">
     
                 {   
                     novels?.length ? (
-                        novels.map((novel) => {
+                        novels.map((novel : NovelType) => {
                             return (
                                 <div key={novel.novelId} className="flex">
-                                    <Link href={`/truyen/${novel.slug}`} className="w-20 h-28 mt-2 overflow-hidden shadow align-middle inline-block">
+                                    <Link href={`/truyen/${novel.slug}`} className="relative w-20 h-28 overflow-hidden shadow">
                                         <BlurImage
-                                            width={80}
-                                            height={120}
+                                            width={85}
+                                            height={125}
                                             alt="image-demo"
                                             blurDataURL={novel.imageBlurHash || placeholderBlurhash}
-                                            className="group-hover:scale-105 group-hover:duration-500 object-cover w-20 h-28"
+                                            className="group-hover:scale-105 group-hover:duration-500 object-cover h-full w-full"
                                             placeholder="blur"
-                                            src={novel.thumbnailUrl}
+                                            src={novel.thumbnailUrl || "/images/novel-default.png"}
                                         />
                                     </Link>
                                     <div className="flex-1 ml-3">
                                         <h2 className="mb-2 text-base line-clamp-1 font-semibold">
                                             <Link className="block" href={`/truyen/${novel.slug}`}>{novel.title}</Link>
                                         </h2>
-                                        <div className="flex items-center mb-2">
-                                            <div className="py-[3px] lg:px-3 px-2 rounded-full lg:text-base text-sm leading-none text-white font-semibold bg-red-700">{novel.mediumScore}</div>
-                                            <div className="ml-3 text-green-700 lg:text-base text-sm font-semibold line-clamp-1">{}</div>
-                                        </div>
                                         <div className="line-clamp-2 text-sm mb-2 text-slate-900">{novel.description.replace(/<[^>]+>/g, '')}</div>
                                         <div className="text-base flex align-middle items-center justify-between">
-                                            <span className="max-w-[55%] text-base line-clamp-1 align-middle">{novel.author}</span>
+                                            <span className="w-[55%] text-base mr-3 line-clamp-1 align-middle">{novel.author}</span>
                                             <span className="px-2 text-xs text-orange-700 line-clamp-1 align-middle text-center border border-orange-700">{novel.category}</span>
                                         </div>
                                     </div>
@@ -58,4 +53,4 @@ const HighlyRated = ({ novels = [] } : HighlyRatedProps) => {
     )
 }
 
-export default HighlyRated;
+export default Outstanding;

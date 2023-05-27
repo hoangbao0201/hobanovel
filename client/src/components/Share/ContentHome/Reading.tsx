@@ -2,8 +2,8 @@ import Link from "next/link";
 
 import { NovelType } from "@/types";
 import { placeholderBlurhash } from "@/constants";
-import BlurImage from "../Layout/BlurImage";
 import { useSelector } from "react-redux";
+import BlurImage from "@/components/Layout/BlurImage";
 
 interface ReadingProps {
     readingNovel?: any

@@ -1,13 +1,12 @@
 import { ReactNode, useEffect } from "react";
-import dynamic from "next/dynamic";
 
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { addUserHandle, logoutUserHandle } from "@/redux/userSlice";
 import { getAccessToken, removeAccessToken } from "@/services/cookies.servies";
 
 import Header from "../partials/Header";
 import Footer from "../partials/Footer";
-import BannerPage from "../partials/BannerPage";
+import BannersIntro from "../partials/BannersIntro";
 import { connectUserHandle } from "@/services/auth.services";
 import Head from "next/head";
 import ScrollOnTop from "./ScrollOnTop";
@@ -74,16 +73,16 @@ const MainLayout= ({ bg = "#ffff", children, isHeader = true, isFooter = true, i
 
             <ScrollOnTop />
             
-            { isHeader && !matchesMobile && <Header /> }
+            { isHeader && <Header /> }
 
-            { isBannerPage && <BannerPage /> }
+            { isBannerPage && <BannersIntro /> }
 
 
             <div className={`${isBannerPage && `w-full min-h-[500px] top-0 overflow-hidden ${ !matchesMobile && "-translate-y-28" }`}`}>
                 {children}
             </div>
 
-            { isFooter && !matchesMobile && <Footer /> }
+            { isFooter && <Footer /> }
         
         </>
     )

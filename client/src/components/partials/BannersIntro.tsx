@@ -1,18 +1,23 @@
 
+import Image from "next/image";
 import { GetServerSideProps } from "next";
+import { useEffect, useState } from "react";
+
+import { Swiper, SwiperSlide } from "swiper/react";
+import 'swiper/css';
+import "swiper/css/effect-coverflow";
+import { EffectCoverflow } from "swiper";
+
 
 import useSWR from "swr";
+import axios from "axios";
 import { BannersType } from "@/types";
 import BlurImage from "../Layout/BlurImage";
 import { placeholderBlurhash } from "@/constants";
-// import { getSingleBannersHandle } from "@/services/banners.services";
-import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useMediaQuery } from "usehooks-ts";
-import axios from "axios";
-import { Swiper, SwiperSlide } from "swiper/react";
 import SwiperButton from "../Buttons/SwiperButton";
-import { Pagination } from "swiper";
+import styled from "styled-components";
 
 type ResBannerProps = Pick<BannersType, 'bannersId' | 'bannersUrl' | 'imageBlurHash' | 'slug'>
 
@@ -86,8 +91,19 @@ const dataFakeBannersMobile = [
     },
 ]
   
+const GridSwiperStyled = styled.div`
+    .swiper-slide {
+        opacity: 0.5;
+        box-shadow: 0 3px 10px 0 rgba(0,0,0,.25);
+        background-color: #eee;
+        transition: all .2s ease-in-out;
+    }
+    .swiper-slide-active {
+        opacity: 1;
+    }
+`
 
-const BannerPage = () => {
+const BannersIntro = () => {
 
     const matchesMobile = useMediaQuery('(max-width: 640px)') 
 
@@ -125,49 +141,49 @@ const BannerPage = () => {
             <div className="w-full relative select-none">
                 {
                     matchesMobile ? (
-                        <div className="w-full h-[180px]">
-                            <Swiper
-                                loop={true}
-                                spaceBetween={18}
-                                slidesPerView={1}
-                                navigation={true}
-                                pagination={true}
-                                className="w-full h-full overflow-hidden"
-                                modules={[Pagination]}
-                            >
-                                <SwiperButton
-                                    type="prev"
-                                    styleButton="absolute top-1/2 -translate-y-1/2 z-40 p-4 active:bg-opacity-80 bg-slate-50 rounded-sm bg-opacity-50 border left-0"
-                                    styleIcon="h-4 w-4 fill-slate-400 stroke-slate-600"   
-                                />
-                                <SwiperButton
-                                    type="next"
-                                    styleButton="absolute top-1/2 -translate-y-1/2 z-40 p-4 active:bg-opacity-80 bg-slate-50 rounded-sm bg-opacity-50 border right-0"
-                                    styleIcon="h-4 w-4 fill-slate-400 stroke-slate-600"   
-                                />
-                                {
-                                    dataFakeBannersMobile.map((banner : any) => {
-                                        return (
-                                            <SwiperSlide
-                                                className=""
-                                                key={banner.bannersId}
-                                            >
-                                                <Link href={`/truyen/${banner?.slug}`} className="w-full h-[180px] rounded-md overflow-hidden align-middle inline-block">
-                                                    <BlurImage
-                                                        width={500}
-                                                        height={500}
-                                                        alt="image-demo"
-                                                        blurDataURL={banner?.imageBlurHash || placeholderBlurhash}
-                                                        className="block object-cover w-full h-full"
-                                                        placeholder="blur"
-                                                        src={banner?.bannersUrl ?? "/images/banners-default.jpg"}
-                                                    />
-                                                </Link>
-                                            </SwiperSlide>
-                                        )
-                                    })
-                                }
-                            </Swiper>
+                        <div className="relative overflow-hidden">
+                            <GridSwiperStyled className="relative">
+                                <Swiper
+                                    loop={true}
+                                    centeredSlides
+                                    slidesPerView={1}
+                                    spaceBetween={18}
+                                    className=""
+                                >
+
+                                    <SwiperButton
+                                        type="prev"
+                                        styleButton="absolute top-1/2 -translate-y-1/2 z-40 p-4 active:bg-opacity-80 bg-slate-50 rounded-sm bg-opacity-50 border left-[18px]"
+                                        styleIcon="h-4 w-4 fill-slate-400 stroke-slate-600"   
+                                    />
+                                    <SwiperButton
+                                        type="next"
+                                        styleButton="absolute top-1/2 -translate-y-1/2 z-40 p-4 active:bg-opacity-80 bg-slate-50 rounded-sm bg-opacity-50 border right-[18px]"
+                                        styleIcon="h-4 w-4 fill-slate-400 stroke-slate-600"   
+                                    />
+                
+                                    {
+                                        dataFakeBannersMobile.map((banner, index) => {
+                                            return ( 
+                                                <SwiperSlide data-banner-id={banner.bannersId} key={index} className="">
+                                                    <div className="bg-white p-4">
+                                                        <Link className="block relative" href={`/`}>
+                                                            <Image
+                                                                width={500}
+                                                                height={500}
+                                                                alt="banner thumbnail banner"
+                                                                className="h-[200px] inset-0 block object-cover rounded-md overflow-hidden"
+                                                                src={banner.bannersUrl}
+                                                            />
+                                                        </Link>
+                                                    </div>
+                                                </SwiperSlide>
+                                            )
+                                        })
+                                    }
+                
+                                </Swiper>
+                            </GridSwiperStyled>
                         </div>
                     ) : (
                         <>
@@ -180,7 +196,7 @@ const BannerPage = () => {
                                                 height={1000}
                                                 alt="image-demo"
                                                 blurDataURL={BannersRes?.banners?.imageBlurHash || placeholderBlurhash}
-                                                className="group-hover:scale-105 group-hover:duration-500 object-cover w-full h-full"
+                                                className="object-cover w-full h-full"
                                                 placeholder="blur"
                                                 src={BannersRes?.banners?.bannersUrl ?? "/images/banners-default.jpg"}
                                             />
@@ -203,4 +219,4 @@ const BannerPage = () => {
     );
 };
 
-export default BannerPage;
+export default BannersIntro;

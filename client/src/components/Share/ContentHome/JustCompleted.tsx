@@ -2,7 +2,7 @@ import Link from "next/link";
 
 import { NovelType } from "@/types";
 import { placeholderBlurhash } from "@/constants";
-import BlurImage from "../Layout/BlurImage";
+import BlurImage from "@/components/Layout/BlurImage";
 
 interface JustCompletedProps {
     novels?: NovelType[]

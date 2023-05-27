@@ -2,10 +2,9 @@ import { ReviewType } from "@/types";
 import axios from "axios";
 
 
-export const getReviewsByNovelHandle = async (data: ReviewType & { page?: number }) => {
+export const getReviewsByNovelHandle = async (query? : string) => {
     try {
-        const { page = 1 } = data
-        const reviews = await axios.get(`http://localhost:4000/api/reviews/get/${data?.novelId ?? ''}?page=${page}`);
+        const reviews = await axios.get(`http://localhost:4000/api/reviews/get/${query}`);
 
         if(reviews.data.success) {
             return reviews

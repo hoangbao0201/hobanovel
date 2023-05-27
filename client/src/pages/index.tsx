@@ -30,38 +30,38 @@ export interface PageHomeProps {
 
 
 const Outstanding = dynamic(
-    () => import("@/components/Share/Outstanding", {
+    () => import("@/components/Share/ContentHome/Outstanding", {
         ssr: false,
     } as ImportCallOptions)
 )
 const JustUpdated = dynamic(
-    () => import("@/components/Share/JustUpdated", {
+    () => import("@/components/Share/ContentHome/JustUpdated", {
         ssr: false,
     } as ImportCallOptions)
 )
 
 const Reading = dynamic(
-    () => import("@/components/Share/Reading", {
+    () => import("@/components/Share/ContentHome/Reading", {
         ssr: false,
     } as ImportCallOptions)
 )
 const HighlyRated = dynamic(
-    () => import("@/components/Share/HighlyRated", {
+    () => import("@/components/Share/ContentHome/HighlyRated", {
         ssr: false,
     } as ImportCallOptions)
 )
 const LatestReviews = dynamic(
-    () => import("@/components/Share/LatestReviews", {
+    () => import("@/components/Share/ContentHome/LatestReviews", {
         ssr: false,
     } as ImportCallOptions)
 )
 const JustPosted = dynamic(
-    () => import("@/components/Share/JustPosted", {
+    () => import("@/components/Share/ContentHome/JustPosted", {
         ssr: false,
     } as ImportCallOptions)
 )
 const JustCompleted = dynamic(
-    () => import("@/components/Share/JustCompleted", {
+    () => import("@/components/Share/ContentHome/JustCompleted", {
         ssr: false,
     } as ImportCallOptions)
 )
@@ -69,7 +69,40 @@ const JustCompleted = dynamic(
 
 const HomePage = ({ data = [], novelsOutstending = [], novelsJustUpdated = [], novelsHighlyRated = [], novelsLatestReviews = [], novelsJustCompleted = [] } : PageHomeProps ) => {
 
-    const matchesMobile = useMediaQuery('(max-width: 640px)') 
+    const matchesMobile = useMediaQuery('(max-width: 640px)')
+    const matchesTablet = useMediaQuery('(max-width: 1024px)')
+
+    // const { data: novelReviews } = useSWR<{ reviews: any }>(
+    //     `?page=1`, 
+    //     async (query) => {
+    //         const token = getAccessToken();
+    //         if(!token) {
+    //             throw new Error();
+    //         }
+    //         const res = await axios.get(`http://localhost:4000/api/reviews/get/${query}`);
+
+    //         if(!res.data.success || !res) {
+    //             throw new Error();
+    //         }
+            
+    //         return {
+    //             reviews: res.data.reviews
+    //         }
+    //     },
+    //     {
+    //         onErrorRetry: (error, _, __, revalidate, { retryCount }) => {
+    //             if(error.status === 404) {
+    //                 return
+    //             }
+    //             if(retryCount >= 1) {
+    //                 return
+    //             }
+    //             setTimeout(() => {
+    //                 revalidate({ retryCount })
+    //             }, 2000)
+    //         }
+    //     }
+    // );
     
     const { data: novelReading } = useSWR<{ novels: any }>(
         `?page=1`, 
@@ -85,11 +118,9 @@ const HomePage = ({ data = [], novelsOutstending = [], novelsJustUpdated = [], n
             });
 
             if(!res.data.success || !res) {
-                // console.log("lỗi: ", 2)
                 throw new Error();
             }
             
-            // console.log("lỗi: ", res.data.novels)
             return {
                 novels: res.data.novels
             }
@@ -110,6 +141,7 @@ const HomePage = ({ data = [], novelsOutstending = [], novelsJustUpdated = [], n
     );
     
     // console.log("novelReading: ", novelReading?.novels);
+    console.log("novelReviews: ", novelsLatestReviews);
  
 
     return (
@@ -129,17 +161,27 @@ const HomePage = ({ data = [], novelsOutstending = [], novelsJustUpdated = [], n
             <main>
 
                 <WrapperLayout className="min-h-screen pt-5">
-                    <div className="flex flex-col lg:flex-row">
+                    <div className="flex">
                         <div className="lg:w-8/12">
                             <Outstanding novels={novelsOutstending}/>
                         </div>
-                        <div className="lg:w-4/12 hidden lg:block">
-                            <Reading readingNovel={novelReading?.novels}/>
-                        </div>
+                        {
+                            !matchesTablet && (
+                                <div className="lg:w-4/12">
+                                    <Reading readingNovel={novelReading?.novels}/>
+                                </div>
+                            )
+                        }
                     </div>
-                    <div className="hidden xl:block">
-                        <JustUpdated novels={novelsJustUpdated}/>
-                    </div>
+
+                    {
+                        !matchesTablet && (
+                            <div className="">
+                                <JustUpdated novels={novelsJustUpdated}/>
+                            </div>
+                        )
+                    }
+
                     <div className="flex flex-col lg:flex-row my-6">
                         <div className="lg:w-8/12">
                             <HighlyRated novels={novelsHighlyRated as NovelHighlyRated[]}/>
@@ -148,22 +190,15 @@ const HomePage = ({ data = [], novelsOutstending = [], novelsJustUpdated = [], n
                             <LatestReviews reviews={novelsLatestReviews}/>
                         </div>
                     </div>
-                    {/* {
-                        !matchesMobile && (
-                            <div className="lg:flex flex-col lg:flex-row my-6">
+                    
+                    <div className="hidden lg:flex flex-col lg:flex-row my-6">
+                        {
+                            !matchesTablet && (
                                 <div className="lg:w-4/12">
                                     <JustPosted novels={novelsOutstending}/>
                                 </div>
-                                <div className="lg:w-8/12">
-                                    <JustCompleted novels={novelsJustCompleted}/>
-                                </div>
-                            </div>
-                        ) 
-                    } */}
-                    <div className="hidden lg:flex flex-col lg:flex-row my-6">
-                        <div className="lg:w-4/12">
-                            <JustPosted novels={novelsOutstending}/>
-                        </div>
+                            )
+                        }
                         <div className="lg:w-8/12">
                             <JustCompleted novels={novelsJustCompleted}/>
                         </div>
@@ -183,7 +218,7 @@ export const getStaticProps : GetStaticProps = async (context) => {
     const novelsResponse = await getNovelsByPageHandle("1");
     const novelsOutstandingResponse = await getNovelsByOutstandingHandle(1);
     const novelsHighlyRatedResponse = await getNovelsByHighlyRatedHandle(1);
-    const reviewsResponse = await getReviewsByNovelHandle(data as ReviewType & { page: number })
+    const reviewsResponse = await getReviewsByNovelHandle(`?page=1`)
     const novelReading = await getReadingNovelHandle(1)
 
     return {

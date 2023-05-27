@@ -1,9 +1,9 @@
 import Link from "next/link";
 
 import { placeholderBlurhash } from "@/constants";
-import BlurImage from "../Layout/BlurImage";
 import { convertFromRaw } from "draft-js";
 import { NovelType, ReviewType } from "@/types";
+import BlurImage from "@/components/Layout/BlurImage";
 
 interface LatestReviewsProps {
     reviews?:  ReviewType[]
@@ -13,7 +13,7 @@ const LatestReviews = ({ reviews } : LatestReviewsProps) => {
 
     // console.log("reviews: ", reviews)
 
-    console.log(reviews)
+    // console.log(reviews)
 
     return (
         <div className="mb-5">

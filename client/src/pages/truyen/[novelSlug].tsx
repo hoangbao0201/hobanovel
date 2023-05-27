@@ -1,10 +1,14 @@
 import Head from "next/head";
 import Link from "next/link";
 import Image from "next/image";
-import { ReactNode, useState } from "react";
+import dynamic from "next/dynamic";
+import { ReactNode, useEffect, useState } from "react";
 import {
     GetServerSideProps
 } from "next";
+
+import Tippy from "@tippyjs/react";
+import 'tippy.js/dist/tippy.css';
 
 import { NovelBySlugType } from "@/types";
 import { ParsedUrlQuery } from "querystring";
@@ -15,16 +19,36 @@ import { getNovelBySlugHandle } from "@/services/novels.services";
 import { iconBookmark, iconGlasses } from "../../../public/icons";
 import WrapperLayout from "@/components/Layout/WrapperLayout";
 import { Tab, Transition } from "@headlessui/react";
-import FormIntroduce from "@/components/Share/ContentNovel/FormIntroduce";
-import FormFeedback from "@/components/Share/ContentNovel/FormFeedback";
-import FormListChapters from "@/components/Share/ContentNovel/FormListChapters";
-import FormComment from "@/components/Share/ContentNovel/FormComment";
 import { convertViewsCount } from "@/utils/convertViewsCount";
 import { ListStarLayout } from "@/components/Layout/ListStarLayout";
 import { useMediaQuery } from "usehooks-ts";
 
-import Tippy from "@tippyjs/react";
-import 'tippy.js/dist/tippy.css';
+// import FormIntroduce from "@/components/Share/ContentNovelDetail/FormIntroduce";
+// import FormFeedback from "@/components/Share/ContentNovelDetail/FormFeedback";
+// import FormListChapters from "@/components/Share/ContentNovelDetail/FormListChapters";
+// import FormComment from "@/components/Share/ContentNovelDetail/FormComment";
+
+const FormIntroduce = dynamic(
+    () => import("../../components/Share/ContentNovelDetail/FormIntroduce", {
+        ssr: false,
+    } as ImportCallOptions)
+)
+const FormFeedback = dynamic(
+    () => import("../../components/Share/ContentNovelDetail/FormFeedback", {
+        ssr: false,
+    } as ImportCallOptions)
+)
+const FormListChapters = dynamic(
+    () => import("../../components/Share/ContentNovelDetail/FormListChapters", {
+        ssr: false,
+    } as ImportCallOptions)
+)
+const FormComment = dynamic(
+    () => import("../../components/Share/ContentNovelDetail/FormComment", {
+        ssr: false,
+    } as ImportCallOptions)
+)
+
 
 interface Params extends ParsedUrlQuery {
     novelSlug: string;
@@ -41,10 +65,22 @@ const NovelDetailPage = ({ token, tab, novel }: NovelDetailPageProps) => {
     const matchesMobile = useMediaQuery('(max-width: 640px)')
 
     const [numberTab, setNumberTab] = useState(0);
+    // const [scaleInfoNovel, setScaleInfoNovel] = useState(1);
 
     const getLayout = (page : ReactNode) => {
         return <MainLayout isBannerPage={!matchesMobile}>{page}</MainLayout>;
     };
+
+    // useEffect(() => {
+    //     window.onscroll = () => {
+    //         const currentScrollPosition = window.pageYOffset;
+    //         if (currentScrollPosition <= 600) {
+    //             const nb = (1 - (currentScrollPosition/600))
+    //             // setScaleInfoNovel(parseFloat(nb.toFixed(1)));
+    //             setScaleInfoNovel(nb);
+    //         }
+    //     };
+    // }, []);
 
     if (!novel) {
         return <div></div>;
@@ -60,7 +96,7 @@ const NovelDetailPage = ({ token, tab, novel }: NovelDetailPageProps) => {
                     <link rel="icon" href="/favicon.ico" />
                 </Head>
                 <main>
-                    <WrapperLayout className="">
+                    <WrapperLayout className="pt-5">
                         <div>
                             <div className="">
     
@@ -79,7 +115,10 @@ const NovelDetailPage = ({ token, tab, novel }: NovelDetailPageProps) => {
                                     )
                                 }
     
-                                <div className={`flex ${matchesMobile && "text-white h-56 items-center px-5"}`}>
+                                <div
+                                    // style={{ transform: `scale(${scaleInfoNovel})`, opacity: `${scaleInfoNovel}` }} 
+                                    className={`flex ${matchesMobile ? "text-white h-56 items-center px-5" : "px-3"}`}
+                                >
                                     <Link
                                         href={`/truyen/${novel.slug}`}
                                         className={`lg:w-52 lg:h-[270px] lg:rounded-none w-24 h-[150px] rounded-md overflow-hidden shadow relative `}
@@ -96,7 +135,7 @@ const NovelDetailPage = ({ token, tab, novel }: NovelDetailPageProps) => {
                                     </Link>
                                     <div className="justify-between lg:min-h-[280px] ml-5 min-h-[150px] relative flex-1 flex flex-col">
                                         <Link href={`/truyen/${novel.slug}`}>
-                                            <h2 className="lg:mb-6 lg:text-2xl line-clamp-2 text-sm font-semibold">{novel.title}</h2>
+                                            <h2 className="lg:mb-6 xs:text-xl line-clamp-2 font-semibold">{novel.title}</h2>
                                         </Link>
                                         {
                                             matchesMobile ? (
@@ -238,30 +277,30 @@ const NovelDetailPage = ({ token, tab, novel }: NovelDetailPageProps) => {
                                     selectedIndex={numberTab}
                                     onChange={(index: number) => setNumberTab(index)}
                                 >
-                                    <Tab.List className={`border-b mx-3 mb-3 text-xl font-semibold ${matchesMobile && "grid grid-cols-4"}`}>
+                                    <Tab.List className={`border-b mb-3 text-base font-semibold ${matchesMobile && "grid grid-cols-4"}`}>
                                         <Tab
-                                            className={`outline-none border-b-4 border-transparent hover:text-yellow-600 ${matchesMobile ? "text-sm py-3" : "mr-8 py-5"} ${
+                                            className={`outline-none border-b-4 border-transparent hover:text-yellow-600 ${matchesMobile ? "py-3" : "mr-8 py-5"} ${
                                                 numberTab == 0 && "border-yellow-600"
                                             }`}
                                         >
                                             Giới thiệu
                                         </Tab>
                                         <Tab
-                                            className={`outline-none border-b-4 border-transparent hover:text-yellow-600 ${matchesMobile ? "text-sm py-3" : "mr-8 py-5"} ${
+                                            className={`outline-none border-b-4 border-transparent hover:text-yellow-600 ${matchesMobile ? "py-3" : "mr-8 py-5"} ${
                                                 numberTab == 1 && "border-yellow-600"
                                             }`}
                                         >
                                             Đánh giá
                                         </Tab>
                                         <Tab
-                                            className={`outline-none border-b-4 border-transparent hover:text-yellow-600 ${matchesMobile ? "text-sm py-3" : "mr-8 py-5"} ${
+                                            className={`outline-none border-b-4 border-transparent hover:text-yellow-600 ${matchesMobile ? "py-3" : "mr-8 py-5"} ${
                                                 numberTab == 2 && "border-yellow-600"
                                             }`}
                                         >
                                             D.s chương
                                         </Tab>
                                         <Tab
-                                            className={`outline-none border-b-4 border-transparent hover:text-yellow-600 ${matchesMobile ? "text-sm py-3" : "mr-8 py-5"} ${
+                                            className={`outline-none border-b-4 border-transparent hover:text-yellow-600 ${matchesMobile ? "py-3" : "mr-8 py-5"} ${
                                                 numberTab == 3 && "border-yellow-600"
                                             }`}
                                         >
@@ -270,7 +309,7 @@ const NovelDetailPage = ({ token, tab, novel }: NovelDetailPageProps) => {
                                         {
                                             !matchesMobile && (
                                                 <Tab
-                                                    className={`outline-none border-b-4 border-transparent hover:text-yellow-600 ${matchesMobile ? "text-sm py-3" : "mr-8 py-5"} ${
+                                                    className={`outline-none border-b-4 border-transparent hover:text-yellow-600 ${matchesMobile ? "py-3" : "mr-8 py-5"} ${
                                                         numberTab == 4 && "border-yellow-600"
                                                     }`}
                                                 >

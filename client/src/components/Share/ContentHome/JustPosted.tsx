@@ -15,7 +15,7 @@ import styled from "styled-components";
 import { Transition } from "@headlessui/react";
 
 
-const SwiperButton = dynamic( () => import('../Buttons/SwiperButton') )
+const SwiperButton = dynamic( () => import('../..//Buttons/SwiperButton') )
 
 interface JustPostedProps {
     novels?: NovelType[]

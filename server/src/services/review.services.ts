@@ -56,8 +56,8 @@ export const getReviewsByNovelHandle = async (data : ReviewType & { page: number
                 SELECT COUNT(*) AS count, reviews.parentId FROM reviews
                 WHERE reviews.parentId IS NOT NULL
                 GROUP BY reviews.parentId
-            ) AS countReplyReview ON countReplyReview.parentId = reviews.novelId
-            ${conditions.length>0 ? ( "WHERE " + conditions) : 'WHERE reviews.parentId IS NULL'}
+            ) AS countReplyReview ON countReplyReview.parentId = reviews.reviewId
+            WHERE reviews.parentId IS NULL ${conditions.length>0 ? `AND ${conditions}` : ''}
             ORDER BY reviews.createdAt DESC
             LIMIT 3 OFFSET ?;
         `;

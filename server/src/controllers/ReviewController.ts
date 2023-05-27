@@ -43,7 +43,8 @@ export const addReviewByDataNovel = async (req: Request, res: Response) => {
                 userId: res.locals.user.userId,
                 createdAt: new Date(),
                 updatedAt: new Date()
-            }
+            },
+            data: reviewResult.data
         })
         
     } catch (error) {

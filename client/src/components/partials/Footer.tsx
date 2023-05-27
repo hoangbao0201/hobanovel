@@ -14,7 +14,7 @@ const Footer = () => {
                         Mê Truyện Chữ là nền tảng mở trực tuyến, miễn phí đọc truyện chữ được convert hoặc dịch kỹ lưỡng, do các converter và dịch giả đóng góp, rất nhiều truyện hay và nổi bật được cập nhật nhanh nhất với đủ các thể loại tiên hiệp, kiếm hiệp, huyền ảo ... 
                     </h3>
 
-                    <div className="flex gap-x-6 text-base mt-7">
+                    <div className="gap-x-6 text-base mt-7 hidden md:flex">
                         <Link href="/">Điều khoản dịch vụ</Link>
                         <Link href="/">Chính sách bảo mật</Link>
                         <Link href="/">Về bản quyền</Link>
