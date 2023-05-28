@@ -29,15 +29,15 @@ body {
 // ---
 
 html {
-    -webkit-tap-highlight-color: transparent;
+    // -webkit-tap-highlight-color: transparent;
     // scroll-behavior: smooth;
-    scroll-snap-type: y mandatory;
+    // scroll-snap-type: y mandatory;
 }
 
-::-webkit-scrollbar {
-    width: 10px;
-}
+// ::-webkit-scrollbar {
+//     width: 10px;
+// }
 
-::-webkit-scrollbar-thumb {
-    @apply rounded-2xl bg-gray-400;
-}
+// ::-webkit-scrollbar-thumb {
+//     @apply rounded-2xl bg-gray-400;
+// }

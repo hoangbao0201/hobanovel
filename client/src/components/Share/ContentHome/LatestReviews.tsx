@@ -17,8 +17,8 @@ const LatestReviews = ({ reviews } : LatestReviewsProps) => {
 
     return (
         <div className="mb-5">
-            <h3 className="px-4 mb-5 text-xl font-semibold">Mới đánh giá</h3>
-            <div className="px-4">
+            <h3 className="px-3 mb-5 text-xl font-semibold">Mới đánh giá</h3>
+            <div className="px-3">
 
                 {
                     reviews?.map((review) => {

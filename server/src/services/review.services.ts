@@ -49,14 +49,17 @@ export const getReviewsByNovelHandle = async (data : ReviewType & { page: number
         const { conditions, params } = ReviewSearchConditions(data);
         
         const qGetComment = `
-            SELECT reviews.*, users.name, users.userId, countReplyReview.count AS countReplyReview
+            SELECT reviews.*, users.name, users.userId, novels.title, novels.slug, countReplyReview.count AS countReplyReview
             FROM reviews
-            INNER JOIN users ON users.userId = reviews.userId
-            LEFT JOIN (
-                SELECT COUNT(*) AS count, reviews.parentId FROM reviews
-                WHERE reviews.parentId IS NOT NULL
-                GROUP BY reviews.parentId
-            ) AS countReplyReview ON countReplyReview.parentId = reviews.reviewId
+
+                INNER JOIN users ON users.userId = reviews.userId
+                LEFT JOIN (
+                    SELECT COUNT(*) AS count, reviews.parentId FROM reviews
+                    WHERE reviews.parentId IS NOT NULL
+                    GROUP BY reviews.parentId
+                ) AS countReplyReview ON countReplyReview.parentId = reviews.reviewId
+                LEFT JOIN novels ON novels.novelId = reviews.novelId
+
             WHERE reviews.parentId IS NULL ${conditions.length>0 ? `AND ${conditions}` : ''}
             ORDER BY reviews.createdAt DESC
             LIMIT 3 OFFSET ?;

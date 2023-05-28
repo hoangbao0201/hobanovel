@@ -41,6 +41,7 @@ const showToastify = (data : any) => {
 
 const FormFeedback = ({ tab, novelId }: FormFeedbackProps) => {
     const matchesMobile = useMediaQuery('(max-width: 640px)')
+    const matchesTablet = useMediaQuery('(max-width: 1024px)')
 
     const { currentUser, isAuthenticated } = useSelector((state: any) => state.user);
     // ---
@@ -290,54 +291,52 @@ const FormFeedback = ({ tab, novelId }: FormFeedbackProps) => {
                             })}
                     </div>
                 </div>
-                {
-                    !matchesMobile && (
-                        <div className="w-4/12 relative px-3">
-                            <div className="bg-pink-100 px-5 py-4 mb-7">
-                                <div className="flex items-center py-2 text-base">
-                                    <span>Đã có 3 đánh giá</span>
-                                    <ListStarLayout className="ml-auto mr-2"/>
-                                    <span className="w-9 text-end">5.00</span>
-                                </div>
-                                <div className="flex items-center py-2 text-sm">
-                                    <span>Tính cách nhân vật</span>
-                                    <ListStarLayout className="ml-auto mr-2"/>
-                                    <span className="w-9 text-end">4.71</span>
-                                </div>
-                                <div className="flex items-center py-2 text-sm">
-                                    <span>Nội dung cốt truyện</span>
-                                    <ListStarLayout className="ml-auto mr-2"/>
-                                    <span className="w-9 text-end">4.78</span>
-                                </div>
-                                <div className="flex items-center py-2 text-sm">
-                                    <span>Bố cục thế giới</span>
-                                    <ListStarLayout className="ml-auto mr-2"/>
-                                    <span className="w-9 text-end">4.85</span>
-                                </div>
-                                <div className="flex items-center py-2 text-sm">
-                                    <span>Chất lượng bản dịch</span>
-                                    <ListStarLayout className="ml-auto mr-2"/>
-                                    <span className="w-9 text-end">4.98</span>
-                                </div>
-                            </div>
-            
-                            <div className="bg-pink-100 px-5 py-4 text-sm">
-                                <h3 className="mb-5 text-base font-semibold">Lưu ý khi đánh giá</h3>
-                                <h4 className="mb-5">1. Không được dẫn link hoặc nhắc đến website khác</h4>
-            
-                                <h4 className="mb-5">2. Không được có những từ ngữ gay gắt, đả kích, xúc phạm người khác</h4>
-            
-                                <h4 className="mb-5">3. Đánh giá hoặc bình luận không liên quan tới truyện sẽ bị xóa</h4>
-            
-                                <h4 className="mb-5">4. Đánh giá hoặc bình luận chê truyện một cách chung chung không mang lại giá trị cho người đọc sẽ bị xóa</h4>
-            
-                                <h4 className="mb-5">5. Đánh giá có điểm số sai lệch với nội dung sẽ bị xóa</h4>
-            
-                                <i>Vui lòng xem và tuân theo đầy đủ các quy định tại Điều Khoản Dịch Vụ khi sử dụng website</i>
-                            </div>
+
+                <div className="lg:block hidden w-4/12 relative px-3">
+                    <div className="bg-pink-100 px-5 py-4 mb-7">
+                        <div className="flex items-center py-2 text-base">
+                            <span>Đã có 3 đánh giá</span>
+                            <ListStarLayout className="ml-auto mr-2"/>
+                            <span className="w-9 text-end">5.00</span>
                         </div>
-                    )
-                }
+                        <div className="flex items-center py-2 text-sm">
+                            <span>Tính cách nhân vật</span>
+                            <ListStarLayout className="ml-auto mr-2"/>
+                            <span className="w-9 text-end">4.71</span>
+                        </div>
+                        <div className="flex items-center py-2 text-sm">
+                            <span>Nội dung cốt truyện</span>
+                            <ListStarLayout className="ml-auto mr-2"/>
+                            <span className="w-9 text-end">4.78</span>
+                        </div>
+                        <div className="flex items-center py-2 text-sm">
+                            <span>Bố cục thế giới</span>
+                            <ListStarLayout className="ml-auto mr-2"/>
+                            <span className="w-9 text-end">4.85</span>
+                        </div>
+                        <div className="flex items-center py-2 text-sm">
+                            <span>Chất lượng bản dịch</span>
+                            <ListStarLayout className="ml-auto mr-2"/>
+                            <span className="w-9 text-end">4.98</span>
+                        </div>
+                    </div>
+    
+                    <div className="bg-pink-100 px-5 py-4 text-sm">
+                        <h3 className="mb-5 text-base font-semibold">Lưu ý khi đánh giá</h3>
+                        <h4 className="mb-5">1. Không được dẫn link hoặc nhắc đến website khác</h4>
+    
+                        <h4 className="mb-5">2. Không được có những từ ngữ gay gắt, đả kích, xúc phạm người khác</h4>
+    
+                        <h4 className="mb-5">3. Đánh giá hoặc bình luận không liên quan tới truyện sẽ bị xóa</h4>
+    
+                        <h4 className="mb-5">4. Đánh giá hoặc bình luận chê truyện một cách chung chung không mang lại giá trị cho người đọc sẽ bị xóa</h4>
+    
+                        <h4 className="mb-5">5. Đánh giá có điểm số sai lệch với nội dung sẽ bị xóa</h4>
+    
+                        <i>Vui lòng xem và tuân theo đầy đủ các quy định tại Điều Khoản Dịch Vụ khi sử dụng website</i>
+                    </div>
+                </div>
+
             </div>
         </>
     );

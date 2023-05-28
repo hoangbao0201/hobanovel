@@ -96,9 +96,9 @@ const NovelDetailPage = ({ token, tab, novel }: NovelDetailPageProps) => {
                     <link rel="icon" href="/favicon.ico" />
                 </Head>
                 <main>
-                    <WrapperLayout className="pt-5">
+                    <WrapperLayout className="pt-5 max-lg:max-w-3xl">
                         <div>
-                            <div className="">
+                            <div className="sm:px-4">
     
                                 {
                                     matchesMobile && (
@@ -110,18 +110,18 @@ const NovelDetailPage = ({ token, tab, novel }: NovelDetailPageProps) => {
                                                 src={novel.thumbnailUrl}
                                                 className="w-full h-56 overflow-hidden object-cover absolute inline-block bg-cover"
                                             />
-                                            <div className="absolute w-full h-56 bg-white/5 backdrop-blur-lg"></div>
+                                            <div className="absolute w-full h-56 bg-black/20 backdrop-blur-lg"></div>
                                         </div>
                                     )
                                 }
     
                                 <div
                                     // style={{ transform: `scale(${scaleInfoNovel})`, opacity: `${scaleInfoNovel}` }} 
-                                    className={`flex ${matchesMobile ? "text-white h-56 items-center px-5" : "px-3"}`}
+                                    className={`flex ${matchesMobile ? "text-white h-56 items-center px-5" : ""}`}
                                 >
                                     <Link
                                         href={`/truyen/${novel.slug}`}
-                                        className={`lg:w-52 lg:h-[270px] lg:rounded-none w-24 h-[150px] rounded-md overflow-hidden shadow relative `}
+                                        className={`lg:w-52 lg:h-[270px] sm:w-40 sm:h-[220px] lg:rounded-none w-24 h-[150px] rounded-md overflow-hidden shadow relative `}
                                     >
                                         <BlurImage
                                             width={208}
@@ -271,36 +271,36 @@ const NovelDetailPage = ({ token, tab, novel }: NovelDetailPageProps) => {
                                 
                             </div>
     
-                            <div className="mb-5">
+                            <div className="mb-5 sm:px-3">
                                 <Tab.Group
                                     defaultIndex={0}
                                     selectedIndex={numberTab}
                                     onChange={(index: number) => setNumberTab(index)}
                                 >
-                                    <Tab.List className={`border-b mb-3 text-base font-semibold ${matchesMobile && "grid grid-cols-4"}`}>
+                                    <Tab.List className={`border-b mb-3 text-base font-semibold grid-cols-4 grid sm:grid-cols-5`}>
                                         <Tab
-                                            className={`outline-none border-b-4 border-transparent hover:text-yellow-600 ${matchesMobile ? "py-3" : "mr-8 py-5"} ${
+                                            className={`outline-none border-b-4 border-transparent hover:text-yellow-600 py-3 sm:mr-8 sm:py-5 ${
                                                 numberTab == 0 && "border-yellow-600"
                                             }`}
                                         >
                                             Giới thiệu
                                         </Tab>
                                         <Tab
-                                            className={`outline-none border-b-4 border-transparent hover:text-yellow-600 ${matchesMobile ? "py-3" : "mr-8 py-5"} ${
+                                            className={`outline-none border-b-4 border-transparent hover:text-yellow-600 py-3 sm:mr-8 sm:py-5 ${
                                                 numberTab == 1 && "border-yellow-600"
                                             }`}
                                         >
                                             Đánh giá
                                         </Tab>
                                         <Tab
-                                            className={`outline-none border-b-4 border-transparent hover:text-yellow-600 ${matchesMobile ? "py-3" : "mr-8 py-5"} ${
+                                            className={`outline-none border-b-4 border-transparent hover:text-yellow-600 py-3 sm:mr-8 sm:py-5 ${
                                                 numberTab == 2 && "border-yellow-600"
                                             }`}
                                         >
                                             D.s chương
                                         </Tab>
                                         <Tab
-                                            className={`outline-none border-b-4 border-transparent hover:text-yellow-600 ${matchesMobile ? "py-3" : "mr-8 py-5"} ${
+                                            className={`outline-none border-b-4 border-transparent hover:text-yellow-600 py-3 sm:mr-8 sm:py-5 ${
                                                 numberTab == 3 && "border-yellow-600"
                                             }`}
                                         >
@@ -309,7 +309,7 @@ const NovelDetailPage = ({ token, tab, novel }: NovelDetailPageProps) => {
                                         {
                                             !matchesMobile && (
                                                 <Tab
-                                                    className={`outline-none border-b-4 border-transparent hover:text-yellow-600 ${matchesMobile ? "py-3" : "mr-8 py-5"} ${
+                                                    className={`outline-none border-b-4 border-transparent hover:text-yellow-600 py-3 sm:mr-8 sm:py-5 ${
                                                         numberTab == 4 && "border-yellow-600"
                                                     }`}
                                                 >

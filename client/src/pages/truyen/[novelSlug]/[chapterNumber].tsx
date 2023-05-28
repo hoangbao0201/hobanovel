@@ -1,6 +1,6 @@
 import Head from "next/head";
 import Link from "next/link";
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
 import { GetServerSideProps } from "next";
 
 import MainLayout from "@/components/Layout/MainLayout";
@@ -14,6 +14,11 @@ import {
     iconArrowTop,
     iconAuthor,
     iconBook,
+    iconChevronLeft,
+    iconChevronRight,
+    iconHeartFull,
+    iconHome,
+    iconList,
     iconOclock,
     iconT,
 } from "../../../../public/icons";
@@ -33,46 +38,78 @@ export interface ChapterDetailPageProps {
 }
 
 const ChapterDetailPage = ({ chapter }: ChapterDetailPageProps) => {
+
+    const paginationRef = useRef<HTMLDivElement>(null)
+    const paginationFakeRef = useRef<HTMLDivElement>(null)
+    const [isFixed, setIsFixed] = useState(false);
     const { isAuthenticated, currentUser } = useSelector((state: any) => state.user);
 
     useEffect(() => {
-        if(chapter) {
+        if (chapter) {
             const timeoutId = setTimeout(() => {
-                increaseViewChapterHandle(chapter.chapterId)
+                increaseViewChapterHandle(chapter.chapterId);
             }, 5000);
-    
+
             return () => {
                 clearTimeout(timeoutId);
             };
-            
         }
     }, [chapter]);
 
     useEffect(() => {
-        if(chapter) {
-            const token = getAccessToken()
-            if(isAuthenticated && token) {
+        if (chapter) {
+            const token = getAccessToken();
+            if (isAuthenticated && token) {
                 const timer = setTimeout(() => {
                     const dataReadingNovel = {
                         novelId: String(chapter?.novelId),
                         chapterRead: String(chapter?.chapterNumber),
-                        token: token
-                    }
-                    console.log("readingNovelHandle")
-                    readingNovelHandle(dataReadingNovel as Pick<HistoryReadingType, 'novelId' | 'chapterRead'> & { token: string })
+                        token: token,
+                    };
+                    console.log("readingNovelHandle");
+                    readingNovelHandle(
+                        dataReadingNovel as Pick<
+                            HistoryReadingType,
+                            "novelId" | "chapterRead"
+                        > & { token: string }
+                    );
                 }, 1000);
-    
+
                 return () => {
-                    clearTimeout(timer)
-                }
+                    clearTimeout(timer);
+                };
             }
         }
-    }, [chapter])
+    }, [chapter]);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            const scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+            
+            if(paginationRef.current && paginationFakeRef.current) {
+                const targetNavPosition = paginationRef?.current?.offsetTop;
+                const targetNavFakePosition = paginationFakeRef?.current?.offsetTop;
+
+                if(targetNavFakePosition === 0 && scrollPosition>targetNavPosition) {
+                    setIsFixed(true);
+                }
+                else if(targetNavFakePosition !== 0 && scrollPosition<targetNavFakePosition) {
+                    setIsFixed(false)
+                }
+
+            }
+        };
+
+        window.addEventListener("scroll", handleScroll);
+
+        return () => {
+            window.removeEventListener("scroll", handleScroll);
+        };
+    }, []);
 
     if (!chapter) {
         return null;
     }
-
 
     return (
         <>
@@ -85,52 +122,84 @@ const ChapterDetailPage = ({ chapter }: ChapterDetailPageProps) => {
             <main>
                 {/* <ScrollOnTop /> */}
 
-                <WrapperLayout bg="bg-[#eae4d3]" className="">
-                    <div className="px-3 py-4">
-                        {/* Navigate */}
-                        <div className="flex justify-between mb-12">
-                            <Link
-                                href={`/truyen/${chapter?.novelSlug}/chuong-${
-                                    chapter?.chapterNumber - 1
-                                }`}
-                                className={`${
-                                    chapter.chapterNumber == 1 &&
-                                    "pointer-events-none text-gray-400 fill-gray-400"
-                                }`}
-                            >
-                                <span className="sm:py-2 sm:px-7 py-2 px-4 border rounded-full flex items-center bg-white bg-opacity-50 sm:text-base text-sm font-semibold select-none">
-                                    <i className="-rotate-90 w-3 mr-2 block">{iconArrowTop}</i>
-                                    Chương trước
-                                </span>
-                            </Link>
-                            <Link
-                                href={`/truyen/${chapter?.novelSlug}/chuong-${
-                                    chapter?.chapterNumber + 1
-                                }`}
-                                className={``}
-                            >
-                                <span className="sm:py-2 sm:px-7 py-2 px-4 border rounded-full flex items-center bg-white bg-opacity-50 sm:text-base text-sm font-semibold select-none">
-                                    Chương sau
-                                    <i className="rotate-90 w-3 ml-2 block">{iconArrowTop}</i>
-                                </span>
-                            </Link>
-                        </div>
+                <WrapperLayout bg="bg-[#eae4d3]" className="lg:max-w-5xl">
+                    <div className="py-4">
+                        {/* Pagination */}
+                        <div className="border mb-7 mt-4">
+                            <div ref={paginationRef} className={`transition-all top-0 left-0 right-0 py-1 ${isFixed ? 'fixed bg-gray-200' : ''}`}>
+                                <div className="lg:max-w-5xl mx-auto flex items-center justify-center gap-1">
+                                    <Link href="/" className="h-9 px-1 flex items-center">
+                                        <i className="w-5 h-5 fill-[#d9534f] hover:fill-[#ac2925] block">{iconHome}</i>
+                                    </Link>
+                                    <Link href={`/truyen/${chapter.novelSlug}`} className="h-9 px-1 flex items-center">
+                                        <i className="w-5 h-5 fill-[#d9534f] hover:fill-[#ac2925] block">{iconList}</i>
+                                    </Link>
+                                    <Link
+                                        href={`/truyen/${chapter?.novelSlug}/chuong-${
+                                            chapter?.chapterNumber - 1
+                                        }`}
+                                        className={`${
+                                            chapter.chapterNumber == 1 &&
+                                            "pointer-events-none text-gray-400 fill-gray-400"
+                                        }`}
+                                    >
+                                        <span className={`bg-[#d9534f] hover:bg-[#ac2925] flex items-center justify-center rounded-l-lg px-[10px] h-9 select-none`}>
+                                            <i className="w-4 h-4 fill-white block">{iconChevronLeft}</i>
+                                        </span>
+                                    </Link>
+                                    <select>
+                                        <option>Chapter 1 </option>
+                                        <option>Chapter 2 </option>
+                                        <option>Chapter 3 </option>
+                                        <option>Chapter 4 </option>
+                                    </select>
+                                    <Link
+                                        href={`/truyen/${chapter?.novelSlug}/chuong-${
+                                            chapter?.chapterNumber + 1
+                                        }`}
+                                        className={``}
+                                    >
+                                        <span className={`bg-[#d9534f] hover:bg-[#ac2925] flex items-center justify-center rounded-r-lg px-[10px] h-9 select-none`}>
+                                            <i className="w-4 h-4 fill-white block">{iconChevronRight}</i>
+                                        </span>
+                                    </Link>
     
-                        <div className="sm:text-3xl text-xl line-clamp-1 font-medium mb-6">
+                                    <button className="flex items-center h-9 px-3 bg-[#d9534f] hover:bg-[#ac2925] rounded-md max-sm:mr-8">
+                                        <i className="w-3 block fill-white sm:mr-1">{iconHeartFull}</i>
+                                        <span className="text-white whitespace-nowrap sm:block hidden">Theo dõi</span>
+                                    </button>
+    
+                                    {/* <span className="">1233481</span> */}
+    
+    
+                                    {/* <div className="w-60">
+                                        <span className="w-3"></span>
+                                        <span className="w-4"></span>
+                                        <span className="w-5"></span>
+                                        <span className="w-6"></span>
+                                    </div> */}
+    
+                                </div>
+                            </div>
+                            <div ref={paginationFakeRef} className={`transition-all top-0 left-0 right-0 py-1 h-9 ${isFixed ? 'block' : 'hidden'}`}></div>
+                        </div>
+
+
+                        <div className="lg:text-3xl sm:text-2xl lg:line-clamp-1 text-xl line-clamp-2 px-3 font-medium mb-6">
                             Chương {chapter.chapterNumber}: {chapter.title}
                         </div>
-    
-                        <div className="mb-4 flex justify-between">
+
+                        <div className="mb-4 px-3 sm:flex justify-between">
                             <div className="flex items-center">
                                 <i className="w-4 block">{iconBook}</i>
                                 <Link
                                     href={`/truyen/${chapter.novelSlug}`}
                                     className="line-clamp-1"
                                 >
-                                    <h2 className=" ml-2">{chapter.novelName}</h2>
+                                    <h2 className="ml-2">{chapter.novelName}</h2>
                                 </Link>
                             </div>
-                            <div className="flex items-center">
+                            {/* <div className="flex items-center">
                                 <i className="w-4 block">{iconAuthor}</i>
                                 <span className="">
                                     <h2 className="line-clamp-1 sm:text-base text-sm ml-2">
@@ -145,7 +214,7 @@ const ChapterDetailPage = ({ chapter }: ChapterDetailPageProps) => {
                                         {getCountWords(chapter.content)}
                                     </h2>
                                 </span>
-                            </div>
+                            </div> */}
                             <div className="flex items-center">
                                 <i className="w-4 block">{iconOclock}</i>
                                 <span className="">
@@ -155,17 +224,17 @@ const ChapterDetailPage = ({ chapter }: ChapterDetailPageProps) => {
                                 </span>
                             </div>
                         </div>
-    
-                        <span className="w-36 mx-auto my-5 border-b border-gray-500"></span>
+
+                        {/* <span className="w-36 mx-auto my-5 border-b border-gray-500"></span> */}
                         <div
-                            className="sm:text-2xl text-xl leading-relaxed grid"
+                            className="sm:text-2xl px-3 text-xl leading-relaxed overflow-hidden"
                             dangerouslySetInnerHTML={{
                                 __html: chapter?.content || "Lỗi hiển thị",
                             }}
                         />
-    
-                        {/* Navigate */}
-                        <div className="flex justify-between mt-8 mb-5">
+
+                        {/* Pagination */}
+                        <div className="flex px-3 justify-between mt-8 mb-5">
                             <Link
                                 href={`/truyen/${chapter?.novelSlug}/chuong-${
                                     chapter?.chapterNumber - 1
@@ -235,7 +304,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
 ChapterDetailPage.getLayout = (page: ReactNode) => {
     return (
-        <MainLayout bg="#e4dece" isBannerPage={false}>
+        <MainLayout autoHidden={false} bg="#e4dece" isBannerPage={false}>
             {page}
         </MainLayout>
     );

@@ -11,7 +11,11 @@ import { removeAccessToken } from "@/services/cookies.servies";
 import Image from "next/image";
 import { LoadingForm } from "../Layout/LoadingLayout";
 
-const Header = () => {
+interface HeaderProps {
+    autoHidden?: boolean
+}
+
+const Header = ({ autoHidden = true } : HeaderProps) => {
     const dispatch = useDispatch();
     const { currentUser, userLoading, isAuthenticated } = useSelector(
         (state: any) => state.user
@@ -74,11 +78,12 @@ const Header = () => {
 
     return (
         <>
-            <div className="w-full h-14"></div>
+            {
+                autoHidden && <div className="w-full h-14"></div>
+            }
             <header
-                className={`transition-all ${
-                    isHeader ? "opacity-100" : "opacity-0 pointer-events-none"
-                } bg-gray-100 fixed top-0 left-0 right-0 z-50 drop-shadow-sm`}
+                className={`transition-all bg-gray-100 drop-shadow-sm ${ autoHidden && 'fixed top-0 left-0 right-0 z-50' } 
+                    ${ autoHidden && (isHeader ? "opacity-100" : "opacity-0 pointer-events-none")}`}
             >
                 <div className={`w-full`}>
                     <div className="max-w-7xl mx-auto flex items-center h-14 px-3">

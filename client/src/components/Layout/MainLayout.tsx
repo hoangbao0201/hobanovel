@@ -13,21 +13,27 @@ import ScrollOnTop from "./ScrollOnTop";
 import { useMediaQuery } from "usehooks-ts";
 
 interface MainLayoutProps {
-    bg?: string
-    children: ReactNode
-    isHeader?: boolean
-    isFooter?: boolean
-    isBannerPage?: boolean
+    bg?: string;
+    autoHidden?: boolean;
+    children: ReactNode;
+    isHeader?: boolean;
+    isFooter?: boolean;
+    isBannerPage?: boolean;
 }
 
 // const Header = dynamic(() => import('../partials/Header'));
 // const Footer = dynamic(() => import('../partials/Footer'));
 // const BannerPage = dynamic(() => import('../partials/BannerPage'));
 
-
-const MainLayout= ({ bg = "#ffff", children, isHeader = true, isFooter = true, isBannerPage = true } : MainLayoutProps) => {
-
-    const matchesMobile = useMediaQuery('(max-width: 640px)') 
+const MainLayout = ({
+    bg = "#ffff",
+    children,
+    isHeader = true,
+    isFooter = true,
+    isBannerPage = true,
+    autoHidden = true,
+}: MainLayoutProps) => {
+    const matchesMobile = useMediaQuery("(max-width: 640px)");
 
     const dispatch = useDispatch();
 
@@ -47,7 +53,7 @@ const MainLayout= ({ bg = "#ffff", children, isHeader = true, isFooter = true, i
                 dispatch(addUserHandle(connectUser.data.user));
                 return;
             }
-            
+
             dispatch(logoutUserHandle());
             removeAccessToken();
         } catch (error) {
@@ -72,20 +78,25 @@ const MainLayout= ({ bg = "#ffff", children, isHeader = true, isFooter = true, i
             </Head>
 
             <ScrollOnTop />
-            
-            { isHeader && <Header /> }
 
-            { isBannerPage && <BannersIntro /> }
+            {isHeader && <Header autoHidden={autoHidden} />}
 
+            {isBannerPage && <BannersIntro />}
 
-            <div className={`${isBannerPage && `w-full min-h-[500px] top-0 overflow-hidden ${ !matchesMobile && "-translate-y-28" }`}`}>
+            <div
+                className={`${
+                    isBannerPage &&
+                    `w-full min-h-[500px] top-0 overflow-hidden ${
+                        !matchesMobile && "-translate-y-28"
+                    }`
+                }`}
+            >
                 {children}
             </div>
 
-            { isFooter && <Footer /> }
-        
+            {isFooter && <Footer />}
         </>
-    )
-}
+    );
+};
 
 export default MainLayout;

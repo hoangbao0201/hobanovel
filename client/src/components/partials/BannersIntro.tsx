@@ -166,13 +166,13 @@ const BannersIntro = () => {
                                         dataFakeBannersMobile.map((banner, index) => {
                                             return ( 
                                                 <SwiperSlide data-banner-id={banner.bannersId} key={index} className="">
-                                                    <div className="bg-white p-4">
+                                                    <div className="bg-white p-3">
                                                         <Link className="block relative" href={`/`}>
                                                             <Image
                                                                 width={500}
                                                                 height={500}
                                                                 alt="banner thumbnail banner"
-                                                                className="h-[200px] inset-0 block object-cover rounded-md overflow-hidden"
+                                                                className="h-[200px] inset-0 block object-cover rounded-md overflow-hidden mx-auto"
                                                                 src={banner.bannersUrl}
                                                             />
                                                         </Link>
