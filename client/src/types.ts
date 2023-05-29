@@ -85,6 +85,13 @@ export interface ChapterType {
     updatedAt: Date
 }
 
+// Follow Novel
+export interface NovelFollowerType {
+    novelFollowerId: string
+    novelId: string
+    userId: string
+}
+
 // Novel
 export interface NovelType {
     novelId: string

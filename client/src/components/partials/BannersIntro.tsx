@@ -187,7 +187,7 @@ const BannersIntro = () => {
                         </div>
                     ) : (
                         <>
-                            <div className="w-full h-[370px] overflow-hidden align-middle inline-block">
+                            <div className="transition-all w-full h-[370px] overflow-hidden align-middle inline-block">
                                 {
                                     BannersRes?.banners && (
                                         <Link href={`/truyen/${BannersRes?.banners?.slug}`}>
@@ -198,7 +198,7 @@ const BannersIntro = () => {
                                                 blurDataURL={BannersRes?.banners?.imageBlurHash || placeholderBlurhash}
                                                 className="object-cover w-full h-full"
                                                 placeholder="blur"
-                                                src={BannersRes?.banners?.bannersUrl ?? "/images/banners-default.jpg"}
+                                                src={BannersRes?.banners?.bannersUrl}
                                             />
                                         </Link>
                                     )

@@ -74,7 +74,7 @@ export const createChapterByDataHandle = async (data : ChapterType) => {
     }
 };
 
-export const getChapterDetailHandle = async ({ novelSlug, chapterNumber } : ChapterType) => {
+export const getChapterDetailHandle = async ({ userId, novelSlug, chapterNumber } : ChapterType) => {
     try {
         const connection = await pool.getConnection();
 
@@ -83,17 +83,28 @@ export const getChapterDetailHandle = async ({ novelSlug, chapterNumber } : Chap
                 chapters.content, chapters.chapterNumber, chapters.updatedAt, chapters.novelId, chapters.views
             FROM chapters
                 LEFT JOIN users ON users.userId = chapters.userId
-
-            WHERE chapters.novelSlug = ? AND chapters.chapterNumber = ?;
+                
+                WHERE chapters.novelSlug = ? AND chapters.chapterNumber = ?;
         `;
-
-        const [rows] = await connection.query(qCreateChapter, [novelSlug, chapterNumber]);
+        // LEFT JOIN novel_followers ON novel_followers.novelId = chapters.novelId ${userId ? 'AND novel_followers.userId = ?' : ''}
+                
+        let params = [novelSlug, chapterNumber]
+        if(userId) {
+            params.push(userId)
+        }
+        const [rows] = await connection.query(qCreateChapter, params);
 
         connection.release();
 
-        return rows
+        return {
+            success: true,
+            data: rows
+        }
     } catch (error) {
-        return error
+        return {
+            success: false,
+            error: error
+        }
     }
 };
 

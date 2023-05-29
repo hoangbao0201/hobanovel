@@ -5,12 +5,16 @@ interface CounterState {
     currentUser: UserType | null
     userLoading: boolean
     isAuthenticated: boolean
+
+    isFollow: boolean
 }
 
 const initialState: CounterState = {
     currentUser: null,
     userLoading: true,
     isAuthenticated: false,
+
+    isFollow: false
 };
 
 export const counterSlice = createSlice({
@@ -31,7 +35,13 @@ export const counterSlice = createSlice({
             state.currentUser = null
             state.userLoading = false
             state.isAuthenticated = false
-        }
+        },
+        followNovelRDHanlde: (state) => {
+            state.isFollow = true
+        },
+        unfollowNovelRDHanlde: (state) => {
+            state.isFollow = false
+        },
     },
 });
 

@@ -3,7 +3,7 @@ import * as cheerio from "cheerio";
 import pool from "../library/connectMySQL";
 
 
-import { HistoryReadingType, NovelType } from "../types";
+import { HistoryReadingType, NovelFollowerType, NovelType } from "../types";
 import { uploadThumbnailNovelByUrlHandle } from "./image.services";
 import { getBlurDataURL } from "../utils/getBlurDataURL";
 import { NovelSearchConditions } from "../middleware/conditionsQuery";
@@ -399,6 +399,55 @@ export const getReadingNovelHandle = async ({ userId, page } : HistoryReadingTyp
         return {
             success: true,
             data: rows as HistoryReadingType[]
+        };
+    } catch (error) {
+        return {
+            success: false,
+            error: error
+        }
+    }
+};
+
+export const followNovelHandle = async ({ userId, novelId } : NovelFollowerType) => {
+    try {
+        const connection = await pool.getConnection();
+
+        const qUpdateReadingNovel = `
+            INSERT INTO novel_followers(userId, novelId)
+            VALUES (?, ?)
+        `;
+
+        const [rows] : any = await connection.query(qUpdateReadingNovel, [userId, novelId]);
+
+        connection.release();
+
+        return {
+            success: true,
+            data: rows
+        };
+    } catch (error) {
+        return {
+            success: false,
+            error: error
+        }
+    }
+};
+export const unfollowNovelHandle = async ({ userId, novelId } : NovelFollowerType) => {
+    try {
+        const connection = await pool.getConnection();
+
+        const qUpdateReadingNovel = `
+            DELETE FROM novel_followers
+            WHERE userId = ? AND novelId = ?
+        `;
+
+        const [rows] : any = await connection.query(qUpdateReadingNovel, [userId, novelId]);
+
+        connection.release();
+
+        return {
+            success: true,
+            data: rows
         };
     } catch (error) {
         return {

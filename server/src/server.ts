@@ -11,6 +11,7 @@ import reviewRouter from "./routes/review"
 import commentRouter from "./routes/comment"
 import bannerRouter from "./routes/banner"
 import updateRouter from "./routes/update"
+import followRouter from "./routes/follow"
 
 
 const app = express()
@@ -56,6 +57,7 @@ const main = async () => {
     app.use("/api/comments", commentRouter);
     app.use("/api/banners", bannerRouter);
     app.use("/api/update", updateRouter);
+    app.use("/api/follows", followRouter);
 
     app.get("/", async (_req : Request, res : Response) => {
         res.send("BY HOANGBAO")

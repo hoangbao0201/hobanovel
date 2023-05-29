@@ -1,4 +1,4 @@
-import { HistoryReadingType, NovelType } from "@/types";
+import { HistoryReadingType, NovelFollowerType, NovelType } from "@/types";
 import axios from "axios";
 import { getAccessToken } from "./cookies.servies";
 
@@ -149,7 +149,6 @@ export const readingNovelHandle = async (data: Pick<HistoryReadingType, 'novelId
 export const getReadingNovelHandle = async (page: number) => {
     try {
         const token = getAccessToken();
-        return token
 
         if(!token) {
             return null
@@ -169,5 +168,48 @@ export const getReadingNovelHandle = async (page: number) => {
     } catch (error) {
         console.log(error)
         return null;
+    }
+};
+
+export const followNovelHandle = async (data : Pick<NovelFollowerType, 'novelId'> & { token: string }) => {
+    try {
+        const { novelId, token } = data
+        const followNovelRes = await axios.post(
+            `http://localhost:4000/api/novels/follow/${novelId}`, {}, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+        if (followNovelRes.data.success) {
+            // throw new Error()
+            return null;
+        }
+    
+        return followNovelRes;
+    } catch (error) {
+        console.log(error)
+        return null;
+    }
+};
+export const unfollowNovelHandle = async (data : Pick<NovelFollowerType, 'novelId'> & { token: string }) => {
+    try {
+        const { novelId, token } = data
+        const followNovelRes = await axios.post(
+            `http://localhost:4000/api/novels/unfollow/${novelId}`, {}, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+        return followNovelRes.data;
+    } catch (error) {
+        if(axios.isAxiosError(error) && error.response?.data) {
+            return error.response.data;
+        } else {
+            return {
+                success: false,
+                message: (error as Error).message
+            };
+        }
     }
 };

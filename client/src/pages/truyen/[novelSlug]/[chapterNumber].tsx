@@ -5,7 +5,7 @@ import { GetServerSideProps } from "next";
 
 import MainLayout from "@/components/Layout/MainLayout";
 import { ParsedUrlQuery } from "querystring";
-import { ChapterDetailResType, HistoryReadingType } from "@/types";
+import { ChapterDetailResType, HistoryReadingType, NovelFollowerType } from "@/types";
 import {
     getChapterDetailHandle,
     increaseViewChapterHandle,
@@ -16,6 +16,7 @@ import {
     iconBook,
     iconChevronLeft,
     iconChevronRight,
+    iconClose,
     iconHeartFull,
     iconHome,
     iconList,
@@ -25,9 +26,11 @@ import {
 import { convertTime } from "@/utils/convertTime";
 import WrapperLayout from "@/components/Layout/WrapperLayout";
 import { getCountWords } from "@/utils/getCountWords";
-import { readingNovelHandle } from "@/services/novels.services";
+import { followNovelHandle, readingNovelHandle, unfollowNovelHandle } from "@/services/novels.services";
 import { getAccessToken, getAccessTokenOnServer } from "@/services/cookies.servies";
 import { useSelector } from "react-redux";
+import { LoadingButton, LoadingSearch } from "@/components/Layout/LoadingLayout";
+import { checkFollowNovelHandle } from "@/services/follow.services";
 
 interface Params extends ParsedUrlQuery {
     slug: string;
@@ -42,7 +45,8 @@ const ChapterDetailPage = ({ chapter }: ChapterDetailPageProps) => {
     const paginationRef = useRef<HTMLDivElement>(null)
     const paginationFakeRef = useRef<HTMLDivElement>(null)
     const [isFixed, setIsFixed] = useState(false);
-    const { isAuthenticated, currentUser } = useSelector((state: any) => state.user);
+    const [isFollow, setIsFollow] = useState<null | boolean>(null)
+    const { isAuthenticated, currentUser, userLoading } = useSelector((state: any) => state.user);
 
     useEffect(() => {
         if (chapter) {
@@ -107,6 +111,93 @@ const ChapterDetailPage = ({ chapter }: ChapterDetailPageProps) => {
         };
     }, []);
 
+    const handleCheckFollowNovel = async () => {
+        const token = getAccessToken();
+        if(!token || !chapter?.chapterId) {
+            console.log("Chưa đủ thông tin")
+            return
+        }
+        try {
+            const query = `${chapter?.novelId}?token=${token}`
+            const checkFollowRes = await checkFollowNovelHandle(query);
+
+            console.log(checkFollowRes)
+
+            if(checkFollowRes.success) {
+                setIsFollow(checkFollowRes.isFollow)
+
+                return
+            }
+
+            setIsFollow(false)
+        } catch (error) {
+            console.log(error)
+            setIsFollow(false)
+        }
+    }
+
+    useEffect(() => {
+        if(isAuthenticated) {
+            handleCheckFollowNovel()
+        }
+    })
+
+    const handleFollowNovel = async () => {
+        const token = getAccessToken()
+        if(!token || !chapter?.novelId) {
+            console.log("Không có token")
+            return
+        }
+        if(!isAuthenticated) {
+            console.log("Chưa đăng nhập")
+            return;
+        }
+        try {
+            const dataFollowNovel = {
+                userId: currentUser.userId,
+                novelId: chapter.novelId,
+                token: token
+            }
+            const followNovelRes = await followNovelHandle(dataFollowNovel as Pick<NovelFollowerType , 'novelId'> & { token: string });
+            // if(followNovelRes?.data.success) {
+                
+            //     return
+            // }
+            
+            setIsFollow(true)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const handleUnfollowNovel = async () => {
+        const token = getAccessToken()
+        if(!token || !chapter?.novelId) {
+            console.log("Không có token")
+            return
+        }
+        if(!isAuthenticated) {
+            console.log("Chưa đăng nhập")
+            return;
+        }
+        try {
+            const dataFollowNovel = {
+                userId: currentUser.userId,
+                novelId: chapter.novelId,
+                token: token
+            }
+            const followNovelRes = await unfollowNovelHandle(dataFollowNovel as Pick<NovelFollowerType , 'novelId'> & { token: string });
+            // if(followNovelRes?.data.success) {
+                
+            //     return
+            // }
+
+            setIsFollow(false)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     if (!chapter) {
         return null;
     }
@@ -138,12 +229,12 @@ const ChapterDetailPage = ({ chapter }: ChapterDetailPageProps) => {
                                         href={`/truyen/${chapter?.novelSlug}/chuong-${
                                             chapter?.chapterNumber - 1
                                         }`}
-                                        className={`${
-                                            chapter.chapterNumber == 1 &&
-                                            "pointer-events-none text-gray-400 fill-gray-400"
+                                        className={`rounded-l-lg ${
+                                            chapter.chapterNumber == 1 ?
+                                            "pointer-events-none bg-black/30 " : "bg-[#d9534f] hover:bg-[#ac2925]"
                                         }`}
-                                    >
-                                        <span className={`bg-[#d9534f] hover:bg-[#ac2925] flex items-center justify-center rounded-l-lg px-[10px] h-9 select-none`}>
+                                     >
+                                        <span className={`flex items-center justify-center px-[10px] h-9 select-none`}>
                                             <i className="w-4 h-4 fill-white block">{iconChevronLeft}</i>
                                         </span>
                                     </Link>
@@ -157,16 +248,34 @@ const ChapterDetailPage = ({ chapter }: ChapterDetailPageProps) => {
                                         href={`/truyen/${chapter?.novelSlug}/chuong-${
                                             chapter?.chapterNumber + 1
                                         }`}
-                                        className={``}
+                                        className={`rounded-r-lg ${
+                                            chapter.chapterNumber == 100 ?
+                                            "pointer-events-none bg-black/30 " : "bg-[#d9534f] hover:bg-[#ac2925]"
+                                        }`}
                                     >
-                                        <span className={`bg-[#d9534f] hover:bg-[#ac2925] flex items-center justify-center rounded-r-lg px-[10px] h-9 select-none`}>
+                                        <span className={`flex items-center justify-center px-[10px] h-9 select-none`}>
                                             <i className="w-4 h-4 fill-white block">{iconChevronRight}</i>
                                         </span>
                                     </Link>
     
-                                    <button className="flex items-center h-9 px-3 bg-[#d9534f] hover:bg-[#ac2925] rounded-md max-sm:mr-8">
-                                        <i className="w-3 block fill-white sm:mr-1">{iconHeartFull}</i>
-                                        <span className="text-white whitespace-nowrap sm:block hidden">Theo dõi</span>
+                                    <button onClick={isFollow ? handleUnfollowNovel : handleFollowNovel}
+                                        className={`flex items-center h-9 px-3 rounded-md max-sm:mr-8 
+                                            ${ isFollow === null || (
+                                                isFollow ? 'bg-[#d9534f] hover:bg-[#ac2925]' : 'bg-[#5cb85c] hover:bg-[#449d44]'
+                                            )}
+                                        `}
+                                    >
+                                        
+                                        <>
+                                            <i className="w-3 block fill-white sm:mr-1">
+                                                {isFollow === null ? (
+                                                    <LoadingButton className="text-white"/>
+                                                ) : (
+                                                    isFollow ? iconClose : iconHeartFull
+                                                )}
+                                            </i>
+                                            <span className="text-white whitespace-nowrap sm:block hidden">Theo dõi</span>
+                                        </>
                                     </button>
     
                                     {/* <span className="">1233481</span> */}
@@ -274,7 +383,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
     const chapterResponse = await getChapterDetailHandle(
         novelSlug,
-        chapterNumber.split("chuong-")[1]
+        chapterNumber.split("chuong-")[1],
     );
 
     if (!chapterResponse) {
@@ -285,7 +394,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         };
     }
 
-    // const token = getAccessTokenOnServer(context.req.headers.cookie as string)
     // if(token) {
     //     const dataReadingNovel = {
     //         token: token,

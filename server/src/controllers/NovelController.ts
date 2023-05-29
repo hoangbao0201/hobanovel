@@ -14,8 +14,10 @@ import {
     getNovelsByHighlyRatedHandle,
     readingNovelHandle,
     getReadingNovelHandle,
+    followNovelHandle,
+    unfollowNovelHandle,
 } from "../services/novel.services";
-import { HistoryReadingType, NovelType } from "../types";
+import { HistoryReadingType, NovelFollowerType, NovelType } from "../types";
 import jwt from "jsonwebtoken";
 
 
@@ -515,6 +517,73 @@ export const getReadingNovel = async (req: Request, res: Response) => {
             success: true,
             message: "Get reading novels successful",
             novels: readingNovelRes.data
+        })
+        
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: `Internal server error ${error}`,
+        });
+    }
+}
+
+// Follow novel /api/novels/follow/:novelId
+export const followNovel = async (req: Request, res: Response) => {
+    try {
+        const { novelId } = req.params
+        if(!novelId) {
+            return res.status(400).json({
+                success: false,
+                message: "Data not found",
+            });
+        }
+        
+        const followNovelRes : any = await followNovelHandle({ userId: res.locals.user.userId, novelId } as NovelFollowerType)
+        if(!followNovelRes.success) {
+            return res.status(400).json({
+                success: false,
+                message: "Follow novel Error",
+                error: followNovelRes.error,
+            })
+        }
+        
+        return res.json({
+            success: true,
+            message: "Follow novel successful",
+            follow: followNovelRes.data.insertId
+        })
+        
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: `Internal server error ${error}`,
+        });
+    }
+}
+// Unfollow novel /api/novels/unfollow/:novelId
+export const unfollowNovel = async (req: Request, res: Response) => {
+    try {
+        const { novelId } = req.params
+        if(!novelId) {
+            return res.status(400).json({
+                success: false,
+                message: "Data not found",
+            });
+        }
+        
+        const unfollowNovelRes : any = await unfollowNovelHandle({ userId: res.locals.user.userId, novelId } as NovelFollowerType)
+        if(!unfollowNovelRes.success) {
+            return res.status(400).json({
+                success: false,
+                message: "Unfollow novel Error",
+                error: unfollowNovelRes.error,
+            })
+        }
+        
+        return res.json({
+            success: true,
+            message: "Unfollow novel successful",
+            follow: unfollowNovelRes.data.insertId
         })
         
     } catch (error) {

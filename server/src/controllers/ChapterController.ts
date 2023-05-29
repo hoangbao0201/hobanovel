@@ -57,8 +57,15 @@ export const getChapterDetailBySlug = async (req: Request, res: Response) => {
 
         chapterNumber = chapterNumber.split("chapter-")[1]
         
-        const existingChapter : ChapterType[] | null = await getChapterDetailHandle({ novelSlug: slug, chapterNumber } as ChapterType);
-        if(!existingChapter?.length) {
+        // let valuesChapter = 
+        // if(res.locals?.user) {
+        //     valuesChapter = {
+        //         ...valuesChapter,
+        //         userId: res.locals.user.userId
+        //     }
+        // }
+        const existingChapter : any = await getChapterDetailHandle({ userId: res.locals?.user?.userId || null, novelSlug: slug, chapterNumber } as ChapterType);
+        if(!existingChapter?.success) {
             return res.status(400).json({
                 success: false,
                 message: "Get chapters novel error"
@@ -68,7 +75,7 @@ export const getChapterDetailBySlug = async (req: Request, res: Response) => {
         return res.json({
             success: true,
             message: "Get chapters novel successful",
-            chapter: existingChapter[0]
+            chapter: existingChapter.data[0]
         })
     } catch (error) {
         return res.status(500).json({
