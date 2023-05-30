@@ -107,3 +107,49 @@ export const NovelSearchConditions = (data : Partial<NovelType>) => {
 
     return { conditions: conbinedConditions, params, values: conbinedValues }
 }
+
+export const getAdvancedNovelConditions = (data : any) => {
+    const { novelId = '', userId = '', title = '', sort_by = '' } = data
+
+    const values : string[] = []
+    const conditions : string[] = []
+    const params : Array<string | number> = []
+    const orderBy : { query: string, by: string } = {
+        query: '',
+        by: ''
+    }
+
+    if (userId !== '') {
+        values.push("userId")
+        conditions.push('novels.userId = ?');
+        params.push(String(userId));
+    }
+    if (novelId !== '') {
+        values.push("novelId")
+        conditions.push('novels.novelId = ?');
+        params.push(String(novelId));
+    }
+
+    if (title !== '') {
+        values.push("title")
+        conditions.push('novels.title LIKE ?');
+        params.push(String(`%${title}%`).trim());
+    }
+
+    if (sort_by.includes('view_')) {
+        
+        orderBy.query = `
+            LEFT JOIN chapters.novelId = novels.novelId 
+                AND chapters.createdAt >= DATE_SUB(NOW(), INTERVAL 1 ${sort_by.split('view_')[1].toUpperCase()})
+        `
+        orderBy.by = `
+            views
+        `
+    }
+
+
+    const conbinedConditions = conditions.length > 0 ? conditions.join(" AND ") : conditions
+    const conbinedValues = values.length > 0 ? values.join(',') : values
+
+    return { conditions: conbinedConditions, params, values: conbinedValues, orderBy }
+}

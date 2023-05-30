@@ -4,7 +4,7 @@ import Image from "next/image";
 import dynamic from "next/dynamic";
 import { ReactNode, useEffect, useState } from "react";
 import {
-    GetServerSideProps
+    GetServerSideProps, GetStaticPaths, GetStaticProps, GetStaticPropsContext
 } from "next";
 
 import Tippy from "@tippyjs/react";
@@ -22,6 +22,9 @@ import { Tab, Transition } from "@headlessui/react";
 import { convertViewsCount } from "@/utils/convertViewsCount";
 import { ListStarLayout } from "@/components/Layout/ListStarLayout";
 import { useMediaQuery } from "usehooks-ts";
+import { getAccessToken } from "@/services/cookies.servies";
+import { checkFollowNovelHandle } from "@/services/follow.services";
+import { useSelector } from "react-redux";
 
 // import FormIntroduce from "@/components/Share/ContentNovelDetail/FormIntroduce";
 // import FormFeedback from "@/components/Share/ContentNovelDetail/FormFeedback";
@@ -65,22 +68,48 @@ const NovelDetailPage = ({ token, tab, novel }: NovelDetailPageProps) => {
     const matchesMobile = useMediaQuery('(max-width: 640px)')
 
     const [numberTab, setNumberTab] = useState(0);
-    // const [scaleInfoNovel, setScaleInfoNovel] = useState(1);
+    const [isFollow, setIsFollow] = useState<null | boolean>(null)
+    const { isAuthenticated, currentUser, userLoading } = useSelector((state: any) => state.user);
 
     const getLayout = (page : ReactNode) => {
         return <MainLayout isBannerPage={!matchesMobile}>{page}</MainLayout>;
     };
 
-    // useEffect(() => {
-    //     window.onscroll = () => {
-    //         const currentScrollPosition = window.pageYOffset;
-    //         if (currentScrollPosition <= 600) {
-    //             const nb = (1 - (currentScrollPosition/600))
-    //             // setScaleInfoNovel(parseFloat(nb.toFixed(1)));
-    //             setScaleInfoNovel(nb);
-    //         }
-    //     };
-    // }, []);
+    const handleCheckFollowNovel = async () => {
+        const token = getAccessToken();
+        if(!token || !novel?.novelId) {
+            console.log("Chưa đủ thông tin")
+            return
+        }
+        try {
+            const query = `${novel?.novelId}?token=${token}`
+            const checkFollowRes = await checkFollowNovelHandle(query);
+
+            console.log(checkFollowRes)
+
+            if(checkFollowRes.success) {
+                setIsFollow(checkFollowRes.isFollow)
+
+                return
+            }
+
+            setIsFollow(false)
+        } catch (error) {
+            console.log(error)
+            setIsFollow(false)
+        }
+    }
+
+    useEffect(() => {
+        if(!userLoading) {
+            if(isAuthenticated) {
+                handleCheckFollowNovel()
+            }
+            else {
+                setIsFollow(false);
+            }
+        }
+    }, [userLoading])
 
     if (!novel) {
         return <div></div>;
@@ -412,59 +441,59 @@ const NovelDetailPage = ({ token, tab, novel }: NovelDetailPageProps) => {
     );
 };
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-    try {
-        const { novelSlug } = context.params as Params;
-        // const token = getAccessTokenOnServer(context.req.headers.cookie as string)
-
-        const novelResponse = await getNovelBySlugHandle(novelSlug as string);
-
-        if(!novelResponse) {
-            return { notFound: true };
-        }
-
-        return {
-            props: {
-                novel: JSON.parse(JSON.stringify(novelResponse.data?.novel)),
-                tab: context.params?.hash?.toString() || "intro",
-            },
-        };
-    } catch (error) {
-        return { notFound: true };
-    }
-};
-
-// export const getStaticProps: GetStaticProps<NovelDetailPageProps, Params> = async (
-//     context: GetStaticPropsContext<Params>
-// ) => {
+// export const getServerSideProps: GetServerSideProps = async (context) => {
 //     try {
 //         const { novelSlug } = context.params as Params;
+//         // const token = getAccessTokenOnServer(context.req.headers.cookie as string)
 
 //         const novelResponse = await getNovelBySlugHandle(novelSlug as string);
 
-//         if (!novelResponse) {
-//             return { notFound: true, props: { novel: null, tab: "intro" } };
+//         if(!novelResponse) {
+//             return { notFound: true };
 //         }
-
 
 //         return {
 //             props: {
-//                 novel: novelResponse?.data.novel || null,
+//                 novel: JSON.parse(JSON.stringify(novelResponse.data?.novel)),
 //                 tab: context.params?.hash?.toString() || "intro",
 //             },
-//             revalidate: REVALIDATE_TIME,
 //         };
-
 //     } catch (error) {
-//         return { notFound: true, props: { novel: null, tab: "intro" } };
+//         return { notFound: true };
 //     }
 // };
-// export const getStaticPaths: GetStaticPaths<Params> = () => {
-//     return {
-//         paths: [],
-//         fallback: true,
-//     };
-// };
+
+export const getStaticProps: GetStaticProps<NovelDetailPageProps, Params> = async (
+    context: GetStaticPropsContext<Params>
+) => {
+    try {
+        const { novelSlug } = context.params as Params;
+
+        const novelResponse = await getNovelBySlugHandle(novelSlug as string);
+
+        if (!novelResponse) {
+            return { notFound: true, props: { novel: null, tab: "intro" } };
+        }
+
+
+        return {
+            props: {
+                novel: novelResponse?.data.novel || null,
+                tab: context.params?.hash?.toString() || "intro",
+            },
+            revalidate: REVALIDATE_TIME,
+        };
+
+    } catch (error) {
+        return { notFound: true, props: { novel: null, tab: "intro" } };
+    }
+};
+export const getStaticPaths: GetStaticPaths<Params> = () => {
+    return {
+        paths: [],
+        fallback: true,
+    };
+};
 
 // NovelDetailPage.getLayout = (page: ReactNode) => {
 //     // const matchesMobile = useMediaQuery('(max-width: 640px)')

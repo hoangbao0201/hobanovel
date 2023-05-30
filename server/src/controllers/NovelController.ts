@@ -16,6 +16,7 @@ import {
     getReadingNovelHandle,
     followNovelHandle,
     unfollowNovelHandle,
+    getAdvancedNovelHandle,
 } from "../services/novel.services";
 import { HistoryReadingType, NovelFollowerType, NovelType } from "../types";
 import jwt from "jsonwebtoken";
@@ -586,6 +587,31 @@ export const unfollowNovel = async (req: Request, res: Response) => {
             follow: unfollowNovelRes.data.insertId
         })
         
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: `Internal server error ${error}`,
+        });
+    }
+}
+
+export const getAdvancedNovel = async (req: Request, res: Response) => {
+    try {
+        const data = req.query
+
+        const resultGetNovelRes = await getAdvancedNovelHandle(data);
+        if(!resultGetNovelRes.success) {
+            return res.status(400).json({
+                success: false,
+                message: "Get novel error",
+                error: resultGetNovelRes.error
+            })
+        }
+
+        return res.json({
+            success: true,
+            data: resultGetNovelRes.data
+        })
     } catch (error) {
         return res.status(500).json({
             success: false,

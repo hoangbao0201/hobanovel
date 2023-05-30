@@ -6,7 +6,7 @@ import pool from "../library/connectMySQL";
 import { HistoryReadingType, NovelFollowerType, NovelType } from "../types";
 import { uploadThumbnailNovelByUrlHandle } from "./image.services";
 import { getBlurDataURL } from "../utils/getBlurDataURL";
-import { NovelSearchConditions } from "../middleware/conditionsQuery";
+import { NovelSearchConditions, getAdvancedNovelConditions } from "../middleware/conditionsQuery";
 
 export const createNovelByDataHandle = async (data : NovelType, userId : string) => {
     try {
@@ -456,3 +456,46 @@ export const unfollowNovelHandle = async ({ userId, novelId } : NovelFollowerTyp
         }
     }
 };
+
+export const getAdvancedNovelHandle = async (query: any) => {
+    try {
+
+        const { conditions, params } = getAdvancedNovelConditions(query)
+        
+        const connection = await pool.getConnection();
+
+        // novels.imageBlurHash
+        const qUpdateReadingNovel = `
+            SELECT 
+                novels.title, novels.novelId, novels.slug, novels.thumbnailUrl, novels.chapterCount, novels.category, novels.createdAt
+            FROM novels
+            
+            ${ conditions.length > 0 ? `WHERE ${conditions}` : '' }
+
+                LEFT JOIN comments ON comments.novelId = novels.novels
+
+            ORDER BY createdAt ASC
+            LIMIT 10 OFFSET ${!isNaN(query?.page) ? [(query?.page-1)*10] : '0'}
+
+        `;
+            
+            // ${!isNaN(query?.page) ? query?.page : '0'}
+
+        const [rows] : any = await connection.query(qUpdateReadingNovel, params);
+
+        connection.release()
+
+        return {
+            success: true,
+            data: rows,
+            // data: { conditions, params }
+            // data: qUpdateReadingNovel
+        }
+
+    } catch (error) {
+        return {
+            success: false,
+            error: error
+        }
+    }
+}

@@ -78,4 +78,3 @@ export const getUserByUsername = async (req: Request, res: Response) => {
         });
     }
 }
-

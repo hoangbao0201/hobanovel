@@ -113,7 +113,7 @@ const ChapterDetailPage = ({ chapter }: ChapterDetailPageProps) => {
 
     const handleCheckFollowNovel = async () => {
         const token = getAccessToken();
-        if(!token || !chapter?.chapterId) {
+        if(!token || !chapter?.novelId) {
             console.log("Chưa đủ thông tin")
             return
         }
@@ -137,10 +137,15 @@ const ChapterDetailPage = ({ chapter }: ChapterDetailPageProps) => {
     }
 
     useEffect(() => {
-        if(isAuthenticated) {
-            handleCheckFollowNovel()
+        if(!userLoading) {
+            if(isAuthenticated) {
+                handleCheckFollowNovel()
+            }
+            else {
+                setIsFollow(false);
+            }
         }
-    })
+    }, [userLoading])
 
     const handleFollowNovel = async () => {
         const token = getAccessToken()

@@ -18,6 +18,7 @@ import {
     getReadingNovel,
     followNovel,
     unfollowNovel,
+    getAdvancedNovel,
 } from "../controllers/NovelController";
 
 
@@ -30,6 +31,8 @@ router.post("/follow/:novelId", verifyToken, followNovel);
 router.post("/unfollow/:novelId", verifyToken, unfollowNovel);
 
 // Get Novel
+router.get("/get/advanced", getAdvancedNovel)
+
 router.get("/get/outstanding", getNovelsByOutstanding)
 router.get("/get/highlyrated", getNovelsByHighlyRated)
 
@@ -38,6 +41,7 @@ router.get("/search-by-title/:title", getNovelByTitle);
 router.get("/search-by-slug/:slug", getNovelBySlug);
 router.get("/search-by-userId/:userId", verifyToken, getNovelsByUserId);
 router.get("/get/:novelId?", getNovelsByData);
+
 
 // Reading Novel
 router.post("/reading/:novelId/:chapterRead", verifyToken, readingNovel)
