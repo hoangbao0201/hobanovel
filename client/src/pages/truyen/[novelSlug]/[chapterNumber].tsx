@@ -254,7 +254,7 @@ const ChapterDetailPage = ({ chapter }: ChapterDetailPageProps) => {
                                             chapter?.chapterNumber + 1
                                         }`}
                                         className={`rounded-r-lg ${
-                                            chapter.chapterNumber == 100 ?
+                                            chapter?.chapterNumber == chapter?.chapterCount ?
                                             "pointer-events-none bg-black/30 " : "bg-[#d9534f] hover:bg-[#ac2925]"
                                         }`}
                                     >
@@ -264,7 +264,7 @@ const ChapterDetailPage = ({ chapter }: ChapterDetailPageProps) => {
                                     </Link>
     
                                     <button onClick={isFollow ? handleUnfollowNovel : handleFollowNovel}
-                                        className={`flex items-center h-9 px-3 rounded-md max-sm:mr-8 
+                                        className={`select-none flex items-center h-9 px-3 rounded-md max-sm:mr-8 
                                             ${ isFollow === null || (
                                                 isFollow ? 'bg-[#d9534f] hover:bg-[#ac2925]' : 'bg-[#5cb85c] hover:bg-[#449d44]'
                                             )}

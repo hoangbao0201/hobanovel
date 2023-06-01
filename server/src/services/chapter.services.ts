@@ -80,11 +80,13 @@ export const getChapterDetailHandle = async ({ userId, novelSlug, chapterNumber 
 
         const qCreateChapter = `
             SELECT chapters.chapterId, chapters.novelName, chapters.novelSlug, chapters.title, users.name AS creator, users.userId AS creatorId,
-                chapters.content, chapters.chapterNumber, chapters.updatedAt, chapters.novelId, chapters.views
+                chapters.content, chapters.chapterNumber, chapters.updatedAt, chapters.novelId, chapters.views,
+                novels.chapterCount
             FROM chapters
                 LEFT JOIN users ON users.userId = chapters.userId
+                LEFT JOIN novels ON novels.novelId = chapters.novelId
                 
-                WHERE chapters.novelSlug = ? AND chapters.chapterNumber = ?;
+            WHERE chapters.novelSlug = ? AND chapters.chapterNumber = ?;
         `;
         // LEFT JOIN novel_followers ON novel_followers.novelId = chapters.novelId ${userId ? 'AND novel_followers.userId = ?' : ''}
                 

@@ -1,144 +1,133 @@
 
 import Image from "next/image";
-import { GetServerSideProps } from "next";
 import { useEffect, useState } from "react";
 
-import { Swiper, SwiperSlide } from "swiper/react";
 import 'swiper/css';
 import "swiper/css/effect-coverflow";
-import { EffectCoverflow } from "swiper";
+import cn from "clsx"
 
 
-import useSWR from "swr";
 import axios from "axios";
 import { BannersType } from "@/types";
-import BlurImage from "../Layout/BlurImage";
-import { placeholderBlurhash } from "@/constants";
 import Link from "next/link";
 import { useMediaQuery } from "usehooks-ts";
-import SwiperButton from "../Buttons/SwiperButton";
 import styled from "styled-components";
 
 type ResBannerProps = Pick<BannersType, 'bannersId' | 'bannersUrl' | 'imageBlurHash' | 'slug'>
 
 
-const getSingleBannersHandle = async (): Promise<{ success: boolean, message: string, banners: ResBannerProps }> => {
-    const response = await fetch("http://localhost:4000/api/banners/get/single");
-    const data = await response.json();
-    return data;
-};
+// const getSingleBannersHandle = async (): Promise<{ success: boolean, message: string, banners: ResBannerProps }> => {
+//     const response = await fetch("http://localhost:4000/api/banners/get/single");
+//     const data = await response.json();
+//     return data;
+// };
 
-const dataFakeBannersMobile = [
-    {
-        bannersId: "1",
-        bannersPublicId: "11",
-        bannersUrl: "https://static.cdnno.com/storage/topbox/69ef3e6a1983ea50f8da66c3024ce726.jpg",
-        createdAt: "",
-        imageBlurHash: null,
-        novelId: "111",
-        title: "fake title",
-        updatedAt: ""
-    },
-    {
-        bannersId: "2",
-        bannersPublicId: "22",
-        bannersUrl: "https://static.cdnno.com/storage/topbox/f97fc8a67807526399663149a543e5d4.jpg",
-        createdAt: "",
-        imageBlurHash: null,
-        novelId: "222",
-        title: "fake title",
-        updatedAt: ""
-    },
-    {
-        bannersId: "3",
-        bannersPublicId: "33",
-        bannersUrl: "https://static.cdnno.com/storage/topbox/38c3db22caeeb3806c7cc4123e67f334.jpg",
-        createdAt: "",
-        imageBlurHash: null,
-        novelId: "333",
-        title: "fake title",
-        updatedAt: ""
-    },
-    {
-        bannersId: "4",
-        bannersPublicId: "44",
-        bannersUrl: "https://static.cdnno.com/storage/topbox/f1ec33fbef50029b4177f7a62bcd9287.jpg",
-        createdAt: "",
-        imageBlurHash: null,
-        novelId: "444",
-        title: "fake title",
-        updatedAt: ""
-    },
-    {
-        bannersId: "5",
-        bannersPublicId: "55",
-        bannersUrl: "https://static.cdnno.com/storage/topbox/179b2c878f036f49c9419370cdc3b955.jpg",
-        createdAt: "",
-        imageBlurHash: null,
-        novelId: "555",
-        title: "fake title",
-        updatedAt: ""
-    },
-    {
-        bannersId: "6",
-        bannersPublicId: "66",
-        bannersUrl: "https://static.cdnno.com/storage/topbox/7586506594143472b1634d8c7a80427d.jpg",
-        createdAt: "",
-        imageBlurHash: null,
-        novelId: "666",
-        title: "fake title",
-        updatedAt: ""
-    },
-]
+// const dataFakeBannersMobile = [
+//     {
+//         bannersId: "1",
+//         bannersPublicId: "11",
+//         bannersUrl: "https://static.cdnno.com/storage/topbox/69ef3e6a1983ea50f8da66c3024ce726.jpg",
+//         createdAt: "",
+//         imageBlurHash: null,
+//         novelId: "111",
+//         title: "fake title",
+//         updatedAt: ""
+//     },
+//     {
+//         bannersId: "2",
+//         bannersPublicId: "22",
+//         bannersUrl: "https://static.cdnno.com/storage/topbox/f97fc8a67807526399663149a543e5d4.jpg",
+//         createdAt: "",
+//         imageBlurHash: null,
+//         novelId: "222",
+//         title: "fake title",
+//         updatedAt: ""
+//     },
+//     {
+//         bannersId: "3",
+//         bannersPublicId: "33",
+//         bannersUrl: "https://static.cdnno.com/storage/topbox/38c3db22caeeb3806c7cc4123e67f334.jpg",
+//         createdAt: "",
+//         imageBlurHash: null,
+//         novelId: "333",
+//         title: "fake title",
+//         updatedAt: ""
+//     },
+//     {
+//         bannersId: "4",
+//         bannersPublicId: "44",
+//         bannersUrl: "https://static.cdnno.com/storage/topbox/f1ec33fbef50029b4177f7a62bcd9287.jpg",
+//         createdAt: "",
+//         imageBlurHash: null,
+//         novelId: "444",
+//         title: "fake title",
+//         updatedAt: ""
+//     },
+//     {
+//         bannersId: "5",
+//         bannersPublicId: "55",
+//         bannersUrl: "https://static.cdnno.com/storage/topbox/179b2c878f036f49c9419370cdc3b955.jpg",
+//         createdAt: "",
+//         imageBlurHash: null,
+//         novelId: "555",
+//         title: "fake title",
+//         updatedAt: ""
+//     },
+//     {
+//         bannersId: "6",
+//         bannersPublicId: "66",
+//         bannersUrl: "https://static.cdnno.com/storage/topbox/7586506594143472b1634d8c7a80427d.jpg",
+//         createdAt: "",
+//         imageBlurHash: null,
+//         novelId: "666",
+//         title: "fake title",
+//         updatedAt: ""
+//     },
+// ]
   
-const GridSwiperStyled = styled.div`
-    .swiper-slide {
-        opacity: 0.5;
-        box-shadow: 0 3px 10px 0 rgba(0,0,0,.25);
-        background-color: #eee;
-        transition: all .2s ease-in-out;
-    }
-    .swiper-slide-active {
-        opacity: 1;
-    }
-`
+// const GridSwiperStyled = styled.div`
+//     .swiper-slide {
+//         opacity: 0.5;
+//         box-shadow: 0 3px 10px 0 rgba(0,0,0,.25);
+//         background-color: #eee;
+//         transition: all .2s ease-in-out;
+//     }
+//     .swiper-slide-active {
+//         opacity: 1;
+//     }
+// `
 
 const BannersIntro = () => {
 
-    const matchesMobile = useMediaQuery('(max-width: 640px)') 
+    // const matchesMobile = useMediaQuery('(max-width: 640px)');
 
-    const { data: BannersRes } = useSWR<{ banners: any }>(
-        `${matchesMobile ? "multiple" : "single"}`,
-        async (query) => {
-            const res = await axios(`http://localhost:4000/api/banners/get/${query}`);
+    const [isLoading, setLoading] = useState(true);
+    const [banners, setBanners] = useState<null | BannersType>();
+
+    const eventGetBannersNovel = async () => {
+        try {
+            const res = await axios(`http://localhost:4000/api/banners/get/single`);
             if(!res.data.success || !res) {
                 throw new Error();
             }
             
-            return {
-                banners: res.data.banners
-            }
-        },
-        {
-            onErrorRetry: (error, _, __, revalidate, { retryCount }) => {
-                if(error.status === 404) {
-                    return
-                }
-                if(retryCount >= 1) {
-                    return
-                }
-                setTimeout(() => {
-                    revalidate({ retryCount })
-                }, 2000)
-            }
+            setBanners(res.data.banners)
+        } catch (error) {
+            console.log(error)
         }
-    );
+    }
 
-    // console.log("banners: ", BannersRes?.banners)
+    useEffect(() => {
+        eventGetBannersNovel()
+    }, [])
+
+    const handleLoadingComplete = () => {
+        setLoading(false);
+    };
 
     return (
         <>
-            <div className="w-full relative select-none">
+            {/* <div className="w-full relative select-none">
                 {
                     matchesMobile ? (
                         <div className="relative overflow-hidden">
@@ -185,22 +174,31 @@ const BannersIntro = () => {
                                 </Swiper>
                             </GridSwiperStyled>
                         </div>
-                    ) : (
+                    ) : ( */}
                         <>
                             <div className="transition-all w-full h-[370px] overflow-hidden align-middle inline-block">
                                 {
-                                    BannersRes?.banners && (
-                                        <Link href={`/truyen/${BannersRes?.banners?.slug}`}>
-                                            <BlurImage
+                                    banners ? (
+                                        <Link href={`/truyen/${banners?.slug}`}>
+                                            <Image
                                                 width={3000}
                                                 height={1000}
-                                                alt="image-demo"
-                                                blurDataURL={BannersRes?.banners?.imageBlurHash || placeholderBlurhash}
-                                                className="object-cover w-full h-full"
+                                                alt="banners novel"
+                                                className={cn(
+                                                    "bg-black/70 group-hover:scale-105 group-hover:duration-500 object-cover h-full block duration-700 ease-in-out",
+                                                    isLoading
+                                                    ? "scale-105"
+                                                    : "scale-100"
+                                                )}
+                                                onLoad={handleLoadingComplete}
+                                                onLoadingComplete={() => setLoading(false)}
+                                                blurDataURL={banners?.imageBlurHash}
                                                 placeholder="blur"
-                                                src={BannersRes?.banners?.bannersUrl}
+                                                src={banners?.bannersUrl}
                                             />
                                         </Link>
+                                    ) : (
+                                        <div></div>
                                     )
                                 }
                             </div>
@@ -212,11 +210,41 @@ const BannersIntro = () => {
                                 className="w-full h-16 absolute bottom-0"
                             ></div>
                         </>
-                    )
+                    {/* )
                 }
-            </div>
+            </div> */}
         </>
     );
 };
 
 export default BannersIntro;
+
+
+// const { data: BannersRes } = useSWR<{ banners: any }>(
+//     `${matchesMobile ? "multiple" : "single"}`,
+//     async (query) => {
+//         const res = await axios(`http://localhost:4000/api/banners/get/${query}`);
+//         if(!res.data.success || !res) {
+//             throw new Error();
+//         }
+        
+//         return {
+//             banners: res.data.banners
+//         }
+//     },
+//     {
+//         onErrorRetry: (error, _, __, revalidate, { retryCount }) => {
+//             if(error.status === 404) {
+//                 return
+//             }
+//             if(retryCount >= 1) {
+//                 return
+//             }
+//             setTimeout(() => {
+//                 revalidate({ retryCount })
+//             }, 2000)
+//         }
+//     }
+// );
+
+// console.log("banners: ", BannersRes?.banners)

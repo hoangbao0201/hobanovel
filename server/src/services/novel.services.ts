@@ -457,39 +457,36 @@ export const unfollowNovelHandle = async ({ userId, novelId } : NovelFollowerTyp
     }
 };
 
-export const getAdvancedNovelHandle = async (query: any) => {
+export const getAdvancedNovelHandle = async (data: any) => {
     try {
 
-        const { conditions, params } = getAdvancedNovelConditions(query)
+        const { query, params } = getAdvancedNovelConditions(data)
         
         const connection = await pool.getConnection();
 
         // novels.imageBlurHash
-        const qUpdateReadingNovel = `
-            SELECT 
-                novels.title, novels.novelId, novels.slug, novels.thumbnailUrl, novels.chapterCount, novels.category, novels.createdAt
-            FROM novels
+        // const qUpdateReadingNovel = `
+        //     SELECT 
+        //         novels.title, novels.novelId, novels.slug, novels.thumbnailUrl, novels.chapterCount, novels.category, novels.createdAt
+        //     FROM novels
+
+        //     JOIN (
+        //         ${sortBy.join}
+        //     ) subquery ON novels.novelId = subquery.novelId
             
-            ${ conditions.length > 0 ? `WHERE ${conditions}` : '' }
-
-                LEFT JOIN comments ON comments.novelId = novels.novels
-
-            ORDER BY createdAt ASC
-            LIMIT 10 OFFSET ${!isNaN(query?.page) ? [(query?.page-1)*10] : '0'}
-
-        `;
+            
+        // `;
+            // ${ conditions.length > 0 ? `WHERE ${conditions}` : '' }
             
             // ${!isNaN(query?.page) ? query?.page : '0'}
 
-        const [rows] : any = await connection.query(qUpdateReadingNovel, params);
+        const [rows] : any = await connection.query(query, params);
 
         connection.release()
 
         return {
             success: true,
             data: rows,
-            // data: { conditions, params }
-            // data: qUpdateReadingNovel
         }
 
     } catch (error) {
