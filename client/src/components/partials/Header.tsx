@@ -82,7 +82,7 @@ const Header = ({ autoHidden = true } : HeaderProps) => {
                 autoHidden && <div className="w-full h-14"></div>
             }
             <header
-                className={`transition-all bg-gray-100 drop-shadow-sm ${ autoHidden && 'fixed top-0 left-0 right-0 z-50' } 
+                className={`bg-gray-100 drop-shadow-sm ${ autoHidden ? 'fixed top-0 left-0 right-0 z-20' : '' } 
                     ${ autoHidden && (isHeader ? "opacity-100" : "opacity-0 pointer-events-none")}`}
             >
                 <div className={`w-full`}>
@@ -150,6 +150,13 @@ const Header = ({ autoHidden = true } : HeaderProps) => {
                                 </div>
                             </div>
                         </div>
+
+                        <Link
+                            href='/truyen?sort_by=novel_new'
+                            className={`px-3 py-1 align-middle`}
+                        >
+                            Tìm truyện
+                        </Link>
 
                         <div className="ml-auto">
                             <div className="flex items-center">

@@ -610,8 +610,7 @@ export const getAdvancedNovel = async (req: Request, res: Response) => {
 
         return res.json({
             success: true,
-            data: resultGetNovelRes.data,
-            query: resultGetNovelRes.query
+            novels: resultGetNovelRes.data,
         })
     } catch (error) {
         return res.status(500).json({

@@ -233,8 +233,8 @@ export const getNovelsByHighlyRatedHandle = async (page : number) => {
         const connection = await pool.getConnection();
 
         const qGetNovel = `
-            SELECT N.novelId, N.slug, N.title, N.thumbnailUrl, N.imageBlurHash, LEFT(N.description, 150) as description, N.author, N.category, N.createdAt, FORMAT(AVG(reviews.mediumScore), 1) AS mediumScore FROM novels N
-                INNER JOIN reviews ON reviews.novelId = N.novelId
+            SELECT N.novelId, N.slug, N.title, N.thumbnailUrl, N.imageBlurHash, N.chapterCount, LEFT(N.description, 150) as description, N.author, N.category, N.createdAt, FORMAT(AVG(reviews.mediumScore), 1) AS mediumScore FROM novels N
+                LEFT JOIN reviews ON reviews.novelId = N.novelId
             GROUP BY N.novelId, N.slug, N.title, N.thumbnailUrl, N.imageBlurHash, description, N.author, N.category, N.createdAt
             ORDER BY mediumScore DESC
             LIMIT 6 OFFSET ?

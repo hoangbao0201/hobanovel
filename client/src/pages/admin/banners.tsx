@@ -1,21 +1,21 @@
 import Head from "next/head";
 import Image from "next/image";
+import { GetServerSideProps } from "next";
 import { ReactNode, useEffect, useRef, useState } from "react";
+
+import Select from "react-select";
+
 import AdminLayout from "@/components/Layout/AdminLayout";
 import { addBannersHandle, getMultipleBannersHandle } from "@/services/banners.services";
 import { getAccessToken } from "@/services/cookies.servies";
 import { BannersType, NovelType } from "@/types";
-import { GetServerSideProps } from "next";
 import { LoadingButton, LoadingSearch } from "@/components/Layout/LoadingLayout";
 import BlurImage from "@/components/Layout/BlurImage";
 import { placeholderBlurhash } from "@/constants";
 import { useDebounce } from "@/hook/useDebounce";
 import { getNovelsByDataHandle } from "@/services/novels.services";
 import { iconClose, iconPlus } from "../../../public/icons";
-import Select from "react-select";
 
-import styled from "styled-components";
-import Tippy from "@tippyjs/react";
 
 type BannersCreateType = Pick<
     BannersType,

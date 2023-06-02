@@ -111,7 +111,7 @@ export const NovelSearchConditions = (data : Partial<NovelType>) => {
 export const getAdvancedNovelConditions = (data : any) => {
     const { novelId = '', userId = '', title = '', sort_by = '', page = '1' } = data
 
-    const field = 'novels.title, novels.novelId, novels.slug, novels.thumbnailUrl, novels.chapterCount, novels.category, novels.createdAt'
+    const field = 'novels.title, novels.novelId, novels.slug, LEFT(novels.description, 150) as description, novels.thumbnailUrl, novels.chapterCount, novels.category, novels.createdAt, users.name as author'
     const conditions : string[] = []
     const params : Array<string | number> = []
 
@@ -135,8 +135,9 @@ export const getAdvancedNovelConditions = (data : any) => {
 
     const query = `
         SELECT ${field} FROM novels
+            LEFT JOIN users ON users.userId = novels.userId
         ${conbinedConditions.length > 0 ? 'WHERE ' + conbinedConditions : ''}
-        LIMIT 10 OFFSET ${(page-1)*10}
+        LIMIT 20 OFFSET ${(page-1)*20}
     `
 
     switch(sort_by) {
@@ -145,10 +146,11 @@ export const getAdvancedNovelConditions = (data : any) => {
                 query: (`
                     SELECT ${field} FROM novels
                         LEFT JOIN chapters ON chapters.novelId = novels.novelId
+                        LEFT JOIN users ON users.userId = novels.userId
                     ${conbinedConditions.length > 0 ? 'WHERE ' + conbinedConditions : ''}
                     GROUP BY novels.novelId
                     ORDER BY SUM(chapters.views) DESC
-                    LIMIT 10 OFFSET ${(page-1)*10}
+                    LIMIT 20 OFFSET ${(page-1)*20}
                 `),
                 params
             }
@@ -157,10 +159,11 @@ export const getAdvancedNovelConditions = (data : any) => {
                 query: (`
                     SELECT ${field} FROM novels
                         LEFT JOIN chapters ON chapters.novelId = novels.novelId
+                        LEFT JOIN users ON users.userId = novels.userId
                     ${conbinedConditions.length > 0 ? 'WHERE ' + conbinedConditions : ''}
                     GROUP BY novels.novelId
                     ORDER BY SUM(chapters.views) DESC
-                    LIMIT 10 OFFSET ${(page-1)*10}
+                    LIMIT 20 OFFSET ${(page-1)*20}
                 `),
                 params
             }
@@ -169,10 +172,11 @@ export const getAdvancedNovelConditions = (data : any) => {
                 query: (`
                     SELECT ${field} FROM novels
                         LEFT JOIN reviews ON reviews.novelId = novels.novelId AND reviews.isRating IS TRUE
+                        LEFT JOIN users ON users.userId = novels.userId
                     ${conbinedConditions.length > 0 ? 'WHERE ' + conbinedConditions : ''}
                     GROUP BY novels.novelId
                     ORDER BY COUNT(reviews.novelId) DESC
-                    LIMIT 10 OFFSET ${(page-1)*10}
+                    LIMIT 20 OFFSET ${(page-1)*20}
                 `),
                 params
             }
@@ -181,10 +185,11 @@ export const getAdvancedNovelConditions = (data : any) => {
                 query: (`
                     SELECT ${field} FROM novels
                         LEFT JOIN reviews ON reviews.novelId = novels.novelId AND reviews.isRating IS TRUE
+                        LEFT JOIN users ON users.userId = novels.userId
                     ${conbinedConditions.length > 0 ? 'WHERE ' + conbinedConditions : ''}
                     GROUP BY novels.novelId
                     ORDER BY SUM(reviews.mediumScore) DESC
-                    LIMIT 10 OFFSET ${(page-1)*10}
+                    LIMIT 20 OFFSET ${(page-1)*20}
                 `),
                 params
             }
@@ -193,10 +198,11 @@ export const getAdvancedNovelConditions = (data : any) => {
                 query: (`
                     SELECT ${field} FROM novels
                         LEFT JOIN chapters ON chapters.novelId = novels.novelId
+                        LEFT JOIN users ON users.userId = novels.userId
                     ${conbinedConditions.length > 0 ? 'WHERE ' + conbinedConditions : ''}
                     GROUP BY novels.novelId
                     ORDER BY COUNT(chapters.chapterId) DESC
-                    LIMIT 10 OFFSET ${(page-1)*10}
+                    LIMIT 20 OFFSET ${(page-1)*20}
                 `),
                 params
             } 
@@ -205,10 +211,11 @@ export const getAdvancedNovelConditions = (data : any) => {
                 query: (`
                     SELECT ${field} FROM novels
                         LEFT JOIN chapters ON chapters.novelId = novels.novelId
+                        LEFT JOIN users ON users.userId = novels.userId
                     ${conbinedConditions.length > 0 ? 'WHERE ' + conbinedConditions : ''}
                     GROUP BY novels.novelId
                     ORDER BY MAX(chapters.createdAt) DESC
-                    LIMIT 10 OFFSET ${(page-1)*10}
+                    LIMIT 20 OFFSET ${(page-1)*20}
                 `),
                 params
             } 
@@ -216,9 +223,10 @@ export const getAdvancedNovelConditions = (data : any) => {
             return {
                 query: (`
                     SELECT ${field} FROM novels
+                        LEFT JOIN users ON users.userId = novels.userId
                     ${conbinedConditions.length > 0 ? 'WHERE ' + conbinedConditions : ''}
                     ORDER BY novels.createdAt DESC
-                    LIMIT 10 OFFSET ${(page-1)*10}
+                    LIMIT 20 OFFSET ${(page-1)*20}
                 `),
                 params
             } 
@@ -227,10 +235,11 @@ export const getAdvancedNovelConditions = (data : any) => {
                 query: (`
                     SELECT ${field} FROM novels
                         LEFT JOIN novel_followers ON novel_followers.novelId = novels.novelId
+                        LEFT JOIN users ON users.userId = novels.userId
                     ${conbinedConditions.length > 0 ? 'WHERE ' + conbinedConditions : ''}
                     GROUP BY novels.novelId
                     ORDER BY COUNT(novel_followers.novelId) DESC
-                    LIMIT 10 OFFSET ${(page-1)*10}
+                    LIMIT 20 OFFSET ${(page-1)*20}
                 `),
                 params
             }
@@ -238,11 +247,12 @@ export const getAdvancedNovelConditions = (data : any) => {
             return {
                 query: (`
                     SELECT ${field} FROM novels
-                        LEFT JOIN novel_followers ON novel_followers.novelId = novels.novelId
+                        LEFT JOIN comments ON comments.novelId = novels.novelId
+                        LEFT JOIN users ON users.userId = novels.userId
                     ${conbinedConditions.length > 0 ? 'WHERE ' + conbinedConditions : ''}
                     GROUP BY novels.novelId
-                    ORDER BY COUNT(novel_followers.novelId) DESC
-                    LIMIT 10 OFFSET ${(page-1)*10}
+                    ORDER BY COUNT(comments.novelId) DESC
+                    LIMIT 20 OFFSET ${(page-1)*20}
                 `),
                 params
             }

@@ -213,3 +213,21 @@ export const unfollowNovelHandle = async (data : Pick<NovelFollowerType, 'novelI
         }
     }
 };
+
+export const advancedSearchNovelHandle = async (query: string) => {
+    try {
+        const getNovels = await axios.get(
+            `http://localhost:4000/api/novels/get/advanced?${query}`);
+
+        return getNovels.data;
+    } catch (error) {
+        if(axios.isAxiosError(error) && error.response?.data) {
+            return error.response.data;
+        } else {
+            return {
+                success: false,
+                message: (error as Error).message
+            };
+        }
+    }
+};
