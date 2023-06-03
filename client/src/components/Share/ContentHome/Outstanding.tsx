@@ -11,9 +11,9 @@ interface OutstandingProps {
 const Outstanding = ({ novels = [] } : OutstandingProps) => {
 
     return (
-        <div className="mb-5">
-            <h3 className="px-3 mb-5 text-xl font-semibold">Truyện nổi bật</h3>
-            <div className="grid md:grid-cols-2 grid-cols-1 gap-6 px-3">
+        <div className="-mx-4">
+            <h3 className="px-4 mb-4 text-xl font-semibold">Truyện nổi bật</h3>
+            <div className="px-4 mb-4 grid md:grid-cols-2 grid-cols-1 gap-6">
     
                 {   
                     novels?.length ? (

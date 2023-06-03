@@ -10,6 +10,7 @@ export interface HistoryReadingType {
 export interface BannersType extends NovelType {
     bannersId: string
     bannersUrl: string
+    isMobile: boolean
     imageBlurHash: string
     bannersPublicId: string
     createdAt: Date
@@ -139,7 +140,7 @@ export interface SelectType {
 
 // ----------------------------------------------- //
 
-export type NovelBySlugType = Pick<NovelType, 'novelId' | 'slug' | 'title' | 'chapterCount' | 'thumbnailUrl' | 'imageBlurHash' | 'description' | 'author' | 'category' | 'personality' | 'scene' | 'classify' | 'viewFrame'> & {
+export type NovelBySlugType = Pick<NovelType, 'novelId' | 'slug' | 'title' | 'chapterCount' | 'thumbnailUrl' | 'imageBlurHash' | 'description' | 'author' | 'category' | 'personality' | 'scene' | 'classify' | 'viewFrame' | 'createdAt'> & {
     newChapterCount: number;
     mediumScore: number;
     views: number

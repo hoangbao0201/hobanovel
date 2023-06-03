@@ -10,6 +10,7 @@ export const addBanners = async (req: Request, res: Response) => {
     try {
 
         const { novelId } = req.params
+        const { isMobile = 0 } = req.query
         if(!novelId) {
             return res.status(400).json({
                 success: false,
@@ -27,7 +28,7 @@ export const addBanners = async (req: Request, res: Response) => {
 
         const hashUrl = await getBlurDataURL(dataImage.url)
 
-        const bannersResponse : any = await addBannerHandle({ novelId, bannersUrl: dataImage.url, imageBlurHash: hashUrl, bannersPublicId: dataImage.public_id } as BannersType);
+        const bannersResponse : any = await addBannerHandle({ novelId, bannersUrl: dataImage.url, imageBlurHash: hashUrl, bannersPublicId: dataImage.public_id, isMobile: isMobile === 0 ? false : true } as BannersType);
         if(!bannersResponse.success) {
             return res.status(400).json({
                 success: false,
@@ -59,8 +60,9 @@ export const addBanners = async (req: Request, res: Response) => {
 export const getBanners = async (req: Request, res: Response) => {
     try {
         const { type = 'single' } = req.params
-
-        const bannersResponse : any = type === 'single' ? await getSingleBannerHandle() : await getMultipleBannerHandle();
+        const { isMobile = '0' } = req.query
+        const checkMobile = isMobile === '0' ? false : true
+        const bannersResponse : any = type === 'single' ? await getSingleBannerHandle(checkMobile as boolean) : await getMultipleBannerHandle(checkMobile as boolean);
         if(!bannersResponse.success) {
             return res.status(400).json({
                 success: false,

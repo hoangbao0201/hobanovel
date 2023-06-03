@@ -170,40 +170,46 @@ const HomePage = ({
             </Head>
             <main>
                 <WrapperLayout className="pt-5">
-                    <div className="flex">
-                        <div className="lg:w-8/12">
-                            <Outstanding novels={novelsOutstending} />
-                        </div>
-                        {!matchesTablet && (
-                            <div className="lg:w-4/12">
-                                <Reading readingNovel={novelReading?.novels} />
-                            </div>
-                        )}
-                    </div>
-
-                    {!matchesTablet && (
+                    <div className="block -mx-4">
                         <div className="">
-                            <JustUpdated novels={novelsJustUpdated} />
+                            <div className="lg:flex">
+                                <div className="lg:w-8/12 w-full px-4">
+                                    <Outstanding novels={novelsOutstending} />
+                                </div>
+                                {!matchesTablet && (
+                                    <div className="lg:w-4/12">
+                                        <Reading readingNovel={novelReading?.novels} />
+                                    </div>
+                                )}
+                            </div>
                         </div>
-                    )}
-
-                    <div className="flex flex-col lg:flex-row my-6">
-                        <div className="lg:w-8/12">
-                            <HighlyRated novels={novelsHighlyRated as NovelHighlyRated[]} />
-                        </div>
-                        <div className="lg:w-4/12">
-                            <LatestReviews reviews={novelsLatestReviews} />
-                        </div>
-                    </div>
-
-                    <div className="hidden lg:flex flex-col lg:flex-row my-6">
+    
                         {!matchesTablet && (
-                            <div className="lg:w-4/12">
-                                <JustPosted novels={novelsOutstending} />
+                            <div className="">
+                                <JustUpdated novels={novelsJustUpdated} />
                             </div>
                         )}
-                        <div className="lg:w-8/12">
-                            <JustCompleted novels={novelsJustCompleted} />
+    
+                        <div className="my-6">
+                            <div className="lg:flex">
+                                <div className="lg:w-8/12 w-full px-4">
+                                    <HighlyRated novels={novelsHighlyRated as NovelHighlyRated[]} />
+                                </div>
+                                <div className="lg:w-4/12 w-full px-4">
+                                    <LatestReviews reviews={novelsLatestReviews} />
+                                </div>
+                            </div>
+                        </div>
+    
+                        <div className="hidden lg:flex flex-col lg:flex-row my-6">
+                            {!matchesTablet && (
+                                <div className="lg:w-4/12">
+                                    <JustPosted novels={novelsOutstending} />
+                                </div>
+                            )}
+                            <div className="lg:w-8/12">
+                                <JustCompleted novels={novelsJustCompleted} />
+                            </div>
                         </div>
                     </div>
                 </WrapperLayout>

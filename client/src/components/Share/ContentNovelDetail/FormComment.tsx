@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
 import { CommentType } from "@/types";
@@ -15,6 +15,7 @@ import { LoadingForm } from "@/components/Layout/LoadingLayout";
 // import { socket } from "@/socket";
 // import { io, Socket } from "socket.io-client";
 import { EditorStyle } from "@/components/Layout/EditorStyle";
+import { dataFakeBannersMobile } from "@/components/partials/BannersIntro";
 
 // import { CKEditor } from '@ckeditor/ckeditor5-react';
 
@@ -47,13 +48,10 @@ const FormComment = ({ tab, novelId }: FormCommentProps) => {
         const dataComments = { novelId }
         const commentsResponse = await getCommentsHandle(dataComments as CommentType);
 
-        setTimeout(() => {
-            if (commentsResponse?.data.success) {
-                dispatch(setCommentsRDHandle(Array.from((commentsResponse.data.comments))))
-            }
-            setHasLoadedData(true);
-        }, 2000)
-
+        if (commentsResponse?.data.success) {
+            dispatch(setCommentsRDHandle(Array.from((commentsResponse.data.comments))))
+        }
+        setHasLoadedData(true);
     };
 
     useEffect(() => {
@@ -155,8 +153,8 @@ const FormComment = ({ tab, novelId }: FormCommentProps) => {
 
 
     return (
-        <div className="flex">
-            <div className="w-8/12 p-5 -ml-5 relative">
+        <div className="flex -mx-4">
+            <div className="lg:w-8/12 w-full px-4">
 
                 {/* <CKEditorWrapper />
                 <code>
@@ -203,7 +201,9 @@ const FormComment = ({ tab, novelId }: FormCommentProps) => {
                             ) : (
                                 comments?.map((comment) => {
                                     return (
-                                        <CommentItem key={comment?.commentId} comment={comment} user={currentUser} handleDeleteComment={handleDestroyComment}/> 
+                                        <Fragment key={comment.commentId}>
+                                            <CommentItem key={comment?.commentId} comment={comment} user={currentUser} handleDeleteComment={handleDestroyComment}/>
+                                        </Fragment>
                                     );
                                 })
                             )
@@ -211,7 +211,23 @@ const FormComment = ({ tab, novelId }: FormCommentProps) => {
                     }
                 </div>
             </div>
-            <div className="w-4/12 p-5 -ml-5 relative">r</div>
+            <div className="max-lg:hidden lg:w-4/12 w-full px-4">
+                {
+                    dataFakeBannersMobile?.slice(0, 4).map((item, index) => {
+                        return (
+                            <div key={index} className="mb-4">
+                                <Image
+                                    width={500}
+                                    height={500}
+                                    alt="image banner"
+                                    src={item.bannersUrl}
+                                    className="w-full h-40 object-cover"
+                                />
+                            </div>
+                        )
+                    })
+                }
+            </div>
         </div>
     );
 };

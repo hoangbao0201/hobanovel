@@ -4,15 +4,15 @@ import { getBlurDataURL } from "../utils/getBlurDataURL";
 
 export const addBannerHandle = async (data : BannersType) => {
     try {
-        const { novelId, bannersUrl, imageBlurHash, bannersPublicId } = data
+        const { novelId, bannersUrl, imageBlurHash, bannersPublicId, isMobile } = data
         const connection = await pool.getConnection();
 
         const qAddBanners = `
-            INSERT INTO banners(novelId, bannersUrl, imageBlurHash, bannersPublicId)
-            VALUES (?,?,?,?)
+            INSERT INTO banners(novelId, bannersUrl, imageBlurHash, bannersPublicId, isMobile)
+            VALUES (?,?,?,?,?)
         `;
 
-        const [rows] = await connection.query(qAddBanners, [novelId, bannersUrl, imageBlurHash, bannersPublicId]);
+        const [rows] = await connection.query(qAddBanners, [novelId, bannersUrl, imageBlurHash, bannersPublicId, isMobile]);
 
         connection.release();
 
@@ -22,22 +22,26 @@ export const addBannerHandle = async (data : BannersType) => {
         }
 
     } catch (error) {
-        return null
+        return {
+            success: false,
+            error: error
+        }
     }
 };
 
-export const getSingleBannerHandle = async () => {
+export const getSingleBannerHandle = async (isMobile : boolean) => {
     try {
         const connection = await pool.getConnection();
 
         const qGetBanners = `
             SELECT banners.bannersId, banners.bannersUrl, banners.imageBlurHash, novels.slug FROM banners
                 LEFT JOIN novels ON novels.novelId = banners.novelId
+            WHERE banners.isMobile = ?
             ORDER BY RAND()
             LIMIT 1
         `;
 
-        const [rows] = await connection.query(qGetBanners);
+        const [rows] = await connection.query(qGetBanners, isMobile);
 
         connection.release();
 
@@ -47,21 +51,25 @@ export const getSingleBannerHandle = async () => {
         }
 
     } catch (error) {
-        return null
+        return {
+            success: false,
+            error: error
+        }
     }
 };
-export const getMultipleBannerHandle = async () => {
+export const getMultipleBannerHandle = async (isMobile : boolean) => {
     try {
         const connection = await pool.getConnection();
 
         const qGetBanners = `
             SELECT banners.*, novels.title FROM banners
-            INNER JOIN novels ON novels.novelId = banners.bannersId
+                INNER JOIN novels ON novels.novelId = banners.bannersId
+            WHERE banners.isMobile = ?
             ORDER BY createdAt DESC
             LIMIT 6
         `;
 
-        const [rows] = await connection.query(qGetBanners);
+        const [rows] = await connection.query(qGetBanners, isMobile);
 
         connection.release();
 
@@ -71,7 +79,10 @@ export const getMultipleBannerHandle = async () => {
         }
 
     } catch (error) {
-        return null
+        return {
+            success: false,
+            error: error
+        }
     }
 };
 

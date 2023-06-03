@@ -1,5 +1,4 @@
-import { PageHomeProps } from "@/pages";
-import { NovelType } from "@/types";
+
 
 interface FormIntroduceProps {
     description: string
@@ -8,8 +7,8 @@ interface FormIntroduceProps {
 const FormIntroduce = ({ description } : FormIntroduceProps) => {
 
     return (
-        <div className="px-4">
-            <div className="" dangerouslySetInnerHTML={{
+        <div className="flex -mx-4">
+            <div className="px-4" dangerouslySetInnerHTML={{
                 __html: description
             }}/>
         </div>

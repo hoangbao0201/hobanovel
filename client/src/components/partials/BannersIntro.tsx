@@ -24,7 +24,7 @@ type ResBannerProps = Pick<BannersType, 'bannersId' | 'bannersUrl' | 'imageBlurH
 //     return data;
 // };
 
-const dataFakeBannersMobile = [
+export const dataFakeBannersMobile = [
     {
         bannersId: "1",
         bannersPublicId: "11",

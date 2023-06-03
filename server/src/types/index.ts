@@ -11,6 +11,7 @@ export interface BannersType extends NovelType {
     bannersUrl: string
     imageBlurHash: string
     bannersPublicId: string
+    isMobile: boolean
     createdAt: Date
     updatedAt: Date
 }

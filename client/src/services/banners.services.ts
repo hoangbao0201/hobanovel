@@ -1,14 +1,14 @@
 import axios from "axios"; 
 import { BannersType } from "@/types";
 
-export const addBannersHandle = async (data : Partial<Pick<BannersType, 'novelId'>> & { token: string, formData: FormData }) => {
+export const addBannersHandle = async (data : Partial<Pick<BannersType, 'novelId' | 'isMobile'>> & { token: string, formData: FormData }) => {
     try {
-        const { novelId, token, formData } = data;
+        const { novelId, isMobile = false, token, formData } = data;
         if(!token) {
             return null;
         }
     
-        const uploadBannerResponse = await axios.post(`http://localhost:4000/api/banners/add/${novelId}`, formData, {
+        const uploadBannerResponse = await axios.post(`http://localhost:4000/api/banners/add/${novelId}?isMobile=${isMobile ? '1' : '0'}`, formData, {
             headers: {
                 Authorization: `Bearer ${token}`
             }

@@ -127,7 +127,7 @@ export const getNovelBySlugHandle = async ({ slug } : NovelType) => {
         const qGetNovel = `
             SELECT novels.novelId, novels.slug, novels.title, novels.thumbnailUrl, novels.imageBlurHash, novels.description, novels.author,
                 AVG(reviews.mediumScore) AS mediumScore, 
-                novels.category, novels.personality, novels.scene, novels.classify, novels.viewFrame,
+                novels.category, novels.personality, novels.scene, novels.classify, novels.viewFrame, novels.createdAt,
                 
                 COUNT(IF(chapters.createdAt >= DATE_SUB(NOW(), INTERVAL 1 WEEK), 1, NULL)) as newChapterCount,
                 chapterCount,

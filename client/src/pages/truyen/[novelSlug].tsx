@@ -16,7 +16,7 @@ import { REVALIDATE_TIME, placeholderBlurhash } from "@/constants";
 import BlurImage from "@/components/Layout/BlurImage";
 import MainLayout from "@/components/Layout/MainLayout";
 import { getNovelBySlugHandle } from "@/services/novels.services";
-import { iconBookmark, iconGlasses } from "../../../public/icons";
+import { iconBookmark, iconGlasses, iconHeartFull } from "../../../public/icons";
 import WrapperLayout from "@/components/Layout/WrapperLayout";
 import { Tab, Transition } from "@headlessui/react";
 import { convertViewsCount } from "@/utils/convertViewsCount";
@@ -25,6 +25,7 @@ import { useMediaQuery } from "usehooks-ts";
 import { getAccessToken } from "@/services/cookies.servies";
 import { checkFollowNovelHandle } from "@/services/follow.services";
 import { useSelector } from "react-redux";
+import { convertTime } from "@/utils/convertTime";
 
 // import FormIntroduce from "@/components/Share/ContentNovelDetail/FormIntroduce";
 // import FormFeedback from "@/components/Share/ContentNovelDetail/FormFeedback";
@@ -126,210 +127,205 @@ const NovelDetailPage = ({ token, tab, novel }: NovelDetailPageProps) => {
                 </Head>
                 <main>
                     <WrapperLayout className="pt-5 max-lg:max-w-3xl">
-                        <div>
-                            <div className="sm:px-4">
-    
-                                {
-                                    matchesMobile && (
-                                        <div>
-                                            <Image 
-                                                width={120}
-                                                height={120}
-                                                alt=""
-                                                src={novel.thumbnailUrl}
-                                                className="w-full h-56 overflow-hidden object-cover absolute inline-block bg-cover"
-                                            />
-                                            <div className="absolute w-full h-56 bg-black/20 backdrop-blur-lg"></div>
-                                        </div>
-                                    )
-                                }
-    
-                                <div
-                                    // style={{ transform: `scale(${scaleInfoNovel})`, opacity: `${scaleInfoNovel}` }} 
-                                    className={`flex ${matchesMobile ? "text-white h-56 items-center px-5" : ""}`}
-                                >
-                                    <Link
-                                        href={`/truyen/${novel.slug}`}
-                                        className={`lg:w-52 lg:h-[270px] sm:w-40 sm:h-[220px] lg:rounded-none w-24 h-[150px] rounded-md overflow-hidden shadow relative `}
-                                    >
+                        <div className="-mx-4">
+                            <article className="mb-6 px-4">
+                                <h1 className="lg:mb-6 sm:text-xl sm:hidden text-xl sm:line-clamp-2 font-semibold mb-1 uppercase text-center">{novel.title}</h1>
+                                <time className="sm:hidden block text-center align-middle mb-4 italic text-gray-600 font-normal text-sm">[Tạo lúc {convertTime(novel.createdAt)}]</time>
+
+                                <div className="sm:flex -mx-4">
+                                    <div className={`sm:w-3/12 w-full max-sm:mb-6 px-4 text-center`}>
                                         <BlurImage
                                             width={208}
                                             height={280}
                                             alt="image-demo"
                                             blurDataURL={novel.imageBlurHash || placeholderBlurhash}
-                                            className="group-hover:scale-105 group-hover:duration-500 object-cover w-full h-full"
+                                            className="group-hover:scale-105 group-hover:duration-500 object-cover max-sm:mx-auto shadow"
                                             placeholder="blur"
                                             src={novel.thumbnailUrl}
                                         />
-                                    </Link>
-                                    <div className="justify-between lg:min-h-[280px] ml-5 min-h-[150px] relative flex-1 flex flex-col">
-                                        <Link href={`/truyen/${novel.slug}`}>
-                                            <h2 className="lg:mb-6 xs:text-xl line-clamp-2 font-semibold">{novel.title}</h2>
-                                        </Link>
-                                        {
-                                            matchesMobile ? (
-                                                <div className="line-clamp-1">
-                                                    bởi {novel.author}
+                                    </div>
+                                    <div className="sm:w-9/12 max-sm:mx-auto px-4">
+                                        <h1 className="max-sm:hidden text-xl line-clamp-2 font-semibold uppercase mb-5">{novel.title}</h1>
+
+                                        <ul className="sm:hidden">
+                                            <li className="flex mb-2">
+                                                <p className="w-4/12">Tác giả:</p>
+                                                <h2 className="w-8/12">{novel.author}</h2>
+                                            </li>
+                                            <li className="flex mb-2">
+                                                <p className="w-4/12">Chương:</p>
+                                                <h2 className="w-8/12">{novel.chapterCount}</h2>
+                                            </li>
+                                            <li className="flex mb-2">
+                                                <p className="w-4/12">Theo dõi:</p>
+                                                <h2 className="w-8/12">Đang cập nhập</h2>
+                                            </li>
+                                            <li className="flex mb-2">
+                                                <p className="w-4/12">Chương/tuần:</p>
+                                                <h2 className="w-8/12">{novel.newChapterCount}</h2>
+                                            </li>
+                                            <li className="flex mb-2">
+                                                <p className="w-4/12">Lượt xem:</p>
+                                                <h2 className="w-8/12">{convertViewsCount(novel.views)}</h2>
+                                            </li>
+                                            <li className="flex mb-2">
+                                                <p className="w-4/12">Thế loại:</p>
+                                                <div className="w-8/12 flex items-center flex-wrap gap-2 text-sm mb-4">
+                                                    <h2 className="border-[#bf2c24] text-[#bf2c24] px-2 text-sm border rounded-md">
+                                                        {novel.newChapterCount > 0
+                                                            ? "Đang ra"
+                                                            : "Chưa ra chương mới"}
+                                                    </h2>
+                                                    {novel.category && (
+                                                        <h2 className="border-[#b78a28] text-[#b78a28] px-2 text-sm border rounded-md">
+                                                            {novel.category}
+                                                        </h2>
+                                                    )}
+                                                    {novel.personality && (
+                                                        <h2 className="border-[#088860] text-[#088860] px-2 text-sm border rounded-md">
+                                                            {novel.personality}
+                                                        </h2>
+                                                    )}
+                                                    {novel.scene && (
+                                                        <h2 className="border-[#088860] text-[#088860] px-2 text-sm border rounded-md">
+                                                            {novel.scene}
+                                                        </h2>
+                                                    )}
+                                                    {novel.classify && (
+                                                        <h2 className="border-[#088860] text-[#088860] px-2 text-sm border rounded-md">
+                                                            {novel.classify}
+                                                        </h2>
+                                                    )}
+                                                    {novel.viewFrame && (
+                                                        <h2 className="border-[#088860] text-[#088860] px-2 text-sm border rounded-md">
+                                                            {novel.viewFrame}
+                                                        </h2>
+                                                    )}
                                                 </div>
-                                            ) : (
-                                                <>
-                                                    <div className="flex items-center flex-wrap gap-2 text-sm mb-4">
-                                                        {novel.author && (
-                                                            <div className="border-[#666] text-[#666] px-3 py-1 border rounded-full ">
-                                                                {novel.author}
-                                                            </div>
-                                                        )}
-                                                        <div className="border-[#bf2c24] text-[#bf2c24] px-3 py-1 border rounded-full ">
-                                                            {novel.newChapterCount > 0
-                                                                ? "Đang ra"
-                                                                : "Chưa ra chương mới"}
-                                                        </div>
-                                                        {novel.category && (
-                                                            <div className="border-[#b78a28] text-[#b78a28] px-3 py-1 border rounded-full ">
-                                                                {novel.category}
-                                                            </div>
-                                                        )}
-                                                        {novel.personality && (
-                                                            <div className="border-[#088860] text-[#088860] px-3 py-1 border rounded-full ">
-                                                                {novel.personality}
-                                                            </div>
-                                                        )}
-                                                        {novel.scene && (
-                                                            <div className="border-[#088860] text-[#088860] px-3 py-1 border rounded-full ">
-                                                                {novel.scene}
-                                                            </div>
-                                                        )}
-                                                        {novel.classify && (
-                                                            <div className="border-[#088860] text-[#088860] px-3 py-1 border rounded-full ">
-                                                                {novel.classify}
-                                                            </div>
-                                                        )}
-                                                        {novel.viewFrame && (
-                                                            <div className="border-[#088860] text-[#088860] px-3 py-1 border rounded-full ">
-                                                                {novel.viewFrame}
-                                                            </div>
-                                                        )}
+                                            </li>
+                                        </ul>
+
+                                        <div className="max-sm:hidden flex items-center flex-wrap gap-2 text-sm mb-4">
+                                            {novel.author && (
+                                                <div className="border-[#666] text-[#666] px-3 py-1 border rounded-full ">
+                                                    {novel.author}
+                                                </div>
+                                            )}
+                                            <div className="border-[#bf2c24] text-[#bf2c24] px-3 py-1 border rounded-full ">
+                                                {novel.newChapterCount > 0
+                                                    ? "Đang ra"
+                                                    : "Chưa ra chương mới"}
+                                            </div>
+                                            {novel.category && (
+                                                <div className="border-[#b78a28] text-[#b78a28] px-3 py-1 border rounded-full ">
+                                                    {novel.category}
+                                                </div>
+                                            )}
+                                            {novel.personality && (
+                                                <div className="border-[#088860] text-[#088860] px-3 py-1 border rounded-full ">
+                                                    {novel.personality}
+                                                </div>
+                                            )}
+                                            {novel.scene && (
+                                                <div className="border-[#088860] text-[#088860] px-3 py-1 border rounded-full ">
+                                                    {novel.scene}
+                                                </div>
+                                            )}
+                                            {novel.classify && (
+                                                <div className="border-[#088860] text-[#088860] px-3 py-1 border rounded-full ">
+                                                    {novel.classify}
+                                                </div>
+                                            )}
+                                            {novel.viewFrame && (
+                                                <div className="border-[#088860] text-[#088860] px-3 py-1 border rounded-full ">
+                                                    {novel.viewFrame}
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        <div className="max-sm:hidden flex gap-9 mb-4">
+                                            <div className="text-center">
+                                                <span className="font-semibold">
+                                                    {novel.chapterCount || 0}
+                                                </span>
+                                                <div className="text-base">Chương</div> 
+                                            </div>
+                                            <div className="text-center">
+                                                <span className="font-semibold">
+                                                    {novel.newChapterCount || 0}
+                                                </span>
+                                                <div className="text-base">Chương/tuần</div>
+                                            </div>
+                                                <Tippy
+                                                    theme="light"
+                                                    arrow={true}
+                                                    delay={[500,0]}
+                                                    content={novel.views}
+                                                >
+                                                    <div className="text-center cursor-default">
+                                                        <span className="font-semibold">
+                                                            {convertViewsCount(novel.views)}
+                                                        </span>
+                                                        <div className="text-base">Lượt đọc</div>
                                                     </div>
-                                                    <div className="flex gap-9 mb-4">
-                                                        <div className="text-center">
-                                                            <span className="font-semibold">
-                                                                {novel.chapterCount || 0}
-                                                            </span>
-                                                            <div className="text-base">Chương</div> 
-                                                        </div>
-                                                        <div className="text-center">
-                                                            <span className="font-semibold">
-                                                                {novel.newChapterCount || 0}
-                                                            </span>
-                                                            <div className="text-base">Chương/tuần</div>
-                                                        </div>
-                                                            <Tippy
-                                                                theme="light"
-                                                                arrow={true}
-                                                                delay={[500,0]}
-                                                                content={novel.views}
-                                                            >
-                                                                <div className="text-center cursor-default">
-                                                                    <span className="font-semibold">
-                                                                        {convertViewsCount(novel.views)}
-                                                                    </span>
-                                                                    <div className="text-base">Lượt đọc</div>
-                                                                </div>
-                                                            </Tippy>
-                                                        <div className="text-center">
-                                                            <span className="font-semibold">818</span>
-                                                            <div className="text-base">Cất giữ</div>
-                                                        </div>
-                                                    </div>
-                                                </>
-                                            )
-                                        }
-        
+                                                </Tippy>
+                                            <div className="text-center">
+                                                <span className="font-semibold">818</span>
+                                                <div className="text-base">Cất giữ</div>
+                                            </div>
+                                        </div>
+
                                         <div className="flex">
                                             <ListStarLayout size={matchesMobile ? 3 : 4} className="mb-4" numb={novel.mediumScore} />
-                                            {
-                                                matchesMobile && (
-                                                    <span className="text-sm">
-                                                        {novel.mediumScore}
-                                                        <span className="text-xs">({10} đánh giá)</span>
-                                                    </span>
-                                                )
-                                            }
+                                            <span className="text-sm">
+                                                {novel.mediumScore}
+                                                <span className="text-xs">({10} đánh giá)</span>
+                                            </span>
                                         </div>
-        
-                                        <div className="flex gap-3 flex-wrap lg:text-xl text-xs">
-                                            <Link href={`/truyen/${novel.slug}/chuong-${novel?.chapterRead || 1}`}>
-                                                <span className="lg:min-w-[120px] lg:py-2 lg:px-6 lg:bg-yellow-500 lg:hover:bg-yellow-600 bg-blue-900 hover:bg-blue-950 min-w-[60px] py-1 px-3 text-center border-yellow-500 rounded-full text-white font-semibold flex items-center justify-center">
-                                                    {
-                                                        !matchesMobile && (
-                                                            <i className="w-5 block fill-white mr-2">
-                                                                {iconGlasses}
-                                                            </i>
-                                                        )
-                                                    }
-                                                    Đọc truyện
-                                                </span>
+
+                                        <div className="lg:text-xl text-xs flex gap-2">
+                                            <Link className="btn float-left bg-yellow-500 border-yellow-500 hover:bg-yellow-600 text-white" href={`/truyen/${novel.slug}/chuong-${novel?.chapterRead || 1}`}>
+                                                Đọc truyện
                                             </Link>
-                                            <Link href="/">
-                                                <span className="lg:min-w-[120px] lg:py-2 lg:px-6 min-w-[60px] py-1 px-3 text-center bg-white hover:bg-gray-100 border border-gray-500 text-gray-500 rounded-full font-semibold flex items-center justify-center">
-                                                    <i className="w-3 block fill-gray-500 mr-2">
-                                                        {iconBookmark}
-                                                    </i>
-                                                    Đánh dấu
-                                                </span>
+                                            <Link className="btn bg-green-500 border-green-500 hover:bg-green-600 text-white" href="/">
+                                                <i className="block w-3 fill-white">{iconHeartFull}</i> Theo dõi
                                             </Link>
-                                            {
-                                                !matchesMobile && (
-                                                    <Link href="/">
-                                                        <span className="lg:min-w-[160px] lg:py-2 lg:px-6 min-w-[60px] py-1 px-3 text-center bg-yellow-100 hover:bg-yellow-200 text-orange-700 border border-orange-700 rounded-full font-semibold flex items-center justify-center">
-                                                            <i
-                                                                style={{
-                                                                    backgroundImage:
-                                                                        "url(/emotions/flowerEmotion.svg?v=1)",
-                                                                }}
-                                                                className="w-4 h-5 fill-white mr-1 inline-block bg-no-repeat bg-contain"
-                                                            ></i>
-                                                            Đề cử
-                                                        </span>
-                                                    </Link>
-                                                )
-                                            }
                                         </div>
                                     </div>
                                 </div>
+                            </article>
                                 
-                            </div>
     
-                            <div className="mb-5 sm:px-3">
+                            <div className="mb-5">
                                 <Tab.Group
                                     defaultIndex={0}
                                     selectedIndex={numberTab}
                                     onChange={(index: number) => setNumberTab(index)}
                                 >
-                                    <Tab.List className={`border-b mb-3 text-base font-semibold grid-cols-4 grid sm:grid-cols-5`}>
+                                    <Tab.List className={`border-b mb-3 text-base font-semibold max-sm:grid max-sm:grid-cols-4`}>
                                         <Tab
-                                            className={`outline-none border-b-4 border-transparent hover:text-yellow-600 py-3 sm:mr-8 sm:py-5 ${
+                                            className={`outline-none border-b-4 border-transparent hover:text-yellow-600 py-3 sm:mr-8 ${
                                                 numberTab == 0 && "border-yellow-600"
                                             }`}
                                         >
                                             Giới thiệu
                                         </Tab>
                                         <Tab
-                                            className={`outline-none border-b-4 border-transparent hover:text-yellow-600 py-3 sm:mr-8 sm:py-5 ${
+                                            className={`outline-none border-b-4 border-transparent hover:text-yellow-600 py-3 sm:mr-8 ${
                                                 numberTab == 1 && "border-yellow-600"
                                             }`}
                                         >
                                             Đánh giá
                                         </Tab>
                                         <Tab
-                                            className={`outline-none border-b-4 border-transparent hover:text-yellow-600 py-3 sm:mr-8 sm:py-5 ${
+                                            className={`outline-none border-b-4 border-transparent hover:text-yellow-600 py-3 sm:mr-8 ${
                                                 numberTab == 2 && "border-yellow-600"
                                             }`}
                                         >
                                             D.s chương
                                         </Tab>
                                         <Tab
-                                            className={`outline-none border-b-4 border-transparent hover:text-yellow-600 py-3 sm:mr-8 sm:py-5 ${
+                                            className={`outline-none border-b-4 border-transparent hover:text-yellow-600 py-3 sm:mr-8 ${
                                                 numberTab == 3 && "border-yellow-600"
                                             }`}
                                         >
@@ -338,7 +334,7 @@ const NovelDetailPage = ({ token, tab, novel }: NovelDetailPageProps) => {
                                         {
                                             !matchesMobile && (
                                                 <Tab
-                                                    className={`outline-none border-b-4 border-transparent hover:text-yellow-600 py-3 sm:mr-8 sm:py-5 ${
+                                                    className={`outline-none border-b-4 border-transparent hover:text-yellow-600 py-3 sm:mr-8 ${
                                                         numberTab == 4 && "border-yellow-600"
                                                     }`}
                                                 >
@@ -347,7 +343,7 @@ const NovelDetailPage = ({ token, tab, novel }: NovelDetailPageProps) => {
                                             )
                                         }
                                     </Tab.List>
-                                    <Tab.Panels className="min-h-[400px]">
+                                    <Tab.Panels className="min-h-[400px] px-4">
                                         <Tab.Panel>
                                             <Transition
                                                 appear
@@ -433,6 +429,7 @@ const NovelDetailPage = ({ token, tab, novel }: NovelDetailPageProps) => {
                                     </Tab.Panels>
                                 </Tab.Group>
                             </div>
+
                         </div>
                     </WrapperLayout>
                 </main>
@@ -502,3 +499,173 @@ export const getStaticPaths: GetStaticPaths<Params> = () => {
 // };
 
 export default NovelDetailPage;
+
+
+
+// {
+//     matchesMobile && (
+//         <div>
+//             <Image 
+//                 width={120}
+//                 height={120}
+//                 alt=""
+//                 src={novel.thumbnailUrl}
+//                 className="w-full h-56 overflow-hidden object-cover absolute inline-block bg-cover"
+//             />
+//             <div className="absolute w-full h-56 bg-black/20 backdrop-blur-lg"></div>
+//         </div>
+//     )
+// }
+
+// <div
+//     className={`flex ${matchesMobile ? "text-white h-56 items-center px-5" : ""}`}
+// >
+//     <Link
+//         href={`/truyen/${novel.slug}`}
+//         className={`lg:w-52 lg:h-[270px] sm:w-40 sm:h-[220px] lg:rounded-none w-24 h-[150px] rounded-md overflow-hidden shadow relative `}
+//     >
+//         <BlurImage
+//             width={208}
+//             height={280}
+//             alt="image-demo"
+//             blurDataURL={novel.imageBlurHash || placeholderBlurhash}
+//             className="group-hover:scale-105 group-hover:duration-500 object-cover w-full h-full"
+//             placeholder="blur"
+//             src={novel.thumbnailUrl}
+//         />
+//     </Link>
+//     <div className="justify-between lg:min-h-[280px] ml-5 min-h-[150px] relative flex-1 flex flex-col">
+//         <Link href={`/truyen/${novel.slug}`}>
+//             <h2 className="lg:mb-6 xs:text-xl line-clamp-2 font-semibold">{novel.title}</h2>
+//         </Link>
+//         {
+//             matchesMobile ? (
+//                 <div className="line-clamp-1">
+//                     bởi {novel.author}
+//                 </div>
+//             ) : (
+//                 <>
+//                     <div className="flex items-center flex-wrap gap-2 text-sm mb-4">
+//                         {novel.author && (
+//                             <div className="border-[#666] text-[#666] px-3 py-1 border rounded-full ">
+//                                 {novel.author}
+//                             </div>
+//                         )}
+//                         <div className="border-[#bf2c24] text-[#bf2c24] px-3 py-1 border rounded-full ">
+//                             {novel.newChapterCount > 0
+//                                 ? "Đang ra"
+//                                 : "Chưa ra chương mới"}
+//                         </div>
+//                         {novel.category && (
+//                             <div className="border-[#b78a28] text-[#b78a28] px-3 py-1 border rounded-full ">
+//                                 {novel.category}
+//                             </div>
+//                         )}
+//                         {novel.personality && (
+//                             <div className="border-[#088860] text-[#088860] px-3 py-1 border rounded-full ">
+//                                 {novel.personality}
+//                             </div>
+//                         )}
+//                         {novel.scene && (
+//                             <div className="border-[#088860] text-[#088860] px-3 py-1 border rounded-full ">
+//                                 {novel.scene}
+//                             </div>
+//                         )}
+//                         {novel.classify && (
+//                             <div className="border-[#088860] text-[#088860] px-3 py-1 border rounded-full ">
+//                                 {novel.classify}
+//                             </div>
+//                         )}
+//                         {novel.viewFrame && (
+//                             <div className="border-[#088860] text-[#088860] px-3 py-1 border rounded-full ">
+//                                 {novel.viewFrame}
+//                             </div>
+//                         )}
+//                     </div>
+//                     <div className="flex gap-9 mb-4">
+//                         <div className="text-center">
+//                             <span className="font-semibold">
+//                                 {novel.chapterCount || 0}
+//                             </span>
+//                             <div className="text-base">Chương</div> 
+//                         </div>
+//                         <div className="text-center">
+//                             <span className="font-semibold">
+//                                 {novel.newChapterCount || 0}
+//                             </span>
+//                             <div className="text-base">Chương/tuần</div>
+//                         </div>
+//                             <Tippy
+//                                 theme="light"
+//                                 arrow={true}
+//                                 delay={[500,0]}
+//                                 content={novel.views}
+//                             >
+//                                 <div className="text-center cursor-default">
+//                                     <span className="font-semibold">
+//                                         {convertViewsCount(novel.views)}
+//                                     </span>
+//                                     <div className="text-base">Lượt đọc</div>
+//                                 </div>
+//                             </Tippy>
+//                         <div className="text-center">
+//                             <span className="font-semibold">818</span>
+//                             <div className="text-base">Cất giữ</div>
+//                         </div>
+//                     </div>
+//                 </>
+//             )
+//         }
+
+//         <div className="flex">
+//             <ListStarLayout size={matchesMobile ? 3 : 4} className="mb-4" numb={novel.mediumScore} />
+//             {
+//                 matchesMobile && (
+//                     <span className="text-sm">
+//                         {novel.mediumScore}
+//                         <span className="text-xs">({10} đánh giá)</span>
+//                     </span>
+//                 )
+//             }
+//         </div>
+
+//         <div className="flex gap-3 flex-wrap lg:text-xl text-xs">
+//             <Link href={`/truyen/${novel.slug}/chuong-${novel?.chapterRead || 1}`}>
+//                 <span className="lg:min-w-[120px] lg:py-2 lg:px-6 lg:bg-yellow-500 lg:hover:bg-yellow-600 bg-blue-900 hover:bg-blue-950 min-w-[60px] py-1 px-3 text-center border-yellow-500 rounded-full text-white font-semibold flex items-center justify-center">
+//                     {
+//                         !matchesMobile && (
+//                             <i className="w-5 block fill-white mr-2">
+//                                 {iconGlasses}
+//                             </i>
+//                         )
+//                     }
+//                     Đọc truyện
+//                 </span>
+//             </Link>
+//             <Link href="/">
+//                 <span className="lg:min-w-[120px] lg:py-2 lg:px-6 min-w-[60px] py-1 px-3 text-center bg-white hover:bg-gray-100 border border-gray-500 text-gray-500 rounded-full font-semibold flex items-center justify-center">
+//                     <i className="w-3 block fill-gray-500 mr-2">
+//                         {iconBookmark}
+//                     </i>
+//                     Đánh dấu
+//                 </span>
+//             </Link>
+//             {
+//                 !matchesMobile && (
+//                     <Link href="/">
+//                         <span className="lg:min-w-[160px] lg:py-2 lg:px-6 min-w-[60px] py-1 px-3 text-center bg-yellow-100 hover:bg-yellow-200 text-orange-700 border border-orange-700 rounded-full font-semibold flex items-center justify-center">
+//                             <i
+//                                 style={{
+//                                     backgroundImage:
+//                                         "url(/emotions/flowerEmotion.svg?v=1)",
+//                                 }}
+//                                 className="w-4 h-5 fill-white mr-1 inline-block bg-no-repeat bg-contain"
+//                             ></i>
+//                             Đề cử
+//                         </span>
+//                     </Link>
+//                 )
+//             }
+//         </div>
+//     </div>
+// </div>

@@ -41,3 +41,22 @@ html {
 // ::-webkit-scrollbar-thumb {
 //     @apply rounded-2xl bg-gray-400;
 // }
+
+.btn {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-weight: 400;
+    text-align: center;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    cursor: pointer;
+    border: 1px solid transparent;
+    white-space: nowrap;
+    padding: 6px 12px;
+    line-height: 1.42857143;
+    border-radius: 4px;
+    -ms-user-select: none;
+    user-select: none;
+    vertical-align: middle;
+}

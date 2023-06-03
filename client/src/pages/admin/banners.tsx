@@ -56,6 +56,7 @@ const AdminBannersPage = ({ banners }: AdminBannersPageProps) => {
     const [resultListNovelsSearch, setResultListNovelsSearch] = useState<NovelType[] | null>(null);
     const [isLoadingSearch, setIsLoadingSearch] = useState(false);
     const [isDropdown, setIsDropdown] = useState<boolean>(false);
+    const [isMobile, setIsMobile] = useState<boolean>(false)
 
     const textDebounce = useDebounce(valueInputSearch, 500);
 
@@ -84,9 +85,10 @@ const AdminBannersPage = ({ banners }: AdminBannersPageProps) => {
                 novelId: idNovelSelect,
                 token,
                 formData,
+                isMobile
             };
             const uploadBanners: any = await addBannersHandle(
-                dataBanners as Pick<BannersType, 'novelId'> & { token: string; formData: FormData }
+                dataBanners as Pick<BannersType, 'novelId' | 'isMobile'> & { token: string; formData: FormData }
             );
             console.log(uploadBanners);
 
@@ -297,6 +299,29 @@ const AdminBannersPage = ({ banners }: AdminBannersPageProps) => {
                                             </div>
                                         )
                                     }
+
+
+                                    <Select
+                                        isSearchable={false}
+                                        defaultValue={{ label: "Banners máy tính", text: "Banners máy tính", value: "BannerMobile" }}
+                                        className="h-10 max-w-[180px] w-full text-sm"
+                                        options={[
+                                            { label: "Banners máy tính", text: "Banners máy tính", value: "0" },
+                                            { label: "Banner điện thoại", text: "Banner điện thoại",  value: "1" }
+                                        ]}
+                                        styles={{
+                                            control: (provided, state) => ({
+                                                ...provided,
+                                                outline: "none",
+                                                boxShadow: "none",
+                                                borderRadius: "0px",
+                                                height: "40px",
+                                            }),
+                                        }}
+                                        onChange={(select: any) =>{
+                                            setIsMobile(select.value === '0' ? false : true)
+                                        }}
+                                    />
                                 </div>
                             </div>
                         </div>
