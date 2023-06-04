@@ -19,7 +19,6 @@ import {
     getAdvancedNovelHandle,
 } from "../services/novel.services";
 import { HistoryReadingType, NovelFollowerType, NovelType } from "../types";
-import jwt from "jsonwebtoken";
 
 
 // Create Novel By Data | /api/novels/create/data

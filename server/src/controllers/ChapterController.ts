@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { createChapterByDataHandle, getChapterBasicHandle, getChapterDetailHandle, getDataChapterByUrlMTCHandle, increaseViewChapterHandle } from "../services/chapter.services";
+import { createChapterByDataHandle, getChapterDetailHandle, getDataChapterByUrlMTCHandle, increaseViewChapterHandle } from "../services/chapter.services";
 import { ChapterType } from "../types";
 
 // Create Novel By Data | /create-by-url/:slug/:chapterNumber

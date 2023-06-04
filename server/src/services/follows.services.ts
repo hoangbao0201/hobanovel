@@ -1,5 +1,5 @@
 import pool from "../library/connectMySQL";
-import { NovelFollowerType, UserType } from "../types";
+import { NovelFollowerType } from "../types";
 
 
 export const checkFollowNovelHanle = async ({ novelId, userId } : NovelFollowerType) => {
