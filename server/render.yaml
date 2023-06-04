@@ -1,0 +1,6 @@
+version: 1
+services:
+  - type: web
+    name: hobanovel
+    buildCommand: tsc
+    startCommand: nodemon dist/server.js
