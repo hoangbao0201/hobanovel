@@ -161,20 +161,8 @@ const FormComment = ({ tab, novelId }: FormCommentProps) => {
                     {value}
                 </code> */}
 
-                <div className="flex mb-16">
-                    <Link
-                        href={`/user/1`}
-                        className="w-10 h-10 mt-2 rounded-full overflow-hidden shadow align-middle inline-block"
-                    >
-                        <Image
-                            width={500}
-                            height={500}
-                            alt="image-demo"
-                            className="object-cover w-10 h-10"
-                            src={`${currentUser?.avatarUrl ?? "/images/50.jpg"}`}
-                        />
-                    </Link>
-                    <div className="flex-1 pr-24 pl-3 py-3 ml-4 border bg-gray-100 border-opacity-5 relative">
+                <div className="flex mb-10">
+                    <div className="flex-1 pr-24 pl-2 py-2 border bg-gray-100 border-opacity-5 relative">
                         <EditorStyle
                             name="comment"
                             text={commentText}

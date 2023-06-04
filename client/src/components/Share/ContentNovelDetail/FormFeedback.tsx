@@ -160,7 +160,7 @@ const FormFeedback = ({ tab, novelId }: FormFeedbackProps) => {
         <div className="flex -mx-4">
             <div className="lg:w-8/12 w-full px-4">
 
-                {/* <div className="px-4">
+                <div className="mb-5">
                     <div className="bg-orange-800/5">
                         <table className="grid py-3 px-3 w-full">
                             <thead>
@@ -274,7 +274,7 @@ const FormFeedback = ({ tab, novelId }: FormFeedbackProps) => {
     
                         </div>
                     </div>
-                </div> */}
+                </div>
 
 
                 <div className="">

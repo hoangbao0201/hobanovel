@@ -2,23 +2,28 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
 
+import Tippy from '@tippyjs/react';
+import 'tippy.js/dist/tippy.css';
+import moment from "moment";
+import "moment/locale/vi";
+import 'tippy.js/themes/light-border.css';
+import { EditorState, convertFromRaw, convertToRaw } from "draft-js";
+
 import { placeholderBlurhash } from "@/constants";
 import BlurImage from "@/components/Layout/BlurImage";
 import { getAccessToken } from "@/services/cookies.servies";
 import { EditorStyle } from "@/components/Layout/EditorStyle";
 import { ReviewItemWith, ReviewType, UserType } from "@/types";
-import { EditorState, convertFromRaw, convertToRaw } from "draft-js";
 import { addReplyReviewHandle, destroyReplyReviewsByNovelHandle, getReplyReviewsHandle } from "@/services/review.services";
 import {
     iconArrowTurnUp,
     iconComment,
+    iconEllipsis,
     iconOclock,
     iconSend,
     iconStar,
     iconTrash,
 } from "../../../../public/icons";
-import moment from "moment";
-import "moment/locale/vi";
 
 interface ReviewItemProps {
     novelId?: string;
@@ -147,56 +152,67 @@ const ReviewItem = ({ novelId, review, user, handleDeleteReview }: ReviewItemPro
                 "
                 ></span>
 
-                <div className="flex-1 mb-3 p-2 bg-gray-100 border">
-                    <div className="flex items-center gap-2 pb-2 mb-2 border-b text-sm">
-                        <h2 className="line-clamp-1 text-base leading-tight font-semibold">
-                            <Link href={""}>{review?.name || ""}</Link>
-                        </h2>
-                        <span> - </span>
-                        <div className="flex items-center mr-auto">
-                            <i className="w-3 h-3 mr-1 translate-y-[1px] leading-tight block fill-gray-500">
+                <div>
+                    <div className="bg-gray-100 border p-2">
+                        <div className="flex items-center gap-2 pb-2 mb-2 border-b text-sm">
+                            <h2 className="line-clamp-1 text-base leading-tight font-semibold">
+                                <Link href={""}>{review?.name || ""}</Link>
+                            </h2>
+                        </div>
+                        <div className="text-gray-600 text-base">
+                            {convertFromRaw(
+                                JSON.parse(review?.commentText || "")
+                            ).getPlainText()}
+                        </div>
+                    </div>
+                    <div className="flex text-sm gap-2 text-[#3f94d5] fill-[#3f94d5] font-semibold">
+                        <button
+                            onClick={() => setIsFormSend((value) => !value)}
+                            className="flex items-center gap-1"
+                        >
+                            <i className="w-3 h-3 block">{iconComment}</i>
+                            <span>Phản hồi</span>
+                        </button>
+
+                        <Tippy
+                            trigger="click"
+                            arrow={true}
+                            animation="fade"
+                            interactive={true}
+                            theme="light-border"
+                            appendTo="parent"
+                            placement="bottom-start"
+                            className="p-0"
+                            content={
+                                <div className="-mx-[9px]">
+                                    <div
+                                        onClick={() =>
+                                            handleDeleteReview(
+                                                review?.userId,
+                                                review?.reviewId
+                                            )
+                                        }
+                                        className="py-2 px-3 cursor-pointer hover:bg-gray-300"
+                                    >Xóa</div>
+                                    <div
+                                        className="py-2 px-3 cursor-pointer hover:bg-gray-300"
+                                    >Báo cáo vi phạm</div>
+                                </div>
+                            }
+                        >
+                            <button className="p-2 rounded-full">
+                                <i className="w-3 h-3 block">{iconEllipsis}</i>
+                            </button>
+                        </Tippy>
+
+                        <div className="ml-auto text-xs flex gap-1 items-center text-gray-500 fill-gray-500 font-normal">
+                            <i className="w-3 h-3 block =">
                                 {iconOclock}
                             </i>
-                            <span className="leading-tight whitespace-nowrap text-[13px] text-gray-500">
+                            <span className="whitespace-nowrap">
                                 {moment(review.createdAt).fromNow()}
                             </span>
                         </div>
-                        <button
-                            onClick={() => setIsFormSend((value) => !value)}
-                            className={`drop-shadow-sm border p-2 group rounded ${
-                                isFormSend && "bg-gray-400"
-                            }`}
-                        >
-                            <i
-                                className={`w-4 h-4 block ${
-                                    isFormSend
-                                        ? "fill-white"
-                                        : "fill-gray-500 group-hover:fill-gray-600"
-                                }`}
-                            >
-                                {iconComment}
-                            </i>
-                        </button>
-                        {user?.userId == review?.userId && (
-                            <button
-                                onClick={() =>
-                                    handleDeleteReview(
-                                        review?.userId,
-                                        review?.reviewId
-                                    )
-                                }
-                                className="drop-shadow-sm border p-2 group rounded"
-                            >
-                                <i className="w-4 h-4 block fill-gray-500 group-hover:fill-gray-600">
-                                    {iconTrash}
-                                </i>
-                            </button>
-                        )}
-                    </div>
-                    <div className="text-gray-600 text-base">
-                        {convertFromRaw(
-                            JSON.parse(review?.commentText || "")
-                        ).getPlainText()}
                     </div>
                 </div>
 
@@ -240,7 +256,7 @@ const ReviewItem = ({ novelId, review, user, handleDeleteReview }: ReviewItemPro
                                                     }
                                                 />
                                             </Link>
-                                            <div className="flex-1 ml-3 p-2 bg-gray-100 border relative">
+                                            <div className="ml-3 flex-1 relative">
                                                 <span
                                                     className="
                                                         absolute
@@ -251,75 +267,85 @@ const ReviewItem = ({ novelId, review, user, handleDeleteReview }: ReviewItemPro
                                                         border-b-[6px] border-b-transparent
                                                     "
                                                 ></span>
-                                                <div className="flex items-center pb-2 mb-2 border-b gap-2 text-sm">
-                                                    <h2 className="line-clamp-1 leading-tight text-base font-semibold">
-                                                        <Link
-                                                            href={`/user/${replyReview?.senderId}`}
-                                                        >
-                                                            {replyReview?.senderName ||
-                                                                ""}
-                                                        </Link>
-                                                    </h2>
-                                                    <span> - </span>
-                                                    <div className="flex items-center mr-auto">
-                                                        <i className="w-3 h-3 mr-1 translate-y-[1px] leading-tight block fill-gray-500">
-                                                            {iconOclock}
-                                                        </i>
-                                                        <span className="mr-auto leading-tight whitespace-nowrap text-[13px] text-gray-500">
-                                                            {moment(
-                                                                replyReview.createdAt
-                                                            ).fromNow()}
-                                                        </span>
-                                                    </div>
-                                                    <button
-                                                        // onClick={() => }
-                                                        className={`border p-2 group rounded ${
-                                                            false && "bg-gray-400"
-                                                        }`}
-                                                    >
-                                                        <i
-                                                            className={`w-4 h-4 block ${
-                                                                false
-                                                                    ? "fill-white"
-                                                                    : "fill-gray-500 group-hover:fill-gray-600"
-                                                            }`}
-                                                        >
-                                                            {iconComment}
-                                                        </i>
-                                                    </button>
-                                                    {user?.userId ==
-                                                        replyReview?.senderId && (
-                                                        <button
-                                                            onClick={() =>
-                                                                handleDestroyReplyReview(
-                                                                    replyReview?.reviewId
+                                                <div>
+                                                    <div className="bg-gray-100 border p-2">
+                                                        <div className="flex items-center pb-2 mb-2 border-b gap-2 text-sm">
+                                                            <h2 className="line-clamp-1 leading-tight text-base font-semibold">
+                                                                <Link
+                                                                    href={`/user/${replyReview?.senderId}`}
+                                                                >
+                                                                    {replyReview?.senderName ||
+                                                                        ""}
+                                                                </Link>
+                                                            </h2>
+                                                        </div>
+                                                        <div className="flex flex-wrap text-gray-600 text-base">
+                                                            <Link
+                                                                href={`/user/${replyReview?.receiverId}`}
+                                                            >
+                                                                <h2 className="text-blue-600 font-semibold cursor-pointer mr-1">
+                                                                    @
+                                                                    {
+                                                                        replyReview?.receiverName
+                                                                    }
+                                                                </h2>
+                                                            </Link>
+                                                            {convertFromRaw(
+                                                                JSON.parse(
+                                                                    replyReview?.commentText ||
+                                                                        ""
                                                                 )
-                                                            }
-                                                            className=" border p-2 group rounded"
+                                                            ).getPlainText()}
+                                                        </div>
+                                                    </div>
+                                                    <div className="flex text-sm gap-2 text-[#3f94d5] fill-[#3f94d5] font-semibold">
+                                                        <button
+                                                            onClick={() => setIsFormSend((value) => !value)}
+                                                            className="flex items-center gap-1"
                                                         >
-                                                            <i className="w-4 h-4 block fill-gray-500 group-hover:fill-gray-600">
-                                                                {iconTrash}
-                                                            </i>
+                                                            <i className="w-3 h-3 block">{iconComment}</i>
+                                                            <span>Phản hồi</span>
                                                         </button>
-                                                    )}
-                                                </div>
-                                                <div className="flex flex-wrap text-gray-600 text-base">
-                                                    <Link
-                                                        href={`/user/${replyReview?.receiverId}`}
-                                                    >
-                                                        <h2 className="text-blue-600 font-semibold cursor-pointer mr-1">
-                                                            @
-                                                            {
-                                                                replyReview?.receiverName
+
+                                                        <Tippy
+                                                            trigger="click"
+                                                            arrow={true}
+                                                            animation="fade"
+                                                            interactive={true}
+                                                            theme="light-border"
+                                                            appendTo="parent"
+                                                            placement="bottom-start"
+                                                            className="p-0"
+                                                            content={
+                                                                <div className="-mx-[9px]">
+                                                                    <div
+                                                                        onClick={() =>
+                                                                            handleDestroyReplyReview(
+                                                                                replyReview?.reviewId
+                                                                            )
+                                                                        }
+                                                                        className="py-2 px-3 cursor-pointer hover:bg-gray-300"
+                                                                    >Xóa</div>
+                                                                    <div
+                                                                        className="py-2 px-3 cursor-pointer hover:bg-gray-300"
+                                                                    >Báo cáo vi phạm</div>
+                                                                </div>
                                                             }
-                                                        </h2>
-                                                    </Link>
-                                                    {convertFromRaw(
-                                                        JSON.parse(
-                                                            replyReview?.commentText ||
-                                                                ""
-                                                        )
-                                                    ).getPlainText()}
+                                                        >
+                                                            <button className="p-2 rounded-full">
+                                                                <i className="w-3 h-3 block">{iconEllipsis}</i>
+                                                            </button>
+                                                        </Tippy>
+
+                                                        <div className="ml-auto text-xs flex gap-1 items-center text-gray-500 fill-gray-500 font-normal">
+                                                            <i className="w-3 h-3 block =">
+                                                                {iconOclock}
+                                                            </i>
+                                                            <span className="whitespace-nowrap">
+                                                                {moment(replyReview.createdAt).fromNow()}
+                                                            </span>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -343,7 +369,7 @@ const ReviewItem = ({ novelId, review, user, handleDeleteReview }: ReviewItemPro
                                     src={`${user?.avatarUrl ?? "/images/50.jpg"}`}
                                 />
                             </Link>
-                            <div className="flex-1 ml-4 py-3 pl-4 pr-24 border bg-gray-100 border-opacity-5 relative">
+                            <div className="flex-1 ml-3 py-2 pl-2 pr-24 border bg-gray-100 border-opacity-5 relative">
                                 <EditorStyle
                                     name="comment"
                                     text={commentText}

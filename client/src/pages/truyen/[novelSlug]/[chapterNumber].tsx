@@ -145,7 +145,7 @@ const ChapterDetailPage = ({ chapter }: ChapterDetailPageProps) => {
                 setIsFollow(false);
             }
         }
-    }, [userLoading])
+    }, [chapter])
 
     const handleFollowNovel = async () => {
         const token = getAccessToken()
@@ -221,7 +221,7 @@ const ChapterDetailPage = ({ chapter }: ChapterDetailPageProps) => {
                 <WrapperLayout bg="bg-[#eae4d3]" className="lg:max-w-5xl">
                     <div className="py-4">
                         {/* Pagination */}
-                        <div className="border mb-7 mt-4">
+                        <div className="border-b pb-3 mb-7 mt-4">
                             <div ref={paginationRef} className={`transition-all top-0 left-0 right-0 py-1 ${isFixed ? 'fixed bg-gray-200' : ''}`}>
                                 <div className="lg:max-w-5xl mx-auto flex items-center justify-center gap-1">
                                     <Link href="/" className="h-9 px-1 flex items-center">
