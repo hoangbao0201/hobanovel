@@ -365,7 +365,7 @@ const AdvencedSearchNovelPage = ({ query, novels, sortBy } : AdvencedSearchNovel
                                                                     <span className="flex items-center w-[55%] text-sm mr-3">
                                                                         <i className="w-4 block mr-2">{iconAuthor}</i> <span className="line-clamp-1 align-middle">{novel.author}</span>
                                                                     </span>
-                                                                    <span className="px-2 text-xs text-orange-700 line-clamp-1 align-middle text-center border border-orange-700">{novel.category}</span>
+                                                                    <span className="px-2 text-xs text-orange-700 line-clamp-1 align-middle text-center border border-orange-700">{PROPERTIES_NOVEL['genres'][novel.category-1].value}</span>
                                                                 </div>
                                                                 <span className="text-sm flex items-center">
                                                                     <i className="w-3 block mr-2">{iconList}</i> {novel.chapterCount} chương

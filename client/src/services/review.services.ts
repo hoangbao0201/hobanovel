@@ -1,10 +1,11 @@
+import { apiUrl } from "@/constants";
 import { ReviewType } from "@/types";
 import axios from "axios";
 
 
 export const getReviewsByNovelHandle = async (query? : string) => {
     try {
-        const reviews = await axios.get(`http://localhost:4000/api/reviews/get/${query}`);
+        const reviews = await axios.get(`${apiUrl}/api/reviews/get/${query}`);
 
         if(reviews.data.success) {
             return reviews
@@ -19,7 +20,7 @@ export const getReviewsByNovelHandle = async (query? : string) => {
 
 export const getReviewsByLatestHandle = async (page : string) => {
     try {
-        const reviews = await axios.get(`http://localhost:4000/api/reviews/search-by-latest/${page}`);
+        const reviews = await axios.get(`${apiUrl}/api/reviews/search-by-latest/${page}`);
 
         if(reviews.data.success) {
             return reviews
@@ -34,7 +35,7 @@ export const getReviewsByLatestHandle = async (page : string) => {
 
 export const addReviewsByDataHandle = async (novelId: string, data: ReviewType, token: string) => {
     try {
-        const reviews = await axios.post(`http://localhost:4000/api/reviews/add/${novelId}`, {
+        const reviews = await axios.post(`${apiUrl}/api/reviews/add/${novelId}`, {
             ...data
         }, {
             headers: {
@@ -57,7 +58,7 @@ export const addReviewsByDataHandle = async (novelId: string, data: ReviewType, 
 
 export const destroyReviewsByNovelHandle = async (reviewId: string, token: string) => {
     try {
-        const reviews = await axios.delete(`http://localhost:4000/api/reviews/destroy-review/${reviewId}`, {
+        const reviews = await axios.delete(`${apiUrl}/api/reviews/destroy-review/${reviewId}`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -76,7 +77,7 @@ export const destroyReviewsByNovelHandle = async (reviewId: string, token: strin
 
 export const destroyReplyReviewsByNovelHandle = async (reviewId: string, token: string) => {
     try {
-        const reviews = await axios.delete(`http://localhost:4000/api/reviews/destroy-replyreview/${reviewId}`, {
+        const reviews = await axios.delete(`${apiUrl}/api/reviews/destroy-replyreview/${reviewId}`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -95,7 +96,7 @@ export const destroyReplyReviewsByNovelHandle = async (reviewId: string, token: 
 
 export const addReplyReviewHandle = async (novelId: string, reviewId: string, data: ReviewType, token: string) => {
     try {
-        const reviews = await axios.post(`http://localhost:4000/api/reviews/add/reply/${novelId}/${reviewId}`, {
+        const reviews = await axios.post(`${apiUrl}/api/reviews/add/reply/${novelId}/${reviewId}`, {
             ...data
         }, {
             headers: {
@@ -116,7 +117,7 @@ export const addReplyReviewHandle = async (novelId: string, reviewId: string, da
 
 export const getReplyReviewsHandle = async (reviewId: string) => {
     try {
-        const reviews = await axios.get(`http://localhost:4000/api/reviews/search-by-review/${reviewId}`);
+        const reviews = await axios.get(`${apiUrl}/api/reviews/search-by-review/${reviewId}`);
 
         if(reviews.data.success) {
             return reviews

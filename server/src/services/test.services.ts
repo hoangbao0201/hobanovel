@@ -5,17 +5,23 @@ export const testDemoHandle = async () => {
 
         const connection = await pool.getConnection();
 
-        const q = `
-            INSERT INTO USERS(name, username, email, password)
-            VALUES (?)
+        const q1 = `
+            UPDATE FROM novels
+            SET category = 5
+            WHERE novels.category = 'Đô Thị'
         `
-        const values = ["1", "username", "email", "password"]
-        const [rows] : any = await connection.query(q, [values]);
+        const [rows] : any = await connection.query(q1);
 
         connection.release();
 
-        return rows
+        return {
+            success: true,
+            data: rows
+        }
     } catch (error) {
-        return null
+        return {
+            success: false,
+            error: error
+        }
     }
 }

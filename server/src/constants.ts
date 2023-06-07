@@ -1,27 +1,3 @@
-export const GENRES_VALUE = [
-    {id: 1, value: "Tất cả"},
-    {id: 2, value: "Tiên Hiệp"},
-    {id: 3, value: "Huyền Huyễn"},
-    {id: 4, value: "Khoa Huyễn"},
-    {id: 5, value: "Võng Du"},
-    {id: 6, value: "Đô Thị"},
-    {id: 7, value: "Đồng Nhân"},
-    {id: 8, value: "Dã Sử"},
-    {id: 9, value: "Cạnh Kỹ"},
-    {id: 10, value: "Huyền Nghi"},
-    {id: 11, value: "Kiếm Hiệp"},
-    {id: 12, value: "Kỳ Ảo"},
-]
-
-export const RANK_VALUE = [
-    { id: 13, value: "Thịnh hành" },
-    { id: 14, value: "Đọc nhiều" },
-    { id: 15, value: "Tặng thưởng" },
-    { id: 16, value: "Đề cử" },
-    { id: 17, value: "Yêu thích" },
-    { id: 18, value: "Thảo luận" },
-]
-
 type PROPERTIES_NOVEL_TYPES = {
     [key: string]: { id: number; value: string }[]
 };
@@ -111,7 +87,7 @@ export const PROPERTIES_NOVEL : PROPERTIES_NOVEL_PROPS = {
         { id: 45, value: "Tinh Tế Luyến Ca" },
         { id: 46, value: "Linh Khí Khôi Phục" },
         { id: 47, value: "Chư Thiên Vạn Giới" },
-        { id: 47, value: "Đông Phương Huyền Huyễn" },
+        { id: 48, value: "Đông Phương Huyền Huyễn" },
     ],
     classify: [
         { id: 1, value: "Hệ Thống" },
@@ -157,3 +133,51 @@ export const PROPERTIES_NOVEL : PROPERTIES_NOVEL_PROPS = {
         { id: 3, value: "Ngôi Thứ Nhất" },
     ]
 }
+
+/*
+
+UPDATE novels
+SET classify = 
+    CASE 
+        WHEN classify = 'Hệ Thống' THEN 1 
+        WHEN classify = 'Lão Gia' THEN 2 
+        WHEN classify = 'Bàn Thờ' THEN 3 
+        WHEN classify = 'Tùy Thân' THEN 4 
+        WHEN classify = 'Phàm Nhân' THEN 5 
+        WHEN classify = 'Vô Địch' THEN 6 
+        WHEN classify = 'Xuyên Qua' THEN 7 
+        WHEN classify = 'Nữ Cường' THEN 8 
+        WHEN classify = 'Khế Ước' THEN 9 
+        WHEN classify = 'Trọng Sinh' THEN 10
+        WHEN classify = 'Hồng Lâu' THEN 11 
+        WHEN classify = 'Học Viện' THEN 12 
+        WHEN classify = 'Biến Thân' THEN 13 
+        WHEN classify = 'Cổ Ngu' THEN 14 
+        WHEN classify = 'Chuyển Thế' THEN 15 
+        WHEN classify = 'Xuyên Sách' THEN 16 
+        WHEN classify = 'Đàn Xuyên' THEN 17 
+        WHEN classify = 'Phế Tài' THEN 18 
+        WHEN classify = 'Dưỡng Thành' THEN 19 
+        WHEN classify = 'Cơm Mềm' THEN 20
+        WHEN classify = 'Vô Hạn' THEN 21 
+        WHEN classify = 'Mary Sue' THEN 22 
+        WHEN classify = 'Cá Mặn' THEN 23 
+        WHEN classify = 'Xây Dựng Thế Lực' THEN 24 
+        WHEN classify = 'Xuyên Nhanh' THEN 25 
+        WHEN classify = 'Nữ Phụ' THEN 26 
+        WHEN classify = 'Vả Mặt' THEN 27 
+        WHEN classify = 'Sảng Văn' THEN 28 
+        WHEN classify = 'Xuyên Không' THEN 29 
+        WHEN classify = 'Ngọt Sủng' THEN 30
+        WHEN classify = 'Ngự Thú' THEN 31 
+        WHEN classify = 'Điền Viên' THEN 32 
+        WHEN classify = 'Toàn Dân' THEN 33 
+        WHEN classify = 'Mỹ Thực' THEN 34 
+        WHEN classify = 'Phản Phái' THEN 35 
+        WHEN classify = 'Sau Màn' THEN 36
+
+
+        ELSE classify
+    END
+
+*/

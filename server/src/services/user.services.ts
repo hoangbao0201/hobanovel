@@ -15,9 +15,15 @@ export const getUserByUsernameEmailHandle = async ({ username, email }: UserType
 
         connection.release();
 
-        return rows as UserType[]
+        return {
+            success: true,
+            data: rows as UserType[]
+        }
     } catch (error) {
-        return null
+        return {
+            success: false,
+            error: error
+        }
     }
 };
 
@@ -37,9 +43,15 @@ export const createUserHandle = async ({ name, username, email, password }: User
 
         connection.release();
 
-        return rows as UserType[]
+        return {
+            success: true,
+            data: rows as UserType[]
+        }
     } catch (error) {
-        return null
+        return {
+            success: false,
+            error: error
+        }
     }
 };
 

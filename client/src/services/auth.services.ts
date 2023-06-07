@@ -1,6 +1,7 @@
 import axios from "axios"; 
 import { UserType } from "@/types";
 import { removeAccessToken } from "./cookies.servies";
+import { apiUrl } from "@/constants";
 
 export const connectUserHandle = async (token : string) => {
     try {
@@ -8,7 +9,7 @@ export const connectUserHandle = async (token : string) => {
             return null;
         }
     
-        const connectUser = await axios.get("http://localhost:4000/api/users", {
+        const connectUser = await axios.get(`${apiUrl}/api/users`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -32,7 +33,7 @@ export const loginUserHandle = async (data: UserType & { accout: string }) => {
             return null
         }
     
-        const user = await axios.post(`http://localhost:4000/api/auth/login`, data);
+        const user = await axios.post(`${apiUrl}/api/auth/login`, data);
         if(user.data.success) {
             return user;
         }
@@ -50,7 +51,7 @@ export const registerUserHandle = async (data: UserType) => {
             return null
         }
     
-        const user = await axios.post(`http://localhost:4000/api/auth/register`, data)
+        const user = await axios.post(`${apiUrl}/api/auth/register`, data)
         if(user.data.success) {
             return user;
         }

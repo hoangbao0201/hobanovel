@@ -19,19 +19,21 @@ export const registerUser = async (req: Request, res: Response) => {
             })
         }
 
-        const checkUser : UserType[] | null = await getUserByUsernameEmailHandle({ username, email } as UserType)
-        if(checkUser?.length) {
+        const checkUser = await getUserByUsernameEmailHandle({ username, email } as UserType)
+        if(!checkUser.success || checkUser.data?.length) {
             return res.status(400).json({
                 success: false,
-                message: "User elready exists"
+                message: "User elready exists",
+                error: checkUser.error
             })
         }
 
-        const createUser : UserType[] | null = await createUserHandle({name, username, email, password} as UserType)
-        if(!createUser) {
+        const createUser = await createUserHandle({name, username, email, password} as UserType)
+        if(!createUser.success) {
             return res.status(400).json({
                 success: false,
-                message: "Create User Error"
+                message: "Create User Error",
+                error: createUser.error
             })
         }
 

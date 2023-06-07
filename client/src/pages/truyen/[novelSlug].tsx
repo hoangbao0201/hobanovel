@@ -16,7 +16,7 @@ import { REVALIDATE_TIME, placeholderBlurhash } from "@/constants";
 import BlurImage from "@/components/Layout/BlurImage";
 import MainLayout from "@/components/Layout/MainLayout";
 import { followNovelHandle, getNovelBySlugHandle, unfollowNovelHandle } from "@/services/novels.services";
-import { iconBookmark, iconClose, iconGlasses, iconHeartFull } from "../../../public/icons";
+import { iconAuthor, iconBookmark, iconClose, iconGlasses, iconHeartFull } from "../../../public/icons";
 import WrapperLayout from "@/components/Layout/WrapperLayout";
 import { Tab, Transition } from "@headlessui/react";
 import { convertViewsCount } from "@/utils/convertViewsCount";
@@ -27,6 +27,7 @@ import { checkFollowNovelHandle } from "@/services/follow.services";
 import { useSelector } from "react-redux";
 import { convertTime } from "@/utils/convertTime";
 import { LoadingButton } from "@/components/Layout/LoadingLayout";
+import { PROPERTIES_NOVEL } from "@/constants/data";
 
 // import FormIntroduce from "@/components/Share/ContentNovelDetail/FormIntroduce";
 // import FormFeedback from "@/components/Share/ContentNovelDetail/FormFeedback";
@@ -189,25 +190,30 @@ const NovelDetailPage = ({ token, tab, novel }: NovelDetailPageProps) => {
                     <WrapperLayout className="pt-5 max-lg:max-w-3xl">
                         <div className="-mx-4">
                             <article className="mb-6 px-4">
-                                <h1 className="lg:mb-6 sm:text-xl sm:hidden text-xl sm:line-clamp-2 font-semibold mb-1 uppercase text-center">{novel.title}</h1>
-                                <time className="sm:hidden block text-center align-middle mb-4 italic text-gray-600 font-normal text-sm">[Tạo lúc {convertTime(novel.createdAt)}]</time>
+                                {/* <h1 className="lg:mb-6 sm:text-xl sm:hidden text-xl sm:line-clamp-2 font-semibold mb-1 uppercase text-center">{novel.title}</h1>
+                                <time className="sm:hidden block text-center align-middle mb-4 italic text-gray-600 font-normal text-sm">[Tạo lúc {convertTime(novel.createdAt)}]</time> */}
 
                                 <div className="sm:flex -mx-4">
-                                    <div className={`sm:w-3/12 w-full max-sm:mb-6 px-4 text-center`}>
+                                    <div className={`sm:w-3/12 w-full max-sm:mb-6 px-4 text-center justify-center`}>
                                         <BlurImage
                                             width={208}
                                             height={280}
                                             alt="image-demo"
                                             blurDataURL={novel.imageBlurHash || placeholderBlurhash}
-                                            className="group-hover:scale-105 group-hover:duration-500 object-cover max-sm:mx-auto shadow"
+                                            className="group-hover:scale-105 group-hover:duration-500 max-sm:mx-auto object-cover shadow"
                                             placeholder="blur"
                                             src={novel.thumbnailUrl}
                                         />
                                     </div>
                                     <div className="sm:w-9/12 max-sm:mx-auto px-4">
-                                        <h1 className="max-sm:hidden text-xl line-clamp-2 font-semibold uppercase mb-5">{novel.title}</h1>
+                                        <h1 className="sm:text-xl text-base  line-clamp-2 font-semibold uppercase mb-3 max-sm:text-center">{novel.title}</h1>
 
-                                        <ul className="sm:hidden">
+                                        <div className="sm:hidden mb-3 flex items-center max-sm:justify-center">
+                                            <i className="w-4 h-4 mr-2 block">{iconAuthor}</i>
+                                            <h1>{novel.author}</h1>
+                                        </div>
+
+                                        {/* <ul className="sm:hidden">
                                             <li className="flex mb-2">
                                                 <p className="w-4/12">Tác giả:</p>
                                                 <h2 className="w-8/12">{novel.author}</h2>
@@ -238,34 +244,34 @@ const NovelDetailPage = ({ token, tab, novel }: NovelDetailPageProps) => {
                                                     </h2>
                                                     {novel.category && (
                                                         <h2 className="border-[#b78a28] text-[#b78a28] px-2 text-sm border rounded-md">
-                                                            {novel.category}
+                                                            {PROPERTIES_NOVEL['genres'][novel.category-1].value}
                                                         </h2>
                                                     )}
                                                     {novel.personality && (
                                                         <h2 className="border-[#088860] text-[#088860] px-2 text-sm border rounded-md">
-                                                            {novel.personality}
+                                                            {PROPERTIES_NOVEL['personality'][novel.personality-1].value}
                                                         </h2>
                                                     )}
                                                     {novel.scene && (
                                                         <h2 className="border-[#088860] text-[#088860] px-2 text-sm border rounded-md">
-                                                            {novel.scene}
+                                                            {PROPERTIES_NOVEL['scene'][novel.scene-1].value}
                                                         </h2>
                                                     )}
                                                     {novel.classify && (
                                                         <h2 className="border-[#088860] text-[#088860] px-2 text-sm border rounded-md">
-                                                            {novel.classify}
+                                                            {PROPERTIES_NOVEL['classify'][novel.classify-1].value}
                                                         </h2>
                                                     )}
                                                     {novel.viewFrame && (
                                                         <h2 className="border-[#088860] text-[#088860] px-2 text-sm border rounded-md">
-                                                            {novel.viewFrame}
+                                                            {PROPERTIES_NOVEL['viewFrame'][novel.viewFrame-1].value}
                                                         </h2>
                                                     )}
                                                 </div>
                                             </li>
-                                        </ul>
+                                        </ul> */}
 
-                                        <div className="max-sm:hidden flex items-center flex-wrap gap-2 text-sm mb-4">
+                                        <div className="flex items-center flex-wrap gap-2 sm:text-sm text-xs mb-4 max-sm:justify-center">
                                             {novel.author && (
                                                 <div className="border-[#666] text-[#666] px-3 py-1 border rounded-full ">
                                                     {novel.author}
@@ -278,27 +284,27 @@ const NovelDetailPage = ({ token, tab, novel }: NovelDetailPageProps) => {
                                             </div>
                                             {novel.category && (
                                                 <div className="border-[#b78a28] text-[#b78a28] px-3 py-1 border rounded-full ">
-                                                    {novel.category}
+                                                    {PROPERTIES_NOVEL['genres'][novel.category-1].value}
                                                 </div>
                                             )}
                                             {novel.personality && (
                                                 <div className="border-[#088860] text-[#088860] px-3 py-1 border rounded-full ">
-                                                    {novel.personality}
+                                                    {PROPERTIES_NOVEL['personality'][novel.personality-1].value}
                                                 </div>
                                             )}
                                             {novel.scene && (
                                                 <div className="border-[#088860] text-[#088860] px-3 py-1 border rounded-full ">
-                                                    {novel.scene}
+                                                    {PROPERTIES_NOVEL['scene'][novel.scene-1].value}
                                                 </div>
                                             )}
                                             {novel.classify && (
                                                 <div className="border-[#088860] text-[#088860] px-3 py-1 border rounded-full ">
-                                                    {novel.classify}
+                                                    {PROPERTIES_NOVEL['classify'][novel.classify-1].value}
                                                 </div>
                                             )}
                                             {novel.viewFrame && (
                                                 <div className="border-[#088860] text-[#088860] px-3 py-1 border rounded-full ">
-                                                    {novel.viewFrame}
+                                                    {PROPERTIES_NOVEL['viewFrame'][novel.viewFrame-1].value}
                                                 </div>
                                             )}
                                         </div>

@@ -1,5 +1,6 @@
 import axios from "axios"; 
 import { BannersType } from "@/types";
+import { apiUrl } from "@/constants";
 
 export const addBannersHandle = async (data : Partial<Pick<BannersType, 'novelId' | 'isMobile'>> & { token: string, formData: FormData }) => {
     try {
@@ -8,7 +9,7 @@ export const addBannersHandle = async (data : Partial<Pick<BannersType, 'novelId
             return null;
         }
     
-        const uploadBannerResponse = await axios.post(`http://localhost:4000/api/banners/add/${novelId}?isMobile=${isMobile ? '1' : '0'}`, formData, {
+        const uploadBannerResponse = await axios.post(`${apiUrl}/api/banners/add/${novelId}?isMobile=${isMobile ? '1' : '0'}`, formData, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -25,7 +26,7 @@ export const addBannersHandle = async (data : Partial<Pick<BannersType, 'novelId
 }
 export const getSingleBannersHandle = async () => {
     try {
-        const getSingleBannerResponse = await axios.get(`http://localhost:4000/api/banners/get/single`)
+        const getSingleBannerResponse = await axios.get(`${apiUrl}/api/banners/get/single`)
     
         if(getSingleBannerResponse.data.success) {
             return getSingleBannerResponse
@@ -36,9 +37,9 @@ export const getSingleBannersHandle = async () => {
         return error;
     }
 }
-export const getMultipleBannersHandle = async () => {
+export const getMultipleBannersHandle = async (query? : string) => {
     try {
-        const getMultipleBannerResponse = await axios.get(`http://localhost:4000/api/banners/get/multiple`)
+        const getMultipleBannerResponse = await axios.get(`${apiUrl}/api/banners/get/multiple${query}`)
     
         if(getMultipleBannerResponse.data.success) {
             return getMultipleBannerResponse

@@ -1,3 +1,4 @@
+import { apiUrl } from "@/constants";
 import axios from "axios";
 
 export const getChapterDetailHandle = async (slug: string, chapterNumber: string) => {
@@ -5,7 +6,7 @@ export const getChapterDetailHandle = async (slug: string, chapterNumber: string
         if(!slug || !chapterNumber) {
             return null;
         }
-        const chapter = await axios.get(`http://localhost:4000/api/chapters/chapter-detail/${slug}/chapter-${chapterNumber}`);
+        const chapter = await axios.get(`${apiUrl}/api/chapters/chapter-detail/${slug}/chapter-${chapterNumber}`);
         if(chapter.data.success) {
             return chapter;
         }
@@ -22,7 +23,7 @@ export const increaseViewChapterHandle = (chapterId : string) => {
         if(!chapterId) {
             return null
         }
-        axios.post(`http://localhost:4000/api/chapters/increase/view/${chapterId}`)
+        axios.post(`${apiUrl}/api/chapters/increase/view/${chapterId}`)
     } catch (error) {
         console.log(error)
         return error
@@ -35,7 +36,7 @@ export const getChaptersNovelByUrlHandle = async (slug: string) => {
             return null;
         }
 
-        const chapter = await axios.get(`http://localhost:4000/api/novels/${slug}/chapters`);
+        const chapter = await axios.get(`${apiUrl}/api/novels/${slug}/chapters`);
         if(chapter.data.success) {
             return chapter;
         }
@@ -52,7 +53,7 @@ export const createChapterByUrlHandle = async (slug: string, token: string) => {
             return null
         }
     
-        const chapter = await axios.post(`http://localhost:4000/api/chapters/create-by-url/${slug}`, {}, {
+        const chapter = await axios.post(`${apiUrl}/api/chapters/create-by-url/${slug}`, {}, {
             headers: {
                 Authorization: `Bearer ${token}`
             }

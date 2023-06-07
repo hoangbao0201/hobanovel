@@ -1,3 +1,4 @@
+import { PROPERTIES_NOVEL } from "@/constants/data";
 import { NovelType } from "@/types";
 import Link from "next/link";
 
@@ -23,7 +24,7 @@ const JustUpdated = ({ novels= [] } : JustUpdatedProps) => {
                                 return (
                                     <tr key={novel.novelId} className={`${index%2 && "bg-[#fcfcfa]"} rounded-md hover:bg-slate-100 hover:text-red-800`}>
                                         <td className="p-2 text-sm text-slate-600">
-                                            <h2 className="line-clamp-1">{novel.category || "Không tìm thấy"}</h2>
+                                            <h2 className="line-clamp-1">{PROPERTIES_NOVEL['genres'][novel.category-1].value || "Không tìm thấy"}</h2>
                                         </td>
                                         <td className="w-1/4 pr-2 text-slate-700 font-semibold text-base">
                                             <Link href={`/truyen/${novel.slug}`}>

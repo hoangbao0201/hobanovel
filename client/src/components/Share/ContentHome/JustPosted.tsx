@@ -13,6 +13,7 @@ import { useState } from "react";
 import Link from "next/link";
 import styled from "styled-components";
 import { Transition } from "@headlessui/react";
+import { PROPERTIES_NOVEL } from "@/constants/data";
 
 
 const SwiperButton = dynamic( () => import('../..//Buttons/SwiperButton') )
@@ -126,7 +127,7 @@ const JustPosted = ({ novels = [] } : JustPostedProps) => {
                             <span className="line-clamp-2 mb-5 text-gray-500">{novels[indexActiveNovel].description.replace(/<[^>]+>/g, '')}</span>
                             <div className="text-base flex align-middle items-center justify-between">
                                 <span className="w-[55%] text-base mr-3 line-clamp-1 align-middle">{novels[indexActiveNovel].author}</span>
-                                <span className="px-2 text-xs text-orange-700 line-clamp-1 align-middle text-center border border-orange-700">{novels[indexActiveNovel].category}</span>
+                                <span className="px-2 text-xs text-orange-700 line-clamp-1 align-middle text-center border border-orange-700">{PROPERTIES_NOVEL['genres'][novels[indexActiveNovel].category-1].value}</span>
                             </div>
                         </div>
                     </Transition>

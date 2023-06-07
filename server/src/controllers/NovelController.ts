@@ -61,14 +61,15 @@ export const createNovelByData = async (req: Request, res: Response) => {
             classify,
             viewFrame,
         };
-        const createNovel: NovelType[] | null = await createNovelByDataHandle(
+        const createNovel = await createNovelByDataHandle(
             data as NovelType,
             res.locals.user.userId
         );
-        if (!createNovel) {
+        if (!createNovel.success) {
             return res.status(400).json({
                 success: false,
                 message: "Create novel error",
+                error: createNovel.error
             });
         }
 
@@ -107,19 +108,20 @@ export const createNovelByUrl = async (req: Request, res: Response) => {
             dataNovel,
             res.locals.user.userId
         );
-        if (!createNovel) {
+        if (!createNovel.success) {
             return res.status(400).json({
                 success: false,
                 message: "Create novel error",
+                error: createNovel.error
             });
         }
 
         return res.json({
             success: true,
             message: "Create novel successful",
-            // dataNovel
+            dataNovel: dataNovel,
             novel: {
-                novelId: createNovel.insertId,
+                novelId: createNovel.data.insertId,
                 slug: dataNovel.slug,
                 chapterNumber: dataNovel.chapterNumber,
                 thumbnailUrl: dataNovel.thumbnailUrl
@@ -610,6 +612,7 @@ export const getAdvancedNovel = async (req: Request, res: Response) => {
         return res.json({
             success: true,
             novels: resultGetNovelRes.data,
+            // query: data
         })
     } catch (error) {
         return res.status(500).json({

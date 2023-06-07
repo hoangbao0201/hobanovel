@@ -1,11 +1,12 @@
 import { HistoryReadingType, NovelFollowerType, NovelType } from "@/types";
 import axios from "axios";
 import { getAccessToken } from "./cookies.servies";
+import { apiUrl } from "@/constants";
 
 
 export const getNovelsByPageHandle = async (pageNumber: string) => {
     try {
-        const chapters = await axios.get(`http://localhost:4000/api/novels/search-by-page/${pageNumber}`);
+        const chapters = await axios.get(`${apiUrl}/api/novels/search-by-page/${pageNumber}`);
 
         if(chapters.data.success) {
             return chapters
@@ -25,7 +26,7 @@ export const getNovelBySlugHandle = async (slug: string) => {
         }
     
         const novels = await axios.get(
-            `http://localhost:4000/api/novels/search-by-slug/${slug}`, {
+            `${apiUrl}/api/novels/search-by-slug/${slug}`, {
                 // headers: {
                 //     Authorization: `Bearer ${token}`,
                 // },
@@ -49,7 +50,7 @@ export const createNovelByUrlHandle = async (url: string, token: string) => {
         }
     
         const novel = await axios.post(
-            "http://localhost:4000/api/novels/create/url",
+            "${apiUrl}/api/novels/create/url",
             {
                 url: url,
             },
@@ -76,7 +77,7 @@ export const getNovelsByDataHandle = async (data: Pick<NovelType, "novelId" | "u
         const { novelId = '', title = '', userId = '', page = 1 } = data;
     
         const novels = await axios.get(
-            `http://localhost:4000/api/novels/get/${novelId}?title=${title}&userId=${userId}&page=${page}`
+            `${apiUrl}/api/novels/get/${novelId}?title=${title}&userId=${userId}&page=${page}`
         );
         if (novels.data.success) {
             return novels;
@@ -93,7 +94,7 @@ export const getNovelsByOutstandingHandle = async (page: number) => {
     try {
     
         const novels = await axios.get(
-            `http://localhost:4000/api/novels/get/outstanding?page=${page || 1}`
+            `${apiUrl}/api/novels/get/outstanding?page=${page || 1}`
         );
         if (novels.data.success) {
             return novels;
@@ -110,7 +111,7 @@ export const getNovelsByHighlyRatedHandle = async (page: number) => {
     try {
     
         const novels = await axios.get(
-            `http://localhost:4000/api/novels/get/highlyrated?page=${page || 1}`
+            `${apiUrl}/api/novels/get/highlyrated?page=${page || 1}`
         );
         if (novels.data.success) {
             return novels;
@@ -130,7 +131,7 @@ export const readingNovelHandle = async (data: Pick<HistoryReadingType, 'novelId
         }
 
         const readingNovelRes = await axios.post(
-            `http://localhost:4000/api/novels/reading/${novelId}/${chapterRead}`, {}, {
+            `${apiUrl}/api/novels/reading/${novelId}/${chapterRead}`, {}, {
                 headers: {
                     Authorization: `Bearer ${data.token}`,
                 },
@@ -155,7 +156,7 @@ export const getReadingNovelHandle = async (page: number) => {
         }
 
         const readingNovelRes = await axios.post(
-            `http://localhost:4000/api/novels/reading?page=${page || 1}`, {
+            `${apiUrl}/api/novels/reading?page=${page || 1}`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -175,7 +176,7 @@ export const followNovelHandle = async (data : Pick<NovelFollowerType, 'novelId'
     try {
         const { novelId, token } = data
         const followNovelRes = await axios.post(
-            `http://localhost:4000/api/novels/follow/${novelId}`, {}, {
+            `${apiUrl}/api/novels/follow/${novelId}`, {}, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -195,7 +196,7 @@ export const unfollowNovelHandle = async (data : Pick<NovelFollowerType, 'novelI
     try {
         const { novelId, token } = data
         const followNovelRes = await axios.post(
-            `http://localhost:4000/api/novels/unfollow/${novelId}`, {}, {
+            `${apiUrl}/api/novels/unfollow/${novelId}`, {}, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -217,7 +218,7 @@ export const unfollowNovelHandle = async (data : Pick<NovelFollowerType, 'novelI
 export const advancedSearchNovelHandle = async (query: string) => {
     try {
         const getNovels = await axios.get(
-            `http://localhost:4000/api/novels/get/advanced?${query}`);
+            `${apiUrl}/api/novels/get/advanced?${query}`);
 
         return getNovels.data;
     } catch (error) {

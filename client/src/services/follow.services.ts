@@ -1,8 +1,9 @@
+import { apiUrl } from "@/constants";
 import axios from "axios"
 
 export const checkFollowNovelHandle = async (query : string) => {
     try {
-        const checkFollowNovelRes = await axios.get(`http://localhost:4000/api/follows/check/${query}`);
+        const checkFollowNovelRes = await axios.get(`${apiUrl}/api/follows/check/${query}`);
         
         return checkFollowNovelRes.data
     } catch (error) {

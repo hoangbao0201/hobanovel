@@ -7,6 +7,7 @@ import { HistoryReadingType, NovelFollowerType, NovelType } from "../types";
 import { uploadThumbnailNovelByUrlHandle } from "./image.services";
 import { getBlurDataURL } from "../utils/getBlurDataURL";
 import { NovelSearchConditions, getAdvancedNovelConditions } from "../middleware/conditionsQuery";
+import { PROPERTIES_NOVEL } from "../constants";
 
 export const createNovelByDataHandle = async (data : NovelType, userId : string) => {
     try {
@@ -21,7 +22,7 @@ export const createNovelByDataHandle = async (data : NovelType, userId : string)
             slug, title, description, author, category, personality, scene, classify, viewFrame
         } = data
          
-        const values = [slug, title, data?.thumbnailUrl || null, data?.thumbnailPublicId || null, description, author, category, personality, scene, classify, viewFrame, userId]
+        const values = [slug, title, data?.thumbnailUrl || null, data?.thumbnailPublicId || null, description, author, category || null, personality || null, scene || null, classify || null, viewFrame || null, userId]
 
         // return values
 
@@ -29,9 +30,15 @@ export const createNovelByDataHandle = async (data : NovelType, userId : string)
 
         connection.release();
 
-        return rows as NovelType[]
+        return {
+            success: true,
+            data: rows as NovelType[]
+        }
     } catch (error) {
-        return error
+        return {
+            success: false,
+            error: error
+        }
     }
 };
 
@@ -40,17 +47,19 @@ export const getDataNovelByUrlMTCHandle = async (url : string) => {
         const response1 = await axios.get(url);
         const $1 = cheerio.load(response1.data);
 
-        const dataNovel = {
+        const dataNovel : any = {
             title: $1('h1.h3.mr-2>a').text().trim(),
             // slug: convertTextToSlug($1('h1.h3.mr-2>a').text()),
             slug: url.split("com/truyen/")[1],
             description: $1('div.content').html(),
             author: $1('ul.list-unstyled.mb-4>li').eq(0).find('a').text().trim(),
+
             category: $1('ul.list-unstyled.mb-4>li').eq(2).find('a').text().trim(),
             personality: $1('ul.list-unstyled.mb-4>li').eq(3).find('a').text().trim(),
             scene: $1('ul.list-unstyled.mb-4>li').eq(4).find('a').text().trim(),
             classify: $1('ul.list-unstyled.mb-4>li').eq(5).find('a').text().trim(),
             viewFrame: $1('ul.list-unstyled.mb-4>li').eq(6).find('a').text().trim(),
+
             chapterNumber: $1('#nav-tab-chap .counter').text()
         }
 
@@ -68,6 +77,44 @@ export const getDataNovelByUrlMTCHandle = async (url : string) => {
         if(!thumbnailImage) {
             return null
         }
+
+        // convert check
+
+        if(dataNovel.category) {
+            const ob = PROPERTIES_NOVEL['genres'].find(item => {
+                return item.value === dataNovel.category
+            })
+            dataNovel.category = ob?.id || undefined
+        }
+        if(dataNovel.personality) {
+            const ob = PROPERTIES_NOVEL['personality'].find(item => {
+                return item.value === dataNovel.personality
+            })
+            dataNovel.personality = ob?.id || undefined
+        }
+        if(dataNovel.scene) {
+            const ob = PROPERTIES_NOVEL['scene'].find(item => {
+                return item.value === dataNovel.scene
+            })
+            dataNovel.scene = ob?.id || undefined
+        }
+        if(dataNovel.classify) {
+            const ob = PROPERTIES_NOVEL['classify'].find(item => {
+                return item.value === dataNovel.classify
+            })
+            dataNovel.classify = ob?.id || undefined
+        }
+        if(dataNovel.viewFrame) {
+            const ob = PROPERTIES_NOVEL['viewFrame'].find(item => {
+                return item.value === dataNovel.viewFrame
+            })
+            dataNovel.viewFrame = ob?.id || undefined
+        }
+
+
+
+
+
 
         return {
             ...dataNovel,

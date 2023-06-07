@@ -30,7 +30,8 @@ type BannersCreateType = Pick<
 >;
 
 interface AdminBannersPageProps {
-    banners: BannersCreateType[];
+    banners: BannersCreateType[]
+    bannersMobile: BannersCreateType[]
 }
 
 const dataConditionSearchNovel = [
@@ -39,10 +40,11 @@ const dataConditionSearchNovel = [
     { label: "ID TÁC GIẢ", text: "id tác giả", value: "userId" },
 ];
 
-const AdminBannersPage = ({ banners }: AdminBannersPageProps) => {
+const AdminBannersPage = ({ banners, bannersMobile }: AdminBannersPageProps) => {
     const [dataImage, setDataImage] = useState(null);
     const [isShowing, setIsShowing] = useState(false);
     const [listBanners, setListBanners] = useState<BannersCreateType[]>(banners || []);
+    const [listBannersMobile, setListBannersMobile] = useState<BannersCreateType[]>(bannersMobile || []);
     const [isLoadingButton, setIsLoadingButton] = useState(false);
     const [urlNewImage, setUrlNewImage] = useState<null | string>(null);
 
@@ -90,23 +92,40 @@ const AdminBannersPage = ({ banners }: AdminBannersPageProps) => {
             const uploadBanners: any = await addBannersHandle(
                 dataBanners as Pick<BannersType, 'novelId' | 'isMobile'> & { token: string; formData: FormData }
             );
-            console.log(uploadBanners);
+            // console.log(uploadBanners);
 
             if (uploadBanners?.data?.success) {
                 const banners  = uploadBanners;
-                setListBanners([
-                    {   
-                        title: valueInputSearch || "Lỗi hiển thị",
-                        novelId: idNovelSelect || "1",
-                        bannersId: banners.bannersId,
-                        bannersUrl: urlNewImage || "",
-                        imageBlurHash: banners.imageBlurHash,
-                        bannersPublicId: banners.bannersPublicId,
-                        createdAt: new Date(),
-                        updatedAt: new Date(),
-                    },
-                    ...listBanners,
-                ]) as any;
+                if(isMobile) {
+                    setListBannersMobile([
+                        {   
+                            title: valueInputSearch || "Lỗi hiển thị",
+                            novelId: idNovelSelect || "1",
+                            bannersId: banners.bannersId,
+                            bannersUrl: urlNewImage || "",
+                            imageBlurHash: banners.imageBlurHash,
+                            bannersPublicId: banners.bannersPublicId,
+                            createdAt: new Date(),
+                            updatedAt: new Date(),
+                        },
+                        ...listBannersMobile,
+                    ]) as any;
+                }
+                else {
+                    setListBanners([
+                        {   
+                            title: valueInputSearch || "Lỗi hiển thị",
+                            novelId: idNovelSelect || "1",
+                            bannersId: banners.bannersId,
+                            bannersUrl: urlNewImage || "",
+                            imageBlurHash: banners.imageBlurHash,
+                            bannersPublicId: banners.bannersPublicId,
+                            createdAt: new Date(),
+                            updatedAt: new Date(),
+                        },
+                        ...listBanners,
+                    ]) as any;
+                }
             }
 
             // SET STATE DEFAULT
@@ -182,6 +201,8 @@ const AdminBannersPage = ({ banners }: AdminBannersPageProps) => {
           document.removeEventListener('mousedown', handleClickOutside);
         };
     }, []);
+
+    console.log("Banners mobile: ", bannersMobile)
 
     return (
         <>
@@ -361,6 +382,38 @@ const AdminBannersPage = ({ banners }: AdminBannersPageProps) => {
                         </div>
                     </div>
 
+                    <div className="flex">
+                        {bannersMobile &&
+                            listBannersMobile.map((itemBanner) => {
+                                return (
+                                    <div key={itemBanner.bannersId} className="border-b pb-3">
+                                        <div
+                                            className="relative w-80 h-40 block border rounded-md shadow overflow-hidden"
+                                        >
+                                            <BlurImage
+                                                width={400}
+                                                height={300}
+                                                alt="image-demo"
+                                                blurDataURL={
+                                                    itemBanner.imageBlurHash ||
+                                                    placeholderBlurhash
+                                                }
+                                                className="group-hover:scale-105 group-hover:duration-500 object-cover h-full w-full"
+                                                placeholder="blur"
+                                                src={
+                                                    itemBanner.bannersUrl ||
+                                                    "/images/novel-default.png"
+                                                }
+                                            />
+                                        </div>
+                                        <h3 className="text-gray-900 text-base text-center font-semibold mt-1">
+                                            {itemBanner.title} - {itemBanner.bannersId}
+                                        </h3>
+                                    </div>
+                                );
+                            })}
+                    </div>
+
                     <div className="mt-5 grid grid-cols-2 gap-6">
                         {banners &&
                             listBanners.map((itemBanner) => {
@@ -403,11 +456,13 @@ export default AdminBannersPage;
 export const getServerSideProps: GetServerSideProps = async () => {
     try {
         const bannersResponse = await getMultipleBannersHandle();
+        const bannersMobile = await getMultipleBannersHandle("?isMobile=1");
 
-        if (bannersResponse?.data.success) {
+        if (bannersResponse?.data.success && bannersMobile?.data.success) {
             return {
                 props: {
                     banners: JSON.parse(JSON.stringify(bannersResponse.data?.banners)),
+                    bannersMobile: JSON.parse(JSON.stringify(bannersMobile.data?.banners)),
                 },
             };
         }

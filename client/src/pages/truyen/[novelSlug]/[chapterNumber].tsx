@@ -303,8 +303,8 @@ const ChapterDetailPage = ({ chapter }: ChapterDetailPageProps) => {
                             Chương {chapter.chapterNumber}: {chapter.title}
                         </div>
 
-                        <div className="mb-4 px-3 sm:flex justify-between">
-                            <div className="flex items-center">
+                        <div className="mb-4 px-3 sm:flex justify-between gap-2">
+                            <div className="flex items-center mb-2">
                                 <i className="w-4 block">{iconBook}</i>
                                 <Link
                                     href={`/truyen/${chapter.novelSlug}`}
@@ -313,7 +313,7 @@ const ChapterDetailPage = ({ chapter }: ChapterDetailPageProps) => {
                                     <h2 className="ml-2">{chapter.novelName}</h2>
                                 </Link>
                             </div>
-                            {/* <div className="flex items-center">
+                            <div className="flex items-center mb-2">
                                 <i className="w-4 block">{iconAuthor}</i>
                                 <span className="">
                                     <h2 className="line-clamp-1 sm:text-base text-sm ml-2">
@@ -321,15 +321,15 @@ const ChapterDetailPage = ({ chapter }: ChapterDetailPageProps) => {
                                     </h2>
                                 </span>
                             </div>
-                            <div className="flex items-center">
-                                <i className="w-4 block">{iconT}</i>
+                            <div className="flex items-center mb-2">
+                                <i className="w-3 block">{iconT}</i>
                                 <span className="">
                                     <h2 className="line-clamp-1 sm:text-base text-sm ml-2">
                                         {getCountWords(chapter.content)}
                                     </h2>
                                 </span>
-                            </div> */}
-                            <div className="flex items-center">
+                            </div>
+                            <div className="flex items-center mb-2">
                                 <i className="w-4 block">{iconOclock}</i>
                                 <span className="">
                                     <h2 className="line-clamp-1 sm:text-base text-sm ml-2">

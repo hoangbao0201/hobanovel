@@ -1,3 +1,4 @@
+import { apiUrl } from "@/constants";
 import { CommentType, ReviewType } from "@/types";
 import axios from "axios";
 
@@ -5,7 +6,7 @@ import axios from "axios";
 export const getCommentsHandle = async (data: CommentType & { page?: number }) => {
     try {
         const { chapterId = '', page = 1 } = data
-        const comments = await axios.get(`http://localhost:4000/api/comments/get/${data?.novelId ?? ''}?page=${page}&chapterId=${chapterId}`);
+        const comments = await axios.get(`${apiUrl}/api/comments/get/${data?.novelId ?? ''}?page=${page}&chapterId=${chapterId}`);
 
         if(comments.data.success) {
             return comments
@@ -21,7 +22,7 @@ export const getCommentsHandle = async (data: CommentType & { page?: number }) =
 export const addCommentHandle = async (data : CommentType & { token: string }) => {
     try {
         const { novelId = '', chapterId = '' } = data
-        const comments = await axios.post(`http://localhost:4000/api/comments/add/${String(novelId)}?chapterId=${String(chapterId)}`, {
+        const comments = await axios.post(`${apiUrl}/api/comments/add/${String(novelId)}?chapterId=${String(chapterId)}`, {
             commentText: data.commentText
         }, {
             headers: {
@@ -43,7 +44,7 @@ export const addCommentHandle = async (data : CommentType & { token: string }) =
 export const addReplyCommentHandle = async (data : CommentType & { token: string }) => {
     try {
         const { commentId, token, commentText } = data
-        const commentResponse = await axios.post(`http://localhost:4000/api/comments/add/reply/${commentId}`, {
+        const commentResponse = await axios.post(`${apiUrl}/api/comments/add/reply/${commentId}`, {
             commentText: commentText
         }, {
             headers: {
@@ -66,7 +67,7 @@ export const getReplyCommentsHandle = async (data: CommentType & { page: number 
     try {
         const { commentId = '', page = 1 } = data;
 
-        const commentsResponse = await axios.get(`http://localhost:4000/api/comments/get/reply/${commentId}?page=${page ?? ''}`);
+        const commentsResponse = await axios.get(`${apiUrl}/api/comments/get/reply/${commentId}?page=${page ?? ''}`);
 
         if(commentsResponse.data.success) {
             return commentsResponse;
@@ -83,7 +84,7 @@ export const destroyCommentHandle = async (data : CommentType & { token: string 
     try {
         const { commentId, token } = data
 
-        const comments = await axios.delete(`http://localhost:4000/api/comments/destroy/${commentId}`, {
+        const comments = await axios.delete(`${apiUrl}/api/comments/destroy/${commentId}`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -103,7 +104,7 @@ export const destroyCommentHandle = async (data : CommentType & { token: string 
 export const destroyReplyCommentHandle = async (data : CommentType & { token: string }) => {
     try {
         const { commentId, token } = data
-        const reviews = await axios.delete(`http://localhost:4000/api/comments/destroy/reply/${commentId}`, {
+        const reviews = await axios.delete(`${apiUrl}/api/comments/destroy/reply/${commentId}`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }

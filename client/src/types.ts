@@ -106,11 +106,11 @@ export interface NovelType {
     thumbnailPublicId: string
     description: string
     author: string
-    category: string
-    personality: string
-    scene: string
-    classify: string
-    viewFrame: string
+    category: number
+    personality: number
+    scene: number
+    classify: number
+    viewFrame: number
     createdAt: Date
     updatedAt: Date
 }

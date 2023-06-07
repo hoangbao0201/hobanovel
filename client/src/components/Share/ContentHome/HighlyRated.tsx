@@ -2,6 +2,7 @@ import { placeholderBlurhash } from "@/constants";
 import { NovelType } from "@/types";
 import Link from "next/link";
 import BlurImage from "../../Layout/BlurImage";
+import { PROPERTIES_NOVEL } from "@/constants/data";
 
 type NovelHighlyRated = NovelType & { mediumScore: number }
 
@@ -43,7 +44,7 @@ const HighlyRated = ({ novels = [] } : HighlyRatedProps) => {
                                         <div className="line-clamp-2 text-sm mb-2 text-slate-900">{novel.description.replace(/<[^>]+>/g, '')}</div>
                                         <div className="text-base flex align-middle items-center justify-between">
                                             <span className="max-w-[55%] text-base line-clamp-1 align-middle">{novel.author}</span>
-                                            <span className="px-2 text-xs text-orange-700 line-clamp-1 align-middle text-center border border-orange-700">{novel.category}</span>
+                                            <span className="px-2 text-xs text-orange-700 line-clamp-1 align-middle text-center border border-orange-700">{PROPERTIES_NOVEL['genres'][novel.category-1].value}</span>
                                         </div>
                                     </div>
                                 </div>

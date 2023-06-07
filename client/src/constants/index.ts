@@ -7,4 +7,4 @@ export const placeholderBlurhash =
 export const apiUrl =
     process.env.NODE_ENV !== "production"
         ? "http://localhost:4000"
-        : "https://hoangbao-server-hobachat-production.up.railway.app";
+        : "https://hobanovel.onrender.com";
