@@ -11,20 +11,20 @@ const pool = mysql.createPool({
 
 export default pool;
 
-async function testConnection() {
-    try {
-        // Kiểm tra kết nối
-        const connection = await pool.getConnection();
-        console.log("Kết nối thành công!");
-        connection.release();
-    } catch (error) {
-        console.error("Kết nối thất bại:", error);
-    } finally {
-        pool.end();
-    }
-}
+// async function testConnection() {
+//     try {
+//         // Kiểm tra kết nối
+//         const connection = await pool.getConnection();
+//         console.log("Kết nối thành công!");
+//         connection.release();
+//     } catch (error) {
+//         console.error("Kết nối thất bại:", error);
+//     } finally {
+//         pool.end();
+//     }
+// }
 
-testConnection();
+// testConnection();
 
 // Kết nối đến SQL Workbench
 

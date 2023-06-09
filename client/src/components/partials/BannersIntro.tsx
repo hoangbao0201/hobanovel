@@ -12,8 +12,9 @@ import { BannersType } from "@/types";
 import Link from "next/link";
 import { useMediaQuery } from "usehooks-ts";
 import styled from "styled-components";
-import SwiperButton from "../Buttons/SwiperButton";
+import SwiperButton from "../features/SwiperButton";
 import { Swiper, SwiperSlide } from "swiper/react";
+import { apiUrl } from "@/constants";
 
 type ResBannerProps = Pick<BannersType, 'bannersId' | 'bannersUrl' | 'imageBlurHash' | 'slug'>
 
@@ -108,7 +109,7 @@ const BannersIntro = () => {
 
     const eventGetBannersNovel = async () => {
         try {
-            const res = await axios(`http://localhost:4000/api/banners/get/single`);
+            const res = await axios(`${apiUrl}/api/banners/get/single`);
             if(!res.data.success || !res) {
                 throw new Error();
             }

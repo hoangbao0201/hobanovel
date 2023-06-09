@@ -6,9 +6,7 @@ export const testDemoHandle = async () => {
         const connection = await pool.getConnection();
 
         const q1 = `
-            UPDATE FROM novels
-            SET category = 5
-            WHERE novels.category = 'Đô Thị'
+            SELECT * FROM users
         `
         const [rows] : any = await connection.query(q1);
 

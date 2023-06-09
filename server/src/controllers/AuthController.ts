@@ -40,6 +40,7 @@ export const registerUser = async (req: Request, res: Response) => {
         return res.json({
             success: true,
             message: "Create User successful",
+            // checkUser
         })
         
     } catch (error) {
