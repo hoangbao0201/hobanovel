@@ -11,17 +11,28 @@ const pool = mysql.createPool({
 
 export default pool;
 
+async function checkConnection() {
+    try {
+        const connection = await pool.getConnection();
+        console.log("Connected to MySQL!");
+        connection.release();
+    } catch (error) {
+        console.error("Failed to connect to MySQL:", error);
+    }
+}
+checkConnection();
+
 // async function testConnection() {
 //     try {
-//         // Kiểm tra kết nối
-//         const connection = await pool.getConnection();
-//         console.log("Kết nối thành công!");
-//         connection.release();
-//     } catch (error) {
-//         console.error("Kết nối thất bại:", error);
+    //         // Kiểm tra kết nối
+    //         const connection = await pool.getConnection();
+    //         console.log("Kết nối thành công!");
+    //         connection.release();
+    //     } catch (error) {
+        //         console.error("Kết nối thất bại:", error);
 //     } finally {
-//         pool.end();
-//     }
+    //         pool.end();
+    //     }
 // }
 
 // testConnection();
@@ -35,12 +46,12 @@ export default pool;
 // }
 
 // const config = {
-//     server: '169.254.116.42',
-//     database: 'hoangbaob1',
-//     user: 'your_username',
-//     password: 'baodeptrai199',
-//     driver: "msnodesqlv8",
-//     options: {
+    //     server: '169.254.116.42',
+    //     database: 'hoangbaob1',
+    //     user: 'your_username',
+    //     password: 'baodeptrai199',
+    //     driver: "msnodesqlv8",
+    //     options: {
 //         encrypt: false
 //     }
 // };
@@ -48,7 +59,7 @@ export default pool;
 // const connection = new sql.ConnectionPool(config);
 
 // async function connectAndQuery() {
-//     try {
+    //     try {
 //         await connection.connect();
 //         console.log('Connected to SQL Server');
 
@@ -57,9 +68,16 @@ export default pool;
 //     } catch (error) {
 //         console.log('Error:', error);
 //     } finally {
-//         await connection.close();
+    //         await connection.close();
 //         console.log('Disconnected from SQL Server');
 //     }
 // }
 
 // connectAndQuery();
+    
+
+
+// uri: process.env.MYSQL_ADDON_URI as string,
+
+    
+    

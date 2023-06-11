@@ -51,14 +51,16 @@ const main = async () => {
     app.use("/api/auth", authRouter);
     app.use("/api/users", userRouter);
     app.use("/api/novels", novelRouter);
-    app.use("/api/tests", testRouter);
     app.use("/api/chapters", chapterRouter);
     app.use("/api/reviews", reviewRouter);
     app.use("/api/comments", commentRouter);
     app.use("/api/banners", bannerRouter);
     app.use("/api/update", updateRouter);
     app.use("/api/follows", followRouter);
+    
+    app.use("/api/tests", testRouter);
 
+    
     app.get("/", async (_req : Request, res : Response) => {
         res.send("BY HOANGBAO")
     }) 
