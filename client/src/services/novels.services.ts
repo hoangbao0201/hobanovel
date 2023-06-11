@@ -50,7 +50,7 @@ export const createNovelByUrlHandle = async (url: string, token: string) => {
         }
     
         const novel = await axios.post(
-            "${apiUrl}/api/novels/create/url",
+            `${apiUrl}/api/novels/create/url`,
             {
                 url: url,
             },

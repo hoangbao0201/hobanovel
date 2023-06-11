@@ -162,6 +162,7 @@ const HomePage = ({
 
     // console.log("novelReading: ", novelReading?.novels);
     // console.log("novelReviews: ", novelsLatestReviews);
+    console.log("NODE ENV: ", process.env.NODE_ENV)
 
     return (
         <>
