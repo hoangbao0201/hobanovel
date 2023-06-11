@@ -158,6 +158,8 @@ const HomePage = ({
         }
     );
 
+    // console.log("URL: ", process.env.NEXT_PUBLIC_APIURL || "không có")
+
     // console.log("novelReading: ", novelReading?.novels);
     // console.log("novelReviews: ", novelsLatestReviews);
 
