@@ -1,4 +1,8 @@
 import mysql from "mysql2/promise";
+import * as fs from "fs";
+import * as path from 'path';
+
+const certPath = path.resolve(__dirname, '../../DigiCertGlobalRootCA.crt.pem');
 
 const pool = mysql.createPool({
     host: process.env.DB_MYSQL_HOST as string,
@@ -7,6 +11,10 @@ const pool = mysql.createPool({
     password: process.env.DB_MYSQL_PASSWORD as string,
     database: process.env.DB_MYSQL_DATABASE as string,
     connectionLimit: 100,
+    ssl: {
+        ca: fs.readFileSync(certPath),
+        rejectUnauthorized: true,
+    }
 });
 
 export default pool;

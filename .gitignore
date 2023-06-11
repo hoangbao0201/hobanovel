@@ -4,6 +4,7 @@
 server/node_modules
 server/dist
 server/.env
+server/DigiCertGlobalRootCA.crt.pem
 
 client/node_modules
 client/.env
