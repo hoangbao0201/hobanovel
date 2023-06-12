@@ -14,7 +14,7 @@ export const getCommentsHandle = async (data: CommentType & { page?: number }) =
 
         return null;
     } catch (error) {
-        console.log(error)
+        // console.log(error)
         return null;
     }
 };
@@ -36,7 +36,7 @@ export const addCommentHandle = async (data : CommentType & { token: string }) =
 
         return null;
     } catch (error) {
-        console.log(error)
+        // console.log(error)
         return null;
     }
 };
@@ -58,7 +58,7 @@ export const addReplyCommentHandle = async (data : CommentType & { token: string
 
         return null;
     } catch (error) {
-        console.log(error)
+        // console.log(error)
         return null;
     }
 };
@@ -75,7 +75,7 @@ export const getReplyCommentsHandle = async (data: CommentType & { page: number 
 
         return null;
     } catch (error) {
-        console.log(error)
+        // console.log(error)
         return null;
     }
 };
@@ -96,7 +96,7 @@ export const destroyCommentHandle = async (data : CommentType & { token: string 
 
         return null;
     } catch (error) {
-        console.log(error)
+        // console.log(error)
         return null;
     }
 };
@@ -116,7 +116,7 @@ export const destroyReplyCommentHandle = async (data : CommentType & { token: st
 
         return null;
     } catch (error) {
-        console.log(error)
+        // console.log(error)
         return null;
     }
 };

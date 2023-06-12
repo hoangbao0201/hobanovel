@@ -40,7 +40,7 @@ export const loginUserHandle = async (data: UserType & { accout: string }) => {
 
         return null;
     } catch (error) {
-        console.log(error)
+        //console.log(error)
         return null
     }
 }
@@ -58,7 +58,7 @@ export const registerUserHandle = async (data: UserType) => {
 
         return null;
     } catch (error) {
-        console.log(error);
+        //console.log(error);
         return null;
     }
 }

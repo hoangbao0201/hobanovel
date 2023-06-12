@@ -13,7 +13,7 @@ export const getChapterDetailHandle = async (slug: string, chapterNumber: string
     
         return null;
     } catch (error) {
-        console.log(error)
+        // console.log(error)
         return null;
     }
 }
@@ -25,7 +25,7 @@ export const increaseViewChapterHandle = (chapterId : string) => {
         }
         axios.post(`${apiUrl}/api/chapters/increase/view/${chapterId}`)
     } catch (error) {
-        console.log(error)
+        // console.log(error)
         return error
     }
 }
@@ -65,7 +65,7 @@ export const createChapterByUrlHandle = async (slug: string, token: string) => {
     
         return null;
     } catch (error) {
-        console.log(error);
+        // console.log(error);
         return null;
     }
 }

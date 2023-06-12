@@ -13,7 +13,7 @@ export const getReviewsByNovelHandle = async (query? : string) => {
 
         return null;
     } catch (error) {
-        console.log(error)
+        // console.log(error)
         return null;
     }
 };
@@ -28,7 +28,7 @@ export const getReviewsByLatestHandle = async (page : string) => {
 
         return null;
     } catch (error) {
-        console.log(error)
+        // console.log(error)
         return null;
     }
 };
@@ -70,7 +70,7 @@ export const destroyReviewsByNovelHandle = async (reviewId: string, token: strin
 
         return null;
     } catch (error) {
-        console.log(error)
+        // console.log(error)
         return null;
     }
 };
@@ -89,7 +89,7 @@ export const destroyReplyReviewsByNovelHandle = async (reviewId: string, token: 
 
         return null;
     } catch (error) {
-        console.log(error)
+        // console.log(error)
         return null;
     }
 };
@@ -110,7 +110,7 @@ export const addReplyReviewHandle = async (novelId: string, reviewId: string, da
 
         return null;
     } catch (error) {
-        console.log(error)
+        // console.log(error)
         return null;
     }
 };
@@ -125,7 +125,7 @@ export const getReplyReviewsHandle = async (reviewId: string) => {
 
         return null;
     } catch (error) {
-        console.log(error)
+        // console.log(error)
         return null;
     }
 };

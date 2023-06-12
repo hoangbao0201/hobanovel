@@ -1,4 +1,9 @@
 import mysql from "mysql2/promise";
+// import * as fs from "fs";
+// import * as path from 'path';
+
+// const certPath = path.resolve('/', 'DigiCertGlobalRootCA.crt.pem');
+// const serverCa = [fs.readFileSync("/DigiCertGlobalRootCA.crt.pem", "utf8")];
 
 const pool = mysql.createPool({
     charset: 'utf8mb4',
@@ -7,14 +12,18 @@ const pool = mysql.createPool({
     user: process.env.DB_MYSQL_USER as string,
     password: process.env.DB_MYSQL_PASSWORD as string,
     database: process.env.DB_MYSQL_DATABASE as string,
-    // connectionLimit: 100,
+    connectionLimit: 100,
     ssl: {
-        ca: process.env.SSL,
+        ca: process.env.SSL
+        // ca: fs.readFileSync("/../DigiCertGlobalRootCA.crt.pem"),
+        // ca: fs.readFileSync(__dirname + '/../../DigiCertGlobalRootCA.crt.pem'),
+        // ca: fs.readFileSync("/DigiCertGlobalRootCA.crt.pem"),
         // rejectUnauthorized: true,
     }
 });
 
 export default pool;
+
 
 async function checkConnection() {
     try {

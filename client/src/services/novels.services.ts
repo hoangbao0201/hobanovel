@@ -14,7 +14,7 @@ export const getNovelsByPageHandle = async (pageNumber: string) => {
 
         return null;
     } catch (error) {
-        console.log(error)
+        // console.log(error)
         return null;
     }
 };
@@ -38,7 +38,7 @@ export const getNovelBySlugHandle = async (slug: string) => {
     
         return null;
     } catch (error) {
-        console.log(error)
+        // console.log(error)
         return null;
     }
 };
@@ -67,7 +67,7 @@ export const createNovelByUrlHandle = async (url: string, token: string) => {
     
         return null;
     } catch (error) {
-        console.log(error)
+        // console.log(error)
         return null;
     }
 };
@@ -85,7 +85,7 @@ export const getNovelsByDataHandle = async (data: Pick<NovelType, "novelId" | "u
     
         return null;
     } catch (error) {
-        console.log(error)
+        // console.log(error)
         return null;
     }
 };
@@ -102,7 +102,7 @@ export const getNovelsByOutstandingHandle = async (page: number) => {
     
         return null;
     } catch (error) {
-        console.log(error)
+        // console.log(error)
         return null;
     }
 };
@@ -119,7 +119,7 @@ export const getNovelsByHighlyRatedHandle = async (page: number) => {
     
         return null;
     } catch (error) {
-        console.log(error)
+        // console.log(error)
         return null;
     }
 };
@@ -142,7 +142,7 @@ export const readingNovelHandle = async (data: Pick<HistoryReadingType, 'novelId
     
         return null;
     } catch (error) {
-        console.log(error)
+        // console.log(error)
         return null;
     }
 };
@@ -167,7 +167,7 @@ export const getReadingNovelHandle = async (page: number) => {
     
         return null;
     } catch (error) {
-        console.log(error)
+        // console.log(error)
         return null;
     }
 };
@@ -188,7 +188,7 @@ export const followNovelHandle = async (data : Pick<NovelFollowerType, 'novelId'
     
         return followNovelRes;
     } catch (error) {
-        console.log(error)
+        // console.log(error)
         return null;
     }
 };
