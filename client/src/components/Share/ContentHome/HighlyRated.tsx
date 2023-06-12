@@ -38,7 +38,7 @@ const HighlyRated = ({ novels = [] } : HighlyRatedProps) => {
                                             <Link className="block" href={`/truyen/${novel.slug}`}>{novel.title}</Link>
                                         </h2>
                                         <div className="flex items-center mb-2">
-                                            <div className="py-[3px] lg:px-3 px-2 rounded-full lg:text-base text-sm leading-none text-white font-semibold bg-red-700">{novel.mediumScore}</div>
+                                            <div className="py-[3px] lg:px-3 px-2 rounded-full lg:text-base text-sm leading-none text-white font-semibold bg-red-700">{novel.mediumScore || "5.0"}</div>
                                             <div className="ml-3 text-green-700 lg:text-base text-sm font-semibold line-clamp-1">{}</div>
                                         </div>
                                         <div className="line-clamp-2 text-sm mb-2 text-slate-900">{novel.description.replace(/<[^>]+>/g, '')}</div>

@@ -89,44 +89,45 @@ const AdminBannersPage = ({ banners, bannersMobile }: AdminBannersPageProps) => 
                 formData,
                 isMobile
             };
-            const uploadBanners: any = await addBannersHandle(
-                dataBanners as Pick<BannersType, 'novelId' | 'isMobile'> & { token: string; formData: FormData }
-            );
-            // console.log(uploadBanners);
 
-            if (uploadBanners?.data?.success) {
-                const banners  = uploadBanners;
-                if(isMobile) {
-                    setListBannersMobile([
-                        {   
-                            title: valueInputSearch || "Lỗi hiển thị",
-                            novelId: idNovelSelect || "1",
-                            bannersId: banners.bannersId,
-                            bannersUrl: urlNewImage || "",
-                            imageBlurHash: banners.imageBlurHash,
-                            bannersPublicId: banners.bannersPublicId,
-                            createdAt: new Date(),
-                            updatedAt: new Date(),
-                        },
-                        ...listBannersMobile,
-                    ]) as any;
-                }
-                else {
-                    setListBanners([
-                        {   
-                            title: valueInputSearch || "Lỗi hiển thị",
-                            novelId: idNovelSelect || "1",
-                            bannersId: banners.bannersId,
-                            bannersUrl: urlNewImage || "",
-                            imageBlurHash: banners.imageBlurHash,
-                            bannersPublicId: banners.bannersPublicId,
-                            createdAt: new Date(),
-                            updatedAt: new Date(),
-                        },
-                        ...listBanners,
-                    ]) as any;
-                }
-            }
+            console.log(isMobile)
+            // const uploadBanners: any = await addBannersHandle(
+            //     dataBanners as Pick<BannersType, 'novelId' | 'isMobile'> & { token: string; formData: FormData }
+            // );
+
+            // if (uploadBanners?.data?.success) {
+            //     const banners  = uploadBanners;
+            //     if(isMobile) {
+            //         setListBannersMobile([
+            //             {   
+            //                 title: valueInputSearch || "Lỗi hiển thị",
+            //                 novelId: idNovelSelect || "1",
+            //                 bannersId: banners.bannersId,
+            //                 bannersUrl: urlNewImage || "",
+            //                 imageBlurHash: banners.imageBlurHash,
+            //                 bannersPublicId: banners.bannersPublicId,
+            //                 createdAt: new Date(),
+            //                 updatedAt: new Date(),
+            //             },
+            //             ...listBannersMobile,
+            //         ]) as any;
+            //     }
+            //     else {
+            //         setListBanners([
+            //             {   
+            //                 title: valueInputSearch || "Lỗi hiển thị",
+            //                 novelId: idNovelSelect || "1",
+            //                 bannersId: banners.bannersId,
+            //                 bannersUrl: urlNewImage || "",
+            //                 imageBlurHash: banners.imageBlurHash,
+            //                 bannersPublicId: banners.bannersPublicId,
+            //                 createdAt: new Date(),
+            //                 updatedAt: new Date(),
+            //             },
+            //             ...listBanners,
+            //         ]) as any;
+            //     }
+            // }
 
             // SET STATE DEFAULT
             setIsLoadingButton(false);

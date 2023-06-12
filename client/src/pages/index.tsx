@@ -13,7 +13,7 @@ import { NovelType, ReviewType } from "@/types";
 import { getReviewsByNovelHandle } from "@/services/review.services";
 import WrapperLayout from "@/components/Layout/WrapperLayout";
 import dynamic from "next/dynamic";
-import { getAccessToken, getAccessTokenOnServer } from "@/services/cookies.servies";
+import { getAccessToken } from "@/services/cookies.servies";
 import useSWR from "swr";
 import axios from "axios";
 import { useMediaQuery } from "usehooks-ts";
@@ -158,12 +158,6 @@ const HomePage = ({
         }
     );
 
-    // console.log("URL: ", process.env.NEXT_PUBLIC_APIURL || "không có")
-
-    // console.log("novelReading: ", novelReading?.novels);
-    // console.log("novelReviews: ", novelsLatestReviews);
-    console.log("NODE ENV: ", process.env.NODE_ENV)
-
     return (
         <>
             <Head />
@@ -217,37 +211,9 @@ const HomePage = ({
     );
 };
 
-// export const getStaticProps: GetStaticProps = async (context) => {
-//     const query = context;
-//     const data = { page: 1 };
-
-//     const novelsResponse = await getNovelsByPageHandle("1");
-//     const novelsOutstandingResponse = await getNovelsByOutstandingHandle(1);
-//     const novelsHighlyRatedResponse = await getNovelsByHighlyRatedHandle(1);
-//     const reviewsResponse = await getReviewsByNovelHandle(`?page=1`);
-//     const novelReading = await getReadingNovelHandle(1);
-
-//     return {
-//         props: {
-//             novelsOutstending: novelsOutstandingResponse?.data.novels || null,
-//             novelsJustUpdated: novelsResponse?.data.novels || null,
-//             novelsReading: context.locale || null,
-//             novelsHighlyRated: novelsHighlyRatedResponse?.data.novels || null,
-
-//             novelsJustCompleted: novelsResponse?.data.novels || null,
-
-//             novelsLatestReviews: reviewsResponse?.data.reviews || null,
-
-//             // data: JSON.stringify(query.params) || null
-//         },
-//         revalidate: REVALIDATE_TIME,
-//     };
-// };
-
-export const getServerSideProps : GetServerSideProps = async (context) => {
-
+export const getStaticProps: GetStaticProps = async (context) => {
     const query = context;
-    const data = { page: 1 }
+    const data = { page: 1 };
 
     const novelsResponse = await getNovelsByPageHandle("1");
     const novelsOutstandingResponse = await getNovelsByOutstandingHandle(1);
@@ -268,10 +234,39 @@ export const getServerSideProps : GetServerSideProps = async (context) => {
 
             // data: JSON.stringify(query.params) || null
         },
-        // revalidate: REVALIDATE_TIME,
+        revalidate: REVALIDATE_TIME,
     };
+};
 
-}
+
+// export const getServerSideProps : GetServerSideProps = async (context) => {
+
+//     const query = context;
+//     const data = { page: 1 }
+
+//     const novelsResponse = await getNovelsByPageHandle("1");
+//     const novelsOutstandingResponse = await getNovelsByOutstandingHandle(1);
+//     const novelsHighlyRatedResponse = await getNovelsByHighlyRatedHandle(1);
+//     const reviewsResponse = await getReviewsByNovelHandle(`?page=1`);
+//     const novelReading = await getReadingNovelHandle(1);
+
+//     return {
+//         props: {
+//             novelsOutstending: novelsOutstandingResponse?.data.novels || null,
+//             novelsJustUpdated: novelsResponse?.data.novels || null,
+//             novelsReading: context.locale || null,
+//             novelsHighlyRated: novelsHighlyRatedResponse?.data.novels || null,
+
+//             novelsJustCompleted: novelsResponse?.data.novels || null,
+
+//             novelsLatestReviews: reviewsResponse?.data.reviews || null,
+
+//             // data: JSON.stringify(query.params) || null
+//         },
+//         // revalidate: REVALIDATE_TIME,
+//     };
+
+// }
 
 HomePage.getLayout = (page: ReactNode) => {
     return <MainLayout isBannerPage={true}>{page}</MainLayout>;

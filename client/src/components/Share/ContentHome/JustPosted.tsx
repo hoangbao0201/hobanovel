@@ -122,14 +122,20 @@ const JustPosted = ({ novels = [] } : JustPostedProps) => {
 
                         className="overflow-hidden"
                     >
-                        {/* <div className="mt-8 min-w-full flex-1">
-                            <Link href={`/truyen/${novels[indexActiveNovel].slug}`}><h3 className="text-center mb-4 font-semibold text-lg">{novels[indexActiveNovel].title}</h3></Link>
-                            <span className="line-clamp-2 mb-5 text-gray-500">{novels[indexActiveNovel].description.replace(/<[^>]+>/g, '')}</span>
-                            <div className="text-base flex align-middle items-center justify-between">
-                                <span className="w-[55%] text-base mr-3 line-clamp-1 align-middle">{novels[indexActiveNovel].author}</span>
-                                <span className="px-2 text-xs text-orange-700 line-clamp-1 align-middle text-center border border-orange-700">{PROPERTIES_NOVEL['genres'][novels[indexActiveNovel].category-1].value}</span>
-                            </div>
-                        </div> */}
+                        <div className="mt-8 min-w-full flex-1">
+                            {
+                                novels.length > 0 && (
+                                    <>
+                                        <Link href={`/truyen/${novels[indexActiveNovel].slug}`}><h3 className="text-center mb-4 font-semibold text-lg">{novels[indexActiveNovel].title}</h3></Link>
+                                        <span className="line-clamp-2 mb-5 text-gray-500">{novels[indexActiveNovel].description.replace(/<[^>]+>/g, '')}</span>
+                                        <div className="text-base flex align-middle items-center justify-between">
+                                            <span className="w-[55%] text-base mr-3 line-clamp-1 align-middle">{novels[indexActiveNovel].author}</span>
+                                            <span className="px-2 text-xs text-orange-700 line-clamp-1 align-middle text-center border border-orange-700">{PROPERTIES_NOVEL['genres'][novels[indexActiveNovel].category-1].value}</span>
+                                        </div>
+                                    </>
+                                )
+                            }
+                        </div>
                     </Transition>
                 </div>
 
