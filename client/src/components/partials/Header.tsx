@@ -1,6 +1,9 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
+import Tippy from "@tippyjs/react";
+import 'tippy.js/dist/tippy.css';
+
 import { useDispatch, useSelector } from "react-redux";
 import { useClickOutSide } from "@/hook/useClickOutSide";
 import { GENRES_VALUE, RANK_VALUE } from "@/constants/data";
@@ -10,12 +13,21 @@ import { logoutUserHandle } from "@/redux/userSlice";
 import { removeAccessToken } from "@/services/cookies.servies";
 import Image from "next/image";
 import { LoadingForm } from "../Layout/LoadingLayout";
+import { useMediaQuery } from "usehooks-ts";
+import { iconBars } from "../../../public/icons";
+import { NavOver } from "./NavOver";
+import { useRouter } from "next/router";
 
 interface HeaderProps {
     autoHidden?: boolean
 }
 
 const Header = ({ autoHidden = true } : HeaderProps) => {
+
+    const router = useRouter()
+
+    const matchesMobile = useMediaQuery("(max-width: 640px)");
+
     const dispatch = useDispatch();
     const { currentUser, userLoading, isAuthenticated } = useSelector(
         (state: any) => state.user
@@ -28,7 +40,8 @@ const Header = ({ autoHidden = true } : HeaderProps) => {
     const [isHeader, setIsHeader] = useState(true);
     const [isDropdownGenres, setIsDropdownGenres] = useState(false);
     const [isDropdownRank, setIsDropdownRank] = useState(false);
-    const [isDropdownUser, setIsDropdownUser] = useState(false)
+    const [isDropdownUser, setIsDropdownUser] = useState(false);
+    const [isNavOver, setIsNavOver] = useState(false);
 
     useEffect(() => {
         let prevScrollPosition = window.pageYOffset;
@@ -76,17 +89,27 @@ const Header = ({ autoHidden = true } : HeaderProps) => {
         }
     }, [isHeader])
 
+
+    // Hiddent when change page
+    useEffect(() => {
+
+        router.events.on("routeChangeStart", () => setIsNavOver(false));
+        return () => {
+            router.events.off("routeChangeStart", () => setIsNavOver(false));
+        }
+    }, [])
+
     return (
         <>
             {
-                autoHidden && <div className="w-full h-14"></div>
+                autoHidden && <div className="w-full h-[50px]"></div>
             }
             <header
                 className={`bg-gray-100 drop-shadow-sm ${ autoHidden ? 'fixed top-0 left-0 right-0 z-20' : '' } 
                     ${ autoHidden && (isHeader ? "opacity-100" : "opacity-0 pointer-events-none")}`}
             >
                 <div className={`w-full`}>
-                    <div className="max-w-7xl mx-auto flex items-center h-14 px-3">
+                    <div className="max-w-7xl mx-auto flex items-center h-[50px] px-3">
                         <h2 className="text-center align-middle font-semibold text-xl">
                             <Link href="/">HOBANOVEL</Link>
                         </h2>
@@ -95,7 +118,7 @@ const Header = ({ autoHidden = true } : HeaderProps) => {
                             <div className="ml-4 relative">
                                 <div
                                     onClick={() => setIsDropdownGenres(true)}
-                                    className={`h-14 px-3 flex items-center justify-center cursor-pointer ${isDropdownGenres && "bg-slate-200"}`}
+                                    className={`h-[50px] px-3 flex items-center justify-center cursor-pointer ${isDropdownGenres && "bg-slate-200"}`}
                                 >
                                     Thể loại
                                 </div>
@@ -124,7 +147,7 @@ const Header = ({ autoHidden = true } : HeaderProps) => {
                             <div className="ml-4 relative">
                                 <div
                                     onClick={() => setIsDropdownRank(true)}
-                                    className={`h-14 px-3 flex items-center justify-center cursor-pointer ${isDropdownRank && "bg-slate-200"}`}
+                                    className={`h-[50px] px-3 flex items-center justify-center cursor-pointer ${isDropdownRank && "bg-slate-200"}`}
                                 >
                                     Bảng xếp hạng
                                 </div>
@@ -164,7 +187,7 @@ const Header = ({ autoHidden = true } : HeaderProps) => {
                                     <LoadingForm />
                                 ) : isAuthenticated ? (
                                     <div className="relative">
-                                        <span className="h-14 flex items-center">
+                                        <span className="h-[50px] flex items-center">
                                             <button
                                                 onClick={() => setIsDropdownUser(true)}
                                                 className="w-9 h-9 outline-none rounded-full overflow-hidden shadow align-middle inline-block"
@@ -229,25 +252,36 @@ const Header = ({ autoHidden = true } : HeaderProps) => {
                                         }
                                     </div>
                                 ) : (
-                                    <>
-                                        <Link className="mr-1" href="/auth/login">
-                                            <h2 className="px-3 py-1 rounded hover:bg-gray-200">
-                                                Đăng nhập
-                                            </h2>
-                                        </Link>
-                                        {"|"}
-                                        <Link className="ml-1" href="/auth/register">
-                                            <h2 className="px-3 py-1 rounded hover:bg-gray-200">
-                                                Đăng kí
-                                            </h2>
-                                        </Link>
-                                    </>
+                                    matchesMobile ? (
+                                        
+                                        <div className="relative">
+                                            <button onClick={() => setIsNavOver(value => !value)} className="bg-[#d0b32e] rounded-sm flex items-center justify-center py-[5px] px-2">
+                                                <i className="w-6 inline-block fill-white">{iconBars}</i>
+                                            </button>
+                                        </div>
+
+                                    ) : (
+                                        <>
+                                            <Link className="mr-1" href="/auth/login">
+                                                <h2 className="px-3 py-1 rounded hover:bg-gray-200">
+                                                    Đăng nhập
+                                                </h2>
+                                            </Link>
+                                            {"|"}
+                                            <Link className="ml-1" href="/auth/register">
+                                                <h2 className="px-3 py-1 rounded hover:bg-gray-200">
+                                                    Đăng kí
+                                                </h2>
+                                            </Link>
+                                        </>
+                                    )
                                 )}
                             </div>
                         </div>
                     </div>
                 </div>
             </header>
+            <NavOver isShow={isNavOver}/>
         </>
     );
 };

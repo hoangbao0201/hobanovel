@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ReactNode, useEffect, useRef, useState } from "react";
-import { GetServerSideProps } from "next";
+import { GetServerSideProps, GetStaticPaths, GetStaticProps, GetStaticPropsContext } from "next";
 
 import MainLayout from "@/components/Layout/MainLayout";
 import { ParsedUrlQuery } from "querystring";
@@ -377,38 +377,76 @@ const ChapterDetailPage = ({ chapter }: ChapterDetailPageProps) => {
     );
 };
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-    const novelSlug = context.query.novelSlug as string;
-    const chapterNumber = context.query.chapterNumber as string;
+// export const getServerSideProps: GetServerSideProps = async (context) => {
+//     const novelSlug = context.query.novelSlug as string;
+//     const chapterNumber = context.query.chapterNumber as string;
 
-    const chapterResponse = await getChapterDetailHandle(
-        novelSlug,
-        chapterNumber.split("chuong-")[1],
-    );
+//     const chapterResponse = await getChapterDetailHandle(
+//         novelSlug,
+//         chapterNumber.split("chuong-")[1],
+//     );
 
-    if (!chapterResponse) {
+//     if (!chapterResponse) {
+//         return {
+//             props: {
+//                 chapter: null,
+//             },
+//         };
+//     }
+
+//     return {
+//         props: {
+//             chapter: chapterResponse.data?.chapter || null,
+//         },
+//     };
+// };
+
+export const getStaticProps: GetStaticProps<ChapterDetailPageProps, Params> = async (
+    context: GetStaticPropsContext<Params>
+) => {
+    try {
+        const { novelSlug = "", chapterNumber = "" } = context.params as Params;
+
+        if (!novelSlug || !chapterNumber) {
+            return {
+                notFound: true,
+                props: {
+                    chapter: null,
+                },
+            };
+        }
+
+
+        const chapterResponse = await getChapterDetailHandle(
+            novelSlug as string,
+            String(chapterNumber).split("chuong-")[1],
+        );
+
+        if (!chapterResponse) {
+            return {
+                props: {
+                    chapter: null,
+                },
+            };
+        }
+
         return {
             props: {
-                chapter: null,
+                chapter: chapterResponse.data?.chapter || null,
             },
         };
+
+    } catch (error) {
+        return { notFound: true, props: { novel: null, tab: "intro" } };
     }
-
-    // if(token) {
-    //     const dataReadingNovel = {
-    //         token: token,
-    //         novelId: chapterResponse.data.chapter.novelId,
-    //         chapterRead: String(chapterResponse.data.chapter.chapterNumber)
-    //     }
-    //     readingNovelHandle(dataReadingNovel as HistoryReadingType & { token: string })
-    // }
-
+};
+export const getStaticPaths: GetStaticPaths<Params> = () => {
     return {
-        props: {
-            chapter: chapterResponse.data?.chapter || null,
-        },
+        paths: [],
+        fallback: true,
     };
 };
+
 
 ChapterDetailPage.getLayout = (page: ReactNode) => {
     return (
