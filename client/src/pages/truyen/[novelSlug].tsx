@@ -13,15 +13,15 @@ import { ParsedUrlQuery } from "querystring";
 import { REVALIDATE_TIME, placeholderBlurhash } from "@/constants";
 import BlurImage from "@/components/Layout/BlurImage";
 import MainLayout from "@/components/Layout/MainLayout";
-import { followNovelHandle, getNovelBySlugHandle, unfollowNovelHandle } from "@/services/novels.services";
-import { iconAuthor, iconBookmark, iconClose, iconGlasses, iconHeartFull } from "../../../public/icons";
+import { getNovelBySlugHandle } from "@/services/novels.services";
+import { iconAuthor, iconClose, iconHeartFull } from "../../../public/icons";
 import WrapperLayout from "@/components/Layout/WrapperLayout";
 import { Tab, Transition } from "@headlessui/react";
 import { convertViewsCount } from "@/utils/convertViewsCount";
 import { ListStarLayout } from "@/components/Layout/ListStarLayout";
 import { useMediaQuery } from "usehooks-ts";
 import { getAccessToken } from "@/services/cookies.servies";
-import { checkFollowNovelHandle } from "@/services/follow.services";
+import { checkFollowNovelHandle, followNovelHandle, unfollowNovelHandle } from "@/services/follow.services";
 import { useSelector } from "react-redux";
 import { convertTime } from "@/utils/convertTime";
 import { LoadingButton } from "@/components/Layout/LoadingLayout";
@@ -128,12 +128,11 @@ const NovelDetailPage = ({ token, tab, novel }: NovelDetailPageProps) => {
                 token: token
             }
             const followNovelRes = await followNovelHandle(dataFollowNovel as Pick<NovelFollowerType , 'novelId'> & { token: string });
-            // if(followNovelRes?.data.success) {
-                
-            //     return
-            // }
+            if(followNovelRes?.success) {
+                setIsFollow(true)
+                return
+            }
             
-            setIsFollow(true)
         } catch (error) {
             console.log(error)
         }
@@ -157,8 +156,11 @@ const NovelDetailPage = ({ token, tab, novel }: NovelDetailPageProps) => {
                 token: token
             }
             const followNovelRes = await unfollowNovelHandle(dataFollowNovel as Pick<NovelFollowerType , 'novelId'> & { token: string });
+            if(followNovelRes?.success) {
+                setIsFollow(false)
+                return
+            }
 
-            setIsFollow(false)
         } catch (error) {
             console.log(error)
         }

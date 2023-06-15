@@ -6,7 +6,7 @@ import { Fragment, ReactNode, useEffect, useRef, useState } from "react";
 
 import Select from "react-select";
 
-import { NovelType } from "@/types";
+import { NovelResType, NovelType } from "@/types";
 import WrapperLayout from "@/components/Layout/WrapperLayout";
 import { useMediaQuery } from "usehooks-ts";
 import MainLayout from "@/components/Layout/MainLayout";
@@ -15,6 +15,7 @@ import { iconAuthor, iconClose, iconList } from "../../../public/icons";
 import { advancedSearchNovelHandle } from "@/services/novels.services";
 import BlurImage from "@/components/Layout/BlurImage";
 import { placeholderBlurhash } from "@/constants";
+import { PaginationLayout } from "@/components/Layout/PaginationLayout";
 
 type querySearchNovelTypes = {
     [key: string]: number[]
@@ -32,7 +33,7 @@ interface querySearchNovelProps extends querySearchNovelTypes {
 interface AdvencedSearchNovelPageProps {
     query: querySearchNovelProps
     sortBy: string
-    novels: any
+    novels: NovelResType[]
     test: any
 }
 
@@ -47,13 +48,9 @@ const optionsSortByRating = [
 
 const AdvencedSearchNovelPage = ({ query, novels, sortBy } : AdvencedSearchNovelPageProps) => {
     const router = useRouter()
-    // const paginationRef = useRef<HTMLDivElement>(null)
-    // const paginationFakeRef = useRef<HTMLDivElement>(null)
     const matchesMobile = useMediaQuery("(max-width: 640px)");
 
     const [querySearchNovel, setQuerySearchNovel] = useState<querySearchNovelProps>(query)
-    const [checkOptionsSortNovel, setCheckOptionsSortNovel] = useState(sortBy)
-    // const [isFixed, setIsFixed] = useState(false);
 
     // Handle Add Query Novel
     const handleAddQuerySearch = (key: keyof querySearchNovelProps, data: number) => {
@@ -87,47 +84,21 @@ const AdvencedSearchNovelPage = ({ query, novels, sortBy } : AdvencedSearchNovel
     ));
 
     // Next Page
-    const handleNextPage = () => {
-        // const queryString = Object.entries(querySearchNovel)
-        //     .filter(([key, value]) => value.length > 0)
-        //     .map(([key, value]) => `${key}=${value.map((v, index) => encodeURIComponent(v)).join('%2C')}`)
-        //     .join('&');
+    const handleNextPage = (optionSort?: string) => {
 
         const queryString = new URLSearchParams(querySearchNovel as any);
 
-        const query = `/truyen?sort_by=${checkOptionsSortNovel}&${queryString}`
+        const query = `/truyen?sort_by=${optionSort || sortBy}&${queryString}`
 
         router.push(query);
     }
 
-    // Change Position
-    // useEffect(() => {
-    //     const handleScroll = () => {
-    //         const scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
-            
-    //         if(paginationRef.current && paginationFakeRef.current) {
-    //             const targetNavPosition = paginationRef?.current?.offsetTop;
-    //             const targetNavFakePosition = paginationFakeRef?.current?.offsetTop;
+    // Change Page
+    const handlePageChange = (page : number) => {
+        router.push(`?page=${String(page)}`)
+    };
 
-    //             if(targetNavFakePosition === 0 && scrollPosition>targetNavPosition) {
-    //                 setIsFixed(true);
-    //             }
-    //             else if(targetNavFakePosition !== 0 && scrollPosition<targetNavFakePosition) {
-    //                 setIsFixed(false)
-    //             }
-    //         }
-    //     };
-
-    //     window.addEventListener("scroll", handleScroll);
-
-    //     return () => {
-    //         window.removeEventListener("scroll", handleScroll);
-    //     };
-    // }, []);
-
-    console.log(checkOptionsSortNovel)
-
-    //  -----
+    console.log("countPage: ", novels)
 
     const getLayout = (page: ReactNode) => {
         return <MainLayout autoHidden={false} isBannerPage={!matchesMobile}>{page}</MainLayout>;
@@ -284,7 +255,7 @@ const AdvencedSearchNovelPage = ({ query, novels, sortBy } : AdvencedSearchNovel
                                     </ul>
                                 </div>
                                 <div className="py-4 border-b">
-                                    <button className="border bg-green-600 py-2 px-3 text-white rounded-md text-sm" onClick={handleNextPage}>Tìm kiếm</button>
+                                    <button className="border bg-green-600 py-2 px-3 text-white rounded-md text-sm" onClick={() => handleNextPage()}>Tìm kiếm</button>
                                 </div>
                             </div>
                             <div className="w-9/12">
@@ -308,7 +279,7 @@ const AdvencedSearchNovelPage = ({ query, novels, sortBy } : AdvencedSearchNovel
                                                 cursor: "pointer"
                                             }),
                                         }}
-                                        onChange={(select: any) =>setCheckOptionsSortNovel(select.id)}
+                                        onChange={(select: any) =>handleNextPage(select.id)}
                                     />
                                     <Select
                                         isSearchable={false}
@@ -326,22 +297,22 @@ const AdvencedSearchNovelPage = ({ query, novels, sortBy } : AdvencedSearchNovel
                                                 cursor: "pointer"
                                             }),
                                         }}
-                                        onChange={(select: any) =>setCheckOptionsSortNovel(select.id)}
+                                        onChange={(select: any) =>handleNextPage(select.id)}
                                     />
 
-                                    <button className="p-1 text-sm font-semibold" onClick={() => setCheckOptionsSortNovel('follow_count')}>Theo dõi</button>
-                                    {/* <button className="p-1 text-sm font-semibold" onClick={() => setCheckOptionsSortNovel('')}>Yêu thích</button> */}
-                                    <button className="p-1 text-sm font-semibold" onClick={() => setCheckOptionsSortNovel('comment_count')}>Bình luận</button>
-                                    <button className="p-1 text-sm font-semibold" onClick={() => setCheckOptionsSortNovel('chapter_count')}>Số chương</button>
+                                    <button className={`p-1 text-sm font-semibold rounded-sm px-2 ${sortBy === 'follow_count' ? 'bg-gray-200' : ''}`} onClick={() => handleNextPage('follow_count')}>Theo dõi</button>
+                                    {/* <button className={`p-1 text-sm font-semibold rounded-sm px-2`} onClick={() => setCheckOptionsSortNovel('')}>Yêu thích</button> */}
+                                    <button className={`p-1 text-sm font-semibold rounded-sm px-2 ${sortBy === 'comment_count' ? 'bg-gray-200' : ''}`} onClick={() => handleNextPage('comment_count')}>Bình luận</button>
+                                    <button className={`p-1 text-sm font-semibold rounded-sm px-2 ${sortBy === 'chapter_count' ? 'bg-gray-200' : ''}`} onClick={() => handleNextPage('chapter_count')}>Số chương</button>
                                     
 
-                                    <button className="ml-auto border bg-green-600 py-2 px-3 text-white rounded-md text-sm" onClick={handleNextPage}>Tìm kiếm</button>
+                                    {/* <button className="ml-auto border bg-green-600 py-2 px-3 text-white rounded-md text-sm" onClick={handleNextPage}>Tìm kiếm</button> */}
                                 </div>
 
                                 <div className="grid grid-cols-2 mt-5">
                                     {   
                                         novels?.length ? (
-                                            novels.map((novel : NovelType) => {
+                                            novels.map((novel) => {
                                                 return (
                                                     <div key={novel.novelId} className="px-4">
                                                         <div className="flex py-4 border-b">
@@ -362,8 +333,8 @@ const AdvencedSearchNovelPage = ({ query, novels, sortBy } : AdvencedSearchNovel
                                                                 </h2>
                                                                 <div className="line-clamp-2 text-sm mb-2 text-slate-900">{novel.description.replace(/<[^>]+>/g, '')}</div>
                                                                 <div className="text-base flex align-middle items-center justify-between">
-                                                                    <span className="flex items-center w-[55%] text-sm mr-3">
-                                                                        <i className="w-4 block mr-2">{iconAuthor}</i> <span className="line-clamp-1 align-middle">{novel.author}</span>
+                                                                    <span className="flex items-center max-w-[55%] text-sm mr-1">
+                                                                        <i className="w-5 h-4 block mr-1">{iconAuthor}</i> <span className="line-clamp-1 align-middle">{novel.author}</span>
                                                                     </span>
                                                                     <span className="px-2 text-xs text-orange-700 line-clamp-1 align-middle text-center border border-orange-700">{PROPERTIES_NOVEL['genres'][novel.category-1].value}</span>
                                                                 </div>
@@ -379,6 +350,11 @@ const AdvencedSearchNovelPage = ({ query, novels, sortBy } : AdvencedSearchNovel
                                             <div>Không có truyện</div>
                                         )
                                     }
+                                </div>
+
+
+                                <div className="flex justify-center my-5">
+                                    <PaginationLayout countPage={20} currentPage={1} handleChangePage={handlePageChange}/>
                                 </div>
                             </div>
                         </div>

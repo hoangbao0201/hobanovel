@@ -10,6 +10,7 @@ export default function Document() {
                     href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600;700;900&display=swap"
                     rel="stylesheet"
                 />
+                <meta name="google-site-verification" content="MyiHo-vH-5dqYMND4Ng9rGSlbJp6doQWSXlfclnsqSo" />
                 <script
                     async
                     src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6688547661590907"

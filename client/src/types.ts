@@ -136,9 +136,27 @@ export interface SelectType {
     label: string
 }
 
+// ---------------------
+export interface ChapterViewersType {
+    
+    chapterViewerId: string
+    
+    views: number
+    chapterId: string
+    userId: string
+
+
+    createdAt: Date
+    updatedAt: Date
+}
+
+
 
 
 // ----------------------------------------------- //
+export type NovelResType = Pick<NovelType, 'title' | 'novelId' | 'slug' | 'chapterCount' | 'thumbnailUrl' | 'imageBlurHash' | 'description' | 'category' | 'createdAt' | 'author'> & {
+    countPage: number
+}
 
 export type NovelBySlugType = Pick<NovelType, 'novelId' | 'slug' | 'title' | 'chapterCount' | 'thumbnailUrl' | 'imageBlurHash' | 'description' | 'author' | 'category' | 'personality' | 'scene' | 'classify' | 'viewFrame' | 'createdAt'> & {
     newChapterCount: number;

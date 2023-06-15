@@ -17,6 +17,7 @@ import {
     followNovelHandle,
     unfollowNovelHandle,
     getAdvancedNovelHandle,
+    getFollowsNovelHandle,
 } from "../services/novel.services";
 import { HistoryReadingType, NovelFollowerType, NovelType } from "../types";
 
@@ -519,6 +520,34 @@ export const getReadingNovel = async (req: Request, res: Response) => {
             success: true,
             message: "Get reading novels successful",
             novels: readingNovelRes.data
+        })
+        
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: `Internal server error ${error}`,
+        });
+    }
+}
+
+// Follow novel /api/novels/get/follows/:novelId
+export const getFollowsNovel = async (req: Request, res: Response) => {
+    try {
+        const { page = 1 } = req.query
+        
+        const followNovelRes = await getFollowsNovelHandle({ userId: res.locals.user.userId, page } as Pick<NovelFollowerType, 'userId'> & { page: number })
+        if(!followNovelRes.success) {
+            return res.status(400).json({
+                success: false,
+                message: "Follow novel Error",
+                error: followNovelRes.error,
+            })
+        }
+        
+        return res.json({
+            success: true,
+            message: "Follow novel successful",
+            follows: followNovelRes.data
         })
         
     } catch (error) {

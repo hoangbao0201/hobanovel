@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { createChapterByDataHandle, getChapterDetailHandle, getDataChapterByUrlMTCHandle, increaseViewChapterHandle } from "../services/chapter.services";
-import { ChapterType } from "../types";
+import { ChapterType, ChapterViewersType } from "../types";
 
 // Create Novel By Data | /create-by-url/:slug/:chapterNumber
 export const createChapterByUrl = async (req: Request, res: Response) => {
@@ -87,7 +87,8 @@ export const getChapterDetailBySlug = async (req: Request, res: Response) => {
 // Increase View Chapter | /api/chapters/increase/view/:chapterId
 export const increaseViewChapter = async (req: Request, res: Response) => {
     try {
-        let { chapterId } : any = req.params
+        const { chapterId } : any = req.params
+        const { userId } : any = req.query
         if(!chapterId) {
             return res.status(400).json({
                 success: false,
@@ -95,7 +96,7 @@ export const increaseViewChapter = async (req: Request, res: Response) => {
             })
         }
         
-        const existingChapter = await increaseViewChapterHandle({ chapterId } as ChapterType);
+        const existingChapter = await increaseViewChapterHandle({ userId, chapterId } as ChapterViewersType);
         if(!existingChapter.success) {
             return res.status(400).json({
                 success: false,
@@ -107,6 +108,7 @@ export const increaseViewChapter = async (req: Request, res: Response) => {
         return res.json({
             success: true,
             message: "Increase view novel successful",
+            data: existingChapter
         })
     } catch (error) {
         return res.status(500).json({

@@ -172,49 +172,6 @@ export const getReadingNovelHandle = async (page: number) => {
     }
 };
 
-export const followNovelHandle = async (data : Pick<NovelFollowerType, 'novelId'> & { token: string }) => {
-    try {
-        const { novelId, token } = data
-        const followNovelRes = await axios.post(
-            `${apiUrl}/api/novels/follow/${novelId}`, {}, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-        if (followNovelRes.data.success) {
-            // throw new Error()
-            return null;
-        }
-    
-        return followNovelRes;
-    } catch (error) {
-        // console.log(error)
-        return null;
-    }
-};
-export const unfollowNovelHandle = async (data : Pick<NovelFollowerType, 'novelId'> & { token: string }) => {
-    try {
-        const { novelId, token } = data
-        const followNovelRes = await axios.post(
-            `${apiUrl}/api/novels/unfollow/${novelId}`, {}, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-
-        return followNovelRes.data;
-    } catch (error) {
-        if(axios.isAxiosError(error) && error.response?.data) {
-            return error.response.data;
-        } else {
-            return {
-                success: false,
-                message: (error as Error).message
-            };
-        }
-    }
-};
-
 export const advancedSearchNovelHandle = async (query: string) => {
     try {
         const getNovels = await axios.get(

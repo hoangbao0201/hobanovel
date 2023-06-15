@@ -31,7 +31,7 @@ export const NavOver = ({ isShow = false } : NavOverProps) => {
                         <Link href={`/`}>Hot</Link>
                     </li>
                     <li className="py-2">
-                        <Link href={`/`}>Theo dõi</Link>
+                        <Link href={`/theo-doi`}>Theo dõi</Link>
                     </li>
                     <li className="py-2">
                         <Link href={`/`}>Lịch sử</Link>

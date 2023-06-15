@@ -110,3 +110,18 @@ export interface SelectType {
     value: string
     label: string
 }
+
+
+// ---------------------
+export interface ChapterViewersType {
+    
+    chapterViewerId: string
+    
+    views: number
+    chapterId: string
+    userId: string
+
+
+    createdAt: Date
+    updatedAt: Date
+}

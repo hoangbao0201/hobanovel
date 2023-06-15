@@ -25,11 +25,11 @@ import {
 import { convertTime } from "@/utils/convertTime";
 import WrapperLayout from "@/components/Layout/WrapperLayout";
 import { getCountWords } from "@/utils/getCountWords";
-import { followNovelHandle, readingNovelHandle, unfollowNovelHandle } from "@/services/novels.services";
-import { getAccessToken, getAccessTokenOnServer } from "@/services/cookies.servies";
+import { readingNovelHandle } from "@/services/novels.services";
+import { getAccessToken } from "@/services/cookies.servies";
 import { useSelector } from "react-redux";
-import { LoadingButton, LoadingSearch } from "@/components/Layout/LoadingLayout";
-import { checkFollowNovelHandle } from "@/services/follow.services";
+import { LoadingButton } from "@/components/Layout/LoadingLayout";
+import { checkFollowNovelHandle, followNovelHandle, unfollowNovelHandle } from "@/services/follow.services";
 import Head from "@/components/Share/Head";
 
 interface Params extends ParsedUrlQuery {
@@ -51,7 +51,7 @@ const ChapterDetailPage = ({ chapter }: ChapterDetailPageProps) => {
     useEffect(() => {
         if (chapter) {
             const timeoutId = setTimeout(() => {
-                increaseViewChapterHandle(chapter.chapterId);
+                increaseViewChapterHandle(`${chapter.chapterId}?userId=${isAuthenticated ? currentUser.userId : ''}`);
             }, 5000);
 
             return () => {
@@ -164,12 +164,11 @@ const ChapterDetailPage = ({ chapter }: ChapterDetailPageProps) => {
                 token: token
             }
             const followNovelRes = await followNovelHandle(dataFollowNovel as Pick<NovelFollowerType , 'novelId'> & { token: string });
-            // if(followNovelRes?.data.success) {
-                
-            //     return
-            // }
+            if(followNovelRes?.success) {
+                setIsFollow(true)
+                return
+            }
             
-            setIsFollow(true)
         } catch (error) {
             console.log(error)
         }
@@ -192,12 +191,11 @@ const ChapterDetailPage = ({ chapter }: ChapterDetailPageProps) => {
                 token: token
             }
             const followNovelRes = await unfollowNovelHandle(dataFollowNovel as Pick<NovelFollowerType , 'novelId'> & { token: string });
-            // if(followNovelRes?.data.success) {
-                
-            //     return
-            // }
+            if(followNovelRes?.success) {
+                setIsFollow(false)
+                return
+            }
 
-            setIsFollow(false)
         } catch (error) {
             console.log(error)
         }

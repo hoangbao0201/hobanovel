@@ -6,7 +6,7 @@ import pool from "../library/connectMySQL";
 import { HistoryReadingType, NovelFollowerType, NovelType } from "../types";
 import { uploadThumbnailNovelByUrlHandle } from "./image.services";
 import { getBlurDataURL } from "../utils/getBlurDataURL";
-import { NovelSearchConditions, getAdvancedNovelConditions } from "../middleware/conditionsQuery";
+import { NovelSearchConditions, fieldGetNovel, getAdvancedNovelConditions } from "../middleware/conditionsQuery";
 import { PROPERTIES_NOVEL } from "../constants";
 
 export const createNovelByDataHandle = async (data : NovelType, userId : string) => {
@@ -176,7 +176,7 @@ export const getNovelBySlugHandle = async ({ slug } : NovelType) => {
                 AVG(reviews.mediumScore) AS mediumScore, 
                 novels.category, novels.personality, novels.scene, novels.classify, novels.viewFrame, novels.createdAt,
                 COUNT(IF(chapters.createdAt >= DATE_SUB(NOW(), INTERVAL 1 WEEK), 1, NULL)) as newChapterCount,
-                chapterCount,
+                novels.chapterCount,
                 SUM(chapters.views) AS views,
                 history_reading.chapterRead
             FROM novels
@@ -443,6 +443,37 @@ export const getReadingNovelHandle = async ({ userId, page } : HistoryReadingTyp
         return {
             success: true,
             data: rows as HistoryReadingType[]
+        };
+    } catch (error) {
+        return {
+            success: false,
+            error: error
+        }
+    }
+};
+
+// Follow Novel
+
+export const getFollowsNovelHandle = async ({ userId, page } : Pick<NovelFollowerType, 'userId'> & { page: number }) => {
+    try {
+        const connection = await pool.getConnection();
+
+        const qGetFollowsNovel = `
+            SELECT ${fieldGetNovel} FROM novel_followers 
+                LEFT JOIN novels ON novels.novelId = novel_followers.novelId
+                LEFT JOIN users ON users.userId = novels.userId
+            WHERE novel_followers.userId = ?
+            ORDER BY novels.updatedAt DESC
+            LIMIT 10 OFFSET ?
+        `;
+
+        const [rows] : any = await connection.query(qGetFollowsNovel, [userId, (page-1)*10]);
+
+        connection.release();
+
+        return {
+            success: true,
+            data: rows
         };
     } catch (error) {
         return {

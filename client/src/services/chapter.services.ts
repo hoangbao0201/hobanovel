@@ -18,15 +18,22 @@ export const getChapterDetailHandle = async (slug: string, chapterNumber: string
     }
 }
 
-export const increaseViewChapterHandle = (chapterId : string) => {
+export const increaseViewChapterHandle = (params : string) => {
     try {
-        if(!chapterId) {
-            return null
+        if(!params) {
+            return;
         }
-        axios.post(`${apiUrl}/api/chapters/increase/view/${chapterId}`)
+        axios.post(`${apiUrl}/api/chapters/increase/view/${params}`)
+
     } catch (error) {
-        // console.log(error)
-        return error
+        if(axios.isAxiosError(error) && error.response?.data) {
+            return error.response.data;
+        } else {
+            return {
+                success: false,
+                message: (error as Error).message
+            };
+        }
     }
 }
 

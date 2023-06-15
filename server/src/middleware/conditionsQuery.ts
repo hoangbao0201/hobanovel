@@ -108,10 +108,12 @@ export const NovelSearchConditions = (data : Partial<NovelType>) => {
     return { conditions: conbinedConditions, params, values: conbinedValues }
 }
 
+export const fieldGetNovel = 'novels.title, novels.novelId, novels.slug, LEFT(novels.description, 150) as description, novels.thumbnailUrl, novels.imageBlurHash, novels.chapterCount, novels.category, novels.createdAt, users.name as author'
+
 export const getAdvancedNovelConditions = (data : any) => {
     const { novelId = '', userId = '', title = '', sort_by = '', page = '1' } = data
 
-    const field = 'novels.title, novels.novelId, novels.slug, LEFT(novels.description, 150) as description, novels.thumbnailUrl, novels.chapterCount, novels.category, novels.createdAt, users.name as author'
+    
     const conditions : string[] = []
     const params : Array<string | number> = []
 
@@ -134,7 +136,7 @@ export const getAdvancedNovelConditions = (data : any) => {
     // -----
 
     const query = `
-        SELECT ${field} FROM novels
+        SELECT ${fieldGetNovel} FROM novels
             LEFT JOIN users ON users.userId = novels.userId
         ${conbinedConditions.length > 0 ? 'WHERE ' + conbinedConditions : ''}
         LIMIT 20 OFFSET ${(page-1)*20}
@@ -144,7 +146,7 @@ export const getAdvancedNovelConditions = (data : any) => {
         case 'view_most':
             return {
                 query: (`
-                    SELECT ${field} FROM novels
+                    SELECT ${fieldGetNovel} FROM novels
                         LEFT JOIN chapters ON chapters.novelId = novels.novelId
                         LEFT JOIN users ON users.userId = novels.userId
                     ${conbinedConditions.length > 0 ? 'WHERE ' + conbinedConditions : ''}
@@ -157,7 +159,7 @@ export const getAdvancedNovelConditions = (data : any) => {
         case 'view_day':
             return {
                 query: (`
-                    SELECT ${field} FROM novels
+                    SELECT ${fieldGetNovel} FROM novels
                         LEFT JOIN chapters ON chapters.novelId = novels.novelId
                         LEFT JOIN users ON users.userId = novels.userId
                     ${conbinedConditions.length > 0 ? 'WHERE ' + conbinedConditions : ''}
@@ -170,7 +172,7 @@ export const getAdvancedNovelConditions = (data : any) => {
         case 'review_count':
             return {
                 query: (`
-                    SELECT ${field} FROM novels
+                    SELECT ${fieldGetNovel} FROM novels
                         LEFT JOIN reviews ON reviews.novelId = novels.novelId AND reviews.isRating IS TRUE
                         LEFT JOIN users ON users.userId = novels.userId
                     ${conbinedConditions.length > 0 ? 'WHERE ' + conbinedConditions : ''}
@@ -183,7 +185,7 @@ export const getAdvancedNovelConditions = (data : any) => {
         case 'review_score':
             return {
                 query: (`
-                    SELECT ${field} FROM novels
+                    SELECT ${fieldGetNovel} FROM novels
                         LEFT JOIN reviews ON reviews.novelId = novels.novelId AND reviews.isRating IS TRUE
                         LEFT JOIN users ON users.userId = novels.userId
                     ${conbinedConditions.length > 0 ? 'WHERE ' + conbinedConditions : ''}
@@ -196,7 +198,7 @@ export const getAdvancedNovelConditions = (data : any) => {
         case 'chapter_count':
             return {
                 query: (`
-                    SELECT ${field} FROM novels
+                    SELECT ${fieldGetNovel} FROM novels
                         LEFT JOIN chapters ON chapters.novelId = novels.novelId
                         LEFT JOIN users ON users.userId = novels.userId
                     ${conbinedConditions.length > 0 ? 'WHERE ' + conbinedConditions : ''}
@@ -209,7 +211,7 @@ export const getAdvancedNovelConditions = (data : any) => {
         case 'chapter_new':
             return {
                 query: (`
-                    SELECT ${field} FROM novels
+                    SELECT ${fieldGetNovel} FROM novels
                         LEFT JOIN chapters ON chapters.novelId = novels.novelId
                         LEFT JOIN users ON users.userId = novels.userId
                     ${conbinedConditions.length > 0 ? 'WHERE ' + conbinedConditions : ''}
@@ -222,9 +224,10 @@ export const getAdvancedNovelConditions = (data : any) => {
         case 'novel_new':
             return {
                 query: (`
-                    SELECT ${field} FROM novels
+                    SELECT ${fieldGetNovel} FROM novels
                         LEFT JOIN users ON users.userId = novels.userId
                     ${conbinedConditions.length > 0 ? 'WHERE ' + conbinedConditions : ''}
+                    GROUP BY novels.novelId
                     ORDER BY novels.createdAt DESC
                     LIMIT 20 OFFSET ${(page-1)*20}
                 `),
@@ -233,7 +236,7 @@ export const getAdvancedNovelConditions = (data : any) => {
         case 'follow_count':
             return {
                 query: (`
-                    SELECT ${field} FROM novels
+                    SELECT ${fieldGetNovel} FROM novels
                         LEFT JOIN novel_followers ON novel_followers.novelId = novels.novelId
                         LEFT JOIN users ON users.userId = novels.userId
                     ${conbinedConditions.length > 0 ? 'WHERE ' + conbinedConditions : ''}
@@ -246,7 +249,7 @@ export const getAdvancedNovelConditions = (data : any) => {
         case 'comment_count':
             return {
                 query: (`
-                    SELECT ${field} FROM novels
+                    SELECT ${fieldGetNovel} FROM novels
                         LEFT JOIN comments ON comments.novelId = novels.novelId
                         LEFT JOIN users ON users.userId = novels.userId
                     ${conbinedConditions.length > 0 ? 'WHERE ' + conbinedConditions : ''}

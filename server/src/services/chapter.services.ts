@@ -2,7 +2,7 @@ import axios from "axios";
 import * as cheerio from "cheerio";
 import pool from "../library/connectMySQL";
 
-import { ChapterType } from "../types";
+import { ChapterType, ChapterViewersType } from "../types";
 
 export const getDataChapterByUrlMTCHandle = async ({ novelSlug, chapterNumber } : ChapterType) => {
     try {
@@ -129,23 +129,37 @@ export const getChapterBasicHandle = async ({ novelSlug, chapterNumber } : Chapt
     }
 };
 
-export const increaseViewChapterHandle = async ({ chapterId } : ChapterType) => {
+export const increaseViewChapterHandle = async ({ userId, chapterId } : ChapterViewersType) => {
     try {
         const connection = await pool.getConnection();
 
-        const qCreateChapter = `
-            UPDATE chapters
-            SET views = views + 1
-            WHERE chapterId = ?
-        `;
+        const conditionsInc = `userId ${userId ? '= ?' : 'IS NULL'} AND chapterId = ? `
+        let paramsInc = [chapterId]
+        if(userId) {
+            paramsInc.unshift(userId)
+        }
 
-        const [rows] = await connection.query(qCreateChapter, chapterId);
+        const qIncreaseViewChapter = `
+            UPDATE chapter_viewers
+            SET chapter_viewers.views = chapter_viewers.views + 1
+            WHERE ${conditionsInc}
+        `
+        const [rowsInc] : any = await connection.query(qIncreaseViewChapter, paramsInc);
+
+        if(rowsInc.affectedRows === 0) {
+            const qCreateChapter = `
+                INSERT INTO chapter_viewers(userId, chapterId)
+                VALUES (?,?)
+            `;
+
+            await connection.query(qCreateChapter, [userId || null, chapterId]);
+        }
 
         connection.release();
 
         return {
             success: true,
-            data: rows
+            data: rowsInc
         }
     } catch (error) {
         return {
