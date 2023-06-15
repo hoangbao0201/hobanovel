@@ -1,6 +1,7 @@
 import Link from "next/link";
 
-import { NovelType } from "@/types";
+import LazyLoad from "react-lazy-load";
+
 import { placeholderBlurhash } from "@/constants";
 import { useSelector } from "react-redux";
 import BlurImage from "@/components/Layout/BlurImage";
@@ -23,16 +24,18 @@ const Reading = ({ readingNovel } : ReadingProps) => {
                                 readingNovel?.map((novel : any, index: number) => {
                                     return (
                                         <div key={index} className="flex mb-3">
-                                            <Link href={`/truyen/${novel.slug}`} className="w-10 h-14 overflow-hidden shadow align-middle inline-block">
-                                                <BlurImage
-                                                    width={38}
-                                                    height={54}
-                                                    alt="image-demo"
-                                                    blurDataURL={novel.imageBlurHash || placeholderBlurhash}
-                                                    className="group-hover:scale-105 group-hover:duration-500 object-cover w-full h-full"
-                                                    placeholder="blur"
-                                                    src={novel.thumbnailUrl}
-                                                />
+                                            <Link href={`/truyen/${novel.slug}`}>
+                                                <LazyLoad className="relative w-10 h-14 overflow-hidden shadow">
+                                                    <BlurImage
+                                                        width={38}
+                                                        height={54}
+                                                        alt="image-demo"
+                                                        blurDataURL={novel.imageBlurHash || placeholderBlurhash}
+                                                        className="group-hover:scale-105 group-hover:duration-500 object-cover w-full h-full"
+                                                        placeholder="blur"
+                                                        src={novel.thumbnailUrl}
+                                                    />
+                                                </LazyLoad>
                                             </Link>
                                             <div className="flex-1 ml-3">
                                                 <Link className="block" href={`/truyen/${novel.slug}`}>

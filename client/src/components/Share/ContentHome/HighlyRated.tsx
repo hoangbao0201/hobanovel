@@ -1,6 +1,9 @@
-import { placeholderBlurhash } from "@/constants";
-import { NovelType } from "@/types";
 import Link from "next/link";
+
+import LazyLoad from "react-lazy-load";
+
+import { NovelType } from "@/types";
+import { placeholderBlurhash } from "@/constants";
 import BlurImage from "../../Layout/BlurImage";
 import { PROPERTIES_NOVEL } from "@/constants/data";
 
@@ -22,16 +25,18 @@ const HighlyRated = ({ novels = [] } : HighlyRatedProps) => {
                         novels.map((novel) => {
                             return (
                                 <div key={novel.novelId} className="flex">
-                                    <Link href={`/truyen/${novel.slug}`} className="w-20 h-28 mt-2 overflow-hidden shadow align-middle inline-block">
-                                        <BlurImage
-                                            width={80}
-                                            height={120}
-                                            alt="image-demo"
-                                            blurDataURL={novel.imageBlurHash || placeholderBlurhash}
-                                            className="group-hover:scale-105 group-hover:duration-500 object-cover w-20 h-28"
-                                            placeholder="blur"
-                                            src={novel.thumbnailUrl}
-                                        />
+                                    <Link href={`/truyen/${novel.slug}`}>
+                                        <LazyLoad className="relative w-20 h-28 mt-2 overflow-hidden shadow">
+                                            <BlurImage
+                                                width={80}
+                                                height={120}
+                                                alt="image-demo"
+                                                blurDataURL={novel.imageBlurHash || placeholderBlurhash}
+                                                className="group-hover:scale-105 group-hover:duration-500 object-cover w-20 h-28"
+                                                placeholder="blur"
+                                                src={novel.thumbnailUrl}
+                                            />
+                                        </LazyLoad>
                                     </Link>
                                     <div className="flex-1 ml-3">
                                         <h2 className="mb-2 text-base line-clamp-1 font-semibold">

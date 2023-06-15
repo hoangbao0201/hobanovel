@@ -1,8 +1,10 @@
 import Link from "next/link";
 
+import LazyLoad from "react-lazy-load";
+
 import { placeholderBlurhash } from "@/constants";
 import { convertFromRaw } from "draft-js";
-import { NovelType, ReviewType } from "@/types";
+import { ReviewType } from "@/types";
 import BlurImage from "@/components/Layout/BlurImage";
 
 interface LatestReviewsProps {
@@ -25,16 +27,18 @@ const LatestReviews = ({ reviews } : LatestReviewsProps) => {
                         return (
                             <div key={review.reviewId} className="p-4 rounded-lg bg-gray-100 mb-3">
                                 <div className="flex mb-4 items-center">
-                                    <Link href={`/user/1`} className="w-12 h-12 rounded-full overflow-hidden shadow align-middle inline-block">
-                                        <BlurImage
-                                            width={48}
-                                            height={48}
-                                            alt="image-demo"
-                                            blurDataURL={placeholderBlurhash}
-                                            className="group-hover:scale-105 group-hover:duration-500 object-cover w-12 h-12"
-                                            placeholder="blur"
-                                            src="/images/avatar-default-2.png"
-                                        />
+                                    <Link href={`/user/1`}>
+                                        <LazyLoad className="relative w-12 h-12 overflow-hidden shadow rounded-full align-middle">
+                                            <BlurImage
+                                                width={48}
+                                                height={48}
+                                                alt="image-demo"
+                                                blurDataURL={placeholderBlurhash}
+                                                className="group-hover:scale-105 group-hover:duration-500 object-cover w-12 h-12"
+                                                placeholder="blur"
+                                                src="/images/avatar-default-2.png"
+                                            />
+                                        </LazyLoad>
                                     </Link>
                                     <div className="flex-1 ml-4">
                                         <h2 className="line-clamp-1 text-base w-full font-semibold mb-2">

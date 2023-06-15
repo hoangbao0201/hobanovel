@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import LazyLoad from "react-lazy-load";
+
 import { NovelType } from "@/types";
 import { placeholderBlurhash } from "@/constants";
 import BlurImage from "@/components/Layout/BlurImage";
@@ -21,16 +23,18 @@ const Outstanding = ({ novels = [] } : OutstandingProps) => {
                         novels.map((novel : NovelType) => {
                             return (
                                 <div key={novel.novelId} className="flex">
-                                    <Link href={`/truyen/${novel.slug}`} className="relative w-20 h-28 overflow-hidden shadow">
-                                        <BlurImage
-                                            width={85}
-                                            height={125}
-                                            alt="image-demo"
-                                            blurDataURL={novel.imageBlurHash || placeholderBlurhash}
-                                            className="group-hover:scale-105 group-hover:duration-500 object-cover h-full w-full"
-                                            placeholder="blur"
-                                            src={novel.thumbnailUrl || "/images/novel-default.png"}
-                                        />
+                                    <Link href={`/truyen/${novel.slug}`}>
+                                        <LazyLoad className="relative w-20 h-28 overflow-hidden shadow">
+                                            <BlurImage
+                                                width={85}
+                                                height={125}
+                                                alt="image-demo"
+                                                blurDataURL={novel.imageBlurHash || placeholderBlurhash}
+                                                className="group-hover:scale-105 group-hover:duration-500 object-cover h-full w-full"
+                                                placeholder="blur"
+                                                src={novel.thumbnailUrl || "/images/novel-default.png"}
+                                            />
+                                        </LazyLoad>
                                     </Link>
                                     <div className="flex-1 ml-3">
                                         <h2 className="mb-2 text-base line-clamp-1 font-semibold">
