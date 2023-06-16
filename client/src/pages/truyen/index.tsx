@@ -402,8 +402,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
         const getNovels = await advancedSearchNovelHandle(queryString || '')
 
-        console.log(queryString)
-
         if(!getNovels.success) {
             return {
                 props: {

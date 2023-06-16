@@ -42,7 +42,6 @@ const dataConditionSearchNovel = [
 
 const AdminBannersPage = ({ banners, bannersMobile }: AdminBannersPageProps) => {
     const [dataImage, setDataImage] = useState(null);
-    const [isShowing, setIsShowing] = useState(false);
     const [listBanners, setListBanners] = useState<BannersCreateType[]>(banners || []);
     const [listBannersMobile, setListBannersMobile] = useState<BannersCreateType[]>(bannersMobile || []);
     const [isLoadingButton, setIsLoadingButton] = useState(false);
@@ -91,43 +90,43 @@ const AdminBannersPage = ({ banners, bannersMobile }: AdminBannersPageProps) => 
             };
 
             console.log(isMobile)
-            // const uploadBanners: any = await addBannersHandle(
-            //     dataBanners as Pick<BannersType, 'novelId' | 'isMobile'> & { token: string; formData: FormData }
-            // );
+            const uploadBanners: any = await addBannersHandle(
+                dataBanners as Pick<BannersType, 'novelId' | 'isMobile'> & { token: string; formData: FormData }
+            );
 
-            // if (uploadBanners?.data?.success) {
-            //     const banners  = uploadBanners;
-            //     if(isMobile) {
-            //         setListBannersMobile([
-            //             {   
-            //                 title: valueInputSearch || "Lỗi hiển thị",
-            //                 novelId: idNovelSelect || "1",
-            //                 bannersId: banners.bannersId,
-            //                 bannersUrl: urlNewImage || "",
-            //                 imageBlurHash: banners.imageBlurHash,
-            //                 bannersPublicId: banners.bannersPublicId,
-            //                 createdAt: new Date(),
-            //                 updatedAt: new Date(),
-            //             },
-            //             ...listBannersMobile,
-            //         ]) as any;
-            //     }
-            //     else {
-            //         setListBanners([
-            //             {   
-            //                 title: valueInputSearch || "Lỗi hiển thị",
-            //                 novelId: idNovelSelect || "1",
-            //                 bannersId: banners.bannersId,
-            //                 bannersUrl: urlNewImage || "",
-            //                 imageBlurHash: banners.imageBlurHash,
-            //                 bannersPublicId: banners.bannersPublicId,
-            //                 createdAt: new Date(),
-            //                 updatedAt: new Date(),
-            //             },
-            //             ...listBanners,
-            //         ]) as any;
-            //     }
-            // }
+            if (uploadBanners?.data?.success) {
+                const banners  = uploadBanners;
+                if(isMobile) {
+                    setListBannersMobile([
+                        {   
+                            title: valueInputSearch || "Lỗi hiển thị",
+                            novelId: idNovelSelect || "1",
+                            bannersId: banners.bannersId,
+                            bannersUrl: urlNewImage || "",
+                            imageBlurHash: banners.imageBlurHash,
+                            bannersPublicId: banners.bannersPublicId,
+                            createdAt: new Date(),
+                            updatedAt: new Date(),
+                        },
+                        ...listBannersMobile,
+                    ]) as any;
+                }    
+                else {
+                    setListBanners([
+                        {   
+                            title: valueInputSearch || "Lỗi hiển thị",
+                            novelId: idNovelSelect || "1",
+                            bannersId: banners.bannersId,
+                            bannersUrl: urlNewImage || "",
+                            imageBlurHash: banners.imageBlurHash,
+                            bannersPublicId: banners.bannersPublicId,
+                            createdAt: new Date(),
+                            updatedAt: new Date(),
+                        },
+                        ...listBanners,
+                    ]) as any;
+                }
+            }
 
             // SET STATE DEFAULT
             setIsLoadingButton(false);
@@ -203,7 +202,7 @@ const AdminBannersPage = ({ banners, bannersMobile }: AdminBannersPageProps) => 
         };
     }, []);
 
-    console.log("Banners mobile: ", bannersMobile)
+    console.log("Banners mobile: ", banners)
 
     return (
         <>
@@ -437,6 +436,12 @@ const AdminBannersPage = ({ banners, bannersMobile }: AdminBannersPageProps) => 
                                                     itemBanner.bannersUrl ||
                                                     "/images/novel-default.png"
                                                 }
+                                                onError={(e) => {
+                                                    const target = e.target as HTMLImageElement;
+                                                    target.onerror = null;
+                                                    target.src = "/images/novel-default.png"
+                                                    target.alt = "image default"
+                                                }}
                                             />
                                         </div>
                                         <h3 className="text-gray-900 text-base text-center font-semibold mt-1">

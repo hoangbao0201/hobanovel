@@ -111,11 +111,6 @@ export const getDataNovelByUrlMTCHandle = async (url : string) => {
             dataNovel.viewFrame = ob?.id || undefined
         }
 
-
-
-
-
-
         return {
             ...dataNovel,
             thumbnailUrl: thumbnailImage?.url || null,

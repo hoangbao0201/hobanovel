@@ -18,7 +18,7 @@ export const addBannerHandle = async (data : BannersType) => {
 
         return {
             success: true,
-            data: rows as BannersType[]
+            data: rows
         }
 
     } catch (error) {
@@ -63,7 +63,7 @@ export const getMultipleBannerHandle = async (isMobile : boolean) => {
 
         const qGetBanners = `
             SELECT banners.*, novels.title FROM banners
-                INNER JOIN novels ON novels.novelId = banners.bannersId
+                INNER JOIN novels ON novels.novelId = banners.novelId
             WHERE banners.isMobile = ?
             ORDER BY createdAt DESC
             LIMIT 6

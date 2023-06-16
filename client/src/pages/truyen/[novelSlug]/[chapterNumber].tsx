@@ -31,6 +31,8 @@ import { useSelector } from "react-redux";
 import { LoadingButton } from "@/components/Layout/LoadingLayout";
 import { checkFollowNovelHandle, followNovelHandle, unfollowNovelHandle } from "@/services/follow.services";
 import Head from "@/components/Share/Head";
+import OptionsListChapter from "@/components/Share/ContentChapter/OptionsListChapter";
+import { useMediaQuery } from "usehooks-ts";
 
 interface Params extends ParsedUrlQuery {
     slug: string;
@@ -42,10 +44,13 @@ export interface ChapterDetailPageProps {
 
 const ChapterDetailPage = ({ chapter }: ChapterDetailPageProps) => {
 
+    const matchesMobile = useMediaQuery("(max-width: 640px)");
+
     const paginationRef = useRef<HTMLDivElement>(null)
     const paginationFakeRef = useRef<HTMLDivElement>(null)
     const [isFixed, setIsFixed] = useState(false);
     const [isFollow, setIsFollow] = useState<null | boolean>(null)
+    const [isOptionsListChapter, setIsOptionsListChapter] = useState<boolean>(false)
     const { isAuthenticated, currentUser, userLoading } = useSelector((state: any) => state.user);
 
     useEffect(() => {
@@ -201,6 +206,12 @@ const ChapterDetailPage = ({ chapter }: ChapterDetailPageProps) => {
         }
     }
 
+    console.log("132: ", isOptionsListChapter)
+
+    const handleChangeOntionsListChapter = () => {
+        setIsOptionsListChapter(value => !value)
+    }
+
     if (!chapter) {
         return null;
     }
@@ -213,6 +224,12 @@ const ChapterDetailPage = ({ chapter }: ChapterDetailPageProps) => {
 
                 <WrapperLayout bg="bg-[#eae4d3]" className="lg:max-w-5xl">
                     <div className="py-4">
+
+
+                        <OptionsListChapter slug={chapter.novelSlug} isShow={isOptionsListChapter} handle={handleChangeOntionsListChapter} chapterNumber={200}/>
+
+
+
                         {/* Pagination */}
                         <div className="border-b pb-3 mb-7 mt-4">
                             <div ref={paginationRef} className={`transition-all top-0 left-0 right-0 py-1 ${isFixed ? 'fixed bg-gray-200' : ''}`}>
@@ -236,12 +253,9 @@ const ChapterDetailPage = ({ chapter }: ChapterDetailPageProps) => {
                                             <i className="w-4 h-4 fill-white block">{iconChevronLeft}</i>
                                         </span>
                                     </Link>
-                                    <select>
-                                        <option>Chapter 1 </option>
-                                        <option>Chapter 2 </option>
-                                        <option>Chapter 3 </option>
-                                        <option>Chapter 4 </option>
-                                    </select>
+                                    <div className="bg-white px-2 h-9 py-2 select-none cursor-pointer border rounded-sm" onClick={handleChangeOntionsListChapter}>
+                                        Chapter {chapter?.chapterNumber || 1}
+                                    </div>
                                     <Link
                                         href={`/truyen/${chapter?.novelSlug}/chuong-${
                                             chapter?.chapterNumber + 1

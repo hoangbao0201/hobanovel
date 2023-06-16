@@ -28,7 +28,7 @@ export const addBanners = async (req: Request, res: Response) => {
 
         const hashUrl = await getBlurDataURL(dataImage.url)
 
-        const bannersResponse : any = await addBannerHandle({ novelId, bannersUrl: dataImage.url, imageBlurHash: hashUrl, bannersPublicId: dataImage.public_id, isMobile: isMobile === 0 ? false : true } as BannersType);
+        const bannersResponse : any = await addBannerHandle({ novelId, bannersUrl: dataImage.url, imageBlurHash: hashUrl, bannersPublicId: dataImage.public_id, isMobile: isMobile === '0' ? false : true } as BannersType);
         if(!bannersResponse.success) {
             return res.status(400).json({
                 success: false,
