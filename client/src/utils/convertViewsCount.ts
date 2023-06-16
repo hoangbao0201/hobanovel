@@ -1,5 +1,9 @@
 export const convertViewsCount = (number: number) => {
-    // return number
+    
+    if(!number) {
+        return 0;
+    }
+    
     if (number < 1000) {
         return number;
     } else if (number >= 1000 && number < 1_000_000) {

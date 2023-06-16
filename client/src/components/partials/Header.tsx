@@ -91,13 +91,13 @@ const Header = ({ autoHidden = true } : HeaderProps) => {
 
 
     // Hiddent when change page
-    useEffect(() => {
+    // useEffect(() => {
 
-        router.events.on("routeChangeStart", () => setIsNavOver(false));
-        return () => {
-            router.events.off("routeChangeStart", () => setIsNavOver(false));
-        }
-    }, [])
+    //     router.events.on("routeChangeStart", () => setIsNavOver(false));
+    //     return () => {
+    //         router.events.off("routeChangeStart", () => setIsNavOver(false));
+    //     }
+    // }, [])
 
     return (
         <>
@@ -187,26 +187,84 @@ const Header = ({ autoHidden = true } : HeaderProps) => {
                                     <LoadingForm />
                                 ) : isAuthenticated ? (
                                     <div className="relative">
-                                        <span className="h-[50px] flex items-center">
-                                            <button
-                                                onClick={() => setIsDropdownUser(true)}
-                                                className="w-9 h-9 outline-none rounded-full overflow-hidden shadow align-middle inline-block"
-                                            >
-                                                <BlurImage
-                                                    width={40}
-                                                    height={40}
-                                                    alt="image-demo"
-                                                    blurDataURL={placeholderBlurhash}
-                                                    className="group-hover:scale-105 group-hover:duration-500 object-cover w-9 h-9"
-                                                    placeholder="blur"
-                                                    src={
-                                                        currentUser.avatarUrl ||
-                                                        "/images/avatar-default-2.png"
-                                                    }
-                                                />
-                                            </button>
-                                        </span>
-                                        {
+                                        <Tippy
+                                            trigger="click"
+                                            arrow={false}
+                                            placement='bottom-end'
+                                            interactive={true}
+                                            className="top-0"
+                                            theme="light"
+                                            content={
+                                                (
+                                                    <>
+                                                        <div className="min-w-[230px]">
+                                                            <div className="flex items-center mb-3">
+                                                                <Image
+                                                                    width={44}
+                                                                    height={44}
+                                                                    alt="image-demo"
+                                                                    className="w-11 h-11 object-cover"
+                                                                    src={
+                                                                        currentUser.thumbnailUrl ||
+                                                                        "/images/avatar-default-2.png"
+                                                                    }
+                                                                />
+                                                                <div className="ml-3 flex-1 line-clamp-1">{currentUser.username}</div>
+                                                            </div>
+                                                            <div className="dropdown-content">
+                                                                {
+                                                                    currentUser.username === "admin" ? (
+                                                                        <Link href={`/admin`} className="hover:bg-gray-100 py-2 px-2 block cursor-pointer">
+                                                                            <span className="block w-full">Admin</span>
+                                                                        </Link>
+                                                                    ) : (
+                                                                        <Link href={`/user/${currentUser.username}`} className="hover:bg-gray-100 py-2 px-2 block cursor-pointer">
+                                                                            <span className="block w-full">Hồ sơ</span>
+                                                                        </Link>
+                                                                    )
+                                                                }
+                                                                <Link href={`/account`} className="hover:bg-gray-100 py-2 px-2 block cursor-pointer">
+                                                                    <span className="block w-full">Tài khoản</span>
+                                                                </Link>
+                                                                <Link href={`/truyen`} className="hover:bg-gray-100 py-2 px-2 block cursor-pointer">
+                                                                    <span className="block w-full">Tìm truyện</span>
+                                                                </Link>
+                                                                <Link href={`/creator`} target="_blank" className="hover:bg-gray-100 py-2 px-2 block cursor-pointer">
+                                                                    <span className="block w-full">Người sánh tạo</span>
+                                                                </Link>
+                                                                <div onClick={eventLogoutUser} className="hover:bg-gray-100 py-2 px-2 block cursor-pointer">
+                                                                    Đăng xuất
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </>
+                                                )
+                                            }
+                                        >
+                                            <span className="h-[50px] flex items-center">
+                                                <button
+                                                    // onClick={() => setIsDropdownUser(true)}
+                                                    className="w-9 h-9 outline-none rounded-full overflow-hidden shadow align-middle inline-block"
+                                                >
+                                                    <BlurImage
+                                                        width={40}
+                                                        height={40}
+                                                        alt="image-demo"
+                                                        blurDataURL={placeholderBlurhash}
+                                                        className="group-hover:scale-105 group-hover:duration-500 object-cover w-9 h-9"
+                                                        placeholder="blur"
+                                                        src={
+                                                            currentUser.avatarUrl ||
+                                                            "/images/avatar-default-2.png"
+                                                        }
+                                                    />
+                                                </button>
+                                            </span>
+                                        </Tippy>
+                                        
+
+
+                                        {/* {
                                             isDropdownUser && (
                                                 <div ref={userDropdownRef} className="drop-shadow-lg min-w-[230px] p-3 absolute bg-white top-12 right-0">
                                                     <div className="flex items-center mb-3">
@@ -249,7 +307,7 @@ const Header = ({ autoHidden = true } : HeaderProps) => {
                                                     </div>
                                                 </div>
                                             )
-                                        }
+                                        } */}
                                     </div>
                                 ) : (
                                     matchesMobile ? (

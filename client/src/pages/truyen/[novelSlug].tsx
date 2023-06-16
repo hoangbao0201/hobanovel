@@ -319,11 +319,11 @@ const NovelDetailPage = ({ token, tab, novel }: NovelDetailPageProps) => {
                                                     theme="light"
                                                     arrow={true}
                                                     delay={[500,0]}
-                                                    content={novel.views}
+                                                    content={novel.views || 0}
                                                 >
                                                     <div className="text-center cursor-default">
                                                         <span className="font-semibold">
-                                                            {convertViewsCount(novel.views)}
+                                                            {convertViewsCount(novel?.views) || 0}
                                                         </span>
                                                         <div className="text-base">Lượt đọc</div>
                                                     </div>

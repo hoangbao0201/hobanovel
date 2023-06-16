@@ -37,8 +37,9 @@ interface AdvencedSearchNovelPageProps {
     query: querySearchNovelProps
     sortBy: string
     novels?: NovelResType[]
-    currentPage: string
     test?: any
+    currentPage: number
+    countPage: number
 }
 
 const optionsSortByNew = [
@@ -50,7 +51,7 @@ const optionsSortByRating = [
     { label: "Điểm đánh giá", value: "Điểm đánh giá", id: 'review_score'},
 ]
 
-const AdvencedSearchNovelPage = ({ query, novels, sortBy, currentPage } : AdvencedSearchNovelPageProps) => {
+const AdvencedSearchNovelPage = ({ query, novels, sortBy, currentPage, countPage } : AdvencedSearchNovelPageProps) => {
     const router = useRouter()
     const matchesMobile = useMediaQuery("(max-width: 640px)");
 
@@ -92,17 +93,21 @@ const AdvencedSearchNovelPage = ({ query, novels, sortBy, currentPage } : Advenc
 
         const queryString = new URLSearchParams(querySearchNovel as any);
 
-        console.log(currentPage)
-
+        
         const queryR = `/truyen?sort_by=${optionSort || sortBy}&page=${page || currentPage}&${queryString}`
-
+        
         router.push(queryR);
     }
+
+    useEffect(() => {
+        setQuerySearchNovel(query)
+    }, [query])
 
     // Change Page
     const handlePageChange = (page : number) => {
         handleNextPage({ page: String(page) })
     };
+
 
     const getLayout = (page: ReactNode) => {
         return <MainLayout autoHidden={false} isBannerPage={!matchesMobile}>{page}</MainLayout>;
@@ -361,7 +366,7 @@ const AdvencedSearchNovelPage = ({ query, novels, sortBy, currentPage } : Advenc
     
     
                                     <div className="flex justify-center my-5">
-                                        <PaginationLayout countPage={20} currentPage={1} handleChangePage={handlePageChange}/>
+                                        <PaginationLayout countPage={countPage} currentPage={currentPage} handleChangePage={handlePageChange}/>
                                     </div>
                                 </div>
                             </div>
@@ -375,7 +380,7 @@ const AdvencedSearchNovelPage = ({ query, novels, sortBy, currentPage } : Advenc
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
     try {
-        const { genres, status, personality, scene, classify, viewFrame, sort_by, page = '1' } = context.query;
+        const { genres, status, personality, scene, classify, viewFrame, sort_by = 'novel_new', page = '1' } = context.query;
 
         const realGenres = genres ? String(genres).split(',').map((genres) => Number(genres)) : []
         const realStatus = status ? String(status).split(',').map((status) => Number(status)) : []
@@ -388,11 +393,16 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
             context.query['sort_by'] = 'novel_new'
         }
 
-        const queryString = Object.entries(context.query)
-            .map(([key, value]) => `${key}=${Array.isArray(value) ? value.join(',') : value}`)
-            .join('&');
+        // const queryString = Object.entries(context.query)
+        //     .map(([key, value]) => `${key}=${Array.isArray(value) ? value.join(',') : value}`)
+        //     .join('&');
+
+        const query = context.query as Record<string, string>;
+        const queryString = new URLSearchParams(query).toString();
 
         const getNovels = await advancedSearchNovelHandle(queryString || '')
+
+        console.log(queryString)
 
         if(!getNovels.success) {
             return {
@@ -424,8 +434,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
                 },
                 sortBy: sort_by || 'novel_new',
                 novels: getNovels?.novels || [],
-                currentPage: String(page) || '1',
-                // test: queryString
+                currentPage: Number(page) || 1,
+                countPage: getNovels.countPage
             },
         };
     } catch (error) {
