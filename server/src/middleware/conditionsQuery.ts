@@ -111,7 +111,7 @@ export const NovelSearchConditions = (data : Partial<NovelType>) => {
 export const fieldGetNovel = 'novels.title, novels.novelId, novels.slug, LEFT(novels.description, 150) as description, novels.thumbnailUrl, novels.imageBlurHash, novels.chapterCount, novels.category, novels.createdAt, users.name as author'
 
 export const getAdvancedNovelConditions = (data : any) => {
-    const { novelId = '', userId = '', title = '', sort_by = '', page = '1' } = data
+    const { novelId = '', userId = '', title = '', sort_by = '', page = '1', genres, status, personality, scene, classify, viewFrame } = data
 
     
     const conditions : string[] = []
@@ -131,138 +131,144 @@ export const getAdvancedNovelConditions = (data : any) => {
         params.push(String(title));
     }
 
-    const conbinedConditions = conditions.length > 0 ? conditions.join(" AND ") : conditions
+    // Filter Novel
+    if(genres) {
+        conditions.push(`category IN (${genres})`);
+    }
+    if(status) {
+        conditions.push(`status IN (${status})`);
+    }
+    if(personality) {
+        conditions.push(`personality IN (${personality})`);
+    }
+    if(scene) {
+        conditions.push(`scene IN (${scene})`);
+    }
+    if(classify) {
+        conditions.push(`classify IN (${classify})`);
+    }
+    if(viewFrame) {
+        conditions.push(`viewFrame IN (${viewFrame})`);
+    }
+
+    
+    const conbinedConditions = conditions.length > 0 ? 'WHERE ' + conditions.join(" AND ") : ''
+    
+    // console.log(conbinedConditions)
 
     // -----
 
-    const query = `
-        SELECT ${fieldGetNovel} FROM novels
-            LEFT JOIN users ON users.userId = novels.userId
-        ${conbinedConditions.length > 0 ? 'WHERE ' + conbinedConditions : ''}
-        LIMIT 20 OFFSET ${(page-1)*20}
+    const join = `
+        LEFT JOIN users ON users.userId = novels.userId        
     `
+    const pageOf = !isNaN(Number(page)) ? (page-1)*20 : 0
 
     switch(sort_by) {
         case 'view_most':
             return {
-                query: (`
-                    SELECT ${fieldGetNovel} FROM novels
-                        LEFT JOIN chapters ON chapters.novelId = novels.novelId
-                        LEFT JOIN users ON users.userId = novels.userId
-                    ${conbinedConditions.length > 0 ? 'WHERE ' + conbinedConditions : ''}
-                    GROUP BY novels.novelId
-                    ORDER BY SUM(chapters.views) DESC
-                    LIMIT 20 OFFSET ${(page-1)*20}
+                join: (`
+                    LEFT JOIN chapters ON chapters.novelId = novels.novelId
+                    LEFT JOIN users ON users.userId = novels.userId
                 `),
-                params
+                params,
+                sort: 'ORDER BY SUM(chapters.views) DESC',
+                conditions: conbinedConditions,
+                page: pageOf
             }
-        case 'view_day':
-            return {
-                query: (`
-                    SELECT ${fieldGetNovel} FROM novels
-                        LEFT JOIN chapters ON chapters.novelId = novels.novelId
-                        LEFT JOIN users ON users.userId = novels.userId
-                    ${conbinedConditions.length > 0 ? 'WHERE ' + conbinedConditions : ''}
-                    GROUP BY novels.novelId
-                    ORDER BY SUM(chapters.views) DESC
-                    LIMIT 20 OFFSET ${(page-1)*20}
-                `),
-                params
-            }
+        // case 'view_day':
+        //     return {
+        //         join: (`
+        //                 LEFT JOIN chapters ON chapters.novelId = novels.novelId
+        //                 LEFT JOIN users ON users.userId = novels.userId
+        //             ${conbinedConditions.length > 0 ? 'WHERE ' + conbinedConditions : ''}                    
+        //         `),
+        //         params,
+        //         sort: 'ORDER BY SUM(chapters.views) DESC',
+        //         page: pageOf
+        //     }
         case 'review_count':
             return {
-                query: (`
-                    SELECT ${fieldGetNovel} FROM novels
-                        LEFT JOIN reviews ON reviews.novelId = novels.novelId AND reviews.isRating IS TRUE
-                        LEFT JOIN users ON users.userId = novels.userId
-                    ${conbinedConditions.length > 0 ? 'WHERE ' + conbinedConditions : ''}
-                    GROUP BY novels.novelId
-                    ORDER BY COUNT(reviews.novelId) DESC
-                    LIMIT 20 OFFSET ${(page-1)*20}
+                join: (`
+                    LEFT JOIN reviews ON reviews.novelId = novels.novelId AND reviews.isRating IS TRUE
+                    LEFT JOIN users ON users.userId = novels.userId
                 `),
-                params
+                params,
+                conditions: conbinedConditions,
+                sort: 'ORDER BY COUNT(reviews.novelId) DESC',
+                page: pageOf
             }
         case 'review_score':
             return {
-                query: (`
-                    SELECT ${fieldGetNovel} FROM novels
-                        LEFT JOIN reviews ON reviews.novelId = novels.novelId AND reviews.isRating IS TRUE
-                        LEFT JOIN users ON users.userId = novels.userId
-                    ${conbinedConditions.length > 0 ? 'WHERE ' + conbinedConditions : ''}
-                    GROUP BY novels.novelId
-                    ORDER BY SUM(reviews.mediumScore) DESC
-                    LIMIT 20 OFFSET ${(page-1)*20}
+                join: (`
+                    LEFT JOIN reviews ON reviews.novelId = novels.novelId AND reviews.isRating IS TRUE
+                    LEFT JOIN users ON users.userId = novels.userId
                 `),
-                params
+                params,
+                conditions: conbinedConditions,
+                sort: 'ORDER BY SUM(reviews.mediumScore) DESC',
+                page: pageOf
             }
         case 'chapter_count':
             return {
-                query: (`
-                    SELECT ${fieldGetNovel} FROM novels
-                        LEFT JOIN chapters ON chapters.novelId = novels.novelId
-                        LEFT JOIN users ON users.userId = novels.userId
-                    ${conbinedConditions.length > 0 ? 'WHERE ' + conbinedConditions : ''}
-                    GROUP BY novels.novelId
-                    ORDER BY COUNT(chapters.chapterId) DESC
-                    LIMIT 20 OFFSET ${(page-1)*20}
+                join: (`
+                    LEFT JOIN chapters ON chapters.novelId = novels.novelId
+                    LEFT JOIN users ON users.userId = novels.userId
                 `),
-                params
+                params,
+                conditions: conbinedConditions,
+                sort: 'ORDER BY COUNT(chapters.chapterId) DESC',
+                page: pageOf
             } 
         case 'chapter_new':
             return {
-                query: (`
-                    SELECT ${fieldGetNovel} FROM novels
-                        LEFT JOIN chapters ON chapters.novelId = novels.novelId
-                        LEFT JOIN users ON users.userId = novels.userId
-                    ${conbinedConditions.length > 0 ? 'WHERE ' + conbinedConditions : ''}
-                    GROUP BY novels.novelId
-                    ORDER BY MAX(chapters.createdAt) DESC
-                    LIMIT 20 OFFSET ${(page-1)*20}
+                join: (`
+                    LEFT JOIN chapters ON chapters.novelId = novels.novelId
+                    LEFT JOIN users ON users.userId = novels.userId
                 `),
-                params
+                params,
+                conditions: conbinedConditions,
+                sort: 'ORDER BY MAX(chapters.createdAt) DESC',
+                page: pageOf
             } 
         case 'novel_new':
             return {
-                query: (`
-                    SELECT ${fieldGetNovel} FROM novels
-                        LEFT JOIN users ON users.userId = novels.userId
-                    ${conbinedConditions.length > 0 ? 'WHERE ' + conbinedConditions : ''}
-                    GROUP BY novels.novelId
-                    ORDER BY novels.createdAt DESC
-                    LIMIT 20 OFFSET ${(page-1)*20}
+                join: (`
+                    LEFT JOIN users ON users.userId = novels.userId
                 `),
-                params
+                params,
+                conditions: conbinedConditions,
+                sort: 'ORDER BY novels.createdAt DESC',
+                page: pageOf
             } 
         case 'follow_count':
             return {
-                query: (`
-                    SELECT ${fieldGetNovel} FROM novels
-                        LEFT JOIN novel_followers ON novel_followers.novelId = novels.novelId
-                        LEFT JOIN users ON users.userId = novels.userId
-                    ${conbinedConditions.length > 0 ? 'WHERE ' + conbinedConditions : ''}
-                    GROUP BY novels.novelId
-                    ORDER BY COUNT(novel_followers.novelId) DESC
-                    LIMIT 20 OFFSET ${(page-1)*20}
+                join: (`
+                    LEFT JOIN novel_followers ON novel_followers.novelId = novels.novelId
+                    LEFT JOIN users ON users.userId = novels.userId
                 `),
-                params
+                params,
+                conditions: conbinedConditions,
+                sort: 'ORDER BY COUNT(novel_followers.novelId) DESC',
+                page: pageOf
             }
         case 'comment_count':
             return {
-                query: (`
-                    SELECT ${fieldGetNovel} FROM novels
-                        LEFT JOIN comments ON comments.novelId = novels.novelId
-                        LEFT JOIN users ON users.userId = novels.userId
-                    ${conbinedConditions.length > 0 ? 'WHERE ' + conbinedConditions : ''}
-                    GROUP BY novels.novelId
-                    ORDER BY COUNT(comments.novelId) DESC
-                    LIMIT 20 OFFSET ${(page-1)*20}
+                join: (`
+                    LEFT JOIN comments ON comments.novelId = novels.novelId
+                    LEFT JOIN users ON users.userId = novels.userId
                 `),
-                params
+                params,
+                conditions: conbinedConditions,
+                sort: 'ORDER BY COUNT(comments.novelId) DESC',
+                page: pageOf
             }
         default:
             return {
-                query,
-                params
+                join,
+                params,
+                sort: '',
+                conditions: conbinedConditions,
+                page: pageOf
             }
     }
 }

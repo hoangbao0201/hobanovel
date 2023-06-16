@@ -640,6 +640,7 @@ export const getAdvancedNovel = async (req: Request, res: Response) => {
 
         return res.json({
             success: true,
+            countPage: Math.ceil(resultGetNovelRes?.countPage[0]?.countPage/20) || 1,
             novels: resultGetNovelRes.data,
             // query: data
         })

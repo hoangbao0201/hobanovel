@@ -72,3 +72,16 @@ const main = async () => {
 
 
 main().catch((error) => console.log(error)) 
+
+
+
+// var conn = mysql.createConnection({
+//     host: "hobanovel-db.mysql.database.azure.com",
+//     user:"hoangbao0201",
+//     password:"{your_password}"
+//     database:"{your_database}",
+//     port:3306,
+//     ssl: {
+//         ca: fs.readFileSync("{ca-cert filename}")
+//     }
+// });

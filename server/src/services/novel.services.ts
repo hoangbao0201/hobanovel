@@ -535,32 +535,39 @@ export const unfollowNovelHandle = async ({ userId, novelId } : NovelFollowerTyp
 export const getAdvancedNovelHandle = async (data: any) => {
     try {
 
-        const { query, params } = getAdvancedNovelConditions(data)
+        const { join, sort, params, conditions, page } = getAdvancedNovelConditions(data)
         
         const connection = await pool.getConnection();
 
-        // novels.imageBlurHash
-        // const qUpdateReadingNovel = `
-        //     SELECT 
-        //         novels.title, novels.novelId, novels.slug, novels.thumbnailUrl, novels.chapterCount, novels.category, novels.createdAt
-        //     FROM novels
+        // Get countPage
+        const qGetCountPage = `
+            SELECT COUNT(*) as countPage FROM novels
+            ${conditions}
+        `
+        const [rowsGetCountPage] : any = await connection.query(qGetCountPage);
 
-        //     JOIN (
-        //         ${sortBy.join}
-        //     ) subquery ON novels.novelId = subquery.novelId
-            
-            
-        // `;
-            // ${ conditions.length > 0 ? `WHERE ${conditions}` : '' }
-            
-            // ${!isNaN(query?.page) ? query?.page : '0'}
+        // Get Novel
+        const qGetNovel = `
+            SELECT ${fieldGetNovel} FROM novels
 
-        const [rows] : any = await connection.query(query, params);
+            ${join}
+
+            ${conditions}
+
+            GROUP BY novels.novelId
+
+            ${sort}
+
+            LIMIT 20 OFFSET ${page}
+        `
+
+        const [rows] : any = await connection.query(qGetNovel, params);
 
         connection.release()
 
         return {
             success: true,
+            countPage: rowsGetCountPage,
             data: rows,
         }
 
