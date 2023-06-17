@@ -1,8 +1,14 @@
 import Link from "next/link";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 import PerfectScrollbar from "react-perfect-scrollbar";
 import 'react-perfect-scrollbar/dist/css/styles.css';
+import styled from "styled-components";
+
+const OptionListStyle = styled.div`
+    overflow-y: scroll;
+    height: calc(100vh - 200px);
+`
 
 
 interface OptionsListChapterProps {
@@ -10,44 +16,68 @@ interface OptionsListChapterProps {
     isShow?: boolean
     handle: () => void
     slug: string
+    chapterCurrent: number
 }
 
-const OptionsListChapter = ({ chapterNumber, isShow = false, handle, slug } : OptionsListChapterProps ) => {
+const OptionsListChapter = ({ chapterNumber, isShow = false, handle, slug, chapterCurrent } : OptionsListChapterProps ) => {
+
+    const chapterListRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         const bodyElement = document.querySelector('body');
+
+        if (chapterListRef.current) {
+            const chapterElement = chapterListRef.current.querySelector(`[data-chapter="${chapterCurrent}"]`);
+    
+            if (chapterElement) {
+                chapterElement.scrollIntoView({ behavior: 'instant', inline: 'center' });
+            }
+        }
+
         if (isShow) {
-          bodyElement?.classList.add('overflow-hidden');
-        //   bodyElement?.classList.add('overflow-y-auto');
+            bodyElement?.classList.add('overflow-hidden');
         } else {
-          bodyElement?.classList.remove('overflow-hidden');
+            bodyElement?.classList.remove('overflow-hidden');
         }
     }, [isShow]);
 
     return (
-        <div className={`${isShow ? 'fixed' : 'hidden'} top-0 left-0 right-0 bottom-0 inset-0 z-1000  bg-black/5`}>
-            <div className="mt-20 mx-auto h-[500px] max-w-lg w-full bg-white">
+        <div className={`${isShow ? 'fixed' : 'hidden'} top-0 left-0 right-0 bottom-0 inset-0 z-[1000]  bg-black/10 overflow-hidden overflow-y-scroll`}>
+            <div className="pt-[60px] pb-[40px] px-4 h-screen">
+                <div className="mx-auto h-full max-w-lg w-full bg-white relative border drop-shadow-lg rounded-lg">
 
+                    <div className="w-full h-[50px] border-b">
 
-                <div
-                    className="overflow-y-scroll"
-                >
-                    <div className="flex flex-wrap gap-2">
-                        {
-                            Array.from({ length: chapterNumber }, (_, index) => {
-                                return (
-                                    <Link onClick={() => handle()} href={`/truyen/${slug}/chuong-${index+1}`} key={index + 1} className="min-w-[100px] px-3 py-1 border rounded-sm text-sm whitespace-nowrap">
-                                        Chapter {index + 1}
-                                    </Link>
-                                )
-                            })
-                        }
                     </div>
+    
+                    <OptionListStyle
+                        ref={chapterListRef}
+                        className="pl-3 py-5"
+                    >
+                        <div className="flex flex-wrap gap-2 text-[14px]">
+                            {
+                                Array.from({ length: chapterNumber }, (_, index) => {
+                                    return (
+                                        <Link 
+                                            onClick={() => handle()}
+                                            data-chapter={index + 1}
+                                            href={`/truyen/${slug}/chuong-${index+1}`} key={index + 1}
+                                            className={`min-w-[100px] px-3 py-1 border rounded-sm whitespace-nowrap ${chapterCurrent == index+1 && 'border-red-600 text-red-600'}`}
+                                        >
+                                            Chapter {index + 1}
+                                        </Link>
+                                    )
+                                })
+                            }
+                        </div>
+                    </OptionListStyle>
+                    
+    
+                    <div className="border-t h-[50px] flex items-center">
+                        <span onClick={() => handle()} className="py-1 px-3 border rounded-md ml-auto mr-5 cursor-pointer select-none">Đóng</span>
+                    </div>
+    
                 </div>
-                
-
-                <span onClick={() => handle()} className="btn ml-auto">Đóng</span>
-
             </div>
         </div>
     )

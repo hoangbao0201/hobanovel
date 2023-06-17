@@ -206,8 +206,6 @@ const ChapterDetailPage = ({ chapter }: ChapterDetailPageProps) => {
         }
     }
 
-    console.log("132: ", isOptionsListChapter)
-
     const handleChangeOntionsListChapter = () => {
         setIsOptionsListChapter(value => !value)
     }
@@ -226,7 +224,7 @@ const ChapterDetailPage = ({ chapter }: ChapterDetailPageProps) => {
                     <div className="py-4">
 
 
-                        <OptionsListChapter slug={chapter.novelSlug} isShow={isOptionsListChapter} handle={handleChangeOntionsListChapter} chapterNumber={200}/>
+                        <OptionsListChapter slug={chapter.novelSlug} isShow={isOptionsListChapter} handle={handleChangeOntionsListChapter} chapterNumber={Number(chapter.chapterCount)} chapterCurrent={chapter?.chapterNumber || 1}/>
 
 
 
@@ -253,7 +251,7 @@ const ChapterDetailPage = ({ chapter }: ChapterDetailPageProps) => {
                                             <i className="w-4 h-4 fill-white block">{iconChevronLeft}</i>
                                         </span>
                                     </Link>
-                                    <div className="bg-white px-2 h-9 py-2 select-none cursor-pointer border rounded-sm" onClick={handleChangeOntionsListChapter}>
+                                    <div className="bg-white px-2 h-9 flex items-center text-sm select-none cursor-pointer border rounded-sm" onClick={handleChangeOntionsListChapter}>
                                         Chapter {chapter?.chapterNumber || 1}
                                     </div>
                                     <Link
