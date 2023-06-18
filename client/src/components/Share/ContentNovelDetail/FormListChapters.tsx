@@ -6,7 +6,7 @@ import { getChaptersNovelByUrlHandle } from "@/services/chapter.services";
 import React from "react";
 import moment from "moment";
 import "moment/locale/vi";
-import { VirtuosoGrid } from "react-virtuoso";
+// import { VirtuosoGrid } from "react-virtuoso";
 import styled from "styled-components";
 import { iconSortDown, iconSortUp } from "../../../../public/icons";
 import { useDebounce } from "@/hook/useDebounce";
