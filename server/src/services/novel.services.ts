@@ -573,3 +573,28 @@ export const getAdvancedNovelHandle = async (data: any) => {
         }
     }
 }
+
+export const getAllNovelForSeoHandle = async () => {
+    try {
+        const connection = await pool.getConnection();
+
+        const qGetAllNovel = `
+            SELECT novels.novelId, novels.title, novels.slug, novels.updatedAt from novels
+        `;
+
+        const [rows] : any = await connection.query(qGetAllNovel);
+
+        connection.release();
+
+        return {
+            success: true,
+            data: rows
+        };
+    } catch (error) {
+        return {
+            success: false,
+            error: error
+        }
+    }
+};
+

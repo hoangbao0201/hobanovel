@@ -17,7 +17,6 @@ import { getAccessToken } from "@/services/cookies.servies";
 import useSWR from "swr";
 import axios from "axios";
 import { useMediaQuery } from "usehooks-ts";
-import LazyLoad from "react-lazy-load";
 import Head from '@/components/Share/Head';
 
 

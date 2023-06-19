@@ -189,3 +189,21 @@ export const advancedSearchNovelHandle = async (query: string) => {
         }
     }
 };
+
+export const getAllNovelForSeoHandle = async () => {
+    try {
+        const getNovels = await axios.get(
+            `${apiUrl}/api/novels/get/all/seo`);
+
+        return getNovels.data;
+    } catch (error) {
+        if(axios.isAxiosError(error) && error.response?.data) {
+            return error.response.data;
+        } else {
+            return {
+                success: false,
+                message: (error as Error).message
+            };
+        }
+    }
+};

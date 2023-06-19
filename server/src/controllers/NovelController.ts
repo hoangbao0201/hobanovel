@@ -18,6 +18,7 @@ import {
     unfollowNovelHandle,
     getAdvancedNovelHandle,
     getFollowsNovelHandle,
+    getAllNovelForSeoHandle,
 } from "../services/novel.services";
 import { HistoryReadingType, NovelFollowerType, NovelType } from "../types";
 
@@ -643,6 +644,30 @@ export const getAdvancedNovel = async (req: Request, res: Response) => {
             countPage: Math.ceil(resultGetNovelRes?.countPage[0]?.countPage/20) || 1,
             novels: resultGetNovelRes.data,
             // query: data
+        })
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: `Internal server error ${error}`,
+        });
+    }
+}
+
+export const getAllNovelForSeo = async (req: Request, res: Response) => {
+    try {
+
+        const resultGetNovelRes = await getAllNovelForSeoHandle();
+        if(!resultGetNovelRes.success) {
+            return res.status(400).json({
+                success: false,
+                message: "Get novel error",
+                error: resultGetNovelRes.error
+            })
+        }
+
+        return res.json({
+            success: true,
+            novels: resultGetNovelRes.data,
         })
     } catch (error) {
         return res.status(500).json({

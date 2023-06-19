@@ -19,6 +19,7 @@ import {
     followNovel,
     unfollowNovel,
     getAdvancedNovel,
+    getAllNovelForSeo,
 } from "../controllers/NovelController";
 
 
@@ -31,6 +32,8 @@ router.post("/follow/:novelId", verifyToken, followNovel);
 router.post("/unfollow/:novelId", verifyToken, unfollowNovel);
 
 // Get Novel
+
+router.get("/get/all/seo", getAllNovelForSeo)
 router.get("/get/advanced", getAdvancedNovel)
 
 router.get("/get/outstanding", getNovelsByOutstanding)
