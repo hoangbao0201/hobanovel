@@ -5,7 +5,7 @@ import Tippy from "@tippyjs/react";
 import 'tippy.js/dist/tippy.css';
 
 import { useDispatch, useSelector } from "react-redux";
-import { useClickOutSide } from "@/hook/useClickOutSide";
+// import { useClickOutSide } from "@/hook/useClickOutSide";
 import { GENRES_VALUE, RANK_VALUE } from "@/constants/data";
 import BlurImage from "../Layout/BlurImage";
 import { placeholderBlurhash } from "@/constants";
@@ -13,10 +13,11 @@ import { logoutUserHandle } from "@/redux/userSlice";
 import { removeAccessToken } from "@/services/cookies.servies";
 import Image from "next/image";
 import { LoadingForm } from "../Layout/LoadingLayout";
-import { useMediaQuery } from "usehooks-ts";
+import { useMediaQuery, useOnClickOutside } from "usehooks-ts";
 import { iconBars } from "../../../public/icons";
 import { NavOver } from "./NavOver";
 import { useRouter } from "next/router";
+import { useClickOutSide } from "@/hook/useClickOutSide";
 
 interface HeaderProps {
     autoHidden?: boolean
@@ -89,29 +90,31 @@ const Header = ({ autoHidden = true } : HeaderProps) => {
         }
     }, [isHeader])
 
-
-    // Hiddent when change page
-    // useEffect(() => {
-
-    //     router.events.on("routeChangeStart", () => setIsNavOver(false));
-    //     return () => {
-    //         router.events.off("routeChangeStart", () => setIsNavOver(false));
-    //     }
-    // }, [])
-
     return (
         <>
             {
                 autoHidden && <div className="w-full h-[50px]"></div>
             }
             <header
-                className={`bg-gray-100 drop-shadow-sm ${ autoHidden ? 'fixed top-0 left-0 right-0 z-20' : '' } 
+                // bg-gray-100
+                // bg-[#3f3567] 
+                className={`bg-gray-100 border-b ${ autoHidden ? 'fixed top-0 left-0 right-0 z-20' : '' } 
                     ${ autoHidden && (isHeader ? "opacity-100" : "opacity-0 pointer-events-none")}`}
             >
                 <div className={`w-full`}>
                     <div className="max-w-7xl mx-auto flex items-center h-[50px] px-3">
-                        <h2 className="text-center align-middle font-semibold text-xl">
-                            <Link href="/">HOBANOVEL</Link>
+                        <h2 className="text-center align-middle font-bold text-2xl">
+                            <Link href="/">
+                                hobanovel
+                            </Link>
+                            {/* <Link href="/">
+                                <Image
+                                    width={150}
+                                    height={30}
+                                    src={"/images/hobanovel-logo.png"}
+                                    alt="hobanovel logo"
+                                />
+                            </Link> */}
                         </h2>
 
                         <div className="hidden lg:flex items-center">
@@ -187,7 +190,7 @@ const Header = ({ autoHidden = true } : HeaderProps) => {
                                     <LoadingForm />
                                 ) : isAuthenticated ? (
                                     <div className="relative">
-                                        <Tippy
+                                        {/* <Tippy
                                             trigger="click"
                                             arrow={false}
                                             placement='bottom-end'
@@ -260,54 +263,68 @@ const Header = ({ autoHidden = true } : HeaderProps) => {
                                                     />
                                                 </button>
                                             </span>
-                                        </Tippy>
+                                        </Tippy> */}
                                         
 
-
-                                        {/* {
-                                            isDropdownUser && (
-                                                <div ref={userDropdownRef} className="drop-shadow-lg min-w-[230px] p-3 absolute bg-white top-12 right-0">
-                                                    <div className="flex items-center mb-3">
-                                                        <Image
-                                                            width={44}
-                                                            height={44}
-                                                            alt="image-demo"
-                                                            className="w-11 h-11 object-cover"
-                                                            src={
-                                                                currentUser.thumbnailUrl ||
-                                                                "/images/avatar-default-2.png"
-                                                            }
-                                                        />
-                                                        <div className="ml-3 flex-1 line-clamp-1">{currentUser.username}</div>
-                                                    </div>
-                                                    <div className="dropdown-content">
-                                                        {
-                                                            currentUser.username === "admin" ? (
-                                                                <Link href={`/admin`} className="hover:bg-gray-100 py-2 px-2 block cursor-pointer">
-                                                                    <span className="block w-full">Admin</span>
-                                                                </Link>
-                                                            ) : (
-                                                                <Link href={`/user/${currentUser.username}`} className="hover:bg-gray-100 py-2 px-2 block cursor-pointer">
-                                                                    <span className="block w-full">Hồ sơ</span>
-                                                                </Link>
-                                                            )
-                                                        }
-                                                        <Link href={`/account`} className="hover:bg-gray-100 py-2 px-2 block cursor-pointer">
-                                                            <span className="block w-full">Tài khoản</span>
+                                        <span className="h-[50px] flex items-center">
+                                            <button
+                                                onClick={() => setIsDropdownUser(true)}
+                                                className="w-9 h-9 outline-none rounded-full overflow-hidden shadow align-middle inline-block"
+                                            >
+                                                <BlurImage
+                                                    width={40}
+                                                    height={40}
+                                                    alt="image-demo"
+                                                    blurDataURL={placeholderBlurhash}
+                                                    className="group-hover:scale-105 group-hover:duration-500 object-cover w-9 h-9"
+                                                    placeholder="blur"
+                                                    src={
+                                                        currentUser.avatarUrl ||
+                                                        "/images/avatar-default-2.png"
+                                                    }
+                                                />
+                                            </button>
+                                        </span>
+                                        <div ref={userDropdownRef} className={`${isDropdownUser ? 'block' : 'hidden'} drop-shadow-lg min-w-[230px] p-3 absolute bg-white top-12 right-0`}>
+                                            <div className="flex items-center mb-3">
+                                                <Image
+                                                    width={44}
+                                                    height={44}
+                                                    alt="image-demo"
+                                                    className="w-11 h-11 object-cover"
+                                                    src={
+                                                        currentUser.thumbnailUrl ||
+                                                        "/images/avatar-default-2.png"
+                                                    }
+                                                />
+                                                <div className="ml-3 flex-1 line-clamp-1">{currentUser.username}</div>
+                                            </div>
+                                            <div className="dropdown-content">
+                                                {
+                                                    currentUser.username === "admin" ? (
+                                                        <Link href={`/admin`} className="hover:bg-gray-100 py-2 px-2 block cursor-pointer">
+                                                            <span className="block w-full">Admin</span>
                                                         </Link>
-                                                        <Link href={`/search`} className="hover:bg-gray-100 py-2 px-2 block cursor-pointer">
-                                                            <span className="block w-full">Tìm truyện</span>
+                                                    ) : (
+                                                        <Link href={`/user/${currentUser.username}`} className="hover:bg-gray-100 py-2 px-2 block cursor-pointer">
+                                                            <span className="block w-full">Hồ sơ</span>
                                                         </Link>
-                                                        <Link href={`/creator`} target="_blank" className="hover:bg-gray-100 py-2 px-2 block cursor-pointer">
-                                                            <span className="block w-full">Người sánh tạo</span>
-                                                        </Link>
-                                                        <div onClick={eventLogoutUser} className="hover:bg-gray-100 py-2 px-2 block cursor-pointer">
-                                                            Đăng xuất
-                                                        </div>
-                                                    </div>
+                                                    )
+                                                }
+                                                <Link href={`/account`} className="hover:bg-gray-100 py-2 px-2 block cursor-pointer">
+                                                    <span className="block w-full">Tài khoản</span>
+                                                </Link>
+                                                <Link href={`/search`} className="hover:bg-gray-100 py-2 px-2 block cursor-pointer">
+                                                    <span className="block w-full">Tìm truyện</span>
+                                                </Link>
+                                                <Link href={`/creator`} target="_blank" className="hover:bg-gray-100 py-2 px-2 block cursor-pointer">
+                                                    <span className="block w-full">Người sánh tạo</span>
+                                                </Link>
+                                                <div onClick={eventLogoutUser} className="hover:bg-gray-100 py-2 px-2 block cursor-pointer">
+                                                    Đăng xuất
                                                 </div>
-                                            )
-                                        } */}
+                                            </div>
+                                        </div>
                                     </div>
                                 ) : (
                                     matchesMobile ? (

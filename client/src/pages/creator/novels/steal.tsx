@@ -1,6 +1,9 @@
 import { useRouter } from "next/router";
 import { ReactNode, useEffect, useRef, useState } from "react";
 
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import { getAccessToken } from "@/services/cookies.servies";
 import CreatorLayout from "@/components/Layout/CreatorLayout";
 import { createNovelByUrlHandle } from "@/services/novels.services";
@@ -8,6 +11,7 @@ import { createChapterByUrlHandle } from "@/services/chapter.services";
 import { updateBlurImageNovelHandle } from "@/services/update.services";
 import { getBlurDataURL } from "@/utils/getBlurDataURL";
 import { NovelType } from "@/types";
+import { ShowToastify } from "@/components/features/ShowToastify";
 
 interface StealNovelPageProps {
     children?: ReactNode
@@ -38,7 +42,7 @@ const StealNovelPage = ({ children } : StealNovelPageProps) => {
         e.preventDefault();
 
         if(!urlInput || isProgress) {
-            console.log("lỗi ")
+            ShowToastify({ data: "Chưa điền url", type: "error" });
             return
         }
         
@@ -50,33 +54,37 @@ const StealNovelPage = ({ children } : StealNovelPageProps) => {
                 setProgress(0);
                 return;
             }
+            setDataMessageProgress([])
 
+            // Upload Novel
             const novelResponse = await createNovelByUrlHandle(urlInput as string, token as string);
+            if(!novelResponse?.success) {
+                throw new Error()
+            }
+
+            // SET STATE START RUN
+            setIsProgress(true)
+
+            setDataMessageProgress(value => [...value, { id: 1, message: "Novel đang được tạo" }])
+            setProgress(1)
+
             console.log(novelResponse)
-            if(novelResponse?.data.success) {
+            
+            const { novelId, slug, chapterCount, chapterLatest } = novelResponse.novel;
+            const stepProgress = 100 / chapterLatest;
+            
+            if(chapterCount >= chapterLatest) {
+                setDataMessageProgress(value => [...value, { id: 2, message: "Novel đang ở chapter mới nhất" }])
+                ShowToastify({ data: "Novel đang ở chapter mới nhất", type: "success" });
+            }
+            else if(chapterCount < chapterLatest) {
 
-                // Upload Blur Image
-                const dataUpdateBlurImageHandle : Pick<NovelType, 'novelId' | 'imageBlurHash'> & { token: string } = {
-                    token,
-                    novelId: novelResponse.data.novel.novelId,
-                    imageBlurHash: (await getBlurDataURL(novelResponse.data.novel.thumbnailUrl)) || ""
-                }
-                updateBlurImageNovelHandle(dataUpdateBlurImageHandle);
 
-                // SET STATE START RUN
-                setIsProgress(true)
-
-                setDataMessageProgress(value => [...value, { id: 1, message: "Creact Novel - Thành công" }])
-                setDataMessageProgress(value => [...value, { id: 2, message: "Upload Thumbnail Novel - Thành công" }])
-                setProgress(1)
-
-                const numberChapter = novelResponse.data.novel.chapterNumber
-                const stepProgress = 100 / numberChapter;
-                for (let i = 1; i <= numberChapter; i++) {
-                    const chapterResponse = await createChapterByUrlHandle(`${novelResponse?.data.novel.slug}/${i}` as string, token as string);
-
+                for (let i = chapterCount + 1; i <= chapterLatest; i++) {
+                    const chapterResponse = await createChapterByUrlHandle(`${slug}/${i}` as string, token as string);
+    
                     // SET DEFAULT STATE
-                    if(chapterResponse?.data.success) {
+                    if(chapterResponse?.success) {
                         setDataMessageProgress(value => [ ...value, { id: i+2, message: `Upload Chương ${i} - Thành công` } ])
                         setProgress(value => value + stepProgress)
                     }
@@ -90,8 +98,6 @@ const StealNovelPage = ({ children } : StealNovelPageProps) => {
 
             setIsProgress(false);
             setProgress(0)
-            return
-
         } catch (error) {
             setIsProgress(false);
             setProgress(0)

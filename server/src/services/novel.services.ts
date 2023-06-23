@@ -4,27 +4,24 @@ import pool from "../library/connectMySQL";
 
 
 import { HistoryReadingType, NovelFollowerType, NovelType } from "../types";
-import { uploadThumbnailNovelByUrlHandle } from "./image.services";
 import { getBlurDataURL } from "../utils/getBlurDataURL";
 import { NovelSearchConditions, fieldGetNovel, getAdvancedNovelConditions } from "../middleware/conditionsQuery";
 import { PROPERTIES_NOVEL } from "../constants";
 
 export const createNovelByDataHandle = async (data : NovelType, userId : string) => {
     try {
-        const connection = await pool.getConnection();
-
-        const qCreateNovel = `
-            INSERT INTO novels(slug, title, thumbnailUrl, thumbnailPublicId, description, author, category, personality, scene, classify, viewFrame, userId)
-            VALUES (?)
-        `;
-
         const {
             slug, title, description, author, category, personality, scene, classify, viewFrame
         } = data
-         
-        const values = [slug, title, data?.thumbnailUrl || null, data?.thumbnailPublicId || null, description, author, category || null, personality || null, scene || null, classify || null, viewFrame || null, userId]
 
-        // return values
+        const connection = await pool.getConnection();
+
+        const qCreateNovel = `
+            INSERT INTO novels(slug, title, description, author, category, personality, scene, classify, viewFrame, userId)
+            VALUES (?)
+        `;
+         
+        const values = [slug, title, description, author, category || null, personality || null, scene || null, classify || null, viewFrame || null, userId]
 
         const [rows] = await connection.query(qCreateNovel, [values]);
 
@@ -37,7 +34,7 @@ export const createNovelByDataHandle = async (data : NovelType, userId : string)
     } catch (error) {
         return {
             success: false,
-            error: error
+            error: error?.message
         }
     }
 };
@@ -49,7 +46,6 @@ export const getDataNovelByUrlMTCHandle = async (url : string) => {
 
         const dataNovel : any = {
             title: $1('h1.h3.mr-2>a').text().trim(),
-            // slug: convertTextToSlug($1('h1.h3.mr-2>a').text()),
             slug: url.split("com/truyen/")[1],
             description: $1('div.content').html(),
             author: $1('ul.list-unstyled.mb-4>li').eq(0).find('a').text().trim(),
@@ -60,26 +56,20 @@ export const getDataNovelByUrlMTCHandle = async (url : string) => {
             classify: $1('ul.list-unstyled.mb-4>li').eq(5).find('a').text().trim(),
             viewFrame: $1('ul.list-unstyled.mb-4>li').eq(6).find('a').text().trim(),
 
-            chapterNumber: $1('#nav-tab-chap .counter').text()
+            chapterCount: $1('#nav-tab-chap .counter').text()
         }
 
         if(!dataNovel.title || !dataNovel.slug || !dataNovel.description || !dataNovel.author) {
-            return null
-        }
-
-        const checkNovel : NovelType[] | null = await getNovelByTitleHandle(dataNovel.title as any);
-        if(checkNovel?.length) {
-            return null
+            throw new Error("Missing attribute");
         }
 
         const urlImage = $1('.nh-thumb--210 img').attr('src');
-        const thumbnailImage = await uploadThumbnailNovelByUrlHandle(urlImage as string);
-        if(!thumbnailImage) {
-            return null
-        }
+        // const thumbnailImage = await uploadThumbnailNovelByUrlHandle(urlImage as string);
+        // if(!thumbnailImage) {
+        //     return null
+        // }
 
-        // convert check
-
+        // convert attribute
         if(dataNovel.category) {
             const ob = PROPERTIES_NOVEL['genres'].find(item => {
                 return item.value === dataNovel.category
@@ -112,13 +102,24 @@ export const getDataNovelByUrlMTCHandle = async (url : string) => {
         }
 
         return {
-            ...dataNovel,
-            thumbnailUrl: thumbnailImage?.url || null,
-            thumbnailPublicId: thumbnailImage?.public_id || null,
+            success: true,
+            data: {
+                ...dataNovel,
+                urlImage: urlImage
+            }
         }
     } catch (error) {
-        return null
+        return {
+            success: false,
+            error: error?.message
+        }
     }
+}
+
+export const getChapterCountNovelHandle = async (url: string) => {
+    const response1 = await axios.get(url);
+    const $1 = cheerio.load(response1.data);
+    return Number($1('#nav-tab-chap .counter').text()) || 0
 }
 
 export const getNovelByTitleHandle = async ({ title } : NovelType) => {
@@ -138,6 +139,32 @@ export const getNovelByTitleHandle = async ({ title } : NovelType) => {
         return rows as NovelType[]
     } catch (error) {
         return null
+    }
+};
+
+export const checkNovelExistedHandle = async (slug : string) => {
+    try {
+        const connection = await pool.getConnection();
+
+        const qGetNovel = `
+            SELECT novelId, slug, title, chapterCount FROM novels
+            WHERE slug = ?
+            LIMIT 1
+        `;
+
+        const [rows] = await connection.query(qGetNovel, slug);
+
+        connection.release();
+
+        return {
+            success: true,
+            data: rows as NovelType[]
+        }
+    } catch (error) {
+        return {
+            success: false,
+            error: error
+        }
     }
 };
 
@@ -168,18 +195,23 @@ export const getNovelBySlugHandle = async ({ slug } : NovelType) => {
 
         const qGetNovel = `
             SELECT novels.novelId, novels.slug, novels.title, novels.thumbnailUrl, novels.imageBlurHash, novels.description, novels.author,
-                AVG(reviews.mediumScore) AS mediumScore, 
-                novels.category, novels.personality, novels.scene, novels.classify, novels.viewFrame, novels.createdAt,
-                COUNT(IF(chapters.createdAt >= DATE_SUB(NOW(), INTERVAL 1 WEEK), 1, NULL)) as newChapterCount,
-                novels.chapterCount,
-                SUM(chapters.views) AS views,
-                history_reading.chapterRead
+                novels.category, novels.personality, novels.scene, novels.classify, novels.viewFrame, novels.createdAt, novels.chapterCount,
+
+                (SELECT COALESCE(SUM(chapters.views), 0) FROM chapters chapters WHERE chapters.novelId = novels.novelId) AS views,
+
+                (SELECT COALESCE(COUNT(DISTINCT chapters.chapterId), 0) FROM chapters chapters WHERE chapters.novelId = novels.novelId) AS chapterCount,
+                
+                (SELECT COUNT(IF(chapters.createdAt >= DATE_SUB(NOW(), INTERVAL 1 WEEK), 1, NULL)) FROM chapters chapters WHERE chapters.novelId = novels.novelId) AS newChapterCount,
+                
+                (SELECT COALESCE(reviews.mediumScore, 5) FROM reviews WHERE reviews.novelId = novels.novelId) AS mediumScore,
+                
+                (SELECT COALESCE(history_reading.chapterRead, 1) FROM history_reading WHERE history_reading.novelId = novels.novelId AND history_reading.userId = 1) AS chapterRead,
+                
+                (SELECT COALESCE(COUNT(DISTINCT novel_followers.userId), 0) FROM novel_followers WHERE novel_followers.novelId = novels.novelId) AS followerCount
+                
             FROM novels
-                LEFT JOIN chapters ON chapters.novelId = novels.novelId
-                LEFT JOIN reviews ON reviews.novelId = novels.novelId AND reviews.isRating = True
-                LEFT JOIN history_reading ON history_reading.novelId = novels.novelId AND history_reading.userId = 1
+
             WHERE novels.slug = ?
-            GROUP BY novels.novelId, history_reading.chapterRead;
         `;
                 // LEFT JOIN history_reading ON history_reading.novelId = novels.novelId AND history_reading.userId = novels.novelId
                 // history_reading.chapterRead

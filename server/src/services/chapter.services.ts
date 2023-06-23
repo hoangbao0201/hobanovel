@@ -14,10 +14,7 @@ export const getDataChapterByUrlMTCHandle = async ({ novelSlug, chapterNumber } 
 
         const checkChapter : string = $1('.unlock-chapter__title').text()
         if(checkChapter === "— Chương Bị Khoá —") {
-            return {
-                success: false,
-                error: "Chapter bị khóa"
-            }
+            throw new Error('Chapter is locked')
         }
 
         const title = $1('div.nh-read__title').text()
@@ -38,7 +35,7 @@ export const getDataChapterByUrlMTCHandle = async ({ novelSlug, chapterNumber } 
     } catch (error) {
         return {
             success: false,
-            error: error
+            error: error?.message
         }
     }
 }
@@ -53,12 +50,12 @@ export const createChapterByDataHandle = async (data : ChapterType) => {
         
         const qCreateChapter = `
             INSERT INTO chapters(userId, novelSlug, novelName, novelId, title, content, chapterNumber )
-            VALUES (?)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
         `;
 
         const values = [ userId, novelSlug, novelName, novelId, title, content, chapterNumber ]
 
-        const [rows] = await connection.query(qCreateChapter, [values]);
+        const [rows] = await connection.query(qCreateChapter, values);
 
         connection.release();
 

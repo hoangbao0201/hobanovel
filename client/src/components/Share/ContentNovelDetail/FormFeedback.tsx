@@ -1,18 +1,19 @@
 import { Fragment, useEffect, useState } from "react";
 
-import ReviewItem from "./ReviewItem";
-import { useSelector } from "react-redux";
-import { ReviewType } from "@/types";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { EditorState, convertToRaw } from "draft-js";
+import { useSelector } from "react-redux";
+import { useMediaQuery } from "usehooks-ts";
+
+import ReviewItem from "./ReviewItem";
+import { ReviewType } from "@/types";
 import { getAccessToken } from "@/services/cookies.servies";
 import { EditorStyle } from "@/components/Layout/EditorStyle";
 import { iconSend, iconStar } from "../../../../public/icons";
 import { addReviewsByDataHandle, destroyReviewsByNovelHandle, getReviewsByNovelHandle } from "@/services/review.services";
 import { ListStarLayout } from "@/components/Layout/ListStarLayout";
-import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import { checkValueReviewNovel } from "@/utils/checkValueReviewNovel";
-import { useMediaQuery } from "usehooks-ts";
 
 interface FormFeedbackProps {
     tab?: number;
@@ -161,8 +162,8 @@ const FormFeedback = ({ tab, novelId }: FormFeedbackProps) => {
             <div className="lg:w-8/12 w-full px-4">
 
                 <div className="mb-5">
-                    <div className="bg-orange-800/5">
-                        <table className="grid py-3 px-3 w-full">
+                    <div className="">
+                        <table className="grid py-3 w-full">
                             <thead>
                                 <tr>
                                     <th></th>
@@ -265,6 +266,9 @@ const FormFeedback = ({ tab, novelId }: FormFeedbackProps) => {
                                 text={commentText}
                                 handleOnchange={setCommentText}
                             />
+
+                        
+
                             <button
                                 onClick={handleSendReviews}
                                 className="py-2 px-4 transition-all bg-yellow-600 hover:bg-yellow-700 absolute bottom-4 right-4"

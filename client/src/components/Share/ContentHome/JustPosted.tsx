@@ -43,11 +43,13 @@ const GridSwiperStyled = styled.div`
 
 const JustPosted = ({ novels = [] } : JustPostedProps) => {
 
-    const [indexActiveNovel, setIndexActiveNovel] = useState(1)
+    const [indexActiveNovel, setIndexActiveNovel] = useState(0)
 
     if(!novels) {
         return <div>Không có truyện</div>
     }
+
+    console.log(novels)
 
     return (
         <div className="px-4 relative overflow-hidden">
@@ -91,14 +93,14 @@ const JustPosted = ({ novels = [] } : JustPostedProps) => {
                         {
                             novels.map((novel, index) => {
                                 return ( 
-                                    <SwiperSlide data-novel-id={novel.slug} key={index} className="">
-                                        <Link className="block relative" href={`/truyen/${novel.slug}`}>
+                                    <SwiperSlide data-novel-id={novel?.slug} key={index} className="">
+                                        <Link className="block relative" href={`/truyen/${novel?.slug}`}>
                                             <Image
                                                 width={180}
                                                 height={240}
                                                 alt="banner thumbnail novel"
                                                 className="h-full w-full inset-0 block object-cover"
-                                                src={novel.thumbnailUrl}
+                                                src={novel?.thumbnailUrl}
                                             />
                                         </Link>
 

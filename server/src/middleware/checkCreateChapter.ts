@@ -26,8 +26,7 @@ export const checkCreateChapter = async (
         if(!rows?.length) {
             res.status(400).json({
                 success: false,
-                message: "Value invalid",
-                // data: { slug, chapterNumber, userId: res.locals.user.userId, novel: rows, error }
+                message: "This series has been posted by another user",
             })
             return;
         }

@@ -163,6 +163,7 @@ export type NovelBySlugType = Pick<NovelType, 'novelId' | 'slug' | 'title' | 'ch
     mediumScore: number;
     views: number
     chapterRead: number
+    followerCount: number
 }
 
 export type ChapterDetailResType = Pick<ChapterType, 'chapterId' | 'novelName' | 'novelSlug' | 'title' | 'content' | 'chapterNumber' | 'updatedAt' | 'novelId'> & {

@@ -157,3 +157,68 @@ export const PROPERTIES_NOVEL : PROPERTIES_NOVEL_PROPS = {
         { id: 3, value: "Ngôi Thứ Nhất" },
     ]
 }
+
+// --------------------------------------------------
+
+type IconType = {
+    id: number
+    url: string
+}
+export interface IconTypeProps {
+    iconTrollFace: IconType[]
+}
+export const iconEmojiData : IconTypeProps = {
+    iconTrollFace: [
+            { id: 1, url: "https://4.bp.blogspot.com/-slisLqTvF6A/WtuC0aownPI/AAAAAAABiEc/HE_BH0aQLgYeT9QrNLE5B_QoyIYwcJ_swCKgBGAs/h120/01-kyghe.gif" },
+            { id: 2, url: "https://3.bp.blogspot.com/-uTp2kw7VMfM/WtuC0ccNKwI/AAAAAAABiEc/6cCUK3cCpEsF-1hMh-fdr1gzLJ0HaOuxgCKgBGAs/h120/02-ahihi.gif" },
+            { id: 3, url: "https://3.bp.blogspot.com/-6klqRMX3feI/WtuC0Z8HaOI/AAAAAAABiEc/RvsxMZLHAOovUSl05MOS1uT8frEH_w2uwCKgBGAs/h120/03-trollgif.gif" },
+            { id: 4, url: "https://2.bp.blogspot.com/-pcYH7hC7Ftg/WtuC0QdUFXI/AAAAAAABiEc/Ar8xlsOTNKA13600G6gTKGUTHbe_fqQzQCKgBGAs/h120/04-lolol.gif" },
+            { id: 5, url: "https://1.bp.blogspot.com/-_Y4X2y1k_2Y/WtuC0a4gxKI/AAAAAAABiEc/QeFXBuxebe4x65_u0o6UaqzUBNkpAnYtwCKgBGAs/h120/05-lolol2.gif" },
+            { id: 6, url: "https://2.bp.blogspot.com/-tOZj0cwh1Yk/WtuC0TOnBoI/AAAAAAABiEc/zWrJB0lyb6oqwdSMIG5DLdJjWTXoElNcACKgBGAs/h120/05-lolol3.gif" },
+            { id: 7, url: "https://3.bp.blogspot.com/-1Kzidf5jke8/WtuC0e5CkgI/AAAAAAABiEc/amjJCh85Cu8pwvvjkhJx1Wqnw7gkAf_VQCKgBGAs/h120/06-BlackGuyBeaten.gif" },
+            { id: 8, url: "https://4.bp.blogspot.com/-1k0KGCGSxkk/WtuC0S1wVFI/AAAAAAABiEc/4fMqhG1zBrED82kSPmzS65DLzPT1KOnGwCKgBGAs/h120/07-ahaha.gif" },
+            { id: 9, url: "https://4.bp.blogspot.com/-uH4aeFnSxFA/WtuC0WUtuXI/AAAAAAABiEc/bTjpu-ObsOwxYnoDuH5JUn3E53KZUh-wQCKgBGAs/h120/08-Pfftch.gif" },
+            { id: 10, url: "https://3.bp.blogspot.com/-h2lg24wL2oQ/WtuC0RDtvpI/AAAAAAABiEc/FdDrVlNsTCQSazibHcX-_xqghDXFgr19wCKgBGAs/h120/09-dapban.gif" },
+            { id: 11, url: "https://4.bp.blogspot.com/-l1OKv-XNKJ0/WtuC0XbCSmI/AAAAAAABiEc/WveGVvknLDszIN6hhjEopa1Ol0s5bok2gCKgBGAs/h120/10-trolldance.gif" },
+            { id: 12, url: "https://2.bp.blogspot.com/-S3LfYBVHeGg/WtuC0VxTD-I/AAAAAAABiEc/HcmnXUmtnKkkyiKm8e48vVTerBpVk5VAwCKgBGAs/h120/11-Devil.gif" },
+            { id: 13, url: "https://3.bp.blogspot.com/-u07nf_GIRJo/WtuC0YeRc5I/AAAAAAABiEc/cw88uWB44XYXGt_YHK3pCUBWXXwSqPwowCKgBGAs/h120/12-ExcitedTroll.gif" },
+            { id: 14, url: "https://3.bp.blogspot.com/-WNUKKK5YeKk/WtuC0WAoksI/AAAAAAABiEc/TevdvRXqUDgJzdR0dqBTKwYr9XUH276CwCKgBGAs/h120/13-Gay.gif" },
+            { id: 15, url: "https://2.bp.blogspot.com/-ydGmRnPYvQM/WtuC0VL7NFI/AAAAAAABiEc/QzLrgmdmJvYIhYHxaqAd9A4cz0VcygaJQCKgBGAs/h120/13-slap.gif" },
+            { id: 16, url: "https://3.bp.blogspot.com/-Su2mydtLs8s/WtuC0dw04oI/AAAAAAABiEc/igqB7svHe68bFSGl_xyj9GFWtk2_kswlQCKgBGAs/h120/13-troll-typing.gif" },
+            { id: 17, url: "https://4.bp.blogspot.com/-cTjPiMh5EiA/WtuC0cWzn9I/AAAAAAABiEc/bWgMjW_snlstdCqJ4T1YBNq8eJ_aO3ojQCKgBGAs/h120/13-u-mad-troll.gif" },
+            { id: 18, url: "https://1.bp.blogspot.com/-DFdQ1q2SaUs/WtuC0Utob9I/AAAAAAABiEc/rRQ9PtVAFVwNPT5zcebGqOzsr_jXV8hwACKgBGAs/h120/14-yaoming.gif" },
+            { id: 19, url: "https://4.bp.blogspot.com/-Ls8yHAyXA54/WtuC0cdgTLI/AAAAAAABiEc/7SQEwH8YH8wPVRXd6flHCm0zd-6xh6SdQCKgBGAs/h120/15-pff.gif" },
+            { id: 20, url: "https://1.bp.blogspot.com/-Scb7BYOitzI/WtuC0VjGy-I/AAAAAAABiEc/t0MkgL_0PYUWQ2yiIw_zCf1qC4jui5LvACKgBGAs/h120/16-yao_ming_heck_no.gif" },
+            { id: 21, url: "https://2.bp.blogspot.com/-CjnrLJtHwm0/WtuC0ScMXoI/AAAAAAABiEc/7x8NgPw5YBUdSyreVOKrkQ55Is_0BzpUACKgBGAs/h120/17-WhatYouDidThere.jpeg " },
+            { id: 22, url: "https://2.bp.blogspot.com/-19eZG3Qy3Tg/WtuC0f3cz2I/AAAAAAABiEc/PkmQyakcvRsrWYfndHp-ANAa_954TTliACKgBGAs/h120/18-hichic.gif" },
+            { id: 23, url: "https://1.bp.blogspot.com/-MC3KPEyOyIU/WtuC0SmvQJI/AAAAAAABiEc/ODw43MsOSYkkKyHK6Q7OSzmg8WV82NHfACKgBGAs/h120/19-hichic2.gif" },
+            { id: 24, url: "https://1.bp.blogspot.com/-2xE174g_lE0/WtuC0T5ZEkI/AAAAAAABiEc/iGmcPQJy-8cSRjGU0kG0i6Z34cD2WwaXQCKgBGAs/h120/20-hichic3.gif" },
+            { id: 25, url: "https://4.bp.blogspot.com/-752G5kjLptg/WtuC0TY6UII/AAAAAAABiEc/RGMRo6Mzy6cQ84OGOZbMN2nGOiUNiRiPACKgBGAs/h120/21-TheSaddest.gif" },
+            { id: 26, url: "https://2.bp.blogspot.com/-q1pGAFyZ8K8/WtuC0e7KUYI/AAAAAAABiEc/gXx9Mk3ieDkJutQ3nyShmKNDsBudWRfDgCKgBGAs/h120/22-Baww.gif" },
+            { id: 27, url: "https://4.bp.blogspot.com/-UQmfsc_xW0Y/WtuC0UTGckI/AAAAAAABiEc/bhU8l2msJOIRlBY0ddpGXLajfEztP31FQCKgBGAs/h120/23-SoMuchWin.gif" },
+            { id: 28, url: "https://4.bp.blogspot.com/-cVsVDX8P7E8/WtuC0Rfn1VI/AAAAAAABiEc/tBYO1DHFu0AGkOIOmVB1tiqltvv6Dh9swCKgBGAs/h120/24-BigGrin.gif" },
+            { id: 29, url: "https://2.bp.blogspot.com/-faTYou0lD8Q/WtuC0bxmvXI/AAAAAAABiEc/o4NpeSBbNxE98BsMFqo1nZSSSEbQVj12QCKgBGAs/h120/25-AwwYeah.gif" },
+            { id: 30, url: "https://1.bp.blogspot.com/-6EgjhCgnqIY/WtuC0Xw6sfI/AAAAAAABiEc/b9kj0itjkeoBBxxf3TXgqRoXMDvrsBDzgCKgBGAs/h120/26-ForeverDontCare.gif" },
+            { id: 31, url: "https://4.bp.blogspot.com/-9r3rGj5opMk/WtuC0doJyQI/AAAAAAABiEc/ew7TTMLvXWAu49Q6SnSHtltxb6P5HnoUwCKgBGAs/h120/27-ForeverAlone.gif" },
+            { id: 32, url: "https://3.bp.blogspot.com/-RVhpxL8c4_g/WtuC0TKKoeI/AAAAAAABiEc/8-eNm5moSDwbCo5CdxKbO5DQxudVQ_kpQCKgBGAs/h120/28-ForeverAlone2.gif" },
+            { id: 33, url: "https://3.bp.blogspot.com/-s6a284cnaBI/WtuC0Qq1KTI/AAAAAAABiEc/tep1SZb-iWU35WTUVWFyectwMx59g1AXACKgBGAs/h120/29-ForeverAloneExcited.gif" },
+            { id: 34, url: "https://4.bp.blogspot.com/-enq6MXH3NVc/WtuC0bJ9rkI/AAAAAAABiEc/Xlmf7wQyE3EAtH70cZFyNJGQpqPWzftngCKgBGAs/h120/30-SoonComputer.gif" },
+            { id: 35, url: "https://2.bp.blogspot.com/-OVXSp5vVpPU/WtuC0eFeozI/AAAAAAABiEc/L6ZjtQL6hg4ynu8oZiJBFZ-9QWJ01t5nACKgBGAs/h120/31-wtf.gif" },
+            { id: 36, url: "https://2.bp.blogspot.com/-SO8K_4q7Eq0/WtuC0cL4yTI/AAAAAAABiEc/_sJP48dHU0E4igO44iiEYaYNX6cWuvPYQCKgBGAs/h120/32-Facepalm.gif" },
+            { id: 37, url: "https://4.bp.blogspot.com/-r8z-mMpra70/WtuC0UbovEI/AAAAAAABiEc/PZDUNYXkpsQxZNDgj1l5HtL01alTPb22gCKgBGAs/h120/33-Shocked.gif" },
+            { id: 38, url: "https://3.bp.blogspot.com/-MavrrOqY5ag/WtuC0b5356I/AAAAAAABiEc/5p7I6RMFrL4YG5-NXhpUv-b1tIuWSgRxQCKgBGAs/h120/34-MotherofGod.gif" },
+            { id: 39, url: "https://4.bp.blogspot.com/-cQ56xSTSg2g/WtuC0V_giuI/AAAAAAABiEc/KeNU5cMc68sLAziPLMPzQTBMe5uRlK4sACKgBGAs/h120/35-GreatScott.gif" },
+            { id: 40, url: "https://4.bp.blogspot.com/-u-13t1pGZDQ/WtuC0ROnJhI/AAAAAAABiEc/Y2r7TesG9pc28lErlyBAfd-6XqYl8FUAwCKgBGAs/h120/36-Gasp.gif" },
+            { id: 41, url: "https://1.bp.blogspot.com/-WUQhxMp1tfs/WtuC0YcYfOI/AAAAAAABiEc/bMR3X0_KqeUQvlh_SLsxKhHJASewxPjLgCKgBGAs/h120/36-panel-NOPE.gif" },
+            { id: 42, url: "https://1.bp.blogspot.com/-EiNhq0BuqN4/WtuC0cp7coI/AAAAAAABiEc/t1wKI8Bwug4FjpPML9Zo4UZ-NwBCOvA2ACKgBGAs/h120/37-FullPanel.gif" },
+            { id: 43, url: "https://4.bp.blogspot.com/-8w5W146wWEE/WtuC0cODhgI/AAAAAAABiEc/mT3A4VJDyXUz5_6Q3pxvzYFlDImtUHaRwCKgBGAs/h120/37-surprised-oh-fuck-no.jpeg" },
+            { id: 44, url: "https://2.bp.blogspot.com/-oDH0MOJChk8/WtuC0SXfKqI/AAAAAAABiEc/U6qRyYTZUnop4jnqiuWBmHzd_GcxCibmgCKgBGAs/h120/38-beerGuy.gif" },
+            { id: 45, url: "https://3.bp.blogspot.com/-jCtMNoMf5fg/WtuC0dP5f7I/AAAAAAABiEc/_ATLXfuKntU0YRk3FKanaEBJ7iTLVkOsgCKgBGAs/h120/38-CerealGuy.gif" },
+            { id: 46, url: "https://2.bp.blogspot.com/-XkrAfNhfefI/WtuC0e-HKkI/AAAAAAABiEc/Ye5T19Ui5B0t6yTQgSGLVs96lEE3kXtPwCKgBGAs/h120/39-CerealSpitting.gif" },
+            { id: 47, url: "https://2.bp.blogspot.com/-ZjTuDQ12vJo/WtuC0WUx6YI/AAAAAAABiEc/1QtNGXemvJ49h3Ka47uVTQMcxqTTXjD5wCKgBGAs/h120/40-NewspaperGuy.gif" },
+            { id: 48, url: "https://1.bp.blogspot.com/-LjVtz-0fyu8/WtuC0Rwj9nI/AAAAAAABiEc/Il0QIECA09MNnMvaiGVWAY5XyVzNuRf6QCKgBGAs/h120/41-NewspaperGuyTear.gif" },
+            { id: 49, url: "https://1.bp.blogspot.com/-7lQVi6yAYcM/WtuC0dMqhfI/AAAAAAABiEc/LZ1cv2OcqKAWnF6pnYoVzKY1f6jMfQNAACKgBGAs/h120/42-Milk.jpeg" },
+            { id: 50, url: "https://3.bp.blogspot.com/-Z69lKowAvM0/WtuC0QFoRQI/AAAAAAABiEc/cvT1rDozp5gY_V6MG4H-akYmsjx6zKu7ACKgBGAs/h120/43-AreYouKiddingMe.gif" },
+            
+    ]
+}

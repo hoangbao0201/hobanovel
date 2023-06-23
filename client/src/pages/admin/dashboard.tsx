@@ -1,9 +1,16 @@
 import Head from "next/head";
-import { ReactNode } from "react";
+import dynamic from "next/dynamic";
+import { ReactNode, useState } from "react";
 import AdminLayout from "@/components/Layout/AdminLayout";
 
-const AdminDashboardPage = () => {
+import { Editor, EditorState, convertToRaw } from "draft-js";
+import "draft-js/dist/Draft.css";
+import EmojiPicker from "@/components/features/EmojiPicker";
+import CommentInput from "@/components/features/CommentInput";
 
+
+const AdminDashboardPage = () => {
+    
     return (
         <>
             <Head>
@@ -13,8 +20,10 @@ const AdminDashboardPage = () => {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
             <main>
-                <div>
-                    Dashboard
+                <div className="w-full">
+                    
+                    <CommentInput />
+
                 </div>
             </main>
         </>
@@ -24,7 +33,5 @@ const AdminDashboardPage = () => {
 export default AdminDashboardPage;
 
 AdminDashboardPage.getLayout = (page: ReactNode) => {
-    return (
-        <AdminLayout>{page}</AdminLayout>
-    );
+    return <AdminLayout>{page}</AdminLayout>;
 };

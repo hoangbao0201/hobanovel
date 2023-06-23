@@ -10,7 +10,7 @@ import { checkCreateChapter } from "../middleware/checkCreateChapter";
 
 router.post("/increase/view/:chapterId", increaseViewChapter);
 
-router.post("/create-by-url/:slug/:chapterNumber", verifyToken, checkCreateChapter, createChapterByUrl);
+router.post("/create/url/:slug/:chapterNumber", verifyToken, checkCreateChapter, createChapterByUrl);
 
 router.get("/chapter-detail/:slug/:chapterNumber", getChapterDetailBySlug);
 

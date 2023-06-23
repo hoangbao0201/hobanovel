@@ -6,6 +6,8 @@ import { NovelType } from "@/types";
 import { placeholderBlurhash } from "@/constants";
 import BlurImage from "@/components/Layout/BlurImage";
 import { PROPERTIES_NOVEL } from "@/constants/data";
+import ItemNovel from "@/components/Layout/ItemNovel";
+import { Fragment } from "react";
 
 interface OutstandingProps {
     novels?: NovelType[]
@@ -22,6 +24,9 @@ const Outstanding = ({ novels = [] } : OutstandingProps) => {
                     novels?.length ? (
                         novels.map((novel : NovelType) => {
                             return (
+                                // <Fragment key={novel?.novelId}>
+                                //     <ItemNovel novel={novel}/>
+                                // </Fragment>
                                 <div key={novel.novelId} className="flex">
                                     <Link href={`/truyen/${novel.slug}`}>
                                         <LazyLoad className="relative w-20 h-28 overflow-hidden shadow">

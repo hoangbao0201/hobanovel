@@ -45,11 +45,7 @@ export const getNovelBySlugHandle = async (slug: string) => {
 
 export const createNovelByUrlHandle = async (url: string, token: string) => {
     try {
-        if (!url) {
-            return null;
-        }
-    
-        const novel = await axios.post(
+        const novelRes = await axios.post(
             `${apiUrl}/api/novels/create/url`,
             {
                 url: url,
@@ -61,14 +57,16 @@ export const createNovelByUrlHandle = async (url: string, token: string) => {
             }
         );
     
-        if (novel.data.success) {
-            return novel;
-        }
-    
-        return null;
+        return novelRes.data;
     } catch (error) {
-        // console.log(error)
-        return null;
+        if(axios.isAxiosError(error) && error.response?.data) {
+            return error.response.data;
+        } else {
+            return {
+                success: false,
+                message: (error as Error).message
+            };
+        }
     }
 };
 

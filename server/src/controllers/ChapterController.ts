@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { createChapterByDataHandle, getChapterDetailHandle, getDataChapterByUrlMTCHandle, increaseViewChapterHandle } from "../services/chapter.services";
 import { ChapterType, ChapterViewersType } from "../types";
 
-// Create Novel By Data | /create-by-url/:slug/:chapterNumber
+// Create Novel By Data | /create/url/:slug/:chapterNumber
 export const createChapterByUrl = async (req: Request, res: Response) => {
     try {
         const { slug, chapterNumber } = req.params
@@ -13,6 +13,7 @@ export const createChapterByUrl = async (req: Request, res: Response) => {
             })
         }
 
+        // Get Data Chapter
         const getDataChapter : any | null = await getDataChapterByUrlMTCHandle({ novelSlug: slug, chapterNumber: Number(chapterNumber)} as ChapterType);
         if(!getDataChapter.success) {
             return res.status(400).json({
@@ -21,7 +22,7 @@ export const createChapterByUrl = async (req: Request, res: Response) => {
             })
         }
 
-        // // createChapterByDataHandle({ novelName: res.locals.novel.title, novelId: res.locals.novel.novelId, ...getDataChapter });
+        // Create Chapter
         const createChapterResponse = await createChapterByDataHandle({ userId: res.locals.user.userId, novelSlug: slug, novelName: res.locals.novel.title, novelId: res.locals.novel.novelId, ...getDataChapter.data });
         if(!createChapterResponse.success) {
             return res.status(400).json({
@@ -34,7 +35,7 @@ export const createChapterByUrl = async (req: Request, res: Response) => {
         return res.json({
             success: true,
             message: "Create novel successful",
-            data: { novelName: res.locals.novel.title, novelId: res.locals.novel.novelId, ...getDataChapter }
+            data: { novelName: res.locals.novel.title, novelId: res.locals.novel.novelId }
         })
     } catch (error) {
         return res.status(500).json({

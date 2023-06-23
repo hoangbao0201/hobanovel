@@ -68,6 +68,22 @@ export interface NovelFollowerType {
     userId: string
 }
 
+// User
+export interface UserType {
+    userId: string
+    name: string
+    username: string
+    email: string
+    password: string
+    description: string
+    candy: number
+    flower: number
+    avatarUrl: string
+    avatarPublicId: string
+    createdAt: Date
+    updatedAt: Date
+}
+
 // Novel
 export interface NovelType {
     novelId: string
@@ -90,22 +106,6 @@ export interface NovelType {
     updatedAt: Date
 }
 
-// User
-export interface UserType {
-    userId: string
-    name: string
-    username: string
-    email: string
-    password: string
-    description: string
-    candy: number
-    flower: number
-    avatarUrl: string
-    avatarPublicId: string
-    createdAt: Date
-    updatedAt: Date
-}
-
 export interface SelectType {
     value: string
     label: string
@@ -124,4 +124,12 @@ export interface ChapterViewersType {
 
     createdAt: Date
     updatedAt: Date
+}
+
+
+// ------------------------
+export interface TypeResponse {
+    success: boolean
+    message?: string
+    error: Error
 }

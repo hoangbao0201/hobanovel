@@ -19,8 +19,11 @@ import {
     getAdvancedNovelHandle,
     getFollowsNovelHandle,
     getAllNovelForSeoHandle,
+    checkNovelExistedHandle,
+    getChapterCountNovelHandle,
 } from "../services/novel.services";
 import { HistoryReadingType, NovelFollowerType, NovelType } from "../types";
+import { uploadThumbnailNovelHandle } from "../services/image.services";
 
 
 // Create Novel By Data | /api/novels/create/data
@@ -98,16 +101,42 @@ export const createNovelByUrl = async (req: Request, res: Response) => {
             });
         }
 
-        const dataNovel : any | null = await getDataNovelByUrlMTCHandle(url as string);
-        if (!dataNovel) {
+        // Check Novel Existed
+        const checkNovelExisted = await checkNovelExistedHandle(String(url.split("com/truyen/")[1]))
+        if(!checkNovelExisted.success) {
+            return {
+                success: false,
+                error: checkNovelExisted.error
+            }
+        }
+
+        const novel = checkNovelExisted?.data
+        if(novel && novel.length > 0) {
+            // Get chapter latest of url
+            const chapterNew = await getChapterCountNovelHandle(url);
+
+            return res.json({
+                success: true,
+                message: "Novel existed",
+                novel: {
+                    ...checkNovelExisted.data[0],
+                    chapterLatest: chapterNew
+                }
+            })
+        }
+
+        // Get Data Novel
+        const getDataNovelRes = await getDataNovelByUrlMTCHandle(url as string);
+        if (!getDataNovelRes.success) {
             return res.status(400).json({
                 success: false,
-                message: "Value invalid",
+                error: getDataNovelRes.error
             });
         }
 
+        // Create Novel
         const createNovel: any = await createNovelByDataHandle(
-            dataNovel,
+            getDataNovelRes.data,
             res.locals.user.userId
         );
         if (!createNovel.success) {
@@ -118,15 +147,17 @@ export const createNovelByUrl = async (req: Request, res: Response) => {
             });
         }
 
+        // Upload Thumbnail Novel
+        uploadThumbnailNovelHandle({ slug: String(url.split("com/truyen/")[1]), urlImage: getDataNovelRes.data?.urlImage });
+
         return res.json({
             success: true,
             message: "Create novel successful",
-            dataNovel: dataNovel,
             novel: {
                 novelId: createNovel.data.insertId,
-                slug: dataNovel.slug,
-                chapterNumber: dataNovel.chapterNumber,
-                thumbnailUrl: dataNovel.thumbnailUrl
+                slug: getDataNovelRes.data.slug,
+                chapterCount: 0,
+                chapterLatest: getDataNovelRes.data.chapterCount
             },
         });
     } catch (error) {
@@ -653,7 +684,7 @@ export const getAdvancedNovel = async (req: Request, res: Response) => {
     }
 }
 
-export const getAllNovelForSeo = async (req: Request, res: Response) => {
+export const getAllNovelForSeo = async (_req: Request, res: Response) => {
     try {
 
         const resultGetNovelRes = await getAllNovelForSeoHandle();

@@ -206,64 +206,6 @@ const NovelDetailPage = ({ token, tab, novel }: NovelDetailPageProps) => {
                                             <h1>{novel.author}</h1>
                                         </div>
 
-                                        {/* <ul className="sm:hidden">
-                                            <li className="flex mb-2">
-                                                <p className="w-4/12">Tác giả:</p>
-                                                <h2 className="w-8/12">{novel.author}</h2>
-                                            </li>
-                                            <li className="flex mb-2">
-                                                <p className="w-4/12">Chương:</p>
-                                                <h2 className="w-8/12">{novel.chapterCount}</h2>
-                                            </li>
-                                            <li className="flex mb-2">
-                                                <p className="w-4/12">Theo dõi:</p>
-                                                <h2 className="w-8/12">Đang cập nhập</h2>
-                                            </li>
-                                            <li className="flex mb-2">
-                                                <p className="w-4/12">Chương/tuần:</p>
-                                                <h2 className="w-8/12">{novel.newChapterCount}</h2>
-                                            </li>
-                                            <li className="flex mb-2">
-                                                <p className="w-4/12">Lượt xem:</p>
-                                                <h2 className="w-8/12">{convertViewsCount(novel.views)}</h2>
-                                            </li>
-                                            <li className="flex mb-2">
-                                                <p className="w-4/12">Thế loại:</p>
-                                                <div className="w-8/12 flex items-center flex-wrap gap-2 text-sm mb-4">
-                                                    <h2 className="border-[#bf2c24] text-[#bf2c24] px-2 text-sm border rounded-md">
-                                                        {novel.newChapterCount > 0
-                                                            ? "Đang ra"
-                                                            : "Chưa ra chương mới"}
-                                                    </h2>
-                                                    {novel.category && (
-                                                        <h2 className="border-[#b78a28] text-[#b78a28] px-2 text-sm border rounded-md">
-                                                            {PROPERTIES_NOVEL['genres'][novel.category-1].value}
-                                                        </h2>
-                                                    )}
-                                                    {novel.personality && (
-                                                        <h2 className="border-[#088860] text-[#088860] px-2 text-sm border rounded-md">
-                                                            {PROPERTIES_NOVEL['personality'][novel.personality-1].value}
-                                                        </h2>
-                                                    )}
-                                                    {novel.scene && (
-                                                        <h2 className="border-[#088860] text-[#088860] px-2 text-sm border rounded-md">
-                                                            {PROPERTIES_NOVEL['scene'][novel.scene-1].value}
-                                                        </h2>
-                                                    )}
-                                                    {novel.classify && (
-                                                        <h2 className="border-[#088860] text-[#088860] px-2 text-sm border rounded-md">
-                                                            {PROPERTIES_NOVEL['classify'][novel.classify-1].value}
-                                                        </h2>
-                                                    )}
-                                                    {novel.viewFrame && (
-                                                        <h2 className="border-[#088860] text-[#088860] px-2 text-sm border rounded-md">
-                                                            {PROPERTIES_NOVEL['viewFrame'][novel.viewFrame-1].value}
-                                                        </h2>
-                                                    )}
-                                                </div>
-                                            </li>
-                                        </ul> */}
-
                                         <div className="flex items-center flex-wrap gap-2 sm:text-sm text-xs mb-4 max-sm:justify-center">
                                             {novel.author && (
                                                 <div className="border-[#666] text-[#666] px-3 py-1 border rounded-full ">
@@ -302,18 +244,18 @@ const NovelDetailPage = ({ token, tab, novel }: NovelDetailPageProps) => {
                                             )}
                                         </div>
 
-                                        <div className="max-sm:hidden flex gap-9 mb-4">
+                                        <div className="max-sm:justify-center flex gap-9 mb-4">
                                             <div className="text-center">
                                                 <span className="font-semibold">
                                                     {novel.chapterCount || 0}
                                                 </span>
-                                                <div className="text-base">Chương</div> 
+                                                <div className="sm:text-base text-xs">Chương</div> 
                                             </div>
                                             <div className="text-center">
                                                 <span className="font-semibold">
                                                     {novel.newChapterCount || 0}
                                                 </span>
-                                                <div className="text-base">Chương/tuần</div>
+                                                <div className="sm:text-base text-xs">Chương/tuần</div>
                                             </div>
                                                 <Tippy
                                                     theme="light"
@@ -325,12 +267,12 @@ const NovelDetailPage = ({ token, tab, novel }: NovelDetailPageProps) => {
                                                         <span className="font-semibold">
                                                             {convertViewsCount(novel?.views) || 0}
                                                         </span>
-                                                        <div className="text-base">Lượt đọc</div>
+                                                        <div className="sm:text-base text-xs">Lượt đọc</div>
                                                     </div>
                                                 </Tippy>
                                             <div className="text-center">
-                                                <span className="font-semibold">818</span>
-                                                <div className="text-base">Cất giữ</div>
+                                                <span className="font-semibold">{novel?.followerCount || 0}</span>
+                                                <div className="sm:text-base text-xs">Cất giữ</div>
                                             </div>
                                         </div>
 

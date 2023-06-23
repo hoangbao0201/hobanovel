@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const getBlurDataURL = async (url: string | null) => {
+export const getBlurDataURL = async (url: string) => {
     if (!url) {
         return null;
     }
