@@ -87,7 +87,7 @@ const MainLayout = ({
 
             {isHeader && <Header autoHidden={autoHidden} />}
 
-            {isBannerPage && <BannersIntro />}
+            <BannersIntro isShow={isBannerPage}/>
 
             <div
                 className={`${

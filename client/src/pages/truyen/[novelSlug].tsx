@@ -75,14 +75,14 @@ const NovelDetailPage = ({ token, tab, novel }: NovelDetailPageProps) => {
     const handleCheckFollowNovel = async () => {
         const token = getAccessToken();
         if(!token || !novel?.novelId) {
-            console.log("Chưa đủ thông tin")
+            // console.log("Chưa đủ thông tin")
             return
         }
         try {
             const query = `${novel?.novelId}?token=${token}`
             const checkFollowRes = await checkFollowNovelHandle(query);
 
-            console.log(checkFollowRes)
+            // console.log(checkFollowRes)
 
             if(checkFollowRes.success) {
                 setIsFollow(checkFollowRes.isFollow)
@@ -181,9 +181,6 @@ const NovelDetailPage = ({ token, tab, novel }: NovelDetailPageProps) => {
                     <WrapperLayout className="pt-5 max-lg:max-w-3xl">
                         <div className="-mx-4">
                             <article className="mb-6 px-4">
-                                {/* <h1 className="lg:mb-6 sm:text-xl sm:hidden text-xl sm:line-clamp-2 font-semibold mb-1 uppercase text-center">{novel.title}</h1>
-                                <time className="sm:hidden block text-center align-middle mb-4 italic text-gray-600 font-normal text-sm">[Tạo lúc {convertTime(novel.createdAt)}]</time> */}
-
                                 <div className="sm:flex -mx-4">
                                     <div className={`sm:w-3/12 w-full max-sm:mb-6 px-4 text-center justify-center`}>
                                         <BlurImage
@@ -201,7 +198,7 @@ const NovelDetailPage = ({ token, tab, novel }: NovelDetailPageProps) => {
 
                                         <div className="sm:hidden mb-3 flex items-center max-sm:justify-center">
                                             <i className="w-4 h-4 mr-2 block">{iconAuthor}</i>
-                                            <h1>{novel.author}</h1>
+                                            <p>{novel.author}</p>
                                         </div>
 
                                         <div className="flex items-center flex-wrap gap-2 sm:text-sm text-xs mb-4 max-sm:justify-center">

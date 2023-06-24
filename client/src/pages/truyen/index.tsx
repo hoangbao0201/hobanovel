@@ -19,6 +19,7 @@ import { advancedSearchNovelHandle } from "@/services/novels.services";
 import BlurImage from "@/components/Layout/BlurImage";
 import { placeholderBlurhash } from "@/constants";
 import { PaginationLayout } from "@/components/Layout/PaginationLayout";
+import { LoadingForm } from "@/components/Layout/LoadingLayout";
 
 type querySearchNovelTypes = {
     [key: string]: number[]
@@ -108,6 +109,41 @@ const AdvencedSearchNovelPage = ({ query, novels, sortBy, currentPage, countPage
         handleNextPage({ page: String(page) })
     };
 
+
+    const { data: novelsQuery } = useSWR<{ novels: NovelResType[], countPage: number }>(
+        `?page=1`,
+        async (queryH) => {
+
+            const queryString = new URLSearchParams(querySearchNovel as any);
+            const queryR = `sort_by=${sortBy}&page=${currentPage}&${queryString}`
+            
+            const getNovels = await advancedSearchNovelHandle(queryR || '')
+
+            if (!getNovels.success || !getNovels) {
+                throw new Error();
+            }
+
+            return {
+                novels: getNovels.novels,
+                countPage: getNovels.countPage
+            };
+        },
+        {
+            onErrorRetry: (error, _, __, revalidate, { retryCount }) => {
+                if (error.status === 404) {
+                    return;
+                }
+                if (retryCount >= 1) {
+                    return;
+                }
+                setTimeout(() => {
+                    revalidate({ retryCount });
+                }, 2000);
+            },
+        }
+    );
+
+    console.log(novelsQuery?.novels)
 
     const getLayout = (page: ReactNode) => {
         return <MainLayout autoHidden={false} isBannerPage={!matchesMobile}>{page}</MainLayout>;
@@ -318,56 +354,73 @@ const AdvencedSearchNovelPage = ({ query, novels, sortBy, currentPage, countPage
                                         
     
                                     </div>
-    
-                                    <div className="grid md:grid-cols-2 grid-cols-1 mt-5">
-                                        {   
-                                            novels?.length ? (
-                                                novels.map((novel) => {
-                                                    return (
-                                                        <div key={novel.novelId} className="px-4">
-                                                            <div className="flex py-4 border-b">
-                                                                <Link href={`/truyen/${novel.slug}`} className="">
-                                                                    <LazyLoad className="relative w-20 h-28 overflow-hidden shadow">
-                                                                        <BlurImage
-                                                                            width={85}
-                                                                            height={125}
-                                                                            alt="image-demo"
-                                                                            blurDataURL={novel.imageBlurHash || placeholderBlurhash}
-                                                                            className="group-hover:scale-105 group-hover:duration-500 object-cover h-full w-full"
-                                                                            placeholder="blur"
-                                                                            src={novel.thumbnailUrl || "/images/novel-default.png"}
-                                                                        />
-                                                                    </LazyLoad>
-                                                                </Link>
-                                                                <div className="flex-1 ml-3">
-                                                                    <h2 className="mb-2 text-base line-clamp-1 font-semibold">
-                                                                        <Link className="block" href={`/truyen/${novel.slug}`}>{novel.title}</Link>
-                                                                    </h2>
-                                                                    <div className="line-clamp-2 text-sm mb-2 text-slate-900">{novel.description.replace(/<[^>]+>/g, '')}</div>
-                                                                    <div className="text-base flex align-middle items-center justify-between">
-                                                                        <span className="flex items-center max-w-[55%] text-sm mr-1">
-                                                                            <i className="w-4 h-4 block mr-1 mb-1">{iconAuthor}</i> <span className="line-clamp-1 align-middle">{novel.author}</span>
-                                                                        </span>
-                                                                        <span className="px-2 text-xs text-orange-700 line-clamp-1 align-middle text-center border border-orange-700">{PROPERTIES_NOVEL['genres'][novel.category-1].value}</span>
-                                                                    </div>
-                                                                    <span className="text-sm flex items-center">
-                                                                        <i className="w-3 block mr-2">{iconList}</i> {novel.chapterCount} chương
-                                                                    </span>
-                                                                </div>
-                                                            </div>
+                                    
+                                    <div className="mt-5">
+
+                                        {
+                                            novelsQuery ? (
+                                                novelsQuery.novels.length > 0 ? (
+                                                    <>
+                                                        <div className="grid md:grid-cols-2 grid-cols-1">
+                                                            {
+                                                                novelsQuery.novels.map((novel) => {
+                                                                    return (
+                                                                        
+                                                                        <div key={novel.novelId} className="px-4">
+                                                                            <div className="flex py-4 border-b">
+                                                                                <Link href={`/truyen/${novel.slug}`} className="">
+                                                                                    <LazyLoad className="relative w-20 h-28 overflow-hidden shadow">
+                                                                                        <BlurImage
+                                                                                            width={85}
+                                                                                            height={125}
+                                                                                            alt="image-demo"
+                                                                                            blurDataURL={novel.imageBlurHash || placeholderBlurhash}
+                                                                                            className="group-hover:scale-105 group-hover:duration-500 object-cover h-full w-full"
+                                                                                            placeholder="blur"
+                                                                                            src={novel.thumbnailUrl}
+                                                                                        />
+                                                                                    </LazyLoad>
+                                                                                </Link>
+                                                                                <div className="flex-1 ml-3">
+                                                                                    <h2 className="mb-2 text-base line-clamp-1 font-semibold">
+                                                                                        <Link className="block" href={`/truyen/${novel.slug}`}>{novel.title}</Link>
+                                                                                    </h2>
+                                                                                    <div className="line-clamp-2 text-sm mb-2 text-slate-900">
+                                                                                        {novel.description && novel?.description.replace(/<[^>]+>/g, '')}
+                                                                                    </div>
+                                                                                    <div className="text-base flex align-middle items-center justify-between">
+                                                                                        <span className="flex items-center max-w-[55%] text-sm mr-1">
+                                                                                            <i className="w-4 h-4 block mr-1 mb-1">{iconAuthor}</i> <span className="line-clamp-1 align-middle">{novel.author}</span>
+                                                                                        </span>
+                                                                                        <span className="px-2 text-xs text-orange-700 line-clamp-1 align-middle text-center border border-orange-700">
+                                                                                            {(novel.category >=1 && novel.category <=11) ? PROPERTIES_NOVEL['genres'][novel?.category-1].value : PROPERTIES_NOVEL['genres'][0].value}
+                                                                                        </span>
+                                                                                    </div>
+                                                                                    <span className="text-sm flex items-center">
+                                                                                        <i className="w-3 block mr-2">{iconList}</i> {novel.chapterCount} chương
+                                                                                    </span>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+            
+                                                                    )
+                                                                })
+                                                            }
                                                         </div>
-                                                    )
-                                                })
+                                                        <div className="flex justify-center my-5">
+                                                            <PaginationLayout countPage={novelsQuery.countPage} currentPage={currentPage} handleChangePage={handlePageChange}/>
+                                                        </div>
+                                                    </>
+                                                ) : (
+                                                    <div>Không có truyện</div>
+                                                )
                                             ) : (
-                                                <div>Không có truyện</div>
+                                                <LoadingForm />
                                             )
+                                            
                                         }
                                     </div>
-    
-    
-                                    <div className="flex justify-center my-5">
-                                        <PaginationLayout countPage={countPage} currentPage={currentPage} handleChangePage={handlePageChange}/>
-                                    </div>
+
                                 </div>
                             </div>
                         </div>
@@ -393,32 +446,27 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
             context.query['sort_by'] = 'novel_new'
         }
 
-        // const queryString = Object.entries(context.query)
-        //     .map(([key, value]) => `${key}=${Array.isArray(value) ? value.join(',') : value}`)
-        //     .join('&');
+        // const query = context.query as Record<string, string>;
+        // const queryString = new URLSearchParams(query).toString();
+        // const getNovels = await advancedSearchNovelHandle(queryString || '')
 
-        const query = context.query as Record<string, string>;
-        const queryString = new URLSearchParams(query).toString();
-
-        const getNovels = await advancedSearchNovelHandle(queryString || '')
-
-        if(!getNovels.success) {
-            return {
-                props: {
-                    query: {
-                        genres: realGenres,
-                        status: realStatus,
-                        personality: realPersonality,
-                        scene: realScene,
-                        classify: realClassify,
-                        viewFrame: realViewFrame,
-                    },
-                    novels: [],
-                    sortBy: sort_by || 'novel_new',
-                    currentPage: String(page) || '1',
-                },
-            };
-        }
+        // if(!getNovels.success) {
+        //     return {
+        //         props: {
+        //             query: {
+        //                 genres: realGenres,
+        //                 status: realStatus,
+        //                 personality: realPersonality,
+        //                 scene: realScene,
+        //                 classify: realClassify,
+        //                 viewFrame: realViewFrame,
+        //             },
+        //             novels: [],
+        //             sortBy: sort_by || 'novel_new',
+        //             currentPage: String(page) || '1',
+        //         },
+        //     };
+        // }
         
         return {
             props: {
@@ -431,9 +479,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
                     viewFrame: realViewFrame,
                 },
                 sortBy: sort_by || 'novel_new',
-                novels: getNovels?.novels || [],
+                // novels: getNovels?.novels || [],
                 currentPage: Number(page) || 1,
-                countPage: getNovels.countPage
+                // countPage: getNovels.countPage
             },
         };
     } catch (error) {

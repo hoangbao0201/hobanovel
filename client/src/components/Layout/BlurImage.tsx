@@ -10,6 +10,7 @@ interface BlurImage extends WithClassName, ComponentProps<typeof Image> {
 
 const BlurImage = (props : BlurImage) => {
     const [isLoading, setLoading] = useState(true);
+    const [imgSrc, setImgSrc] = useState(props.src);
 
     return (
         <Image
@@ -24,7 +25,9 @@ const BlurImage = (props : BlurImage) => {
                 // : "grayscale-0 blur-0"
             )}
             loading="lazy"
+            src={imgSrc}
             onLoadingComplete={() => setLoading(false)}
+            onError={() => setImgSrc("/images/novel-default.png")}
         />
     )
 }

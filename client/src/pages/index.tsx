@@ -1,24 +1,24 @@
-import { ReactNode, useEffect } from "react";
-import { GetServerSideProps, GetStaticProps, NextPage } from "next";
+import { ReactNode } from "react";
+import dynamic from "next/dynamic";
+import { GetStaticProps } from "next";
+
+import useSWR from "swr";
+import axios from "axios";
+import { useMediaQuery } from "usehooks-ts";
 
 import { REVALIDATE_TIME, apiUrl } from "@/constants";
 import MainLayout from "@/components/Layout/MainLayout";
 import {
-    getAllNovelForSeoHandle,
     getNovelsByHighlyRatedHandle,
     getNovelsByOutstandingHandle,
     getNovelsByPageHandle,
     getReadingNovelHandle,
 } from "@/services/novels.services";
+import Head from '@/components/Share/Head';
 import { NovelType, ReviewType } from "@/types";
 import { getReviewsByNovelHandle } from "@/services/review.services";
 import WrapperLayout from "@/components/Layout/WrapperLayout";
-import dynamic from "next/dynamic";
 import { getAccessToken } from "@/services/cookies.servies";
-import useSWR from "swr";
-import axios from "axios";
-import { useMediaQuery } from "usehooks-ts";
-import Head from '@/components/Share/Head';
 
 
 type NovelHighlyRated = NovelType & { mediumScore: number };
@@ -157,15 +157,6 @@ const HomePage = ({
             },
         }
     );
-
-    // const handle = async () => {
-    //     const novels = await getAllNovelForSeoHandle()
-    //     console.log(novels)
-    // }
-
-    // useEffect(() => {
-    //     handle()
-    // })
 
     return (
         <>

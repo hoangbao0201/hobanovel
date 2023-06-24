@@ -26,13 +26,7 @@ const ItemNovel = ({ novel, isRating = false, isAuthor = false } : ItemNovelProp
                             blurDataURL={novel?.imageBlurHash || placeholderBlurhash}
                             className="group-hover:scale-105 group-hover:duration-500 object-cover h-28 w-20"
                             placeholder="blur"
-                            src={novel?.thumbnailUrl || "/images/novel-default.png"}
-                            // onError={(e) => {
-                            //     const target = e.target as HTMLImageElement;
-                            //     target.onerror = null;
-                            //     target.src = "/images/novel-default.png"
-                            //     target.alt = "image default"
-                            // }}
+                            src={novel?.thumbnailUrl}
                         />
                     </LazyLoad>
                 </Link>

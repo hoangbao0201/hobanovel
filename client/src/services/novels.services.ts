@@ -71,20 +71,21 @@ export const createNovelByUrlHandle = async (url: string, token: string) => {
 };
 
 export const getNovelsByDataHandle = async (data: Pick<NovelType, "novelId" | "userId" | "title"> & { page: number }) => {
-    try {
-        const { novelId = '', title = '', userId = '', page = 1 } = data;
-    
-        const novels = await axios.get(
-            `${apiUrl}/api/novels/get/${novelId}?title=${title}&userId=${userId}&page=${page}`
+    try {    
+        const novelsRes = await axios.get(
+            `${apiUrl}/api/novels/get/${data.novelId || ""}?title=${data.title || ""}&userId=${data.userId || ""}&page=${data.page || "1"}`
         );
-        if (novels.data.success) {
-            return novels;
-        }
     
-        return null;
+        return novelsRes.data;
     } catch (error) {
-        // console.log(error)
-        return null;
+        if(axios.isAxiosError(error) && error.response?.data) {
+            return error.response.data;
+        } else {
+            return {
+                success: false,
+                message: (error as Error).message
+            };
+        }
     }
 };
 

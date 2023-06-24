@@ -18,6 +18,7 @@ import { iconBars } from "../../../public/icons";
 import { NavOver } from "./NavOver";
 import { useRouter } from "next/router";
 import { useClickOutSide } from "@/hook/useClickOutSide";
+import SearchInput from "../Layout/SearchInput";
 
 interface HeaderProps {
     autoHidden?: boolean
@@ -183,6 +184,10 @@ const Header = ({ autoHidden = true } : HeaderProps) => {
                         >
                             Tìm truyện
                         </Link>
+
+                        {
+                            !matchesMobile && <SearchInput />
+                        }
 
                         <div className="ml-auto">
                             <div className="flex items-center">

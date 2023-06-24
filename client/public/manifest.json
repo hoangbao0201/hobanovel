@@ -2,7 +2,6 @@
     "name": "Hoba Novel",
     "short_name": "Hoba Novel",
     "display": "standalone",
-    "orientation": "",
     "scope": "/",
     "start_url": "/",
     "icons": [

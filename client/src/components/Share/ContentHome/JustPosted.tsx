@@ -49,7 +49,7 @@ const JustPosted = ({ novels = [] } : JustPostedProps) => {
         return <div>Không có truyện</div>
     }
 
-    console.log(novels)
+    // console.log(novels)
 
     return (
         <div className="px-4 relative overflow-hidden">

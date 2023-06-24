@@ -411,7 +411,8 @@ const AdminBannersPage = ({ banners, bannersMobile }: AdminBannersPageProps) => 
                                         </h3>
                                     </div>
                                 );
-                            })}
+                            })
+                        }
                     </div>
 
                     <div className="mt-5 grid grid-cols-2 gap-6">
@@ -449,7 +450,8 @@ const AdminBannersPage = ({ banners, bannersMobile }: AdminBannersPageProps) => 
                                         </h3>
                                     </div>
                                 );
-                            })}
+                            })
+                        }
                     </div>
                 </div>
             </main>
