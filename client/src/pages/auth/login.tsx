@@ -34,25 +34,18 @@ const LoginPage = () => {
         try {
             const loginResponse = await loginUserHandle(dataForm as any);
 
-            // console.log(loginResponse?.data)
+            if (loginResponse?.success) {
+                addAccessToken(loginResponse.accessToken);
 
-            if (loginResponse?.data.success) {
-                addAccessToken(loginResponse.data.accessToken);
+                const userResponse = await connectUserHandle(loginResponse.accessToken);
 
-                const userResponse = await connectUserHandle(loginResponse.data.accessToken);
-
-                if (userResponse?.data.success) {
-                    dispatch(addUserHandle(userResponse.data.user));
+                if (userResponse?.success) {
+                    dispatch(addUserHandle(userResponse.user));
                     router.back();
                 }
             }
-        } catch (error: any) {
-            // setIsError(
-            //     error.response?.data?.message ?? "An unknown error occurred"
-            // );
-            // setTimeout(() => {
-            //     setIsError(null);
-            // }, 5000);
+        } catch (error) {
+            console.log(error)
         }
     };
 
@@ -116,7 +109,7 @@ export const getServerSideProps : GetServerSideProps = async (ctx) => {
     const token = getAccessTokenOnServer(ctx.req.headers.cookie as string)
     const userResponse = await connectUserHandle(token as string);
 
-    if(userResponse?.data.success) {
+    if(userResponse?.success) {
         return {
             redirect: {
                 destination: "/",

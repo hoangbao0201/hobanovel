@@ -1,4 +1,10 @@
+# *
 User-agent: *
 Allow: /
 
-Sitemap: http://localhost:3000/api/my-sitemap
+# Host
+Host: https://hobanovel.online
+
+# Sitemaps
+Sitemap: https://hobanovel.online/sitemap.xml
+Sitemap: https://hobanovel.online/server-sitemap.xml

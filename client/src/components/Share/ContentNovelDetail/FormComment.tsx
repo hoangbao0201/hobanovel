@@ -4,23 +4,14 @@ import { Fragment, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { CommentType } from "@/types";
 import { EditorState, convertToRaw } from "draft-js";
-// import { EditorStyle } from "@/components/Layout/EditorStyle";
 import { iconSend } from "../../../../public/icons";
 import { addCommentHandle, destroyCommentHandle, getCommentsHandle } from "@/services/comment.services";
-import Link from "next/link";
 import CommentItem from "./CommentItem";
 import { getAccessToken } from "@/services/cookies.servies";
 import { CommentSliceType, addCommentsRDHandle, setCommentsRDHandle } from "@/redux/commentSlice";
 import { LoadingForm } from "@/components/Layout/LoadingLayout";
-// import { socket } from "@/socket";
-// import { io, Socket } from "socket.io-client";
 import { EditorStyle } from "@/components/Layout/EditorStyle";
 import { dataFakeBannersMobile } from "@/components/partials/BannersIntro";
-
-// import { CKEditor } from '@ckeditor/ckeditor5-react';
-
-// import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-// const CKEditor = dynamic(import("@ckeditor/ckeditor5-react"))
 
 
 interface FormCommentProps {
@@ -138,28 +129,9 @@ const FormComment = ({ tab, novelId }: FormCommentProps) => {
         }
     }
 
-
-    // ---
-
-    const editorRef = useRef<{ CKEditor: any, ClassicEditor: any } | null>(null);
-    const { CKEditor, ClassicEditor } = editorRef.current || {};
-
-    useEffect(() => {
-        editorRef.current = {
-        CKEditor: require("@ckeditor/ckeditor5-react").CKEditor, // v3+
-        ClassicEditor: require("@ckeditor/ckeditor5-build-classic")
-        };
-    }, []);
-
-
     return (
         <div className="flex -mx-4">
             <div className="lg:w-8/12 w-full px-4">
-
-                {/* <CKEditorWrapper />
-                <code>
-                    {value}
-                </code> */}
 
                 <div className="flex mb-10">
                     <div className="flex-1 pr-24 pl-2 py-2 border bg-gray-100 border-opacity-5 relative">

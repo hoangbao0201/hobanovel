@@ -6,12 +6,14 @@ interface HeadProps {
     title?: string;
     description?: string;
     image?: string;
+    fallbackImage?: string
 }
 
 export default function Head({
     title = 'Đọc Truyện Chữ Online - Website chính thức - HobaNovel',
     description = 'Website đọc truyện chữ miễn phí!',
     image = 'https://res.cloudinary.com/djrbd6ftt/image/upload/v1686325713/hobanovel/Capture_zxigta.png',
+    fallbackImage = "https://res.cloudinary.com/djrbd6ftt/image/upload/v1686325713/hobanovel/Capture_zxigta.png"
 }: HeadProps) {
     const { asPath } = useRouter();
 
@@ -23,6 +25,7 @@ export default function Head({
             <meta name="title" content={title} />
             <meta name="description" content={description} />
 
+            <meta property="og:image" content={fallbackImage}></meta>
             <meta property="og:type" content="website" />
             <meta property="og:url" content={WEBSITE_URL + asPath} />
             <meta property="og:title" content={title} />

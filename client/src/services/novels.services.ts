@@ -193,7 +193,7 @@ export const getAllNovelForSeoHandle = async () => {
         const getNovels = await axios.get(
             `${apiUrl}/api/novels/get/all/seo`);
 
-        return getNovels.data;
+        return getNovels.data.novels;
     } catch (error) {
         if(axios.isAxiosError(error) && error.response?.data) {
             return error.response.data;

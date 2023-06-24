@@ -30,10 +30,10 @@ const RegisterPage = () => {
         try {
             const registerResponse = await registerUserHandle(dataForm as any);
 
-            if (registerResponse?.data.success) {
+            if (registerResponse?.success) {
                 router.push("/auth/login");
             }
-        } catch (error: any) {
+        } catch (error) {
             console.log(error);
         }
     }
@@ -89,7 +89,7 @@ export const getServerSideProps : GetServerSideProps = async (ctx) => {
     const token = getAccessTokenOnServer(ctx.req.headers.cookie as string)
     const userResponse = await connectUserHandle(token as string);
 
-    if(userResponse?.data.success) {
+    if(userResponse?.success) {
         return {
             redirect: {
                 destination: "/",

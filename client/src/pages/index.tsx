@@ -1,9 +1,10 @@
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 import { GetServerSideProps, GetStaticProps, NextPage } from "next";
 
 import { REVALIDATE_TIME, apiUrl } from "@/constants";
 import MainLayout from "@/components/Layout/MainLayout";
 import {
+    getAllNovelForSeoHandle,
     getNovelsByHighlyRatedHandle,
     getNovelsByOutstandingHandle,
     getNovelsByPageHandle,
@@ -156,6 +157,15 @@ const HomePage = ({
             },
         }
     );
+
+    // const handle = async () => {
+    //     const novels = await getAllNovelForSeoHandle()
+    //     console.log(novels)
+    // }
+
+    // useEffect(() => {
+    //     handle()
+    // })
 
     return (
         <>

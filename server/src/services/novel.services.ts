@@ -611,7 +611,7 @@ export const getAllNovelForSeoHandle = async () => {
         const connection = await pool.getConnection();
 
         const qGetAllNovel = `
-            SELECT novels.novelId, novels.title, novels.slug, novels.updatedAt from novels
+            SELECT novels.novelId, novels.title, novels.slug, novels.createdAt, novels.updatedAt from novels
         `;
 
         const [rows] : any = await connection.query(qGetAllNovel);

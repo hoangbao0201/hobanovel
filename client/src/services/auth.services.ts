@@ -5,60 +5,58 @@ import { apiUrl } from "@/constants";
 
 export const connectUserHandle = async (token : string) => {
     try {
-        if(!token) {
-            return null;
-        }
-    
         const connectUser = await axios.get(`${apiUrl}/api/users`, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
         })
     
-        if(connectUser.data.success) {
-            return connectUser
-        }
-        
-        removeAccessToken();
-        return null;
+        return connectUser.data
     } catch (error) {
-        removeAccessToken();
-        return null;
+        // removeAccessToken();
+        if(axios.isAxiosError(error) && error.response?.data) {
+            return error.response.data;
+        } else {
+            return {
+                success: false,
+                message: (error as Error).message
+            };
+        }
     }
 }
 
 export const loginUserHandle = async (data: UserType & { accout: string }) => {
     try {
-        if(!data.accout || !data.password) {
-            return null
-        }
-    
-        const user = await axios.post(`${apiUrl}/api/auth/login`, data);
-        if(user.data.success) {
-            return user;
-        }
+        const userRes = await axios.post(`${apiUrl}/api/auth/login`, data);
 
-        return null;
+        return userRes.data;
     } catch (error) {
-        //console.log(error)
-        return null
+        // removeAccessToken();
+        if(axios.isAxiosError(error) && error.response?.data) {
+            return error.response.data;
+        } else {
+            return {
+                success: false,
+                message: (error as Error).message
+            };
+        }
     }
 }
 
 export const registerUserHandle = async (data: UserType) => {
     try {
-        if(!data) {
-            return null
-        }
-    
-        const user = await axios.post(`${apiUrl}/api/auth/register`, data)
-        if(user.data.success) {
-            return user;
-        }
+        const userRes = await axios.post(`${apiUrl}/api/auth/register`, data)
 
-        return null;
+        return userRes.data;
     } catch (error) {
-        //console.log(error);
-        return null;
+        // removeAccessToken();
+        if(axios.isAxiosError(error) && error.response?.data) {
+            return error.response.data;
+        } else {
+            return {
+                success: false,
+                message: (error as Error).message
+            };
+        }
     }
 }

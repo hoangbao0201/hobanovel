@@ -1,16 +1,16 @@
+import Head from "next/head";
 import { ReactNode, useEffect } from "react";
 
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useMediaQuery } from "usehooks-ts";
 import { addUserHandle, logoutUserHandle } from "@/redux/userSlice";
 import { getAccessToken, removeAccessToken } from "@/services/cookies.servies";
 
 import Header from "../partials/Header";
 import Footer from "../partials/Footer";
+import ScrollOnTop from "./ScrollOnTop";
 import BannersIntro from "../partials/BannersIntro";
 import { connectUserHandle } from "@/services/auth.services";
-import Head from "next/head";
-import ScrollOnTop from "./ScrollOnTop";
-import { useMediaQuery } from "usehooks-ts";
 
 interface MainLayoutProps {
     bg?: string;
@@ -36,6 +36,9 @@ const MainLayout = ({
     const matchesMobile = useMediaQuery("(max-width: 640px)");
 
     const dispatch = useDispatch();
+    const { isAuthenticated } = useSelector(
+        (state: any) => state.user
+    );
 
     const loadUser = async () => {
         try {
@@ -43,21 +46,24 @@ const MainLayout = ({
             if (!token) {
                 console.log("Không token");
                 dispatch(logoutUserHandle());
-                removeAccessToken();
+                // removeAccessToken();
                 return;
             }
-
-            const connectUser = await connectUserHandle(token);
-
-            if (connectUser?.data.success) {
-                dispatch(addUserHandle(connectUser.data.user));
-                return;
+            if(!isAuthenticated) {
+                const connectUser = await connectUserHandle(token);
+    
+                if (connectUser?.success) {
+                    dispatch(addUserHandle(connectUser.data.user));
+                    return;
+                }
+                else {
+                    removeAccessToken();
+                }
             }
-
-            dispatch(logoutUserHandle());
-            removeAccessToken();
         } catch (error) {
             console.log(error);
+            removeAccessToken();
+            dispatch(logoutUserHandle());
         }
     };
 

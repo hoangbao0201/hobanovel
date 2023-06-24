@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from "react";
+import { ChangeEvent, Fragment, useEffect, useState } from "react";
 
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -78,10 +78,10 @@ const FormFeedback = ({ tab, novelId }: FormFeedbackProps) => {
     });
     const [commentText, setCommentText] = useState(() => EditorState.createEmpty());
 
-    const eventOnchangeDataValue = (e: any) => {
+    const eventOnchangeDataValue = (e: ChangeEvent<HTMLInputElement>) => {
         setDataValue({
             ...dataValue,
-            [e.target.name]: e.target.value,
+            [e.target.name]: Number(e.target.value),
         });
     };
 
@@ -162,121 +162,130 @@ const FormFeedback = ({ tab, novelId }: FormFeedbackProps) => {
             <div className="lg:w-8/12 w-full px-4">
 
                 <div className="mb-5">
-                    <div className="">
-                        <table className="grid py-3 w-full">
-                            <thead>
-                                <tr>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td className="w-1/2 whitespace-nowrap pr-3">Tính cách nhân vật</td>
-                                    <td className="w-3/4">
-                                        <input
-                                            onChange={eventOnchangeDataValue}
-                                            name="pointPersonality"
-                                            className="lg:w-full h-1 cursor-pointer bg-orange-200 rounded-full appearance-none w-full"
-                                            value={dataValue.pointPersonality}
-                                            min="0"
-                                            max="5"
-                                            step="0.5"
-                                            type="range"
-                                        />
-                                    </td>
-                                    <td className="w-1/4 text-right flex items-center">
-                                        <span className="font-semibold text-yellow-500 text-lg ml-3 min-w-[30px]">
-                                            {dataValue.pointPersonality}
-                                        </span>
-                                        <i className="lg:block w-4 ml-2 hidden fill-yellow-400">{iconStar}</i>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td className="w-1/2 whitespace-nowrap pr-3">Nội dung cốt truyện</td>
-                                    <td className="w-3/4">
-                                        <input
-                                            onChange={eventOnchangeDataValue}
-                                            name="pointStoryline"
-                                            className="lg:w-full h-1 cursor-pointer bg-orange-200 rounded-full appearance-none w-full"
-                                            value={dataValue.pointStoryline}
-                                            min="0"
-                                            max="5"
-                                            step="0.5"
-                                            type="range"
-                                        />
-                                    </td>
-                                    <td className="w-1/4 text-right flex items-center">
-                                        <span className="font-semibold text-yellow-500 text-lg ml-3 min-w-[30px]">
-                                            {dataValue.pointStoryline}
-                                        </span>
-                                        <i className="lg:block w-4 ml-2 hidden fill-yellow-400">{iconStar}</i>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td className="w-1/2 whitespace-nowrap pr-3">Bố cục thế giới</td>
-                                    <td className="w-3/4">
-                                        <input
-                                            onChange={eventOnchangeDataValue}
-                                            name="pointScene"
-                                            className="lg:w-full h-1 cursor-pointer bg-orange-200 rounded-full appearance-none w-full"
-                                            value={dataValue.pointScene}
-                                            min="0"
-                                            max="5"
-                                            step="0.5"
-                                            type="range"
-                                        />
-                                    </td>
-                                    <td className="w-1/4 text-right flex items-center">
-                                        <span className="font-semibold text-yellow-500 text-lg ml-3 min-w-[30px]">
-                                            {dataValue.pointScene}
-                                        </span>
-                                        <i className="lg:block w-4 ml-2 hidden fill-yellow-400">{iconStar}</i>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td className="w-1/2 whitespace-nowrap pr-3">Chất lượng bản dịch</td>
-                                    <td className="w-3/4">
-                                        <input
-                                            onChange={eventOnchangeDataValue}
-                                            name="pointTranslation"
-                                            className="lg:w-full h-1 cursor-pointer bg-orange-200 rounded-full appearance-none w-full"
-                                            value={dataValue.pointTranslation}
-                                            min="0"
-                                            max="5"
-                                            step="0.5"
-                                            type="range"
-                                        />
-                                    </td>
-                                    <td className="w-1/4 text-right flex items-center">
-                                        <span className="font-semibold text-yellow-500 text-lg ml-3 min-w-[30px]">
-                                            {dataValue.pointTranslation}
-                                        </span>
-                                        <i className="lg:block w-4 ml-2 hidden fill-yellow-400">{iconStar}</i>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <table className="table py-3 mb-4 w-full">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody className="">
+                            <tr className="py-2 flex items-center">
+                                <td className="w-1/2 whitespace-nowrap pr-3">Tính cách nhân vật</td>
+                                <td className="w-3/4">
+                                    <input
+                                        onChange={eventOnchangeDataValue}
+                                        name="pointPersonality"
+                                        className="lg:w-full h-1 cursor-pointer bg-orange-200 rounded-full appearance-none w-full"
+                                        value={dataValue.pointPersonality}
+                                        min="0"
+                                        max="5"
+                                        step="0.5"
+                                        type="range"
+                                    />
+                                </td>
+                                <td className="w-1/4 text-right flex items-center">
+                                    <span className="font-semibold text-yellow-500 text-lg ml-3 min-w-[30px]">
+                                        {dataValue.pointPersonality}
+                                    </span>
+                                    <i className="lg:block w-4 ml-2 hidden fill-yellow-400">{iconStar}</i>
+                                </td>
+                            </tr>
+                            <tr className="py-2 flex items-center">
+                                <td className="w-1/2 whitespace-nowrap pr-3">Nội dung cốt truyện</td>
+                                <td className="w-3/4">
+                                    <input
+                                        onChange={eventOnchangeDataValue}
+                                        name="pointStoryline"
+                                        className="lg:w-full h-1 cursor-pointer bg-orange-200 rounded-full appearance-none w-full"
+                                        value={dataValue.pointStoryline}
+                                        min="0"
+                                        max="5"
+                                        step="0.5"
+                                        type="range"
+                                    />
+                                </td>
+                                <td className="w-1/4 text-right flex items-center">
+                                    <span className="font-semibold text-yellow-500 text-lg ml-3 min-w-[30px]">
+                                        {dataValue.pointStoryline}
+                                    </span>
+                                    <i className="lg:block w-4 ml-2 hidden fill-yellow-400">{iconStar}</i>
+                                </td>
+                            </tr>
+                            <tr className="py-2 flex items-center">
+                                <td className="w-1/2 whitespace-nowrap pr-3">Bố cục thế giới</td>
+                                <td className="w-3/4">
+                                    <input
+                                        onChange={eventOnchangeDataValue}
+                                        name="pointScene"
+                                        className="lg:w-full h-1 cursor-pointer bg-orange-200 rounded-full appearance-none w-full"
+                                        value={dataValue.pointScene}
+                                        min="0"
+                                        max="5"
+                                        step="0.5"
+                                        type="range"
+                                    />
+                                </td>
+                                <td className="w-1/4 text-right flex items-center">
+                                    <span className="font-semibold text-yellow-500 text-lg ml-3 min-w-[30px]">
+                                        {dataValue.pointScene}
+                                    </span>
+                                    <i className="lg:block w-4 ml-2 hidden fill-yellow-400">{iconStar}</i>
+                                </td>
+                            </tr>
+                            <tr className="py-2 flex items-center">
+                                <td className="w-1/2 whitespace-nowrap pr-3">Chất lượng bản dịch</td>
+                                <td className="w-3/4">
+                                    <input
+                                        onChange={eventOnchangeDataValue}
+                                        name="pointTranslation"
+                                        className="lg:w-full h-1 cursor-pointer bg-orange-200 rounded-full appearance-none w-full"
+                                        value={dataValue.pointTranslation}
+                                        min="0"
+                                        max="5"
+                                        step="0.5"
+                                        type="range"
+                                    />
+                                </td>
+                                <td className="w-1/4 text-right flex items-center">
+                                    <span className="font-semibold text-yellow-500 text-lg ml-3 min-w-[30px]">
+                                        {dataValue.pointTranslation}
+                                    </span>
+                                    <i className="lg:block w-4 ml-2 hidden fill-yellow-400">{iconStar}</i>
+                                </td>
+                            </tr>
+                            
+                            {/* Statistical */}
+                            <tr className="border-t border-gray-200 mt-4 py-2 flex items-center">
+                                <td className="w-1/2 whitespace-nowrap pr-3">Thống kê</td>
+                                <td className="w-3/4"></td>
+                                <td className="w-1/4 text-right flex items-center">
+                                    <span className="font-semibold text-yellow-500 text-lg ml-3 min-w-[30px]">
+                                        {((dataValue.pointPersonality + dataValue.pointScene + dataValue.pointStoryline + dataValue.pointTranslation)/4)}
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
 
-                        <div className="py-3 pl-4 pr-24 border-4 border-orange-800 border-opacity-5 rounded-md relative">
-                            <EditorStyle
-                                name="comment"
-                                text={commentText}
-                                handleOnchange={setCommentText}
-                            />
+                    <div className="py-3 pl-4 pr-24 border-4 border-orange-800 border-opacity-5 rounded-md relative">
+                        <EditorStyle
+                            name="comment"
+                            text={commentText}
+                            handleOnchange={setCommentText}
+                        />
 
-                        
+                    
 
-                            <button
-                                onClick={handleSendReviews}
-                                className="py-2 px-4 transition-all bg-yellow-600 hover:bg-yellow-700 absolute bottom-4 right-4"
-                            >
-                                <i className="w-6 h-6 fill-white block translate-x-[1px]">{iconSend}</i>
-                            </button>
-    
-                        </div>
+                        <button
+                            onClick={handleSendReviews}
+                            className="py-2 px-4 transition-all bg-yellow-600 hover:bg-yellow-700 absolute bottom-4 right-4"
+                        >
+                            <i className="w-6 h-6 fill-white block translate-x-[1px]">{iconSend}</i>
+                        </button>
+
                     </div>
                 </div>
 
@@ -301,27 +310,27 @@ const FormFeedback = ({ tab, novelId }: FormFeedbackProps) => {
                 <div className="bg-pink-100 px-4 py-4 mb-7">
                     <div className="flex items-center py-2 text-base">
                         <span>Đã có 3 đánh giá</span>
-                        <ListStarLayout className="ml-auto mr-2"/>
+                        <ListStarLayout size={3} className="ml-auto mr-2"/>
                         <span className="w-9 text-end">5.00</span>
                     </div>
                     <div className="flex items-center py-2 text-sm">
                         <span>Tính cách nhân vật</span>
-                        <ListStarLayout className="ml-auto mr-2"/>
+                        <ListStarLayout size={3} className="ml-auto mr-2"/>
                         <span className="w-9 text-end">4.71</span>
                     </div>
                     <div className="flex items-center py-2 text-sm">
                         <span>Nội dung cốt truyện</span>
-                        <ListStarLayout className="ml-auto mr-2"/>
+                        <ListStarLayout size={3} className="ml-auto mr-2"/>
                         <span className="w-9 text-end">4.78</span>
                     </div>
                     <div className="flex items-center py-2 text-sm">
                         <span>Bố cục thế giới</span>
-                        <ListStarLayout className="ml-auto mr-2"/>
+                        <ListStarLayout size={3} className="ml-auto mr-2"/>
                         <span className="w-9 text-end">4.85</span>
                     </div>
                     <div className="flex items-center py-2 text-sm">
                         <span>Chất lượng bản dịch</span>
-                        <ListStarLayout className="ml-auto mr-2"/>
+                        <ListStarLayout size={3} className="ml-auto mr-2"/>
                         <span className="w-9 text-end">4.98</span>
                     </div>
                 </div>

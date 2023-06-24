@@ -1,29 +1,27 @@
 import Link from "next/link";
-import Image from "next/image";
 import dynamic from "next/dynamic";
 import { ReactNode, useEffect, useState } from "react";
 import {
-    GetServerSideProps, GetStaticPaths, GetStaticProps, GetStaticPropsContext
+    GetStaticPaths, GetStaticProps, GetStaticPropsContext
 } from "next";
 
 import Tippy from "@tippyjs/react";
+import { useSelector } from "react-redux";
+import { useMediaQuery } from "usehooks-ts";
+import { ParsedUrlQuery } from "querystring";
+import { Tab, Transition } from "@headlessui/react";
 
 import { NovelBySlugType, NovelFollowerType } from "@/types";
-import { ParsedUrlQuery } from "querystring";
-import { REVALIDATE_TIME, placeholderBlurhash } from "@/constants";
+import { REVALIDATE_TIME_DETAILS_PAGE, placeholderBlurhash } from "@/constants";
 import BlurImage from "@/components/Layout/BlurImage";
 import MainLayout from "@/components/Layout/MainLayout";
 import { getNovelBySlugHandle } from "@/services/novels.services";
 import { iconAuthor, iconClose, iconHeartFull } from "../../../public/icons";
 import WrapperLayout from "@/components/Layout/WrapperLayout";
-import { Tab, Transition } from "@headlessui/react";
 import { convertViewsCount } from "@/utils/convertViewsCount";
 import { ListStarLayout } from "@/components/Layout/ListStarLayout";
-import { useMediaQuery } from "usehooks-ts";
 import { getAccessToken } from "@/services/cookies.servies";
 import { checkFollowNovelHandle, followNovelHandle, unfollowNovelHandle } from "@/services/follow.services";
-import { useSelector } from "react-redux";
-import { convertTime } from "@/utils/convertTime";
 import { LoadingButton } from "@/components/Layout/LoadingLayout";
 import { PROPERTIES_NOVEL } from "@/constants/data";
 import Head from "@/components/Share/Head";
@@ -503,7 +501,7 @@ export const getStaticProps: GetStaticProps<NovelDetailPageProps, Params> = asyn
                 novel: novelResponse?.data.novel || null,
                 tab: context.params?.hash?.toString() || "intro",
             },
-            revalidate: REVALIDATE_TIME,
+            revalidate: REVALIDATE_TIME_DETAILS_PAGE,
         };
 
     } catch (error) {
