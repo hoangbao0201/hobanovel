@@ -1,7 +1,9 @@
 import { useRouter } from "next/router";
 import { useEffect, useRef } from "react";
 
-export const useClickOutSide = (node: any, handler: Function) => {
+type ClickOutsideHandler = () => void;
+
+export const useClickOutSide = (node: any, handler: ClickOutsideHandler) => {
     // const router = useRouter();
     // const handlerRef = useRef(handler);
 

@@ -26,6 +26,7 @@ export default function Document() {
                     (adsbygoogle = window.adsbygoogle || []).push({});
                 </script>
 
+
             </Head>
             <body>
                 <Main />

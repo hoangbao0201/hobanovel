@@ -1,4 +1,3 @@
-
-export type WithClassName<T = {}> = T & {
-    className?: string
-}
+export type WithClassName<T = {}> = {
+    className?: string;
+} & T;

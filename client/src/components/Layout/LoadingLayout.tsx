@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { WithClassName } from "@/types/common";
 import cn from "clsx"
 
-interface LoadingProps extends WithClassName {
+interface LoadingProps extends WithClassName<{}> {
     w?: string;
     h?: string;
     color?: string

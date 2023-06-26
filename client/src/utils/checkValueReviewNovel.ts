@@ -8,7 +8,7 @@ export const checkValueReviewNovel = (data: Partial<ReviewType>) => {
         pointStoryline,
         pointScene,
         pointTranslation,
-        isSpoiler,
+        // isSpoiler,
     } = data;
 
     // return {

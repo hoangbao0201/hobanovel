@@ -169,5 +169,5 @@ export type NovelBySlugType = Pick<NovelType, 'novelId' | 'slug' | 'title' | 'ch
 export type ChapterDetailResType = Pick<ChapterType, 'chapterId' | 'novelName' | 'novelSlug' | 'title' | 'content' | 'chapterNumber' | 'updatedAt' | 'novelId'> & {
     creator: string
     creatorId: string
-    chapterCount: Number
+    chapterCount: number
 }

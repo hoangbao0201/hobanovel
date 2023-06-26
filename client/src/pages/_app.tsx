@@ -1,19 +1,24 @@
 import "@/styles/main.scss";
 import "@/styles/globals.scss";
 import { NextPage } from "next";
+import Script from "next/script";
 import { Inter } from "next/font/google";
 import { Router } from "next/router";
 import type { AppProps } from "next/app";
-import { ReactElement, ReactNode } from "react";
+import { ReactElement, ReactNode, useEffect } from "react";
 
 import "nprogress/nprogress.css";
 import NProgress from "nprogress";
 import { Provider } from "react-redux";
+import { ToastContainer } from "react-toastify";
+import { Analytics } from '@vercel/analytics/react';
+
 import { persistor, store } from "@/redux/store";
+// import { GA_TRACKING_ID, pageview } from "@/utils/gtag";
 import { PersistGate } from "redux-persist/integration/react";
 import useScrollRestoration from "@/hook/useScrollRestoration";
-import { ToastContainer } from "react-toastify";
-import Script from "next/script";
+import { AdsenseForm } from "@/components/features/AdSenseForm";
+
 
 export type NextPageWithLayout = NextPage & {
     getLayout?: (page: ReactElement) => ReactNode;
@@ -44,13 +49,43 @@ export default function App({ Component, pageProps, router }: AppPropsWithlayout
 
     useScrollRestoration(router);
 
+    // ----
+    // useEffect(() => {
+    //     const handleRouteChange = (url: string) => {
+    //         pageview(url);
+    //     };
+    //     router.events.on('routeChangeComplete', handleRouteChange);
+    //     router.events.on('hashChangeComplete', handleRouteChange);
+    //     return () => {
+    //         router.events.off('routeChangeComplete', handleRouteChange);
+    //         router.events.off('hashChangeComplete', handleRouteChange);
+    //     };
+    // }, [router.events]);
+
     return (
         <>
-            <Script
-                async
-                src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
-                strategy="afterInteractive"
+
+            {/* Ads */}
+            {/* <Script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6688547661590907" crossOrigin="anonymous" /> */}
+            <AdsenseForm />
+
+            {/* Analytics */}
+            {/* <Script
+                strategy="lazyOnload"
+                src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`}
             />
+            <Script id="google-analytics" strategy="lazyOnload">
+                {`
+                    window.dataLayer = window.dataLayer || [];
+                    function gtag(){dataLayer.push(arguments);}
+                    gtag('js', new Date());
+                    gtag('config', '${GA_TRACKING_ID}', {
+                    page_path: window.location.pathname,
+                    });
+                `}
+            </Script>
+            <Analytics /> */}
+
             <ToastContainer />
             <style jsx global>{`
                 html {

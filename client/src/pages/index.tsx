@@ -164,6 +164,9 @@ const HomePage = ({
             <main>
                 <WrapperLayout className="pt-5">
                     <div className="block -mx-4">
+
+                        {/* <AdsenseForm /> */}
+
                         <div className="">
                             <div className="lg:flex">
                                 <div className="lg:w-8/12 w-full px-4">
