@@ -13,6 +13,7 @@ import { persistor, store } from "@/redux/store";
 import { PersistGate } from "redux-persist/integration/react";
 import useScrollRestoration from "@/hook/useScrollRestoration";
 import { ToastContainer } from "react-toastify";
+import Script from "next/script";
 
 export type NextPageWithLayout = NextPage & {
     getLayout?: (page: ReactElement) => ReactNode;
@@ -45,6 +46,11 @@ export default function App({ Component, pageProps, router }: AppPropsWithlayout
 
     return (
         <>
+            <Script
+                async
+                src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
+                strategy="afterInteractive"
+            />
             <ToastContainer />
             <style jsx global>{`
                 html {
