@@ -1,23 +1,19 @@
 import "@/styles/main.scss";
 import "@/styles/globals.scss";
 import { NextPage } from "next";
-import Script from "next/script";
 import { Inter } from "next/font/google";
 import { Router } from "next/router";
 import type { AppProps } from "next/app";
-import { ReactElement, ReactNode, useEffect } from "react";
+import { ReactElement, ReactNode } from "react";
 
 import "nprogress/nprogress.css";
 import NProgress from "nprogress";
 import { Provider } from "react-redux";
 import { ToastContainer } from "react-toastify";
-import { Analytics } from '@vercel/analytics/react';
 
 import { persistor, store } from "@/redux/store";
-// import { GA_TRACKING_ID, pageview } from "@/utils/gtag";
 import { PersistGate } from "redux-persist/integration/react";
 import useScrollRestoration from "@/hook/useScrollRestoration";
-import { AdsenseForm } from "@/components/features/AdSenseForm";
 
 
 export type NextPageWithLayout = NextPage & {
@@ -67,7 +63,7 @@ export default function App({ Component, pageProps, router }: AppPropsWithlayout
 
             {/* Ads */}
             {/* <Script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6688547661590907" crossOrigin="anonymous" /> */}
-            <AdsenseForm />
+            {/* <AdsenseForm /> */}
 
             {/* Analytics */}
             {/* <Script

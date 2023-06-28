@@ -179,7 +179,7 @@ const Header = ({ autoHidden = true } : HeaderProps) => {
                         </div>
 
                         <Link
-                            href='/truyen?sort_by=novel_new'
+                            href='/tim-truyen?sort_by=novel_new'
                             className={`px-3 py-1 align-middle`}
                         >
                             Tìm truyện

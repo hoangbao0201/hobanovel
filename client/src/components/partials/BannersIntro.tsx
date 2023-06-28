@@ -193,7 +193,7 @@ const BannersIntro = ({ isShow }: BannersIntroProps) => {
                 <>
                     <div className="w-full h-[370px] overflow-hidden align-middle inline-block">
                         {banners ? (
-                            <Link href={`/truyen/${banners?.slug}`}>
+                            <Link href={`/truyen/${banners?.slug}`} className="flex justify-center">
                                 <Image
                                     width={3000}
                                     height={1000}

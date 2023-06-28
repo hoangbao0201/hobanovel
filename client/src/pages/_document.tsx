@@ -16,7 +16,7 @@ export default function Document() {
                 <meta name="google-site-verification" content="VYr3U568eAPsZHYVfVtVFkF_41bHeGdekZrs2mV7PQk" />
                 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6688547661590907" crossOrigin="anonymous"></script>
                 {/* First Ad */}
-                <ins className="adsbygoogle"
+                {/* <ins className="adsbygoogle"
                     style={{ display: "block" }}
                     data-ad-client="ca-pub-6688547661590907"
                     data-ad-slot="1661752529"
@@ -24,7 +24,7 @@ export default function Document() {
                     data-full-width-responsive="true"></ins>
                 <script>
                     (adsbygoogle = window.adsbygoogle || []).push({});
-                </script>
+                </script> */}
 
 
             </Head>
