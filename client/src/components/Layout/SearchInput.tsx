@@ -2,17 +2,24 @@ import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 
+import cn from "clsx"
+import LazyLoad from "react-lazy-load";
+
 import { NovelType } from "@/types";
 import { useDebounce } from "@/hook/useDebounce";
 import { getNovelsByDataHandle } from "@/services/novels.services";
 import { LoadingSearch } from "./LoadingLayout";
-import { iconClose } from "../../../public/icons";
-import { useClickOutSide } from "@/hook/useClickOutSide";
+import { iconClose, iconList } from "../../../public/icons";
 import { PROPERTIES_NOVEL } from "@/constants/data";
-import LazyLoad from "react-lazy-load";
+import { WithClassName } from "@/types/common";
+import BlurImage from "./BlurImage";
 
 
-const SearchInput = () => {
+interface SearchInputProps extends WithClassName {
+}
+
+
+const SearchInput = (props : SearchInputProps) => {
 
     const dropSearchRef = useRef<HTMLDivElement>(null)
 
@@ -67,10 +74,13 @@ const SearchInput = () => {
     // Check click out side
     // useClickOutSide(dropSearchRef, eventDeleteValueInputSearch)
 
-    // console.log(resultListNovelsSearch)
+    console.log(resultListNovelsSearch)
 
     return (
-        <div  ref={dropSearchRef} className="flex items-center flex-1  max-w-md relative h-[50px]">
+        <div  ref={dropSearchRef} className={cn(
+            props.className,
+            "flex items-center flex-1  max-w-md relative h-[50px]"
+        )}>
             <div className="flex w-full items-center relative">
                 <input
                     value={valueInputSearch}
@@ -95,7 +105,7 @@ const SearchInput = () => {
                 </span>
             </div>
 
-            <div className={`absolute max-w-lg w-full top-[50px] bg-white ${valueInputSearch ? "block" : "hidden"}`}>
+            <div className={`absolute z-20 max-w-lg w-full top-[50px] bg-white ${valueInputSearch ? "block" : "hidden"}`}>
                 {
                     valueInputSearch !== "" ? (
                         resultListNovelsSearch && (
@@ -110,20 +120,37 @@ const SearchInput = () => {
                                                     className="transition-all flex cursor-pointer hover:bg-gray-100 p-3"
                                                 >
                                                     <LazyLoad className="flex-shrink-0 relative w-11 h-16 overflow-hidden shadow">
-                                                        <Image
+                                                        <BlurImage
                                                             width={85}
                                                             height={125}
                                                             alt="Image-novel"
                                                             className="object-cover h-full w-full"
-                                                            src={
-                                                                novel.thumbnailUrl ||
-                                                                "/images/novel-default.png"
-                                                            }
+                                                            src={novel.thumbnailUrl}
                                                         />
                                                     </LazyLoad>
                                                     <div className="ml-3">
-                                                        <h3 className="line-clamp-2 uppercase font-semibold">{novel.title}</h3>
-                                                        <span>{JSON.stringify(PROPERTIES_NOVEL.genres[novel?.category])}</span>
+                                                        <h3 className="line-clamp-2 mb-2 uppercase font-semibold max-lg:text-xs">{novel.title}</h3>
+                                                        {/* <div>
+                                                            <span>
+                                                                {}
+                                                                {novel.chapterCount}
+                                                            </span>
+                                                            <span className="px-2 text-xs text-orange-700 line-clamp-1 border border-orange-700">
+                                                              
+                                                              <span>
+                                                                </span>  {PROPERTIES_NOVEL.genres[novel?.category].value}
+                                                            </span>
+                                                        </div> */}
+
+                                                        <div className="text-base flex align-middle items-center justify-between">
+                                                            <span className="flex items-center max-w-[55%] text-sm mr-1">
+                                                                Chapter<span className="ml-1 line-clamp-1 align-middle">{novel.chapterCount}</span>
+                                                            </span>
+                                                            <span className="px-2 text-xs text-orange-700 line-clamp-1 align-middle text-center border border-orange-700">
+                                                                {PROPERTIES_NOVEL['genres'][novel?.category-1].value || PROPERTIES_NOVEL['genres'][0].value}
+                                                            </span>
+                                                        </div>
+
                                                     </div>
                                                 </Link>
                                             );

@@ -1,17 +1,19 @@
-import { NovelBySlugType, NovelType } from "@/types"
+import { NovelResType } from "@/types"
 import Link from "next/link"
 import LazyLoad from "react-lazy-load"
 import BlurImage from "./BlurImage"
 import { placeholderBlurhash } from "@/constants"
 import { PROPERTIES_NOVEL } from "@/constants/data"
+import { iconAuthor, iconList } from "../../../public/icons"
 
 interface ItemNovelProps {
-    novel: NovelType & { mediumScore?: number }
+    novel: NovelResType
     isRating?: boolean 
-    isAuthor?: boolean 
+    isAuthor?: boolean
+    isChapterCount?: boolean
 }
 
-const ItemNovel = ({ novel, isRating = false, isAuthor = false } : ItemNovelProps) => {
+const ItemNovel = ({ novel, isRating = false, isAuthor = false, isChapterCount = false } : ItemNovelProps) => {
 
     return (
         <>
@@ -42,11 +44,35 @@ const ItemNovel = ({ novel, isRating = false, isAuthor = false } : ItemNovelProp
                             </div>
                         )
                     }
-                    <div className="line-clamp-2 text-sm mb-2 text-slate-900">{novel.description.replace(/<[^>]+>/g, '')}</div>
-                    <div className="text-base flex align-middle items-center justify-between">
-                        <span className="max-w-[50%] text-base mr-2 line-clamp-1 align-middle">{novel.author}</span>
-                        <span className="px-2 text-xs text-orange-700 line-clamp-1 align-middle text-center border border-orange-700">{PROPERTIES_NOVEL['genres'][novel.category-1].value}</span>
+                    <div className="line-clamp-2 text-sm mb-2 text-slate-900">
+                        {novel.description && novel?.description.replace(/<[^>]+>/g, '')}
                     </div>
+                    {/* <div className="line-clamp-2 text-sm mb-2 text-slate-900">
+                        {novel.description.replace(/<[^>]+>/g, '')}
+                    </div>
+                    <div className="text-base flex align-middle items-center justify-between">
+                        <span className="max-w-[50%] text-base mr-2 line-clamp-1 align-middle">
+                            {novel.author}
+                        </span>
+                        <span className="px-2 text-xs text-orange-700 line-clamp-1 align-middle text-center border border-orange-700">
+                            {PROPERTIES_NOVEL['genres'][novel.category-1].value}
+                        </span>
+                    </div> */}
+                    <div className="text-base flex align-middle items-center justify-between">
+                        <span className="flex items-center max-w-[55%] text-sm mr-1">
+                            <i className="w-4 h-4 block mr-1 mb-1">{iconAuthor}</i> <span className="line-clamp-1 align-middle">{novel.author}</span>
+                        </span>
+                        <span className="px-2 text-xs text-orange-700 line-clamp-1 align-middle text-center border border-orange-700">
+                            {PROPERTIES_NOVEL['genres'][novel?.category-1].value || PROPERTIES_NOVEL['genres'][0].value}
+                        </span>
+                    </div>
+                    {
+                        isChapterCount && (
+                            <span className="text-sm flex items-center">
+                                <i className="w-3 block mr-2">{iconList}</i> {novel.chapterCount} chương
+                            </span>
+                        )
+                    }
                 </div>
             </div>
         </>

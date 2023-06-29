@@ -393,10 +393,14 @@ export const getNovelsByDataHanle = async (data : NovelType & { page: number }) 
 
         const connection = await pool.getConnection();
 
-        const qGetNovel = `
-            SELECT novelId, title, slug, thumbnailUrl, imageBlurHash FROM novels
+        const qGetNovel = `            
+            SELECT novels.novelId, novels.title, novels.slug, novels.thumbnailUrl, novels.imageBlurHash, novels.category, novels.personality, novels.scene, novels.classify,
+                novels.viewFrame, COUNT(chapters.novelId) as chapterCount
+                FROM novels
+                LEFT JOIN chapters ON chapters.novelId = novels.novelId
             ${conditions.length>0 ? ( "WHERE " + conditions) : ''}
-            ORDER BY createdAt ASC
+            GROUP BY novels.novelId, novels.title
+            ORDER BY novels.createdAt DESC
             LIMIT 5 OFFSET ?;
         `;
 

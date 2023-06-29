@@ -155,7 +155,8 @@ export interface ChapterViewersType {
 
 // ----------------------------------------------- //
 export type NovelResType = Pick<NovelType, 'title' | 'novelId' | 'slug' | 'chapterCount' | 'thumbnailUrl' | 'imageBlurHash' | 'description' | 'category' | 'createdAt' | 'author'> & {
-    countPage: number
+    countPage?: number
+    mediumScore?: number
 }
 
 export type NovelBySlugType = Pick<NovelType, 'novelId' | 'slug' | 'title' | 'chapterCount' | 'thumbnailUrl' | 'imageBlurHash' | 'description' | 'author' | 'category' | 'personality' | 'scene' | 'classify' | 'viewFrame' | 'createdAt'> & {

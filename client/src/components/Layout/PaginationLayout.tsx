@@ -14,7 +14,7 @@ export const PaginationLayout = ({ countPage, currentPage, handleChangePage } : 
     return (
         <ul className="flex items-center gap-2 text-gray-600">
             <li onClick={() => handleChangePage(1)}>
-                <span className={`py-1 px-3 rounded-md block border select-none cursor-pointer dark:hover:bg-white/5 dark:border-white ${ currentPage === 1 ? 'dark:bg-white/25 bg-blue-400 text-white' : '' }`}>1</span>
+                <span className={`py-2 px-4 rounded-md block border select-none cursor-pointer dark:hover:bg-white/5 dark:border-white ${ currentPage === 1 ? 'dark:bg-white/25 bg-blue-400 text-white' : '' }`}>1</span>
             </li>
 
             {
@@ -36,7 +36,7 @@ export const PaginationLayout = ({ countPage, currentPage, handleChangePage } : 
                     if(number > 1 && number<countPage) {
                         return (
                             <li key={number} onClick={() => handleChangePage(number)}>
-                                <span className={`py-1 px-3 rounded-md block border select-none cursor-pointer dark:hover:bg-white/5 dark:border-white ${ currentPage === number ? 'dark:bg-white/25 bg-blue-400 text-white' : '' }`}>{number}</span>
+                                <span className={`py-2 px-4 rounded-md block border select-none cursor-pointer dark:hover:bg-white/5 dark:border-white ${ currentPage === number ? 'dark:bg-white/25 bg-blue-400 text-white' : '' }`}>{number}</span>
                             </li>
                         )
                     }
@@ -54,7 +54,7 @@ export const PaginationLayout = ({ countPage, currentPage, handleChangePage } : 
             {
                 countPage > 1 && (
                     <li onClick={() => handleChangePage(countPage)}>
-                        <span className={`py-1 px-3 rounded-md block border select-none cursor-pointer dark:hover:bg-white/5 dark:border-white ${ currentPage === countPage ? 'dark:bg-white/25 bg-blue-400 text-white' : '' }`}>{countPage}</span>
+                        <span className={`py-2 px-4 rounded-md block border select-none cursor-pointer dark:hover:bg-white/5 dark:border-white ${ currentPage === countPage ? 'dark:bg-white/25 bg-blue-400 text-white' : '' }`}>{countPage}</span>
                     </li>
                 )
             }
