@@ -1,9 +1,11 @@
 import Link from "next/link";
 import Image from "next/image";
+import { useEffect } from "react";
+
+import { useMediaQuery } from "usehooks-ts";
 
 import { UserType } from "@/types";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
 import SearchInput from "../Layout/SearchInput";
 
 
@@ -15,7 +17,9 @@ interface NavOverProps {
     handle: () => void
 }
 export const NavOver = ({ user = null, isShow = false, handle } : NavOverProps) => {
-    const router = useRouter()
+    const router = useRouter();
+    const matchesMobile = useMediaQuery("(max-width: 640px)");
+
 
     useEffect(() => {
         const bodyElement = document.querySelector('body');
@@ -27,12 +31,14 @@ export const NavOver = ({ user = null, isShow = false, handle } : NavOverProps) 
     }, [isShow]);
 
     useEffect(() => {
-        handle()
+        if(isShow) {
+            handle()
+        }
     }, [router.route])
 
     return (
         <>
-            <div className={`p-3 fixed w-full h-full inset-0 text-white z-[100] top-[50px] left-0 right-0 bottom-0 bg-[#141414] overflow-x-hidden overflow-y-auto ${isShow ? "block" : "hidden"}`}>
+            <div className={`p-3 fixed w-full h-full inset-0 text-white z-[100] top-[50px] left-0 right-0 bottom-0 bg-[#141414] overflow-x-hidden overflow-y-auto ${matchesMobile && isShow ? "block" : "hidden"}`}>
                 
                 <SearchInput className="text-gray-900"/>
                 

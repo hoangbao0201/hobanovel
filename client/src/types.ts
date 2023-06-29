@@ -24,7 +24,9 @@ export interface CommentItemWith {
     senderName?: string
     senderId?: string
 
-    name?: string   
+    name?: string
+    rank?: number
+    username?: string
     avatarUrl?: string
     avatarPublicId?: string
 }

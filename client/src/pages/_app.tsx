@@ -1,10 +1,11 @@
 import "@/styles/main.scss";
 import "@/styles/globals.scss";
 import { NextPage } from "next";
-import { Inter } from "next/font/google";
 import { Router } from "next/router";
 import type { AppProps } from "next/app";
 import { ReactElement, ReactNode } from "react";
+import { Inter } from "next/font/google";
+
 
 import "nprogress/nprogress.css";
 import NProgress from "nprogress";
@@ -32,7 +33,40 @@ NProgress.configure({ showSpinner: false });
 
 // FONT
 
-const inter = Inter({ subsets: ["latin"] });
+// const sourcesan = Source_Sans_3({
+//     weight: ['400','500','600','700'],
+//     style: ['normal', 'italic'],
+//     subsets: ['latin'],
+//     display: 'swap',
+// })
+   
+const inter = Inter({
+    subsets: ["latin"]
+});
+// const myFont = localFont({
+//     src: [
+//         {
+//             path: '/fonts/SourceSans3-Regular.ttf',
+//             weight: '400',
+//             style: 'normal',
+//         },
+//         {
+//             path: '/fonts/SourceSans3-Medium.ttf',
+//             weight: '500',
+//             style: 'normal',
+//         },
+//         {
+//             path: '/fonts/SourceSans3-SemiBold.ttf',
+//             weight: '600',
+//             style: 'normal',
+//         },
+//         {
+//             path: '/fonts/SourceSans3-Bold.ttf',
+//             weight: '700',
+//             style: 'normal',
+//         },
+//     ],
+// })
 
 export default function App({ Component, pageProps, router }: AppPropsWithlayout) {
     const getLayout = Component.getLayout || ((page) => {
@@ -59,7 +93,7 @@ export default function App({ Component, pageProps, router }: AppPropsWithlayout
     // }, [router.events]);
 
     return (
-        <>
+        <main>
 
             {/* Ads */}
             {/* <Script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6688547661590907" crossOrigin="anonymous" /> */}
@@ -93,6 +127,6 @@ export default function App({ Component, pageProps, router }: AppPropsWithlayout
                     {getLayout(<Component {...pageProps} />)}
                 </PersistGate>
             </Provider>
-        </>
+        </main>
     );
 }

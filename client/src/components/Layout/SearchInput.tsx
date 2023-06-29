@@ -74,7 +74,7 @@ const SearchInput = (props : SearchInputProps) => {
     // Check click out side
     // useClickOutSide(dropSearchRef, eventDeleteValueInputSearch)
 
-    console.log(resultListNovelsSearch)
+    // console.log(resultListNovelsSearch)
 
     return (
         <div  ref={dropSearchRef} className={cn(
@@ -128,7 +128,7 @@ const SearchInput = (props : SearchInputProps) => {
                                                             src={novel.thumbnailUrl}
                                                         />
                                                     </LazyLoad>
-                                                    <div className="ml-3">
+                                                    <div className="ml-3 flex-1">
                                                         <h3 className="line-clamp-2 mb-2 uppercase font-semibold max-lg:text-xs">{novel.title}</h3>
                                                         {/* <div>
                                                             <span>

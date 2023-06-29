@@ -22,6 +22,17 @@ export const RANK_VALUE = [
     { id: 18, value: "Thảo luận" },
 ]
 
+export const LEVEL_VALUE = [
+    { id: 0, value: "Phàm nhân" },
+    { id: 1, value: "Luyện Khí" },
+    { id: 2, value: "Trúc cơ" },
+    { id: 3, value: "Kim Đan" },
+    { id: 4, value: "Nguyên Anh" },
+    { id: 5, value: "Hóa Thần" },
+    { id: 6, value: "Dung Hư" },
+    { id: 7, value: "Sáng Tạo Đạo Giả" },
+]
+
 type PROPERTIES_NOVEL_TYPES = {
     [key: string]: { id: number; value: string }[]
 };

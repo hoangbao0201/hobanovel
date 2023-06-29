@@ -17,7 +17,7 @@ const ItemNovel = ({ novel, isRating = false, isAuthor = false, isChapterCount =
 
     return (
         <>
-            <div key={novel.novelId} className="flex">
+            <div className="flex">
                 <Link href={`/truyen/${novel.slug}`} className="">
                     <LazyLoad className="relative w-20 h-28 overflow-hidden shadow">
                         <BlurImage

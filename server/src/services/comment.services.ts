@@ -38,7 +38,7 @@ export const getCommentByNovelHandle = async (data : CommentType & { page: numbe
         const { conditions, params } = CommentSearchConditions(data);
         
         const qGetComment = `
-            SELECT comments.*, users.name, users.userId, countReplyComment.count AS countReplyComment
+            SELECT comments.*, users.name, users.username, users.rank, users.userId, countReplyComment.count AS countReplyComment
             FROM comments
             INNER JOIN users ON users.userId = comments.userId
             LEFT JOIN (

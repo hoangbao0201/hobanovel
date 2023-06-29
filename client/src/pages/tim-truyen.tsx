@@ -20,6 +20,7 @@ import LazyLoad from "react-lazy-load";
 import BlurImage from "@/components/Layout/BlurImage";
 import { placeholderBlurhash } from "@/constants";
 import ItemNovel from "@/components/Layout/ItemNovel";
+import ItemNovelLazy from "@/components/Layout/ItemNovelLazy";
 
 
 // Data Default 
@@ -69,12 +70,15 @@ interface QuerySearchNovelProps extends querySearchNovelTypes {
     classify: number[]
     viewFrame: number[]
 }
+interface SearchNovelProps {
+    queryPage: any
+}
 
 
 
 
 const SearchNovel = (
-    // { query, test }: SearchNovelProps
+    { queryPage }: SearchNovelProps
 ) => {
     const router = useRouter();
     const matchesMobile = useMediaQuery("(max-width: 640px)");
@@ -141,19 +145,19 @@ const SearchNovel = (
         </Fragment>
     ));
     // Get Novels By Query
-    const handleGetNovelsByQuery = async ({ query, page, sortBy, isBox = false } : { query?: string, page?: number, sortBy?: string, isBox?: boolean }) => {
+    const handleGetNovelsByQuery = async ({ queryOb, page, sortBy, isBox = false } : { queryOb: QuerySearchNovelProps, page: number, sortBy: string, isBox?: boolean }) => {
         try {
-            if(!query) {
-                query = new URLSearchParams(querySearchNovel as any).toString()
-            }
+            const cvQueryOb = new URLSearchParams(queryOb as any).toString()
 
-            const queryR = `sort_by=${sortBy || optionSort}&page=${page || currentPage}&${query || querySearchNovel}&isBox=${isBox == true ? true : false}`
+            
+            const queryR = `sort_by=${sortBy}&page=${page}&${cvQueryOb}&isBox=${isBox == true ? true : false}`
 
+            
             const getNovelsRes = await advancedSearchNovelHandle(queryR || '')
             if (!getNovelsRes.success || !getNovelsRes) {
                 throw new Error();
             }
-
+            
             // console.log(getNovelsRes)
 
             setListNovels(getNovelsRes.novels);
@@ -200,20 +204,30 @@ const SearchNovel = (
         }
         setQuerySearchNovel(queryOb)
 
-        setOptionSort(sort_by || "novel_new")
+        setOptionSort(sort_by)
 
         setIsBoxSearch(isBox == true ? true : false)
 
-        handleGetNovelsByQuery({});
+        handleGetNovelsByQuery({ queryOb: queryOb, sortBy: sort_by, page: page });
     }
 
-    console.log("isloading: ", isLoad)
+    console.log("router: ", queryPage)
 
     // Run
     useEffect(() => {
         setIsLoad(true)
-        handleCvQuery(router.query)
-    }, [router.query])
+        handleCvQuery(queryPage)
+    }, [queryPage])
+
+    // Is Show Box Search
+    useEffect(() => {
+        const bodyElement = document.querySelector('body');
+        if (isBoxSearch && matchesMobile) {
+          bodyElement?.classList.add('overflow-hidden');
+        } else {
+          bodyElement?.classList.remove('overflow-hidden');
+        }
+    }, [isBoxSearch, matchesMobile]);
     
     const getLayout = (page: ReactNode) => {
         return <MainLayout autoHidden={false} isBannerPage={!matchesMobile}>{page}</MainLayout>;
@@ -236,7 +250,14 @@ const SearchNovel = (
                             </button>
                             <div className={`${!isBoxSearch && "hidden"}`}>
                                 {/* w-3/12 */}
-                                <div className="px-4 max-lg:hidden">
+                                <div className={`px-4 ${ matchesMobile ? "fixed top-0 right-0 bottom-0 left-0 overflow-y-auto bg-white z-50" : "" }`}>
+                                    <div className={`${matchesMobile ? "mt-4 flex items-center justify-between" : "hidden"}`}>
+                                        <button className="w-3 h-3 p-2 flex-shrink-0"></button>
+                                        <h2 className="text-xl font-semibold">Tìm truyện nâng cao</h2>
+                                        <button onClick={() => setIsBoxSearch(false)} className="p-2 bg-gray-200 hover:bg-gray-300 rounded-full">
+                                            <i className="w-3 h-3 block">{iconClose}</i>
+                                        </button>
+                                    </div>
                                     <div className="-mx-4">
                                         <div className="px-4">
                                             <h4 className="mb-2 font-semibold">Đã chọn</h4>
@@ -244,140 +265,142 @@ const SearchNovel = (
                                                 {listCheckQuery}
                                             </ul>
                                         </div>
-                                        <div className="py-4 mx-4 border-b">
-                                            <h4 className="mb-2 font-semibold">Thể loại</h4>
-                                            <ul className="flex flex-wrap gap-2">
-                                                {PROPERTIES_NOVEL.genres.map((item, index) => {
-                                                    return (
-                                                        <Fragment key={index}>
-                                                            {
-                                                                querySearchNovel.genres.includes(item.id) ? (
-                                                                    <li onClick={() => handleDeleteQuerySearch('genres', item.id)} 
-                                                                        className={`bg-[#666] text-white flex items-center whitespace-nowrap cursor-pointer text-[12px] py-1 px-2 border border-[#666] rounded-[3px] select-none`}
-                                                                    >{item.value} <i className="w-3 ml-1 block fill-white">{iconClose}</i></li>
-                                                                ) : (
-                                                                    <li onClick={() => handleAddQuerySearch('genres', item.id)} 
-                                                                        className={`hover:bg-gray-800/25 flex items-center whitespace-nowrap cursor-pointer text-[12px] py-1 px-2 border border-[#666] rounded-[3px] select-none`}
-                                                                    >{item.value}</li>
-                                                                )
-                                                            }
-                                                        </Fragment>
-                                                    )
-                                                })}
-                                            </ul>
+                                        <div className="text-[12px]">
+                                            <div className="py-4 mx-4 border-b">
+                                                <h4 className="mb-2 font-semibold">Thể loại</h4>
+                                                <ul className="flex flex-wrap sm:gap-2 gap-1">
+                                                    {PROPERTIES_NOVEL.genres.map((item, index) => {
+                                                        return (
+                                                            <Fragment key={index}>
+                                                                {
+                                                                    querySearchNovel.genres.includes(item.id) ? (
+                                                                        <li onClick={() => handleDeleteQuerySearch('genres', item.id)} 
+                                                                            className={`bg-[#666] text-white flex items-center whitespace-nowrap cursor-pointer py-1 px-2 border border-[#666] rounded-[3px] select-none`}
+                                                                        >{item.value} <i className="w-3 ml-1 block fill-white">{iconClose}</i></li>
+                                                                    ) : (
+                                                                        <li onClick={() => handleAddQuerySearch('genres', item.id)} 
+                                                                            className={`hover:bg-gray-800/25 flex items-center whitespace-nowrap cursor-pointer py-1 px-2 border border-[#666] rounded-[3px] select-none`}
+                                                                        >{item.value}</li>
+                                                                    )
+                                                                }
+                                                            </Fragment>
+                                                        )
+                                                    })}
+                                                </ul>
+                                            </div>
+                                            <div className="py-4 mx-4 border-b">
+                                                <h4 className="mb-2 font-semibold">Tình trạng</h4>
+                                                <ul className="flex flex-wrap sm:gap-2 gap-1">
+                                                    {PROPERTIES_NOVEL.status.map((item, index) => {
+                                                        return (
+                                                            <Fragment key={index}>
+                                                                {
+                                                                    querySearchNovel.status.includes(item.id) ? (
+                                                                        <li onClick={() => handleDeleteQuerySearch('status', item.id)} 
+                                                                            className={`bg-[#666] text-white flex items-center whitespace-nowrap cursor-pointer py-1 px-2 border border-[#666] rounded-[3px] select-none`}
+                                                                        >{item.value} <i className="w-3 ml-1 block fill-white">{iconClose}</i></li>
+                                                                    ) : (
+                                                                        <li onClick={() => handleAddQuerySearch('status', item.id)} 
+                                                                            className={`hover:bg-gray-800/25 flex items-center whitespace-nowrap cursor-pointer py-1 px-2 border border-[#666] rounded-[3px] select-none`}
+                                                                        >{item.value}</li>
+                                                                    )
+                                                                }
+                                                            </Fragment>
+                                                        )
+                                                    })}
+                                                </ul>
+                                            </div>
+                                            <div className="py-4 mx-4 border-b">
+                                                <h4 className="mb-2 font-semibold">Tính cách nhân vật chính</h4>
+                                                <ul className="flex flex-wrap sm:gap-2 gap-1">
+                                                    {PROPERTIES_NOVEL.personality.map((item, index) => {
+                                                        return (
+                                                            <Fragment key={index}>
+                                                                {
+                                                                    querySearchNovel.personality.includes(item.id) ? (
+                                                                        <li onClick={() => handleDeleteQuerySearch('personality', item.id)} 
+                                                                            className={`bg-[#666] text-white flex items-center whitespace-nowrap cursor-pointer py-1 px-2 border border-[#666] rounded-[3px] select-none`}
+                                                                        >{item.value} <i className="w-3 ml-1 block fill-white">{iconClose}</i></li>
+                                                                    ) : (
+                                                                        <li onClick={() => handleAddQuerySearch('personality', item.id)} 
+                                                                            className={`hover:bg-gray-800/25 flex items-center whitespace-nowrap cursor-pointer py-1 px-2 border border-[#666] rounded-[3px] select-none`}
+                                                                        >{item.value}</li>
+                                                                    )
+                                                                }
+                                                            </Fragment>
+                                                        )
+                                                    })}
+                                                </ul>
+                                            </div>
+                                            <div className="py-4 mx-4 border-b">
+                                                <h4 className="mb-2 font-semibold">Bối cảnh thế giới</h4>
+                                                <ul className="flex flex-wrap sm:gap-2 gap-1">
+                                                    {PROPERTIES_NOVEL.scene.map((item, index) => {
+                                                        return (
+                                                            <Fragment key={index}>
+                                                                {
+                                                                    querySearchNovel.scene.includes(item.id) ? (
+                                                                        <li onClick={() => handleDeleteQuerySearch('scene', item.id)} 
+                                                                            className={`bg-[#666] text-white flex items-center whitespace-nowrap cursor-pointer py-1 px-2 border border-[#666] rounded-[3px] select-none`}
+                                                                        >{item.value} <i className="w-3 ml-1 block fill-white">{iconClose}</i></li>
+                                                                    ) : (
+                                                                        <li onClick={() => handleAddQuerySearch('scene', item.id)} 
+                                                                            className={`hover:bg-gray-800/25 flex items-center whitespace-nowrap cursor-pointer py-1 px-2 border border-[#666] rounded-[3px] select-none`}
+                                                                        >{item.value}</li>
+                                                                    )
+                                                                }
+                                                            </Fragment>
+                                                        )
+                                                    })}
+                                                </ul>
+                                            </div>
+                                            <div className="py-4 mx-4 border-b">
+                                                <h4 className="mb-2 font-semibold">Lưu phái</h4>
+                                                <ul className="flex flex-wrap sm:gap-2 gap-1">
+                                                    {PROPERTIES_NOVEL.classify.map((item, index) => {
+                                                        return (
+                                                            <Fragment key={index}>
+                                                                {
+                                                                    querySearchNovel.classify.includes(item.id) ? (
+                                                                        <li onClick={() => handleDeleteQuerySearch('classify', item.id)} 
+                                                                            className={`bg-[#666] text-white flex items-center whitespace-nowrap cursor-pointer py-1 px-2 border border-[#666] rounded-[3px] select-none`}
+                                                                        >{item.value} <i className="w-3 ml-1 block fill-white">{iconClose}</i></li>
+                                                                    ) : (
+                                                                        <li onClick={() => handleAddQuerySearch('classify', item.id)} 
+                                                                            className={`hover:bg-gray-800/25 flex items-center whitespace-nowrap cursor-pointer py-1 px-2 border border-[#666] rounded-[3px] select-none`}
+                                                                        >{item.value}</li>
+                                                                    )
+                                                                }
+                                                            </Fragment>
+                                                        )
+                                                    })}
+                                                </ul>
+                                            </div>
+                                            <div className="py-4 mx-4 border-b">
+                                                <h4 className="mb-2 font-semibold">Thị giác</h4>
+                                                <ul className="flex flex-wrap sm:gap-2 gap-1">
+                                                    {PROPERTIES_NOVEL.viewFrame.map((item, index) => {
+                                                        return (
+                                                            <Fragment key={index}>
+                                                                {
+                                                                    querySearchNovel.viewFrame.includes(item.id) ? (
+                                                                        <li onClick={() => handleDeleteQuerySearch('viewFrame', item.id)} 
+                                                                            className={`bg-[#666] text-white flex items-center whitespace-nowrap cursor-pointer py-1 px-2 border border-[#666] rounded-[3px] select-none`}
+                                                                        >{item.value} <i className="w-3 ml-1 block fill-white">{iconClose}</i></li>
+                                                                    ) : (
+                                                                        <li onClick={() => handleAddQuerySearch('viewFrame', item.id)} 
+                                                                            className={`hover:bg-gray-800/25 flex items-center whitespace-nowrap cursor-pointer py-1 px-2 border border-[#666] rounded-[3px] select-none`}
+                                                                        >{item.value}</li>
+                                                                    )
+                                                                }
+                                                            </Fragment>
+                                                        )
+                                                    })}
+                                                </ul>
+                                            </div>
                                         </div>
                                         <div className="py-4 mx-4 border-b">
-                                            <h4 className="mb-2 font-semibold">Tình trạng</h4>
-                                            <ul className="flex flex-wrap gap-2">
-                                                {PROPERTIES_NOVEL.status.map((item, index) => {
-                                                    return (
-                                                        <Fragment key={index}>
-                                                            {
-                                                                querySearchNovel.status.includes(item.id) ? (
-                                                                    <li onClick={() => handleDeleteQuerySearch('status', item.id)} 
-                                                                        className={`bg-[#666] text-white flex items-center whitespace-nowrap cursor-pointer text-[12px] py-1 px-2 border border-[#666] rounded-[3px] select-none`}
-                                                                    >{item.value} <i className="w-3 ml-1 block fill-white">{iconClose}</i></li>
-                                                                ) : (
-                                                                    <li onClick={() => handleAddQuerySearch('status', item.id)} 
-                                                                        className={`hover:bg-gray-800/25 flex items-center whitespace-nowrap cursor-pointer text-[12px] py-1 px-2 border border-[#666] rounded-[3px] select-none`}
-                                                                    >{item.value}</li>
-                                                                )
-                                                            }
-                                                        </Fragment>
-                                                    )
-                                                })}
-                                            </ul>
-                                        </div>
-                                        <div className="py-4 mx-4 border-b">
-                                            <h4 className="mb-2 font-semibold">Tính cách nhân vật chính</h4>
-                                            <ul className="flex flex-wrap gap-2">
-                                                {PROPERTIES_NOVEL.personality.map((item, index) => {
-                                                    return (
-                                                        <Fragment key={index}>
-                                                            {
-                                                                querySearchNovel.personality.includes(item.id) ? (
-                                                                    <li onClick={() => handleDeleteQuerySearch('personality', item.id)} 
-                                                                        className={`bg-[#666] text-white flex items-center whitespace-nowrap cursor-pointer text-[12px] py-1 px-2 border border-[#666] rounded-[3px] select-none`}
-                                                                    >{item.value} <i className="w-3 ml-1 block fill-white">{iconClose}</i></li>
-                                                                ) : (
-                                                                    <li onClick={() => handleAddQuerySearch('personality', item.id)} 
-                                                                        className={`hover:bg-gray-800/25 flex items-center whitespace-nowrap cursor-pointer text-[12px] py-1 px-2 border border-[#666] rounded-[3px] select-none`}
-                                                                    >{item.value}</li>
-                                                                )
-                                                            }
-                                                        </Fragment>
-                                                    )
-                                                })}
-                                            </ul>
-                                        </div>
-                                        <div className="py-4 mx-4 border-b">
-                                            <h4 className="mb-2 font-semibold">Bối cảnh thế giới</h4>
-                                            <ul className="flex flex-wrap gap-2">
-                                                {PROPERTIES_NOVEL.scene.map((item, index) => {
-                                                    return (
-                                                        <Fragment key={index}>
-                                                            {
-                                                                querySearchNovel.scene.includes(item.id) ? (
-                                                                    <li onClick={() => handleDeleteQuerySearch('scene', item.id)} 
-                                                                        className={`bg-[#666] text-white flex items-center whitespace-nowrap cursor-pointer text-[12px] py-1 px-2 border border-[#666] rounded-[3px] select-none`}
-                                                                    >{item.value} <i className="w-3 ml-1 block fill-white">{iconClose}</i></li>
-                                                                ) : (
-                                                                    <li onClick={() => handleAddQuerySearch('scene', item.id)} 
-                                                                        className={`hover:bg-gray-800/25 flex items-center whitespace-nowrap cursor-pointer text-[12px] py-1 px-2 border border-[#666] rounded-[3px] select-none`}
-                                                                    >{item.value}</li>
-                                                                )
-                                                            }
-                                                        </Fragment>
-                                                    )
-                                                })}
-                                            </ul>
-                                        </div>
-                                        <div className="py-4 mx-4 border-b">
-                                            <h4 className="mb-2 font-semibold">Lưu phái</h4>
-                                            <ul className="flex flex-wrap gap-2">
-                                                {PROPERTIES_NOVEL.classify.map((item, index) => {
-                                                    return (
-                                                        <Fragment key={index}>
-                                                            {
-                                                                querySearchNovel.classify.includes(item.id) ? (
-                                                                    <li onClick={() => handleDeleteQuerySearch('classify', item.id)} 
-                                                                        className={`bg-[#666] text-white flex items-center whitespace-nowrap cursor-pointer text-[12px] py-1 px-2 border border-[#666] rounded-[3px] select-none`}
-                                                                    >{item.value} <i className="w-3 ml-1 block fill-white">{iconClose}</i></li>
-                                                                ) : (
-                                                                    <li onClick={() => handleAddQuerySearch('classify', item.id)} 
-                                                                        className={`hover:bg-gray-800/25 flex items-center whitespace-nowrap cursor-pointer text-[12px] py-1 px-2 border border-[#666] rounded-[3px] select-none`}
-                                                                    >{item.value}</li>
-                                                                )
-                                                            }
-                                                        </Fragment>
-                                                    )
-                                                })}
-                                            </ul>
-                                        </div>
-                                        <div className="py-4 mx-4 border-b">
-                                            <h4 className="mb-2 font-semibold">Thị giác</h4>
-                                            <ul className="flex flex-wrap gap-2">
-                                                {PROPERTIES_NOVEL.viewFrame.map((item, index) => {
-                                                    return (
-                                                        <Fragment key={index}>
-                                                            {
-                                                                querySearchNovel.viewFrame.includes(item.id) ? (
-                                                                    <li onClick={() => handleDeleteQuerySearch('viewFrame', item.id)} 
-                                                                        className={`bg-[#666] text-white flex items-center whitespace-nowrap cursor-pointer text-[12px] py-1 px-2 border border-[#666] rounded-[3px] select-none`}
-                                                                    >{item.value} <i className="w-3 ml-1 block fill-white">{iconClose}</i></li>
-                                                                ) : (
-                                                                    <li onClick={() => handleAddQuerySearch('viewFrame', item.id)} 
-                                                                        className={`hover:bg-gray-800/25 flex items-center whitespace-nowrap cursor-pointer text-[12px] py-1 px-2 border border-[#666] rounded-[3px] select-none`}
-                                                                    >{item.value}</li>
-                                                                )
-                                                            }
-                                                        </Fragment>
-                                                    )
-                                                })}
-                                            </ul>
-                                        </div>
-                                        <div className="py-4 mx-4 border-b">
-                                            <button className="border bg-green-600 py-2 px-3 text-white rounded-md text-sm" onClick={() => handleChangePage({})}>Tìm kiếm</button>
+                                            <button className="border bg-green-600 py-2 px-3 text-white rounded-md text-sm" onClick={() => handleChangePage({ page: 1 })}>Tìm kiếm</button>
                                         </div>
                                     </div>
                                 </div>
@@ -450,43 +473,6 @@ const SearchNovel = (
                                                             {
                                                                 listNovels.map((novel) => {
                                                                     return (
-                                                                        
-                                                                        // <div key={novel.novelId} className="px-4">
-                                                                        //     <div className="flex py-4 border-b">
-                                                                        //         <Link href={`/truyen/${novel.slug}`} className="">
-                                                                        //             <LazyLoad className="relative w-20 h-28 overflow-hidden shadow">
-                                                                        //                 <BlurImage
-                                                                        //                     width={85}
-                                                                        //                     height={125}
-                                                                        //                     alt="image-demo"
-                                                                        //                     blurDataURL={novel.imageBlurHash || placeholderBlurhash}
-                                                                        //                     className="group-hover:scale-105 group-hover:duration-500 object-cover h-full w-full"
-                                                                        //                     placeholder="blur"
-                                                                        //                     src={novel.thumbnailUrl}
-                                                                        //                 />
-                                                                        //             </LazyLoad>
-                                                                        //         </Link>
-                                                                        //         <div className="flex-1 ml-3">
-                                                                        //             <h2 className="mb-2 text-base line-clamp-1 font-semibold">
-                                                                        //                 <Link className="block" href={`/truyen/${novel.slug}`}>{novel.title}</Link>
-                                                                        //             </h2>
-                                                                        //             <div className="line-clamp-2 text-sm mb-2 text-slate-900">
-                                                                        //                 {novel.description && novel?.description.replace(/<[^>]+>/g, '')}
-                                                                        //             </div>
-                                                                        //             <div className="text-base flex align-middle items-center justify-between">
-                                                                        //                 <span className="flex items-center max-w-[55%] text-sm mr-1">
-                                                                        //                     <i className="w-4 h-4 block mr-1 mb-1">{iconAuthor}</i> <span className="line-clamp-1 align-middle">{novel.author}</span>
-                                                                        //                 </span>
-                                                                        //                 <span className="px-2 text-xs text-orange-700 line-clamp-1 align-middle text-center border border-orange-700">
-                                                                        //                     {(novel.category >=1 && novel.category <=11) ? PROPERTIES_NOVEL['genres'][novel?.category-1].value : PROPERTIES_NOVEL['genres'][0].value}
-                                                                        //                 </span>
-                                                                        //             </div>
-                                                                        //             <span className="text-sm flex items-center">
-                                                                        //                 <i className="w-3 block mr-2">{iconList}</i> {novel.chapterCount} chương
-                                                                        //             </span>
-                                                                        //         </div>
-                                                                        //     </div>
-                                                                        // </div>
                                                                         <Fragment key={novel.novelId}>
                                                                             <ItemNovel
                                                                                 novel={novel}
@@ -504,10 +490,15 @@ const SearchNovel = (
                                                         </div>
                                                     </>
                                                 ) : (
-                                                    <div>Không có truyện</div>
+                                                    <div className="px-4">Không có truyện nào</div>
                                                 )
                                             ) : (
-                                                <LoadingForm />
+                                                // <LoadingForm />
+                                                <div className="grid gap-6 md:grid-cols-2 grid-cols-1 px-4">
+                                                    {[1,2,3,4,5,6,7,8,9,10,11,12].map((index) => (
+                                                        <ItemNovelLazy key={index} />
+                                                    ))}
+                                                </div>
                                             )
                                             
                                         }
@@ -544,27 +535,21 @@ export default SearchNovel;
 
 // ---
 
-// export const getStaticProps: GetStaticProps = async (
-//     context: any
-// ) => {
-//     const { query } = context;    
+export const getServerSideProps = async (
+    context: any
+) => {
+    const { query } = context;    
 
-//     try {
-//         const queryAdv = query.queryAdv as string;
-//         const queryValue = query.query as string;
-
-//         return {
-//             props: {
-//                 query: {
-//                     name: "bao",
-//                 },
-//                 test: queryAdv + "?" + query || null,
-//             },
-//         };
-//     } catch (error) {
-//         return { notFound: true };
-//     }
-// };
+    try {
+        return {
+            props: {
+                queryPage: query
+            },
+        };
+    } catch (error) {
+        return { notFound: true };
+    }
+};
 
 // export const getStaticPaths: GetStaticPaths = async () => {
 //     return {

@@ -31,6 +31,7 @@ import {
     destroyReplyCommentHandle,
     getReplyCommentsHandle,
 } from "@/services/comment.services";
+import TextRank from "@/components/Layout/TextRank";
 
 
 interface CommentItemProps {
@@ -169,11 +170,11 @@ const CommentItem = ({ comment, user, handleDeleteComment }: CommentItemProps) =
 
                 <div className="">
                     <div className="bg-gray-100 border p-2">
-                        <div className="flex items-center gap-2 pb-2 mb-2 border-b text-sm">
-                            <h2 className="line-clamp-1 text-base leading-tight font-semibold">
-                                <Link href={""}>{comment?.name || ""}</Link>
-                            </h2>
-                        </div>
+                        <h2 className="line-clamp-1 text-base pb-2 mb-2 border-b font-semibold flex items-center">
+                            {/* <Link href={""}>{comment?.name || ""}</Link>*/}
+                            <TextRank className="uppercase max-sm:text-xs" rank={comment.rank || 0} text={comment.name + `${" "}-`}/>
+                            <TextRank className="uppercase ml-2 max-sm:text-xs" rank={comment.rank || 0}/>
+                        </h2>
                         <div className="text-gray-600 text-base">
                             {convertFromRaw(
                                 JSON.parse(comment?.commentText || "")
