@@ -33,7 +33,6 @@ import {
 } from "@/services/comment.services";
 import TextRank from "@/components/Layout/TextRank";
 
-
 interface CommentItemProps {
     novelId?: string;
     user?: UserType;
