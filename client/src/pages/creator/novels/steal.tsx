@@ -2,15 +2,11 @@ import { useRouter } from "next/router";
 import { ReactNode, useEffect, useRef, useState } from "react";
 
 import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 
 import { getAccessToken } from "@/services/cookies.servies";
 import CreatorLayout from "@/components/Layout/CreatorLayout";
 import { createNovelByUrlHandle } from "@/services/novels.services";
 import { createChapterByUrlHandle } from "@/services/chapter.services";
-import { updateBlurImageNovelHandle } from "@/services/update.services";
-import { getBlurDataURL } from "@/utils/getBlurDataURL";
-import { NovelType } from "@/types";
 import { ShowToastify } from "@/components/features/ShowToastify";
 
 interface StealNovelPageProps {

@@ -96,7 +96,7 @@ export const destroyReplyReviewsByNovelHandle = async (reviewId: string, token: 
 
 export const addReplyReviewHandle = async (novelId: string, reviewId: string, data: ReviewType, token: string) => {
     try {
-        const reviews = await axios.post(`${apiUrl}/api/reviews/add/reply/${novelId}/${reviewId}`, {
+        const reviewsRes = await axios.post(`${apiUrl}/api/reviews/add/reply/${novelId}/${reviewId}`, {
             ...data
         }, {
             headers: {
@@ -104,14 +104,16 @@ export const addReplyReviewHandle = async (novelId: string, reviewId: string, da
             }
         });
 
-        if(reviews.data.success) {
-            return reviews
-        }
-
-        return null;
+        return reviewsRes.data;
     } catch (error) {
-        // console.log(error)
-        return null;
+        if(axios.isAxiosError(error) && error.response?.data) {
+            return error.response.data;
+        } else {
+            return {
+                success: false,
+                message: (error as Error).message
+            };
+        }
     }
 };
 

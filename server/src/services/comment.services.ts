@@ -149,7 +149,7 @@ export const getReplyCommentHandle = async (data : CommentType & { page: number 
         const connection = await pool.getConnection();
 
         const qGetComment = `
-            SELECT comments.*, us_sender.name as senderName, us_sender.userId as senderId,
+            SELECT comments.*, us_sender.name as senderName, us_sender.userId as senderId, us_sender.rank as senderRank,
                 us_receiver.name as receiverName, us_receiver.userId as receiverId FROM comments
                 LEFT JOIN users us_sender ON us_sender.userId = comments.userId
                 LEFT JOIN comments rv ON rv.commentId = comments.parentId

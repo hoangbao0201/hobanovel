@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
@@ -13,17 +13,16 @@ import { placeholderBlurhash } from "@/constants";
 import BlurImage from "@/components/Layout/BlurImage";
 import { getAccessToken } from "@/services/cookies.servies";
 import { EditorStyle } from "@/components/Layout/EditorStyle";
-import { ReviewItemWith, ReviewType, UserType } from "@/types";
+import { ReplyReviewType, ReviewType, UserType } from "@/types";
 import { addReplyReviewHandle, destroyReplyReviewsByNovelHandle, getReplyReviewsHandle } from "@/services/review.services";
 import {
     iconArrowTurnUp,
     iconComment,
     iconEllipsis,
     iconOclock,
-    iconSend,
-    iconStar,
-    iconTrash,
+    iconSend
 } from "../../../../public/icons";
+import TextRank from "@/components/Layout/TextRank";
 
 interface ReviewItemProps {
     novelId?: string;
@@ -33,11 +32,13 @@ interface ReviewItemProps {
 }
 
 const ReviewItem = ({ novelId, review, user, handleDeleteReview }: ReviewItemProps) => {
+
     const [isFormSend, setIsFormSend] = useState<boolean>(false);
     const [isReplyReview, setIsReplyReview] = useState<boolean>(false);
-    const [replyReviews, setReplyReviews] = useState<ReviewType[]>([]);
+    const [replyReviews, setReplyReviews] = useState<ReplyReviewType[]>([]);
     const [commentText, setCommentText] = useState(() => EditorState.createEmpty());
 
+    // Add Reply Review
     const handleAddReplyReview = async () => {
         const token = getAccessToken();
         if (!token) {
@@ -59,18 +60,18 @@ const ReviewItem = ({ novelId, review, user, handleDeleteReview }: ReviewItemPro
                 data as ReviewType,
                 token as string
             );
-
-            console.log(reviewResponse?.data?.review?.reviewId)
             
-            if (reviewResponse?.data.success) {
+            if (reviewResponse?.success) {
                 setCommentText(() => EditorState.createEmpty())
-                const dataReplyReview : any = {
+                const dataReplyReview : ReplyReviewType = {
                     receiverName: review.name,
                     receiverId: review.userId,
                     senderName: user?.name,
                     senderId: user?.userId,
+                    senderRank: user?.rank,
+                    senderAvatarUrl: user?.avatarUrl,
                     commentText: data.commentText,
-                    reviewId: reviewResponse?.data?.review?.reviewId,
+                    reviewId: reviewResponse?.reviewsId,
                     createdAt: new Date(),
                     updatedAt: new Date(),
                 }
@@ -85,6 +86,7 @@ const ReviewItem = ({ novelId, review, user, handleDeleteReview }: ReviewItemPro
         }
     };
 
+    // Get Reply Review
     const handleGetReplyReviews = async () => {
         setIsReplyReview(true)
         setIsFormSend(true)
@@ -102,6 +104,7 @@ const ReviewItem = ({ novelId, review, user, handleDeleteReview }: ReviewItemPro
         }
     };
 
+    // Destroy Reply Review
     const handleDestroyReplyReview = async (reviewId: string | undefined) => {
         if(!user?.userId || !review.reviewId) {
             return;
@@ -117,12 +120,12 @@ const ReviewItem = ({ novelId, review, user, handleDeleteReview }: ReviewItemPro
                 setReplyReviews(filterReplyReviews);
             }
 
-            console.log(reviewResponse);
         } catch (error) {
             console.log(error)
         }
     }
 
+    
     return (
         <div className="flex mb-4">
             <Link
@@ -130,13 +133,13 @@ const ReviewItem = ({ novelId, review, user, handleDeleteReview }: ReviewItemPro
                 className="w-10 h-10 mt-2 rounded-full overflow-hidden shadow align-middle inline-block"
             >
                 <BlurImage
-                    width={500}
-                    height={500}
+                    width={50}
+                    height={50}
                     alt="image-demo"
                     blurDataURL={placeholderBlurhash}
                     className="group-hover:scale-105 group-hover:duration-500 object-cover w-10 h-10"
                     placeholder="blur"
-                    src="/images/avatar-default-2.png"
+                    src={ review.avatarUrl || "/images/avatar-default-2.png" }
                 />
             </Link>
             <div className="ml-3 flex-1 relative">
@@ -154,12 +157,11 @@ const ReviewItem = ({ novelId, review, user, handleDeleteReview }: ReviewItemPro
 
                 <div>
                     <div className="bg-gray-100 border p-2">
-                        <div className="flex items-center gap-2 pb-2 mb-2 border-b text-sm">
-                            <h2 className="line-clamp-1 text-base leading-tight font-semibold">
-                                <Link href={""}>{review?.name || ""}</Link>
-                            </h2>
+                        <div className="flex flex-wrap gap-2 items-center mb-3">
+                            <TextRank className="" rank={review.rank || 0} text={review.name}/>
+                            <TextRank className="" rank={review.rank || 0}/>
                         </div>
-                        <div className="text-gray-600 text-base">
+                        <div className={`text-gray-600 text-base`}>
                             {convertFromRaw(
                                 JSON.parse(review?.commentText || "")
                             ).getPlainText()}
@@ -231,10 +233,10 @@ const ReviewItem = ({ novelId, review, user, handleDeleteReview }: ReviewItemPro
 
                 <div>
                     {replyReviews.length > 0 && (
-                        <div>
+                        <ul>
                             {replyReviews.map((replyReview, index) => {
                                 return (
-                                    <div
+                                    <li
                                         key={replyReview?.reviewId}
                                         className="my-2"
                                     >
@@ -244,14 +246,14 @@ const ReviewItem = ({ novelId, review, user, handleDeleteReview }: ReviewItemPro
                                                 className="w-8 h-8 rounded-full overflow-hidden shadow align-middle inline-block"
                                             >
                                                 <BlurImage
-                                                    width={500}
-                                                    height={500}
+                                                    width={50}
+                                                    height={50}
                                                     alt="image-demo"
                                                     blurDataURL={placeholderBlurhash}
                                                     className="group-hover:scale-105 group-hover:duration-500 object-cover w-8 h-8"
                                                     placeholder="blur"
                                                     src={
-                                                        replyReview?.avatarUrl ??
+                                                        replyReview?.senderAvatarUrl ??
                                                         "/images/50.jpg"
                                                     }
                                                 />
@@ -269,15 +271,9 @@ const ReviewItem = ({ novelId, review, user, handleDeleteReview }: ReviewItemPro
                                                 ></span>
                                                 <div>
                                                     <div className="bg-gray-100 border p-2">
-                                                        <div className="flex items-center pb-2 mb-2 border-b gap-2 text-sm">
-                                                            <h2 className="line-clamp-1 leading-tight text-base font-semibold">
-                                                                <Link
-                                                                    href={`/user/${replyReview?.senderId}`}
-                                                                >
-                                                                    {replyReview?.senderName ||
-                                                                        ""}
-                                                                </Link>
-                                                            </h2>
+                                                        <div className="flex flex-wrap gap-2 items-center mb-3">
+                                                            <TextRank className="" rank={review.rank || 0} text={review.name}/>
+                                                            <TextRank className="" rank={review.rank || 0}/>
                                                         </div>
                                                         <div className="flex flex-wrap text-gray-600 text-base">
                                                             <Link
@@ -349,10 +345,10 @@ const ReviewItem = ({ novelId, review, user, handleDeleteReview }: ReviewItemPro
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </li>
                                 );
                             })}
-                        </div>
+                        </ul>
                     )}
 
                     {isFormSend && (

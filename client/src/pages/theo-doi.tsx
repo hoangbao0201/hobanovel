@@ -47,45 +47,51 @@ const NovelFollowPage = () => {
         }
     );
 
-    console.log("getFollowsNovel: ", getFollowsNovel)
+    // console.log("getFollowsNovel: ", getFollowsNovel)
 
     return (
         <>
             <Head title={`Truyện đang theo dõi - HobaNovel chính thức - HobaNovel`}/>
-            <main>
+            <>
                 <WrapperLayout>
                     <div className="flex my-5">
                         <div className="w-8/12">
                             <div className="px-4 mb-4 grid md:grid-cols-2 grid-cols-1 gap-6">
                                 {   
                                     getFollowsNovel && getFollowsNovel?.follows.length ? (
-                                        getFollowsNovel?.follows.map((novel : NovelBySlugType) => {
-                                            return (
-                                                <div key={novel.novelId} className="flex">
-                                                    <Link href={`/truyen/${novel.slug}`} className="relative w-20 h-28 overflow-hidden shadow">
-                                                        <BlurImage
-                                                            width={85}
-                                                            height={125}
-                                                            alt="image-demo"
-                                                            blurDataURL={novel.imageBlurHash || placeholderBlurhash}
-                                                            className="group-hover:scale-105 group-hover:duration-500 object-cover h-full w-full"
-                                                            placeholder="blur"
-                                                            src={novel.thumbnailUrl}
-                                                        />
-                                                    </Link>
-                                                    <div className="flex-1 ml-3">
-                                                        <h2 className="mb-2 text-base line-clamp-1 font-semibold">
-                                                            <Link className="block" href={`/truyen/${novel.slug}`}>{novel.title}</Link>
-                                                        </h2>
-                                                        <div className="line-clamp-2 text-sm mb-2 text-slate-900">{novel.description.replace(/<[^>]+>/g, '')}</div>
-                                                        <div className="text-base flex align-middle items-center justify-between">
-                                                            <span className="w-[55%] text-base mr-3 line-clamp-1 align-middle">{novel.author}</span>
-                                                            <span className="px-2 text-xs text-orange-700 line-clamp-1 align-middle text-center border border-orange-700">{PROPERTIES_NOVEL['genres'][novel.category-1].value}</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            )
-                                        })
+                                        <ul>
+                                            {
+                                                getFollowsNovel?.follows.map((novel : NovelBySlugType) => {
+                                                    return (
+                                                        <li key={novel.novelId} className="flex">
+                                                            <Link href={`/truyen/${novel.slug}`} className="relative w-20 h-28 overflow-hidden shadow">
+                                                                <BlurImage
+                                                                    width={85}
+                                                                    height={125}
+                                                                    alt="image-demo"
+                                                                    blurDataURL={novel.imageBlurHash || placeholderBlurhash}
+                                                                    className="group-hover:scale-105 group-hover:duration-500 object-cover h-full w-full"
+                                                                    placeholder="blur"
+                                                                    src={novel.thumbnailUrl}
+                                                                />
+                                                            </Link>
+                                                            <div className="flex-1 ml-3">
+                                                                <h3 className="mb-2 text-base line-clamp-1 font-semibold">
+                                                                    <Link className="block" href={`/truyen/${novel.slug}`}>
+                                                                        {novel.title}
+                                                                    </Link>
+                                                                </h3>
+                                                                <div className="line-clamp-2 text-sm mb-2 text-slate-900">{novel.description.replace(/<[^>]+>/g, '')}</div>
+                                                                <div className="text-base flex align-middle items-center justify-between">
+                                                                    <span className="w-[55%] text-base mr-3 line-clamp-1 align-middle">{novel.author}</span>
+                                                                    <span className="px-2 text-xs text-orange-700 line-clamp-1 align-middle text-center border border-orange-700">{PROPERTIES_NOVEL['genres'][novel.category-1].value}</span>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                    )
+                                                })
+                                            }
+                                        </ul>
                                     ) : (
                                         <div>Không có truyện</div>
                                     )
@@ -97,7 +103,7 @@ const NovelFollowPage = () => {
                         </div>
                     </div>
                 </WrapperLayout>
-            </main>
+            </>
         </>
     )
 }

@@ -21,111 +21,6 @@ type ChaptersByNovelType = Pick<
     "chapterId" | "novelSlug" | "title" | "chapterNumber" | "createdAt"
 >;
 
-// const ListContainerStyle = styled.div`
-//     display: grid;
-//     scroll-behavior: smooth;
-//     scroll-snap-type: y mandatory;
-//     height: fit;
-//     margin-right: 10px;
-//     margin: 10px 0px;
-//     column-gap: 24px;
-
-//     scroll-behavior: smooth;
-//     scroll-snap-type: y mandatory;
-
-//     ::-webkit-scrollbar {
-//         width: 6px;
-//     }
-//     ::-webkit-scrollbar-thumb {
-//         @apply rounded-2xl bg-gray-400;
-//     }
-
-//     @media (min-width: 768px) {
-//         grid-template-columns: repeat(1, minmax(0, 1fr));
-//     }
-//     @media (min-width: 1024px) {
-//         grid-template-columns: repeat(3, minmax(0, 1fr));
-//     }
-// `
-
-// const ItemChapterStyle = styled.div`
-//     &::before {
-//         content: '';
-//         position: absolute;
-//         height: 60%;
-//         width: 1px;
-//         background-color: #000;
-//         right: 0px;
-//         top: 0px;
-//     }
-// `
-
-// const ListItemChapter = ({ chapters }: { chapters: ChaptersByNovelType[] }) => {
-//     const [isShowMoreChapters, setIsShowMoreChapters] = useState<number>(42);
-
-//     // LENGTH CHAPTERS
-//     const lengthChapters = chapters.length;
-
-//     return (
-//         <>
-//             <div
-//                 className={`${
-//                     isShowMoreChapters && "overflow-hidden"
-//                 } `}
-//             >
-//                 <VirtuosoGrid
-//                     ref={virtuoso}
-//                     style={{
-//                         width: "100%",
-//                         height: `${
-//                             chapters.length > 50
-//                                 ? '750px'
-//                                 : '450px'
-//                         }`,
-//                     }}
-//                     overscan={50}
-//                     components={{
-//                         List: ListContainerStyle,
-//                         Item: ItemContainerStyle
-//                     }}
-//                     totalCount={chapters.length}
-//                     itemContent={(index) => {
-//                         return (
-//                             <Link
-//                                 key={chapters[index].chapterId || index}
-//                                 href={`/truyen/${chapters[index].novelSlug}/chuong-${chapters[index].chapterNumber}`}
-//                                 className="text-sm animate__fadeIn animate__animated"
-//                             >
-//                                 <span className="item-text flex items-center py-2 border-b border-gray-200 border-dashed">
-//                                     <span className="whitespace-nowrap">
-//                                         Chương {chapters[index].chapterNumber}
-//                                     </span>
-//                                     :{" "}
-//                                     <h2 className="line-clamp-1 ml-2 mr-auto">{chapters[index].title}</h2>
-//                                     <span className="ml-2 whitespace-nowrap text-xs">
-//                                         ({moment(chapters[index].createdAt).fromNow()})
-//                                     </span>
-//                                 </span>
-//                             </Link>
-//                         )
-//                     }}
-//                 >
-
-//                 </VirtuosoGrid>
-
-//             </div>
-//             {/* {isShowMoreChapters !== lengthChapters && (
-//                 <div
-//                     onClick={() => setIsShowMoreChapters(lengthChapters)}
-//                     className="hover:bg-gray-200 bg-gray-100 border cursor-pointer select-none text-center p-3 mt-3"
-//                 >
-//                     <button>Xem thêm</button>
-//                 </div>
-//             )} */}
-//         </>
-//     );
-// };
-
 const FormListChapters = ({ tab, slug }: FormListChaptersProps) => {
     const virtuosoRef = useRef<any>(null);
 
@@ -188,84 +83,40 @@ const FormListChapters = ({ tab, slug }: FormListChaptersProps) => {
                     </div>
                 )
             }
-            <div className="transition-all">
+            <div className="transition-all px-4 mb-4">
                 {hasLoadedData ? (
                     listChapter && bodyContent ? (
-                        <>
-
-                            <div className="border py-2 px-1 min-h-[500px]">
-                                <div className="grid gap-x-5 lg:grid-cols-3 grid-cols-1">
-                                    {bodyContent.slice(0, isShowMoreChapters)?.map((chapter) => {
-                                        return (
-                                            <Link
-                                                key={chapter.chapterId}
-                                                href={`/truyen/${chapter.novelSlug}/chuong-${chapter.chapterNumber}`}
-                                                className="text-sm"
-                                            >
-                                                <span className="item-text flex items-center py-2 px-2 border-b border-gray-200 border-dashed hover:bg-gray-100">
-                                                    <span className="whitespace-nowrap">
-                                                        Chương {chapter.chapterNumber}
-                                                    </span>
-                                                    :{" "}
-                                                    <h2 className="line-clamp-1 ml-2 mr-auto">{chapter.title}</h2>
-                                                    <span className="ml-2 whitespace-nowrap text-xs">
-                                                        ({moment(chapter.createdAt).fromNow()})
-                                                    </span>
-                                                </span>
-                                            </Link>
-                                        )
-                                    })}
-                                </div>
-                                {(isShowMoreChapters !== bodyContent?.length)  && bodyContent.length > 42 && (
-                                    <div
-                                        onClick={() => setIsShowMoreChapters(listChapter?.length)}
-                                        className="hover:bg-gray-200 bg-gray-100 border cursor-pointer select-none text-center p-3 mt-3"
-                                    >
-                                        <button>Xem thêm</button>
-                                    </div>
-                                )}
-                            </div>
-
-                            {/* <ListItemChapter chapters={bodyContent} /> */}
-                            {/* <VirtuosoGrid
-                                ref={virtuosoRef}
-                                style={{
-                                    width: "100%",
-                                    height: `${
-                                        bodyContent.length > 50
-                                            ? '750px'
-                                            : '450px'
-                                    }`,
-                                }}
-                                overscan={50}
-                                components={{
-                                    List: ListContainerStyle,
-                                    Item: ItemContainerStyle
-                                }}
-                                totalCount={bodyContent.length}
-                                itemContent={(index) => {
+                        <div className="border py-2 px-1 min-h-[500px]">
+                            <ul className="grid gap-x-5 lg:grid-cols-3 grid-cols-1">
+                                {bodyContent.slice(0, isShowMoreChapters)?.map((chapter) => {
                                     return (
-                                        <Link
-                                            key={bodyContent[index].chapterId || index}
-                                            href={`/truyen/${bodyContent[index].novelSlug}/chuong-${bodyContent[index].chapterNumber}`}
-                                            className="text-sm"
-                                        >
-                                            <span className="item-text flex items-center py-2 px-1 border-b border-gray-200 border-dashed">
+                                        <li key={chapter.chapterId}>
+                                            <Link
+                                                href={`/truyen/${chapter.novelSlug}/chuong-${chapter.chapterNumber}`}
+                                                className="text-sm item-text flex items-center py-2 px-2 border-b border-gray-200 border-dashed hover:bg-gray-100"
+                                            >
                                                 <span className="whitespace-nowrap">
-                                                    Chương {bodyContent[index].chapterNumber}
+                                                    Chương {chapter.chapterNumber}
                                                 </span>
                                                 :{" "}
-                                                <h2 className="line-clamp-1 ml-2 mr-auto">{bodyContent[index].title}</h2>
+                                                <h3 className="line-clamp-1 ml-2 mr-auto">{chapter.title}</h3>
                                                 <span className="ml-2 whitespace-nowrap text-xs">
-                                                    ({moment(bodyContent[index].createdAt).fromNow()})
+                                                    ({moment(chapter.createdAt).fromNow()})
                                                 </span>
-                                            </span>
-                                        </Link>
+                                            </Link>
+                                        </li>
                                     )
-                                }}
-                            >
-                            </VirtuosoGrid> */}
-                        </>
+                                })}
+                            </ul>
+                            {(isShowMoreChapters !== bodyContent?.length)  && bodyContent.length > 42 && (
+                                <div
+                                    onClick={() => setIsShowMoreChapters(listChapter?.length)}
+                                    className="hover:bg-gray-200 bg-gray-100 border cursor-pointer select-none text-center p-3 mt-3"
+                                >
+                                    <button>Xem thêm</button>
+                                </div>
+                            )}
+                        </div>
                     ) : (
                         <div></div>
                     )

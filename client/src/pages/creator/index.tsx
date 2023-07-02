@@ -1,5 +1,4 @@
 import CreatorLayout from "@/components/Layout/CreatorLayout";
-import dynamic from "next/dynamic";
 import { ReactNode } from "react";
 
 interface CreatorHomePageProps {

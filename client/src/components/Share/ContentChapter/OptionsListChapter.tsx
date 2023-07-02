@@ -62,26 +62,6 @@ const OptionsListChapter = ({ chapterNumber, isShow = false, handle, slug, chapt
 
                     </div>
 
-                    {/* <VirtuosoGrid
-                        ref={chapterListRef}
-                        className=""
-                        style={{ height: 'calc(100vh - 200px)' }}
-                        totalCount={chapterNumber}
-                        listClassName="flex flex-wrap gap-2 sm:text-[14px] text-[13px] px-3 my-3"
-                        itemContent={(index) => {
-                            return (
-                                <Link
-                                    onClick={() => handle()}
-                                    href={`/truyen/${slug}/chuong-${index+1}`} key={index}
-                                    className={`min-w-[100px] block py-1 px-3 border rounded-sm whitespace-nowrap text-center ${chapterCurrent == index+1 && 'border-red-600 text-red-600'}`}
-                                >
-                                    Chapter {index + 1}
-                                </Link>
-                            )
-                        }}
-                    /> */}
-
-
                     <AutoSizer>
                         {({ height, width }) => (
                             <Grid
@@ -95,15 +75,15 @@ const OptionsListChapter = ({ chapterNumber, isShow = false, handle, slug, chapt
                                 columnWidth={width}
                                 cellRenderer={({ columnIndex, key, rowIndex, style }: GridCellProps) => (
                                     <div key={key} style={style}>
-                                    <Link
-                                        onClick={() => handle()}
-                                        href={`/truyen/${slug}/chuong-${rowIndex + 1}`}
-                                        className={`min-w-[100px] block py-1 px-3 border rounded-sm whitespace-nowrap text-center ${
-                                        chapterCurrent === rowIndex + 1 ? 'border-red-600 text-red-600' : ''
-                                        }`}
-                                    >
-                                        Chapter {rowIndex + 1}
-                                    </Link>
+                                        <Link
+                                            onClick={() => handle()}
+                                            href={`/truyen/${slug}/chuong-${rowIndex + 1}`}
+                                            className={`min-w-[100px] block py-1 px-3 border rounded-sm whitespace-nowrap text-center ${
+                                                chapterCurrent === rowIndex + 1 ? 'border-red-600 text-red-600' : ''
+                                            }`}
+                                        >
+                                            Chapter {rowIndex + 1}
+                                        </Link>
                                     </div>
                                 )}
                             />

@@ -1,10 +1,10 @@
-import CreatorLayout from "@/components/Layout/CreatorLayout";
-import { createChapterByUrlHandle } from "@/services/chapter.services";
-import { getAccessToken } from "@/services/cookies.servies";
-import { createNovelByUrlHandle } from "@/services/novels.services";
-import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { ReactNode, useEffect, useRef, useState } from "react";
+
+import { getAccessToken } from "@/services/cookies.servies";
+import CreatorLayout from "@/components/Layout/CreatorLayout";
+import { createNovelByUrlHandle } from "@/services/novels.services";
+import { createChapterByUrlHandle } from "@/services/chapter.services";
 
 interface StealNovelPageProps {
     children?: ReactNode
@@ -19,7 +19,7 @@ const StealNovelPage = ({ children } : StealNovelPageProps) => {
 
     const router = useRouter();
 
-    const messageProgressRef = useRef<HTMLDivElement>(null)
+    const messageProgressRef = useRef<HTMLLIElement>(null)
     const [urlInput, setUrlInput] = useState<string>("")
     const [progress, setProgress] = useState<number>(0);
     const [isProgress, setIsProgress] = useState<boolean>(false);
@@ -120,14 +120,14 @@ const StealNovelPage = ({ children } : StealNovelPageProps) => {
             <div className="">
 
                 <div className="mb-8">
-                    <div className="bg-gray-200 border border-gray-300 rounded-md h-40 w-[400px] overflow-y-auto p-2 text-gray-500">
+                    <ul className="bg-gray-200 border border-gray-300 rounded-md h-40 w-[400px] overflow-y-auto p-2 text-gray-500">
                         {  
                             dataMessageProgress.map((data) => {
-                                return <div key={data.id} className="select-none">{data.message}</div>
+                                return <li key={data.id} className="select-none">{data.message}</li>
                             })
                         }
-                        <div ref={messageProgressRef}></div>
-                    </div>
+                        <li ref={messageProgressRef}></li>
+                    </ul>
                 </div>
 
                 <button onClick={handleSubmitButtonCreatNovel} className="border border-gray-300 rounded-lg py-2 px-8">

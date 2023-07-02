@@ -1,32 +1,26 @@
 import Link from "next/link";
 import Image from "next/image";
-import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
-import { useMediaQuery, useOnClickOutside } from "usehooks-ts";
-import Tippy from "@tippyjs/react";
-import 'tippy.js/dist/tippy.css';
+import { useMediaQuery } from "usehooks-ts";
 
-// import { useClickOutSide } from "@/hook/useClickOutSide";
-import { GENRES_VALUE, RANK_VALUE } from "@/constants/data";
+import { NavOver } from "./NavOver";
 import BlurImage from "../Layout/BlurImage";
+import SearchInput from "../Layout/SearchInput";
+import { iconBars } from "../../../public/icons";
 import { placeholderBlurhash } from "@/constants";
 import { logoutUserHandle } from "@/redux/userSlice";
-import { removeAccessToken } from "@/services/cookies.servies";
 import { LoadingForm } from "../Layout/LoadingLayout";
-import { iconBars } from "../../../public/icons";
-import { NavOver } from "./NavOver";
 import { useClickOutSide } from "@/hook/useClickOutSide";
-import SearchInput from "../Layout/SearchInput";
+import { GENRES_VALUE, RANK_VALUE } from "@/constants/data";
+import { removeAccessToken } from "@/services/cookies.servies";
 
 interface HeaderProps {
     autoHidden?: boolean
 }
 
 const Header = ({ autoHidden = true } : HeaderProps) => {
-
-    const router = useRouter()
 
     const matchesMobile = useMediaQuery("(max-width: 640px)");
 
@@ -104,19 +98,11 @@ const Header = ({ autoHidden = true } : HeaderProps) => {
             >
                 <div className={`w-full`}>
                     <div className="max-w-7xl mx-auto flex items-center h-[50px] px-3">
-                        <h2 className="text-center align-middle font-bold text-2xl">
+                        <h1 className="text-center align-middle font-bold text-2xl">
                             <Link href="/">
-                                hobanovel
+                                Hobanovel
                             </Link>
-                            {/* <Link href="/">
-                                <Image
-                                    width={150}
-                                    height={30}
-                                    src={"/images/hobanovel-logo.png"}
-                                    alt="hobanovel logo"
-                                />
-                            </Link> */}
-                        </h2>
+                        </h1>
 
                         <div className="hidden lg:flex items-center">
                             <div className="ml-4 relative">
@@ -132,19 +118,20 @@ const Header = ({ autoHidden = true } : HeaderProps) => {
                                         isDropdownGenres ? "block" : "hidden"
                                     }`}
                                 >
-                                    <div className="grid grid-cols-2">
+                                    <ul className="grid grid-cols-2">
                                         {GENRES_VALUE.map((item) => {
                                             return (
-                                                <Link
-                                                    key={item.id}
-                                                    className="px-4 py-2 block hover:bg-gray-100 cursor-pointer"
-                                                    href="/"
-                                                >
-                                                    <span className="">{item.value}</span>
-                                                </Link>
+                                                <li key={item.id}>
+                                                    <Link
+                                                        className="px-4 py-2 block hover:bg-gray-100 cursor-pointer"
+                                                        href="/"
+                                                    >
+                                                        {item.value}
+                                                    </Link>
+                                                </li>
                                             );
                                         })}
-                                    </div>
+                                    </ul>
                                 </div>
                             </div>
     
@@ -161,19 +148,20 @@ const Header = ({ autoHidden = true } : HeaderProps) => {
                                         isDropdownRank ? "block" : "hidden"
                                     }`}
                                 >
-                                    <div className="grid grid-cols-1">
+                                    <ul className="grid grid-cols-1">
                                         {RANK_VALUE.map((item) => {
                                             return (
-                                                <Link
-                                                    key={item.id}
-                                                    className="px-4 py-2 block hover:bg-gray-100 cursor-pointer"
-                                                    href="/"
-                                                >
-                                                    <span className="">{item.value}</span>
-                                                </Link>
+                                                <li key={item.id}>
+                                                    <Link
+                                                        className="px-4 py-2 block hover:bg-gray-100 cursor-pointer"
+                                                        href="/"
+                                                    >
+                                                        {item.value}
+                                                    </Link>
+                                                </li>
                                             );
                                         })}
-                                    </div>
+                                    </ul>
                                 </div>
                             </div>
                         </div>
@@ -204,7 +192,7 @@ const Header = ({ autoHidden = true } : HeaderProps) => {
                                         ) : (
                                             isAuthenticated ? (
                                                 <div className="relative">
-                                                    <span className="h-[50px] flex items-center">
+                                                    <div className="h-[50px] flex items-center">
                                                         <button
                                                             onClick={() => setIsDropdownUser(true)}
                                                             className="w-9 h-9 outline-none rounded-full overflow-hidden shadow align-middle inline-block"
@@ -222,7 +210,7 @@ const Header = ({ autoHidden = true } : HeaderProps) => {
                                                                 }
                                                             />
                                                         </button>
-                                                    </span>
+                                                    </div>
                                                     <div ref={userDropdownRef} className={`${isDropdownUser ? 'block' : 'hidden'} z-20 drop-shadow-lg min-w-[230px] p-3 absolute bg-white top-12 right-0`}>
                                                         <div className="flex items-center mb-3">
                                                             <Image
@@ -237,47 +225,57 @@ const Header = ({ autoHidden = true } : HeaderProps) => {
                                                             />
                                                             <div className="ml-3 flex-1 line-clamp-1">{currentUser.username}</div>
                                                         </div>
-                                                        <div className="dropdown-content">
+                                                        <ul className="dropdown-content">
                                                             {
                                                                 currentUser.username === "admin" ? (
-                                                                    <Link href={`/admin`} className="hover:bg-gray-100 py-2 px-2 block cursor-pointer">
-                                                                        <span className="block w-full">Admin</span>
-                                                                    </Link>
+                                                                    <li>
+                                                                        <Link href={`/admin`} className="hover:bg-gray-100 py-2 px-2 block cursor-pointer">
+                                                                            Admin
+                                                                        </Link>
+                                                                    </li>
                                                                 ) : (
-                                                                    <Link href={`/user/${currentUser.username}`} className="hover:bg-gray-100 py-2 px-2 block cursor-pointer">
-                                                                        <span className="block w-full">Hồ sơ</span>
-                                                                    </Link>
+                                                                    <li>
+                                                                        <Link href={`/user/${currentUser.username}`} className="hover:bg-gray-100 py-2 px-2 block cursor-pointer">
+                                                                            Hồ sơ
+                                                                        </Link>
+                                                                    </li>
                                                                 )
                                                             }
-                                                            <Link href={`/account`} className="hover:bg-gray-100 py-2 px-2 block cursor-pointer">
-                                                                <span className="block w-full">Tài khoản</span>
-                                                            </Link>
-                                                            <Link href={`/search`} className="hover:bg-gray-100 py-2 px-2 block cursor-pointer">
-                                                                <span className="block w-full">Tìm truyện</span>
-                                                            </Link>
-                                                            <Link href={`/creator`} target="_blank" className="hover:bg-gray-100 py-2 px-2 block cursor-pointer">
-                                                                <span className="block w-full">Người sánh tạo</span>
-                                                            </Link>
-                                                            <div onClick={eventLogoutUser} className="hover:bg-gray-100 py-2 px-2 block cursor-pointer">
+                                                            <li>
+                                                                <Link href={`/account`} className="hover:bg-gray-100 py-2 px-2 block cursor-pointer">
+                                                                    Tài khoản
+                                                                </Link>
+                                                            </li>
+                                                            <li>
+                                                                <Link href={`/search`} className="hover:bg-gray-100 py-2 px-2 block cursor-pointer">
+                                                                    Tìm truyện
+                                                                </Link>
+                                                            </li>
+                                                            <li>
+                                                                <Link href={`/creator`} target="_blank" className="hover:bg-gray-100 py-2 px-2 block cursor-pointer">
+                                                                    Người sánh tạo
+                                                                </Link>
+                                                            </li>
+                                                            <li onClick={eventLogoutUser} className="hover:bg-gray-100 py-2 px-2 block cursor-pointer">
                                                                 Đăng xuất
-                                                            </div>
-                                                        </div>
+                                                            </li>
+                                                        </ul>
                                                     </div>
                                                 </div>
                                             ) : (
-                                                <>
-                                                    <Link className="mr-1" href="/auth/login">
-                                                        <h2 className="px-3 py-1 rounded hover:bg-gray-200">
+                                                <div>
+                                                    <span>
+                                                        <Link className="mr-1 px-3 py-1 rounded hover:bg-gray-200" href="/auth/login">
                                                             Đăng nhập
-                                                        </h2>
-                                                    </Link>
+                                                        </Link>
+                                                    </span>
                                                     {"|"}
-                                                    <Link className="ml-1" href="/auth/register">
-                                                        <h2 className="px-3 py-1 rounded hover:bg-gray-200">
+                                                    <span>
+                                                        <Link className="ml-1 px-3 py-1 rounded hover:bg-gray-200" href="/auth/register">
                                                             Đăng kí
-                                                        </h2>
-                                                    </Link>
-                                                </>
+                                                        </Link>
+                                                    </span>
+                                                </div>
                                             )
                                         )
                                     )
@@ -288,7 +286,7 @@ const Header = ({ autoHidden = true } : HeaderProps) => {
                 </div>
             </header>
 
-            <NavOver user={currentUser} isShow={isNavOver} handle={() => setIsNavOver(value => !value)}/>
+            <NavOver user={currentUser} isShow={isNavOver} handle={() => setIsNavOver(value => !value)} handleLogout={eventLogoutUser}/>
         </>
     );
 };

@@ -1,10 +1,10 @@
-import CreatorLayout from "@/components/Layout/CreatorLayout";
-import { createChapterByUrlHandle } from "@/services/chapter.services";
-import { getAccessToken } from "@/services/cookies.servies";
-import { createNovelByUrlHandle } from "@/services/novels.services";
-import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { ReactNode, useEffect, useRef, useState } from "react";
+
+import { getAccessToken } from "@/services/cookies.servies";
+import CreatorLayout from "@/components/Layout/CreatorLayout";
+import { createNovelByUrlHandle } from "@/services/novels.services";
+import { createChapterByUrlHandle } from "@/services/chapter.services";
 
 interface StealNovelPageProps {
     children?: ReactNode

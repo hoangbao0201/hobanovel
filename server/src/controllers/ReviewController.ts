@@ -6,7 +6,7 @@ import { addReplyReviewHandle, addReviewByNovelHandle, destroyReplyReviewByNovel
 export const addReviewByDataNovel = async (req: Request, res: Response) => {
     try {
 
-        const { pointStoryline, pointPersonality, pointScene, pointTranslation, commentText, isSpoiler } = req.body
+        const { pointStoryline, pointPersonality, pointScene, pointTranslation, commentText } = req.body
         const { novelId } = req.params;
         if(!novelId || !commentText) {
             return res.status(400).json({
@@ -29,22 +29,7 @@ export const addReviewByDataNovel = async (req: Request, res: Response) => {
         return res.json({
             success: true,
             message: "Create review successful",
-            demo: reviewResult,
-            reviews: {
-                reviewId: reviewResult?.data?.insertId || null,
-                mediumScore,
-                pointStoryline,
-                pointPersonality,
-                pointScene,
-                pointTranslation,
-                commentText,
-                isSpoiler,
-                novelId,
-                userId: res.locals.user.userId,
-                createdAt: new Date(),
-                updatedAt: new Date()
-            },
-            data: reviewResult.data
+            reviewsId: reviewResult?.data?.insertId
         })
         
     } catch (error) {
@@ -247,9 +232,7 @@ export const addReplyReview = async (req: Request, res: Response) => {
         return res.json({
             success: true,
             message: "Add reviews successful",
-            review: {
-                reviewId: reviewResponse?.data?.insertId || null,
-            }
+            reviewsId: reviewResponse?.data?.insertId || null,
         })
         
     } catch (error) {

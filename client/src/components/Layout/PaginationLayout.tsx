@@ -19,9 +19,9 @@ export const PaginationLayout = ({ countPage, currentPage, handleChangePage } : 
 
             {
                 currentPage > 4 && (
-                    <span>
+                    <li>
                         <i className="w-4 h-4 block dark:fill-white">{iconEllipsis}</i>
-                    </span>
+                    </li>
                 )
             }
 
@@ -45,9 +45,9 @@ export const PaginationLayout = ({ countPage, currentPage, handleChangePage } : 
 
             {
                 countPage - currentPage > 4 && (
-                    <span>
+                    <li>
                         <i className="w-4 h-4 block dark:fill-white">{iconEllipsis}</i>
-                    </span>
+                    </li>
                 )
             }
 

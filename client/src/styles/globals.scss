@@ -9,6 +9,7 @@
 * {
     margin: 0px;
     padding: 0px;
+    // font-size: 1rem;
     box-sizing: border-box;
 }
 
@@ -24,19 +25,7 @@ body {
 
 // ---
 
-html {
-    // -webkit-tap-highlight-color: transparent;
-    // scroll-behavior: smooth;
-    // scroll-snap-type: y mandatory;
-}
-
-// ::-webkit-scrollbar {
-//     width: 15px;
-// }
-
-// ::-webkit-scrollbar-thumb {
-//     @apply rounded-2xl bg-gray-400;
-// }
+html {}
 
 .btn {
     display: flex;
@@ -54,4 +43,14 @@ html {
     user-select: none;
     vertical-align: middle;
     min-width: 110px;
+}
+
+
+
+// KEY FRAME
+
+@keyframes c {
+    50% {
+        opacity: 0.4;
+    }
 }

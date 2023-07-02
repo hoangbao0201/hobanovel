@@ -77,15 +77,16 @@ const FormComment = ({ tab, novelId }: FormCommentProps) => {
             };
             
             
-            const reviewResponse = await addCommentHandle(data as CommentType & { token: string });
-            if (reviewResponse?.data.success) {
+            const commentResponse = await addCommentHandle(data as CommentType & { token: string });
+            if (commentResponse?.success) {
                 const newComment = {
-                    commentId: reviewResponse.data.data.commentId,
+                    commentId: commentResponse.commentId,
                     commentText: String(data.commentText),
                     countReplyComment: null,
                     novelId: String(novelId),
                     chapterId: null,
                     parentId: null,
+                    rank: currentUser.rank,
                     userId: currentUser.userId,
                     name: currentUser?.name,
                     createdAt: String(new Date()),
@@ -130,7 +131,7 @@ const FormComment = ({ tab, novelId }: FormCommentProps) => {
     }
 
     return (
-        <div className="flex -mx-4">
+        <div className="flex">
             <div className="lg:w-8/12 w-full px-4">
 
                 <div className="flex mb-10">
@@ -151,25 +152,25 @@ const FormComment = ({ tab, novelId }: FormCommentProps) => {
                     </div>
                 </div>
 
-                <div className="transition-all ease-linear">
+                <ul className="transition-all ease-linear">
                     {
                         isLoading ? (
                             <LoadingForm theme="dark"/>
                         ) : (
                             comments.length === 0 ? (
-                                <span>Hãy là người đầu tiên bình luận</span>
+                                <li>Hãy là người đầu tiên bình luận</li>
                             ) : (
                                 comments?.map((comment) => {
                                     return (
-                                        <Fragment key={comment.commentId}>
+                                        <li key={comment.commentId}>
                                             <CommentItem key={comment?.commentId} comment={comment} user={currentUser} handleDeleteComment={handleDestroyComment}/>
-                                        </Fragment>
+                                        </li>
                                     );
                                 })
                             )
                         )
                     }
-                </div>
+                </ul>
             </div>
             <div className="max-lg:hidden lg:w-4/12 w-full px-4">
                 {

@@ -10,10 +10,18 @@ import {
     REGISTER,
 } from "redux-persist";
 import storage from "redux-persist/lib/storage";
-import userReducer from "./userSlice";
-import commentReducer from "./commentSlice";
-import bannersReducer from "./bannersSlice";
-// import scrollReducer from "./scrollSlice";
+// import { Context, MakeStore, createWrapper } from "next-redux-wrapper";
+
+import userReducer, { UserSlideState } from "./userSlice";
+import commentReducer, { CommentSliceType } from "./commentSlice";
+import bannersReducer, { BannersSliceType } from "./bannersSlice";
+
+
+export interface RootState {
+    user: UserSlideState;
+    comment: CommentSliceType;
+    banners: BannersSliceType;
+}
 
 const persistConfig = {
     key: "root",
@@ -44,3 +52,12 @@ export const store = configureStore({
 });
 
 export const persistor = persistStore(store);
+
+
+//  ------------
+
+// const makeStore: MakeStore<Store<RootState, AnyAction>> = (context: Context) => {
+//     return { store, persistor }
+// }
+
+// export const wrapper = createWrapper<Store<RootState, AnyAction>>(makeStore)

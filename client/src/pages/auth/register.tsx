@@ -44,18 +44,18 @@ const RegisterPage = () => {
     
                 <div className="mx-auto max-w-[500px]">
     
-                    <div className="py-10 flex justify-center">
+                    <h2 className="py-10 flex justify-center">
                         <Link className="" href="/">
-                            <div>Logo</div>
+                            Hobanovel
                         </Link>
-                    </div>
+                    </h2>
     
                     <div className="w-full min-h-[300px] py-6 px-10 drop-shadow-md bg-white">
                         <div className="grid">
-                            <h2 className="mb-3 text-3xl font-semibold">Create a HobaNovel Account.</h2>
-                            <div className="mb-6">
+                            <h1 className="mb-3 text-3xl font-semibold">Đăng kí tài khoản</h1>
+                            <h3 className="mb-6">
                                 Already have an account? <Link className="ml-3 text-blue-700 font-semibold" href="/auth/login">Sign In</Link>
-                            </div>
+                            </h3>
                             <div>
                                 <CustomInput value={dataForm.name} name="name" handleOnchangeValue={eventChangeValueInput} label="Fullname" id="fullnameInputRegister"/>
                                 <CustomInput value={dataForm.email} name="username" handleOnchangeValue={eventChangeValueInput} label="Username" id="usernameInputRegister"/>
@@ -64,12 +64,18 @@ const RegisterPage = () => {
                             </div>
                             <div className="flex items-center mb-3">
                                 <input className="w-6 h-6 mr-3 cursor-pointer rounded-t" type="checkbox"/>
-                                <span className="text-sm">
+                                <div className="text-sm">
                                     I agree to the {" "}
-                                    <Link className="text-blue-700 underline decoration-solid hover:decoration-2" href="/">Subscription Service Agreement</Link>,{" "}
-                                    <Link className="text-blue-700 underline decoration-solid hover:decoration-2" href="/">Privacy Policy</Link>, and{" "}
-                                    <Link className="text-blue-700 underline decoration-solid hover:decoration-2" href="/">Data Processing Terms</Link>.
-                                </span>
+                                    <Link className="text-blue-700 underline decoration-solid hover:decoration-2" href="/">
+                                        Subscription Service Agreement    
+                                    </Link>,{" "}
+                                    <Link className="text-blue-700 underline decoration-solid hover:decoration-2" href="/">
+                                        Privacy Policy    
+                                    </Link>, and{" "}
+                                    <Link className="text-blue-700 underline decoration-solid hover:decoration-2" href="/">
+                                        Data Processing Terms
+                                    </Link>.
+                                </div>
                             </div>
                             <div className="mt-2">
                                 <button onClick={eventSubmitForm} className=" transition-all w-full text-center py-3 rounded bg-blue-600 hover:bg-blue-700 active:bg-blue-800 active:shadow-xl text-white">Sign Up</button>

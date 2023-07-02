@@ -6,11 +6,24 @@ import { useMediaQuery } from "usehooks-ts";
 import { addUserHandle, logoutUserHandle } from "@/redux/userSlice";
 import { getAccessToken, removeAccessToken } from "@/services/cookies.servies";
 
+import ScrollOnTop from "./ScrollOnTop";
+import { connectUserHandle } from "@/services/auth.services";
+import dynamic from "next/dynamic";
+
 import Header from "../partials/Header";
 import Footer from "../partials/Footer";
-import ScrollOnTop from "./ScrollOnTop";
 import BannersIntro from "../partials/BannersIntro";
-import { connectUserHandle } from "@/services/auth.services";
+
+
+// const Header = dynamic(() => import('../partials/Header', {
+//     ssr: false,
+// } as ImportCallOptions));
+// const Footer = dynamic(() => import('../partials/Footer', {
+//     ssr: false,
+// } as ImportCallOptions));
+// const BannersIntro = dynamic(() => import('../partials/BannersIntro', {
+//     ssr: false,
+// } as ImportCallOptions));
 
 interface MainLayoutProps {
     bg?: string;
@@ -20,10 +33,6 @@ interface MainLayoutProps {
     isFooter?: boolean;
     isBannerPage?: boolean;
 }
-
-// const Header = dynamic(() => import('../partials/Header'));
-// const Footer = dynamic(() => import('../partials/Footer'));
-// const BannerPage = dynamic(() => import('../partials/BannerPage'));
 
 const MainLayout = ({
     bg = "#ffff",
@@ -73,7 +82,7 @@ const MainLayout = ({
 
     return (
         <>
-            <Head>
+            {/* <Head>
                 <style>
                     {`
                         body {
@@ -81,15 +90,19 @@ const MainLayout = ({
                         }
                     `}
                 </style>
-            </Head>
+            </Head> */}
+
+            {/* <Head>
+                <title>123</title>
+            </Head> */}
 
             <ScrollOnTop />
 
             {isHeader && <Header autoHidden={autoHidden} />}
 
-            <BannersIntro isShow={isBannerPage}/>
+            { !matchesMobile && <BannersIntro isShow={isBannerPage}/> }
 
-            <div
+            <main 
                 className={`${
                     isBannerPage &&
                     `w-full min-h-[500px] top-0 overflow-hidden ${
@@ -98,7 +111,7 @@ const MainLayout = ({
                 }`}
             >
                 {children}
-            </div>
+            </main>
 
             {isFooter && <Footer />}
         </>

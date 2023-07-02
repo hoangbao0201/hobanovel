@@ -26,6 +26,7 @@ export interface CommentItemWith {
 
     name?: string
     rank?: number
+    senderRank?: number
     username?: string
     avatarUrl?: string
     avatarPublicId?: string
@@ -43,36 +44,21 @@ export interface CommentType extends CommentItemWith {
     novelId?: string | null | undefined
 }
 
-export interface ReviewItemWith extends NovelType {
-    countReplyReview?: string | null
-    receiverName?: string
-    receiverId?: string
-    senderName?: string
-    senderId?: string
+// export interface ReviewItemWith extends NovelType {
+//     countReplyReview?: string | null
+//     receiverName?: string
+//     receiverId?: string
+//     senderName?: string
+//     senderId?: string
 
-    name?: string   
-    avatarUrl?: string
-    avatarPublicId?: string
-}
+//     name?: string   
+//     avatarUrl?: string
+//     avatarPublicId?: string
+// }
 
-export interface ReviewType extends ReviewItemWith {
-    reviewId: string
 
-    isRating: boolean
-    mediumScore: number
-    pointStoryline: number
-    pointPersonality: number
-    pointScene: number
-    pointTranslation: number
-    commentText: string
-    createdAt: Date
-    updatedAt: Date
-    isSpoiler: boolean
 
-    userId: string
-    novelId: string
-    parentId?: string | null
-}
+
 
 export interface ChapterType {
     chapterId: string
@@ -123,12 +109,63 @@ export interface UserType {
     name: string
     username: string
     email: string
+    rank: number
     password: string
     description?: string
     candy?: number
     flower?: number
     avatarUrl?: string
     avatarPublicId?: string
+    createdAt: Date
+    updatedAt: Date
+}
+
+// Review Type
+export interface ReviewType {
+    reviewId: string
+    
+    isRating: boolean
+    isSpoiler: boolean
+    mediumScore: number
+    pointStoryline: number
+    pointPersonality: number
+    pointScene: number
+    pointTranslation: number
+
+    commentText: string
+    createdAt: Date
+    updatedAt: Date
+
+    userId: string
+    novelId: string
+    parentId?: string | null
+    
+    name?: string
+    rank?: number
+    avatarUrl?: string
+    username?: string
+
+    slug?: string
+    title?: string
+
+    countReplyReview?: number
+}
+export interface ReplyReviewType {
+    reviewId: string
+
+    commentText: string
+    parentId?: string | null
+
+    senderId?: string
+    senderAvatarUrl?: string
+    senderName?: string
+    senderUsername?: string
+    senderRank?: number
+
+    receiverId?: string
+    receiverName?: string
+    receiverUsername?: string
+
     createdAt: Date
     updatedAt: Date
 }
@@ -155,6 +192,8 @@ export interface ChapterViewersType {
 
 
 
+
+
 // ----------------------------------------------- //
 export type NovelResType = Pick<NovelType, 'title' | 'novelId' | 'slug' | 'chapterCount' | 'thumbnailUrl' | 'imageBlurHash' | 'description' | 'category' | 'createdAt' | 'author'> & {
     countPage?: number
@@ -174,3 +213,13 @@ export type ChapterDetailResType = Pick<ChapterType, 'chapterId' | 'novelName' |
     creatorId: string
     chapterCount: number
 }
+
+// export type ReviewResType =  ReviewType & Pick<UserType, 'name' | 'avatarUrl'> & {
+// }
+// export type ReplyReviewResType =  ReviewResType & {
+//     senderId: string
+//     senderName: string
+//     receiverId: string
+//     receiverName: string
+//     countReplyReview: number
+// }

@@ -88,7 +88,7 @@ const SearchInput = (props : SearchInputProps) => {
                     placeholder="Tìm kiếm truyện"
                     className="py-1 pl-3 pr-8 h-10 m-0 flex-1 text-gray-800 text-sm bg-white border-2 border-gray-200 focus:border-gray-600 focus:outline-none rounded"
                 />
-                <span className="absolute right-2">
+                <div className="absolute right-2">
                     {valueInputSearch !== "" &&
                         (!isLoadingSearch ? (
                             <button
@@ -102,7 +102,7 @@ const SearchInput = (props : SearchInputProps) => {
                         ) : (
                             <LoadingSearch className="top-1"/>
                         ))}
-                </span>
+                </div>
             </div>
 
             <div className={`absolute z-20 max-w-lg w-full top-[50px] bg-white ${valueInputSearch ? "block" : "hidden"}`}>
@@ -111,51 +111,40 @@ const SearchInput = (props : SearchInputProps) => {
                         resultListNovelsSearch && (
                             resultListNovelsSearch.length > 0 ? (
                                 <div className="border max-h-96 overflow-y-auto shadow-sm">
-                                    <div>
+                                    <ul>
                                         {resultListNovelsSearch.map((novel) => {
                                             return (
-                                                <Link
-                                                    key={novel?.novelId}
-                                                    href={`/truyen/${novel?.slug}`}
-                                                    className="transition-all flex cursor-pointer hover:bg-gray-100 p-3"
-                                                >
-                                                    <LazyLoad className="flex-shrink-0 relative w-11 h-16 overflow-hidden shadow">
-                                                        <BlurImage
-                                                            width={85}
-                                                            height={125}
-                                                            alt="Image-novel"
-                                                            className="object-cover h-full w-full"
-                                                            src={novel.thumbnailUrl}
-                                                        />
-                                                    </LazyLoad>
-                                                    <div className="ml-3 flex-1">
-                                                        <h3 className="line-clamp-2 mb-2 uppercase font-semibold max-lg:text-xs">{novel.title}</h3>
-                                                        {/* <div>
-                                                            <span>
-                                                                {}
-                                                                {novel.chapterCount}
-                                                            </span>
-                                                            <span className="px-2 text-xs text-orange-700 line-clamp-1 border border-orange-700">
-                                                              
-                                                              <span>
-                                                                </span>  {PROPERTIES_NOVEL.genres[novel?.category].value}
-                                                            </span>
-                                                        </div> */}
-
-                                                        <div className="text-base flex align-middle items-center justify-between">
-                                                            <span className="flex items-center max-w-[55%] text-sm mr-1">
-                                                                Chapter<span className="ml-1 line-clamp-1 align-middle">{novel.chapterCount}</span>
-                                                            </span>
-                                                            <span className="px-2 text-xs text-orange-700 line-clamp-1 align-middle text-center border border-orange-700">
-                                                                {PROPERTIES_NOVEL['genres'][novel?.category-1].value || PROPERTIES_NOVEL['genres'][0].value}
-                                                            </span>
+                                                <li key={novel?.novelId}>
+                                                    <Link
+                                                        href={`/truyen/${novel?.slug}`}
+                                                        className="transition-all flex cursor-pointer hover:bg-gray-100 p-3"
+                                                    >
+                                                        <LazyLoad className="flex-shrink-0 relative w-11 h-16 overflow-hidden shadow">
+                                                            <BlurImage
+                                                                width={85}
+                                                                height={125}
+                                                                alt="Image-novel"
+                                                                className="object-cover h-full w-full"
+                                                                src={novel.thumbnailUrl}
+                                                            />
+                                                        </LazyLoad>
+                                                        <div className="ml-3 flex-1">
+                                                            <h3 className="line-clamp-2 mb-2 uppercase font-semibold max-lg:text-xs">{novel.title}</h3>
+                                                            <div className="text-base flex align-middle items-center justify-between">
+                                                                <span className="flex items-center max-w-[55%] text-sm mr-1">
+                                                                    Chapter<span className="ml-1 line-clamp-1 align-middle">{novel.chapterCount}</span>
+                                                                </span>
+                                                                <span className="px-2 text-xs text-orange-700 line-clamp-1 align-middle text-center border border-orange-700">
+                                                                    {PROPERTIES_NOVEL['genres'][novel?.category-1].value || PROPERTIES_NOVEL['genres'][0].value}
+                                                                </span>
+                                                            </div>
+    
                                                         </div>
-
-                                                    </div>
-                                                </Link>
+                                                    </Link>
+                                                </li>
                                             );
                                         })}
-                                    </div>
+                                    </ul>
                                 </div>
                             ) : (
                                 textDebounce ? <div>Không tìm thấy truyện</div> : <div></div>

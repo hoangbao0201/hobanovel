@@ -71,17 +71,18 @@ const CommentItem = ({ comment, user, handleDeleteComment }: CommentItemProps) =
                 dataReplyComment as CommentType & { token: string }
             );
 
-            console.log(commentResponse);
+            // console.log(commentResponse);
 
-            if (commentResponse?.data.success) {
+            if (commentResponse?.success) {
                 setCommentText(() => EditorState.createEmpty());
                 const dataReplyCommentNew: any = {
                     receiverName: comment.name,
                     receiverId: comment.userId,
                     senderName: user?.name ?? "",
                     senderId: user?.userId ?? "",
+                    senderRank: user?.rank ?? 0,
                     commentText: dataReplyComment.commentText,
-                    commentId: commentResponse?.data.data.commentId,
+                    commentId: commentResponse?.commentId,
                     createdAt: new Date(),
                     updatedAt: new Date(),
                 };
@@ -169,11 +170,10 @@ const CommentItem = ({ comment, user, handleDeleteComment }: CommentItemProps) =
 
                 <div className="">
                     <div className="bg-gray-100 border p-2">
-                        <h2 className="line-clamp-1 text-base pb-2 mb-2 border-b font-semibold flex items-center">
-                            {/* <Link href={""}>{comment?.name || ""}</Link>*/}
-                            <TextRank className="uppercase max-sm:text-xs" rank={comment.rank || 0} text={comment.name + `${" "}-`}/>
-                            <TextRank className="uppercase ml-2 max-sm:text-xs" rank={comment.rank || 0}/>
-                        </h2>
+                        <div className="flex flex-wrap gap-2 items-center mb-3">
+                            <TextRank className="" rank={comment.rank || 0} text={comment.name}/>
+                            <TextRank className="" rank={comment.rank || 0}/>
+                        </div>
                         <div className="text-gray-600 text-base">
                             {convertFromRaw(
                                 JSON.parse(comment?.commentText || "")
@@ -245,10 +245,10 @@ const CommentItem = ({ comment, user, handleDeleteComment }: CommentItemProps) =
 
                 <div>
                     {replyComments.length > 0 && (
-                        <div>
+                        <ul>
                             {replyComments.map((replyComment, index) => {
                                 return (
-                                    <div
+                                    <li
                                         key={replyComment?.commentId || index}
                                         className="my-4"
                                     >
@@ -283,15 +283,15 @@ const CommentItem = ({ comment, user, handleDeleteComment }: CommentItemProps) =
                                                 ></span>
                                                 <div>
                                                     <div className="bg-gray-100 border p-2">
-                                                        <div className="flex items-center pb-2 mb-2 border-b gap-2 text-sm">
-                                                            <h2 className="line-clamp-1 leading-tight text-base font-semibold">
-                                                                <Link
-                                                                    href={`/user/${replyComment?.senderId}`}
-                                                                >
-                                                                    {replyComment?.senderName ||
-                                                                        ""}
-                                                                </Link>
-                                                            </h2>
+                                                        {/* <div className="flex items-center pb-2 mb-2 border-b gap-2 text-sm">
+                                                            <div className="line-clamp-1 flex items-center">
+                                                                <TextRank className="uppercase max-sm:text-xs" rank={replyComment.senderRank || 0} text={replyComment.senderName + `${" "}-`}/>
+                                                                <TextRank className="uppercase ml-2 max-sm:text-xs" rank={replyComment.senderRank || 0}/>
+                                                            </div>
+                                                        </div> */}
+                                                        <div className="flex flex-wrap gap-2 items-center mb-3">
+                                                            <TextRank className="" rank={replyComment.senderRank || 0} text={replyComment.senderName}/>
+                                                            <TextRank className="" rank={replyComment.senderRank || 0}/>
                                                         </div>
                                                         <div className="flex flex-wrap text-gray-600 text-base">
                                                             <Link
@@ -363,10 +363,10 @@ const CommentItem = ({ comment, user, handleDeleteComment }: CommentItemProps) =
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </li>
                                 );
                             })}
-                        </div>
+                        </ul>
                     )}
 
                     {isFormSend && (

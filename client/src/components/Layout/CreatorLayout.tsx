@@ -81,7 +81,9 @@ const CreatorLayout = ({ children, tab }: CreatorLayoutProps) => {
     return (
         <div className="overflow-hidden w-full h-full relative">
             <div className="z-50 bg-[#f8f8f8] fixed ml-[260px] top-0 w-full border-b border-gray-300">
-                <div className="h-12 px-4 flex items-center">Header</div>
+                <h1>
+                    <Link href="/" className="h-12 px-4 flex items-center">Hobanovel</Link>
+                </h1>
             </div>
             <div className="relative block ml-[260px] mt-12 p-5 overflow-y-auto scrollbar-thumb-gray-500 scrollbar-track-gray-300">
                 <div>
@@ -97,40 +99,44 @@ const CreatorLayout = ({ children, tab }: CreatorLayoutProps) => {
                 <PerfectScrollbar
                     options={{ suppressScrollX: true, wheelPropagation: true, wheelSpeed: 0.5, minScrollbarLength: 10 }}
                 >
-                    <Link href="/">
-                        <h2 className="mx-5 my-4">HOBA NOVEL</h2>
-                    </Link>
-                    <div>
+                    <h1>
+                        <Link href="/">
+                            HOBA NOVEL
+                        </Link>
+                    </h1>
+                    <ul>
                         {dataContentSide.map((itemTitle, indexTitle) => {
                             return (
-                                <div key={indexTitle} className="flex flex-col">
+                                <li key={indexTitle} className="flex flex-col">
                                     <div className="ml-[30px] mb-[15px] mt-[30px] uppercase text-sm text-gray-400 font-semibold">
                                         {itemTitle.title}
                                     </div>
-                                    {itemTitle.children.map((item, index) => {
-                                        return (
-                                            <div key={index} className="">
-                                                <Link
-                                                    href={item.linkItem}
-                                                    className={`flex items-center px-[15px] py-[10px] mx-[15px] hover:ml-[21px] transition-all duration-300 rounded-lg ${
-                                                        tab == item.linkItem &&
-                                                        "bg-indigo-500 text-white fill-white shadow-sm bg-opacity-90 shadow-indigo-600"
-                                                    }`}
-                                                >
-                                                    <i className="block w-5 mr-4 ">
-                                                        {!!item.icon && item.icon}
-                                                    </i>
-                                                    <span className="text-base line-clamp-1">
-                                                        {item.value}
-                                                    </span>
-                                                </Link>
-                                            </div>
-                                        );
-                                    })}
-                                </div>
+                                    <ul>
+                                        {itemTitle.children.map((item, index) => {
+                                            return (
+                                                <li key={index} className="">
+                                                    <Link
+                                                        href={item.linkItem}
+                                                        className={`flex items-center px-[15px] py-[10px] mx-[15px] hover:ml-[21px] transition-all duration-300 rounded-lg ${
+                                                            tab == item.linkItem &&
+                                                            "bg-indigo-500 text-white fill-white shadow-sm bg-opacity-90 shadow-indigo-600"
+                                                        }`}
+                                                    >
+                                                        <i className="block w-5 mr-4 ">
+                                                            {!!item.icon && item.icon}
+                                                        </i>
+                                                        <span className="text-base line-clamp-1">
+                                                            {item.value}
+                                                        </span>
+                                                    </Link>
+                                                </li>
+                                            );
+                                        })}
+                                    </ul>
+                                </li>
                             );
                         })}
-                    </div>
+                    </ul>
                 </PerfectScrollbar>
             </div>
         </div>

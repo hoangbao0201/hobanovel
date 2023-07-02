@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import dynamic from "next/dynamic";
-import { GetStaticProps } from "next";
+import { GetServerSideProps, GetStaticProps } from "next";
 
 import useSWR from "swr";
 import axios from "axios";
@@ -161,55 +161,58 @@ const HomePage = ({
     return (
         <>
             <Head />
-            <main>
+            <>
                 <WrapperLayout className="pt-5">
                     <div className="block -mx-4">
 
                         {/* <AdsenseForm /> */}
 
-                        <div className="">
-                            <div className="lg:flex">
-                                <div className="lg:w-8/12 w-full px-4">
-                                    <Outstanding novels={novelsOutstending} />
-                                </div>
-                                {!matchesTablet && (
-                                    <div className="lg:w-4/12">
-                                        <Reading readingNovel={novelReading?.novels} />
-                                    </div>
-                                )}
+                        <div className="lg:flex mb-5">
+                            <div className="lg:w-8/12">
+                                <h2 className="px-4 mb-4 text-xl font-semibold">Truyện nổi bật</h2>
+                                <Outstanding novels={novelsOutstending} />
                             </div>
+                            {!matchesTablet && (
+                                <div className="lg:w-4/12">
+                                    <h2 className="px-4 mb-5 text-xl font-semibold">Truyện đang đọc</h2>
+                                    <Reading readingNovel={novelReading?.novels} />
+                                </div>
+                            )}
                         </div>
     
                         {!matchesTablet && (
-                            <div className="">
+                            <div className="mb-5">
+                                <h2 className="px-4 mb-4 text-xl font-semibold">Truyện mới cập nhật</h2>
                                 <JustUpdated novels={novelsJustUpdated} />
                             </div>
                         )}
     
-                        <div className="my-6">
-                            <div className="lg:flex">
-                                <div className="lg:w-8/12 w-full px-4">
-                                    <HighlyRated novels={novelsHighlyRated as NovelHighlyRated[]} />
-                                </div>
-                                <div className="lg:w-4/12 w-full px-4">
-                                    <LatestReviews reviews={novelsLatestReviews} />
-                                </div>
+                        <div className="lg:flex">
+                            <div className="lg:w-8/12">
+                                <h2 className="px-4 mb-4 text-xl font-semibold">Truyện đánh giá cao</h2>
+                                <HighlyRated novels={novelsHighlyRated as NovelHighlyRated[]} />
+                            </div>
+                            <div className="lg:w-4/12">
+                                <h2 className="px-4 mb-4 text-xl font-semibold">Mới đánh giá</h2>
+                                <LatestReviews reviews={novelsLatestReviews} />
                             </div>
                         </div>
     
-                        <div className="hidden lg:flex flex-col lg:flex-row my-6">
+                        <div className="lg:flex">
                             {!matchesTablet && (
                                 <div className="lg:w-4/12">
+                                    <h2 className="px-4 mb-4 text-xl font-semibold">Mới đăng</h2>
                                     <JustPosted novels={novelsOutstending} />
                                 </div>
                             )}
                             <div className="lg:w-8/12">
+                                <h2 className="px-4 mb-4 text-xl font-semibold">Mới hoàn thành</h2>
                                 <JustCompleted novels={novelsJustCompleted} />
                             </div>
                         </div>
                     </div>
                 </WrapperLayout>
-            </main>
+            </>
         </>
     );
 };
@@ -234,8 +237,6 @@ export const getStaticProps: GetStaticProps = async (context) => {
             novelsJustCompleted: novelsResponse?.data.novels || null,
 
             novelsLatestReviews: reviewsResponse?.data.reviews || null,
-
-            // data: JSON.stringify(query.params) || null
         },
         revalidate: REVALIDATE_TIME,
     };
@@ -264,11 +265,8 @@ export const getStaticProps: GetStaticProps = async (context) => {
 
 //             novelsLatestReviews: reviewsResponse?.data.reviews || null,
 
-//             // data: JSON.stringify(query.params) || null
 //         },
-//         // revalidate: REVALIDATE_TIME,
 //     };
-
 // }
 
 HomePage.getLayout = (page: ReactNode) => {

@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { UserType } from "@/types";
 
-interface CounterState {
+export interface UserSlideState {
     currentUser: UserType | null
     userLoading: boolean
     isAuthenticated: boolean
@@ -9,7 +9,7 @@ interface CounterState {
     // isFollow: boolean
 }
 
-const initialState: CounterState = {
+const initialState: UserSlideState = {
     currentUser: null,
     userLoading: true,
     isAuthenticated: false,

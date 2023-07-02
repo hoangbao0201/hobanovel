@@ -49,7 +49,7 @@ export const getReviewsByNovelHandle = async (data : ReviewType & { page: number
         const { conditions, params } = ReviewSearchConditions(data);
         
         const qGetComment = `
-            SELECT reviews.*, users.name, users.userId, novels.title, novels.slug, countReplyReview.count AS countReplyReview
+            SELECT reviews.*, users.name, users.username, users.avatarUrl, users.rank, users.userId, novels.title, novels.slug, countReplyReview.count AS countReplyReview
             FROM reviews
 
                 INNER JOIN users ON users.userId = reviews.userId
@@ -186,8 +186,8 @@ export const getReplyReviewHandle = async (reviewId : string) => {
         const connection = await pool.getConnection();
 
         const qGetReview = `
-            SELECT reviews.*, us_sender.name as senderName, us_sender.userId as senderId,
-                us_receiver.name as receiverName, us_receiver.userId as receiverId FROM reviews
+            SELECT reviews.*, us_sender.name as senderName, us_sender.username as senderUsername, us_sender.userId as senderId, us_sender.avatarUrl as senderAvatarUrl, us_sender.rank as senderRank,
+                us_receiver.name as receiverName, us_receiver.userId as receiverId, us_receiver.username as receiverUsername FROM reviews
                 LEFT JOIN users us_sender ON us_sender.userId = reviews.userId
                 LEFT JOIN reviews rv ON rv.reviewId = reviews.parentId
                 LEFT JOIN users us_receiver ON us_receiver.userId = rv.userId

@@ -22,7 +22,7 @@ export const getCommentsHandle = async (data: CommentType & { page?: number }) =
 export const addCommentHandle = async (data : CommentType & { token: string }) => {
     try {
         const { novelId = '', chapterId = '' } = data
-        const comments = await axios.post(`${apiUrl}/api/comments/add/${String(novelId)}?chapterId=${String(chapterId)}`, {
+        const commentsRes = await axios.post(`${apiUrl}/api/comments/add/${String(novelId)}?chapterId=${String(chapterId)}`, {
             commentText: data.commentText
         }, {
             headers: {
@@ -30,14 +30,16 @@ export const addCommentHandle = async (data : CommentType & { token: string }) =
             }
         });
 
-        if(comments.data.success) {
-            return comments
-        }
-
-        return null;
+        return commentsRes.data
     } catch (error) {
-        // console.log(error)
-        return null;
+        if(axios.isAxiosError(error) && error.response?.data) {
+            return error.response.data;
+        } else {
+            return {
+                success: false,
+                message: (error as Error).message
+            };
+        }
     }
 };
 
@@ -52,14 +54,16 @@ export const addReplyCommentHandle = async (data : CommentType & { token: string
             }
         });
 
-        if(commentResponse.data.success) {
-            return commentResponse
-        }
-
-        return null;
+        return commentResponse.data;
     } catch (error) {
-        // console.log(error)
-        return null;
+        if(axios.isAxiosError(error) && error.response?.data) {
+            return error.response.data;
+        } else {
+            return {
+                success: false,
+                message: (error as Error).message
+            };
+        }
     }
 };
 

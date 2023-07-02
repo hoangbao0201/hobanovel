@@ -15,8 +15,9 @@ interface NavOverProps {
     user?: UserType | null
     isShow?: boolean
     handle: () => void
+    handleLogout: () => void
 }
-export const NavOver = ({ user = null, isShow = false, handle } : NavOverProps) => {
+export const NavOver = ({ user = null, isShow = false, handle, handleLogout } : NavOverProps) => {
     const router = useRouter();
     const matchesMobile = useMediaQuery("(max-width: 640px)");
 
@@ -44,25 +45,39 @@ export const NavOver = ({ user = null, isShow = false, handle } : NavOverProps) 
                 
                 <ul className="block uppercase text-sm">
                     <li className="py-2">
-                        <Link href={`/`}>Trang chủ</Link>
+                        <Link href={`/`}>
+                            Trang chủ
+                        </Link>
                     </li>
                     <li className="py-2">
-                        <Link href={`/`}>Hot</Link>
+                        <Link href={`/`}>
+                            Hot
+                        </Link>
                     </li>
                     <li className="py-2">
-                        <Link href={`/theo-doi`}>Theo dõi</Link>
+                        <Link href={`/theo-doi`}>
+                            Theo dõi
+                        </Link>
                     </li>
                     <li className="py-2">
-                        <Link href={`/`}>Lịch sử</Link>
+                        <Link href={`/`}>
+                            Lịch sử
+                        </Link>
                     </li>
                     <li className="py-2">
-                        <Link href={`/`}>Tìm truyện</Link>
+                        <Link href={`/`}>
+                            Tìm truyện
+                        </Link>
                     </li>
                     <li className="py-2">
-                        <Link href={`/`}>Con gái</Link>
+                        <Link href={`/`}>
+                            Con gái
+                        </Link>
                     </li>
                     <li className="py-2">
-                        <Link href={`/`}>Con trai</Link>
+                        <Link href={`/`}>
+                            Con trai
+                        </Link>
                     </li>
 
 
@@ -72,19 +87,22 @@ export const NavOver = ({ user = null, isShow = false, handle } : NavOverProps) 
 
                     {
                         user ? (
-                            <div className="flex items-center mb-3">
-                                <Image
-                                    width={44}
-                                    height={44}
-                                    alt="image-demo"
-                                    className="w-11 h-11 object-cover"
-                                    src={
-                                        user.avatarUrl ||
-                                        "/images/avatar-default-2.png"
-                                    }
-                                />
-                                <div className="ml-3 flex-1 line-clamp-1">{user.name}</div>
-                            </div>
+                            <>
+                                <div className="flex items-center mb-3">
+                                    <Image
+                                        width={44}
+                                        height={44}
+                                        alt="image-demo"
+                                        className="w-11 h-11 object-cover"
+                                        src={
+                                            user.avatarUrl ||
+                                            "/images/avatar-default-2.png"
+                                        }
+                                    />
+                                    <div className="ml-3 flex-1 line-clamp-1">{user.name}</div>
+                                </div>
+                                <div onClick={handleLogout}>Đăng xuất</div>
+                            </>
                         ) : (
                             <>
                                 <div className="py-2 border-b">

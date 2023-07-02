@@ -1,12 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { BannersType } from "@/types";
 
-export interface CommentSliceType {
+export interface BannersSliceType {
     isLoading: boolean
     banners: BannersType[]
 }
 
-const initialState: CommentSliceType = {
+const initialState: BannersSliceType = {
     isLoading: true,
     banners: [],
 };

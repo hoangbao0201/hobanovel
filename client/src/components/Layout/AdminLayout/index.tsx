@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { ReactNode, useState } from "react";
 import { iconSteal } from "../../../../public/icons";
-import Head from "next/head";
-import styled from "styled-components";
+// import Head from "next/head";
+// import styled from "styled-components";
 // import "@"
 
 interface AdminLayoutProps {
@@ -31,7 +31,7 @@ const dataContentSide = [
 const AdminLayout = ({ children, tab }: AdminLayoutProps) => {
     return (
         <>
-            <Head>
+            {/* <Head>
                 <style>
                     {`
                         body {
@@ -39,30 +39,30 @@ const AdminLayout = ({ children, tab }: AdminLayoutProps) => {
                         }
                     `}
                 </style>
-            </Head>
+            </Head> */}
             <div className="relative">
                 <nav className="md:left-0 bg-white md:bottom-0 md:w-64 md:fixed md:min-h-screen overflow-y-auto border-r relative px-3 py-2">
                     <div className="pb-5 pt-3 border-b mb-2">
-                        <Link href="/">
-                            <h3 className="py-2 px-3">HOBANOVEL</h3>
-                        </Link>
+                        <h1 className="py-2 px-3">
+                            <Link href="/">
+                                HOBANOVEL
+                            </Link>
+                        </h1>
                     </div>
                     <h3 className="py-2 px-3 uppercase font-semibold text-sm text-gray-500">
                         ADMIN LAYOUT PAGES
                     </h3>
-                    <div>
+                    <ul>
                         {dataContentSide.map((item, index) => {
                             return (
-                                <div key={index} className="">
-                                    <Link href={item.linkItem}>
-                                        <div className="py-2 px-3 font-semibold uppercase text-gray-800">
-                                            {item.value}
-                                        </div>
+                                <li key={index} className="">
+                                    <Link href={item.linkItem} className="py-2 px-3 font-semibold uppercase text-gray-800">
+                                        {item.value}
                                     </Link>
-                                </div>
+                                </li>
                             );
                         })}
-                    </div>
+                    </ul>
                 </nav>
                 <div className="relative md:ml-64">
                     <nav className="w-full bg-white border-b px-3">

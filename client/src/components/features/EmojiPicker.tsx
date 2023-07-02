@@ -26,22 +26,24 @@ const EmojiPicker = () => {
             {
                 iconType && (
                     <div className="border ">
-                        <div className="flex flex-wrap">
+                        <ul className="flex flex-wrap">
                             {
                                 iconEmojiData[iconType].map(icon => {
                                     return (
-                                        <LazyLoad key={icon.id} className="h-[40px] block cursor-pointer border overflow-hidden hover:border-blue-600">
-                                            <Image
-                                                width={40}
-                                                height={40}
-                                                src={icon.url}
-                                                alt="emoji"
-                                            />
-                                        </LazyLoad>
+                                        <li key={icon.id}>
+                                            <LazyLoad className="h-[40px] block cursor-pointer border overflow-hidden hover:border-blue-600">
+                                                <Image
+                                                    width={40}
+                                                    height={40}
+                                                    src={icon.url}
+                                                    alt="emoji"
+                                                />
+                                            </LazyLoad>
+                                        </li>
                                     )
                                 })
                             }
-                        </div>
+                        </ul>
                     </div>
                 )
             }

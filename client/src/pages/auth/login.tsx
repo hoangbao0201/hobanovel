@@ -55,17 +55,17 @@ const LoginPage = () => {
         <>
             <div className="bg-slate-100 min-h-screen">
                 <div className="mx-auto max-w-[500px]">
-                    <div className="py-10 flex justify-center">
+                    <h2 className="py-10 flex justify-center">
                         <Link className="" href="/">
-                            <div>HOBANOVEL</div>
+                            HOBANOVEL
                         </Link>
-                    </div>
+                    </h2>
 
                     <div className="w-full min-h-[300px] py-6 px-10 drop-shadow-md bg-white">
                         <div className="grid">
-                            <h2 className="mb-7 text-center text-3xl font-semibold">
-                                Welcome
-                            </h2>
+                            <h1 className="mb-7 text-center text-3xl font-semibold">
+                                LOGIN
+                            </h1>
                             <div>
                                 <CustomInput
                                     name="accout"

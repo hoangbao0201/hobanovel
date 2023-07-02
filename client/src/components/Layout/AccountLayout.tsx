@@ -144,11 +144,15 @@ const AccountLayout = ({ children, tab }: AccountLayoutProps) => {
     return (
         <WrapperLayout>
             <div className="flex">
-                <div className="flex flex-col rounded-lg py-3 px-2 bg-gray-100 w-full max-w-[270px]">
+                <ul className="flex flex-col rounded-lg py-3 px-2 bg-gray-100 w-full max-w-[270px]">
                     {dataContentSide.map((item, index) => {
-                        return <ItemTab key={index} item={item} tab={tab} />;
+                        return (
+                            <li key={index} >
+                                <ItemTab item={item} tab={tab} />
+                            </li>
+                        )
                     })}
-                </div>
+                </ul>
                 <div className="px-4 flex-1">
                     {children}
                 </div>

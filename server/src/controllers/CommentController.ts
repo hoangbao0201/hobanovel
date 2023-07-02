@@ -34,9 +34,7 @@ export const addCommentByNovel = async (req: Request, res: Response) => {
         return res.json({
             success: true,
             message: "Create comment successful",
-            data: {
-                commentId: commentResult.data.insertId
-            }
+            commentId: commentResult.data.insertId
             // data: commentResult.data
         })
         
@@ -180,9 +178,7 @@ export const addReplyComment = async (req: Request, res: Response) => {
         return res.json({
             success: true,
             message: "Add comments successful",
-            data: {
-                commentId: commentResponse.data.insertId
-            }
+            commentId: commentResponse.data.insertId
             // comment: {
             //     commentId: commentResponse?.data?.insertId || null,
             // }
