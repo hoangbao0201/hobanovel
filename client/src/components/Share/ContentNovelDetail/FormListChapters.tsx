@@ -69,10 +69,10 @@ const FormListChapters = ({ tab, slug }: FormListChaptersProps) => {
 
     return (
         <div>
-            <div className="max-lg:px-3 mb-4 font-semibold text-xl">Danh sách chương</div>
+            <div className="px-4 mb-4 font-semibold text-xl">Danh sách chương</div>
             {
                 listChapter && listChapter?.length > 0 && (
-                    <div className="max-lg:px-3 flex justify-between mb-5">
+                    <div className="px-4 flex justify-between mb-5">
                         <div>
                             <span>Tìm kiếm: </span>
                             <input onChange={(e) => setValueInputFilter(e.target.value.toLowerCase())} value={valueInputFilter} className="border h-11 px-3 py-1 outline-none"/>

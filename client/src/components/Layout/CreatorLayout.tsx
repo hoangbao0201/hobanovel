@@ -82,7 +82,7 @@ const CreatorLayout = ({ children, tab }: CreatorLayoutProps) => {
         <div className="overflow-hidden w-full h-full relative">
             <div className="z-50 bg-[#f8f8f8] fixed ml-[260px] top-0 w-full border-b border-gray-300">
                 <h1>
-                    <Link href="/" className="h-12 px-4 flex items-center">Hobanovel</Link>
+                    <Link href="/" className="h-12 px-4 flex items-center">hobanovel</Link>
                 </h1>
             </div>
             <div className="relative block ml-[260px] mt-12 p-5 overflow-y-auto scrollbar-thumb-gray-500 scrollbar-track-gray-300">
@@ -99,9 +99,9 @@ const CreatorLayout = ({ children, tab }: CreatorLayoutProps) => {
                 <PerfectScrollbar
                     options={{ suppressScrollX: true, wheelPropagation: true, wheelSpeed: 0.5, minScrollbarLength: 10 }}
                 >
-                    <h1>
+                    <h1 className="font-semibold text-xl py-1 mt-3 ml-[30px]">
                         <Link href="/">
-                            HOBA NOVEL
+                            hobanovel
                         </Link>
                     </h1>
                     <ul>

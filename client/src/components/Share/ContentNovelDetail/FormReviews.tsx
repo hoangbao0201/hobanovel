@@ -54,7 +54,6 @@ const showToastify = (data : any) => {
 
 const FormReviews = ({ tab, novelId }: FormReviewsProps) => {
     const matchesMobile = useMediaQuery('(max-width: 640px)')
-    const matchesTablet = useMediaQuery('(max-width: 1024px)')
 
     const { currentUser, isAuthenticated } = useSelector((state: any) => state.user);
     // ---

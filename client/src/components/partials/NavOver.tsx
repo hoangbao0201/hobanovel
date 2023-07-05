@@ -19,7 +19,7 @@ interface NavOverProps {
 }
 export const NavOver = ({ user = null, isShow = false, handle, handleLogout } : NavOverProps) => {
     const router = useRouter();
-    const matchesMobile = useMediaQuery("(max-width: 640px)");
+    const matchesMobile = useMediaQuery("(max-width: 768px)");
 
 
     useEffect(() => {
@@ -35,7 +35,7 @@ export const NavOver = ({ user = null, isShow = false, handle, handleLogout } : 
         if(isShow) {
             handle()
         }
-    }, [router.route])
+    }, [router])
 
     return (
         <>
@@ -65,17 +65,17 @@ export const NavOver = ({ user = null, isShow = false, handle, handleLogout } : 
                         </Link>
                     </li>
                     <li className="py-2">
-                        <Link href={`/`}>
+                        <Link href='/tim-truyen?sort_by=novel_new'>
                             Tìm truyện
                         </Link>
                     </li>
                     <li className="py-2">
-                        <Link href={`/`}>
+                        <Link href={`/tim-truyen?viewFrame=2`}>
                             Con gái
                         </Link>
                     </li>
                     <li className="py-2">
-                        <Link href={`/`}>
+                        <Link href={`/tim-truyen?viewFrame=1`}>
                             Con trai
                         </Link>
                     </li>
@@ -101,7 +101,7 @@ export const NavOver = ({ user = null, isShow = false, handle, handleLogout } : 
                                     />
                                     <div className="ml-3 flex-1 line-clamp-1">{user.name}</div>
                                 </div>
-                                <div onClick={handleLogout}>Đăng xuất</div>
+                                <div className="cursor-pointer" onClick={handleLogout}>Đăng xuất</div>
                             </>
                         ) : (
                             <>

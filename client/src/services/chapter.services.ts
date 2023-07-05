@@ -3,18 +3,18 @@ import axios from "axios";
 
 export const getChapterDetailHandle = async (slug: string, chapterNumber: string) => {
     try {
-        if(!slug || !chapterNumber) {
-            return null;
-        }
-        const chapter = await axios.get(`${apiUrl}/api/chapters/chapter-detail/${slug}/chapter-${chapterNumber}`);
-        if(chapter.data.success) {
-            return chapter;
-        }
-    
-        return null;
+        const chapterRes = await axios.get(`${apiUrl}/api/chapters/chapter-detail/${slug}/chapter-${chapterNumber}`);
+        
+        return chapterRes.data
     } catch (error) {
-        // console.log(error)
-        return null;
+        if(axios.isAxiosError(error) && error.response?.data) {
+            return error.response.data;
+        } else {
+            return {
+                success: false,
+                message: (error as Error).message
+            };
+        }
     }
 }
 

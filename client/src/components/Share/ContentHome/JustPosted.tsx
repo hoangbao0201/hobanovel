@@ -47,10 +47,8 @@ const JustPosted = ({ novels = [] } : JustPostedProps) => {
         return <div>Không có truyện</div>
     }
 
-    // console.log(novels)
-
     return (
-        <div className="px-4 relative overflow-hidden">
+        <div className="px-4 overflow-hidden">
             <div className="px-4 py-5 rounded-lg bg-gray-100 mb-3 min-h-[400px]">
     
                 <GridSwiperStyled className="relative">
@@ -84,14 +82,14 @@ const JustPosted = ({ novels = [] } : JustPostedProps) => {
                             styleButton="absolute top-1/2 -translate-y-1/2 z-40 p-3 focus:bg-slate-100 bg-slate-50 rounded-full border right-0"
                             styleIcon="h-4 w-4 fill-slate-400 stroke-slate-600"   
                         />
-                        <div className="absolute w-full top-1/2 -translate-y-1/2 z-40 flex justify-between">
-                        </div>
-    
+                        
+                        {/* <div className="absolute w-full top-1/2 -translate-y-1/2 z-40 flex justify-between">
+                        </div> */}
                         {
                             novels.map((novel, index) => {
                                 return ( 
                                     <SwiperSlide data-novel-id={novel?.slug} key={index} className="">
-                                        <Link className="block relative" href={`/truyen/${novel?.slug}`}>
+                                        <Link className="w-[180px] h-[240px]" href={`/truyen/${novel?.slug}`}>
                                             <Image
                                                 width={180}
                                                 height={240}
@@ -104,6 +102,9 @@ const JustPosted = ({ novels = [] } : JustPostedProps) => {
                                 )
                             })
                         }
+    
+                        {/* <div className="flex overflow-hidden"> */}
+                        {/* </div> */}
     
                     </Swiper>
                 </GridSwiperStyled>

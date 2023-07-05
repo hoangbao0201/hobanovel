@@ -21,25 +21,19 @@ export const getNovelsByPageHandle = async (pageNumber: string) => {
 
 export const getNovelBySlugHandle = async (slug: string) => {
     try {
-        if (!slug) {
-            return null;
-        }
-    
-        const novels = await axios.get(
-            `${apiUrl}/api/novels/search-by-slug/${slug}`, {
-                // headers: {
-                //     Authorization: `Bearer ${token}`,
-                // },
-            }
+        const novelsRes = await axios.get(
+            `${apiUrl}/api/novels/search-by-slug/${slug}`, {}
         );
-        if (novels.data.success) {
-            return novels;
-        }
-    
-        return null;
+        return novelsRes.data;
     } catch (error) {
-        // console.log(error)
-        return null;
+        if(axios.isAxiosError(error) && error.response?.data) {
+            return error.response.data;
+        } else {
+            return {
+                success: false,
+                message: (error as Error).message
+            };
+        }
     }
 };
 

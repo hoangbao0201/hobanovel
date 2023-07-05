@@ -2,20 +2,19 @@ import { ReactNode } from "react";
 
 import CreatorLayout from "@/components/Layout/CreatorLayout";
 
-interface StealNovelPageProps {
-    children?: ReactNode
+interface DocumentPageProps {
 }
 
-const StealNovelPage = ({ children } : StealNovelPageProps) => {
+const DocumentPage = ({} : DocumentPageProps) => {
 
     return (    
         <div className="">
-            Page Document
+            Tư liệu
         </div>
     )
 }
 
-StealNovelPage.getLayout = (page : ReactNode) => {
+DocumentPage.getLayout = (page : ReactNode) => {
 
     return (
         <CreatorLayout tab="/creator/novels/documents">
@@ -24,4 +23,4 @@ StealNovelPage.getLayout = (page : ReactNode) => {
     )
 }
 
-export default StealNovelPage;
+export default DocumentPage;

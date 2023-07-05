@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 
 import cn from "clsx"
@@ -9,7 +10,7 @@ import { NovelType } from "@/types";
 import { useDebounce } from "@/hook/useDebounce";
 import { getNovelsByDataHandle } from "@/services/novels.services";
 import { LoadingSearch } from "./LoadingLayout";
-import { iconClose, iconList } from "../../../public/icons";
+import { iconClose, iconList, iconTimes } from "../../../public/icons";
 import { PROPERTIES_NOVEL } from "@/constants/data";
 import { WithClassName } from "@/types/common";
 import BlurImage from "./BlurImage";
@@ -20,6 +21,8 @@ interface SearchInputProps extends WithClassName {
 
 
 const SearchInput = (props : SearchInputProps) => {
+
+    const route = useRouter()
 
     const dropSearchRef = useRef<HTMLDivElement>(null)
 
@@ -71,15 +74,16 @@ const SearchInput = (props : SearchInputProps) => {
         setIsLoadingSearch(false);
     };
 
-    // Check click out side
-    // useClickOutSide(dropSearchRef, eventDeleteValueInputSearch)
-
-    // console.log(resultListNovelsSearch)
+    useEffect(() => {
+        setValueInputSearch("");
+        setResultListNovelsSearch(null);
+        setIsLoadingSearch(false);
+    }, [route])
 
     return (
         <div  ref={dropSearchRef} className={cn(
             props.className,
-            "flex items-center flex-1  max-w-md relative h-[50px]"
+            "flex items-center flex-1 relative h-[50px]"
         )}>
             <div className="flex w-full items-center relative">
                 <input
@@ -98,6 +102,7 @@ const SearchInput = (props : SearchInputProps) => {
                                 <i className="w-3 h-3 fill-gray-600 block">
                                     {iconClose}
                                 </i>
+                                
                             </button>
                         ) : (
                             <LoadingSearch className="top-1"/>
@@ -105,7 +110,7 @@ const SearchInput = (props : SearchInputProps) => {
                 </div>
             </div>
 
-            <div className={`absolute z-20 max-w-lg w-full top-[50px] bg-white ${valueInputSearch ? "block" : "hidden"}`}>
+            <div className={`absolute z-20 w-full top-[50px] bg-white ${valueInputSearch ? "block" : "hidden"}`}>
                 {
                     valueInputSearch !== "" ? (
                         resultListNovelsSearch && (

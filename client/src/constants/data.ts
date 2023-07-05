@@ -1,25 +1,25 @@
 export const GENRES_VALUE = [
-    {id: 1, value: "Tất cả"},
-    {id: 2, value: "Tiên Hiệp"},
-    {id: 3, value: "Huyền Huyễn"},
-    {id: 4, value: "Khoa Huyễn"},
-    {id: 5, value: "Võng Du"},
-    {id: 6, value: "Đô Thị"},
-    {id: 7, value: "Đồng Nhân"},
-    {id: 8, value: "Dã Sử"},
-    {id: 9, value: "Cạnh Kỹ"},
-    {id: 10, value: "Huyền Nghi"},
-    {id: 11, value: "Kiếm Hiệp"},
-    {id: 12, value: "Kỳ Ảo"},
+    {id: 1, value: "Tất cả", path: ""},
+    {id: 2, value: "Tiên Hiệp", path: "?genres=1"},
+    {id: 3, value: "Huyền Huyễn", path: "?genres=2"},
+    {id: 4, value: "Khoa Huyễn", path: "?genres=3"},
+    {id: 5, value: "Võng Du", path: "?genres=4"},
+    {id: 6, value: "Đô Thị", path: "?genres=5"},
+    {id: 7, value: "Đồng Nhân", path: "?genres=6"},
+    {id: 8, value: "Dã Sử", path: "?genres=7"},
+    {id: 9, value: "Cạnh Kỹ", path: "?genres=8"},
+    {id: 10, value: "Huyền Nghi", path: "?genres=9"},
+    {id: 11, value: "Kiếm Hiệp", path: "?genres=10"},
+    {id: 12, value: "Kỳ Ảo", path: "?genres=11"},
 ]
 
 export const RANK_VALUE = [
-    { id: 13, value: "Thịnh hành" },
-    { id: 14, value: "Đọc nhiều" },
-    { id: 15, value: "Tặng thưởng" },
-    { id: 16, value: "Đề cử" },
-    { id: 17, value: "Yêu thích" },
-    { id: 18, value: "Thảo luận" },
+    { id: 13, value: "Thịnh hành", path: "" },
+    { id: 14, value: "Đọc nhiều", path: "" },
+    { id: 15, value: "Tặng thưởng", path: "" },
+    { id: 16, value: "Đề cử", path: "?sort_by=follow_count" },
+    { id: 17, value: "Yêu thích", path: "?sort_by=review_score" },
+    { id: 18, value: "Thảo luận", path: "?sort_by=comment_count" },
 ]
 
 export const LEVEL_VALUE = [

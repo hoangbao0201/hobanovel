@@ -19,6 +19,7 @@ import useScrollRestoration from "@/hook/useScrollRestoration";
 import type { NextPage } from "next";
 import type { AppProps } from "next/app";
 import MainLayout from "@/components/Layout/MainLayout";
+import { createWrapper } from "next-redux-wrapper";
 
 type NextPageWithLayout = NextPage & {
     getLayout?: (page: ReactElement) => ReactNode;
@@ -47,10 +48,10 @@ const inter = Inter({
 });
 
 
-function MyApp({
+const MyApp = ({
     Component,
     pageProps: { session, ...pageProps }, router
-} : AppPropsWithLayout) {
+} : AppPropsWithLayout) => {
 
     useScrollRestoration(router);
 
@@ -75,9 +76,7 @@ function MyApp({
 
                     <PersistGate loading={false} persistor={persistor}>
                         
-                        {/* {() => getLayout(<Component {...pageProps} />)} */}
-                        {/* {renderComponent} */}
-                        {getLayout(<Component {...pageProps}/>)}
+                        {() => getLayout(<Component {...pageProps} />)}
 
                     </PersistGate>
 
@@ -89,4 +88,10 @@ function MyApp({
 
 }
 
-export default MyApp
+export default MyApp;
+
+
+// const makeStore = () => store;
+// const wrapper = createWrapper(makeStore);
+
+// export default wrapper.withRedux(MyApp);

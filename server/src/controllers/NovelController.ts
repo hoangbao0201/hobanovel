@@ -579,7 +579,7 @@ export const getFollowsNovel = async (req: Request, res: Response) => {
         return res.json({
             success: true,
             message: "Follow novel successful",
-            follows: followNovelRes.data
+            novels: followNovelRes.data
         })
         
     } catch (error) {

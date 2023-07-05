@@ -2,25 +2,20 @@ import { ReactNode } from "react";
 
 import CreatorLayout from "@/components/Layout/CreatorLayout";
 
-interface StealNovelPageProps {
+interface IssuesPageProps {
     children?: ReactNode
 }
 
-interface Message {
-    id: number;
-    message: string;
-}
-
-const StealNovelPage = ({ children } : StealNovelPageProps) => {
+const IssuesPage = ({ children } : IssuesPageProps) => {
 
     return (    
         <div className="">
-            Page Issues
+            Vấn đề
         </div>
     )
 }
 
-StealNovelPage.getLayout = (page : ReactNode) => {
+IssuesPage.getLayout = (page : ReactNode) => {
 
     return (
         <CreatorLayout tab="/creator/novels/issues">
@@ -29,4 +24,4 @@ StealNovelPage.getLayout = (page : ReactNode) => {
     )
 }
 
-export default StealNovelPage;
+export default IssuesPage;

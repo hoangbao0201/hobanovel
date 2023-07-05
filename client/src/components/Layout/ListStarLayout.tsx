@@ -11,28 +11,31 @@ export const ListStarLayout = (props : ListStarLayoutProps) => {
     return (
         <div className={cn(
             props.className,
-            "flex items-center -ml-1"
+            "-ml-1"
         )}>
-            <div className="gap-1 relative">
-                <i className={`w-${props.size || 4} mx-1 inline-block fill-yellow-400 opacity-40`}>{iconStar}</i>
-                <i className={`w-${props.size || 4} mx-1 inline-block fill-yellow-400 opacity-40`}>{iconStar}</i>
-                <i className={`w-${props.size || 4} mx-1 inline-block fill-yellow-400 opacity-40`}>{iconStar}</i>
-                <i className={`w-${props.size || 4} mx-1 inline-block fill-yellow-400 opacity-40`}>{iconStar}</i>
-                <i className={`w-${props.size || 4} mx-1 inline-block fill-yellow-400 opacity-40`}>{iconStar}</i>
+            <div className="relative flex items-center">
+                <i className={`w-${props.size || 4} sm:w-4 w-3 mx-1 flex-shrink-0 fill-yellow-400 opacity-40`}>{iconStar}</i>
+                <i className={`w-${props.size || 4} sm:w-4 w-3 mx-1 flex-shrink-0 fill-yellow-400 opacity-40`}>{iconStar}</i>
+                <i className={`w-${props.size || 4} sm:w-4 w-3 mx-1 flex-shrink-0 fill-yellow-400 opacity-40`}>{iconStar}</i>
+                <i className={`w-${props.size || 4} sm:w-4 w-3 mx-1 flex-shrink-0 fill-yellow-400 opacity-40`}>{iconStar}</i>
+                <i className={`w-${props.size || 4} sm:w-4 w-3 mx-1 flex-shrink-0 fill-yellow-400 opacity-40`}>{iconStar}</i>
+
 
                 <div
                     style={{
-                        width: `${props.numb ? ( props.numb*20 ) : (100)}%`,
+                        width: `${props.numb ? ( ( Math.round(props.numb * 2) /2 )/5 )*100 : 100}%`, 
                     }}
-                    className="max-w-full block whitespace-nowrap overflow-hidden absolute gap-1 top-0 left-0 right-0 bottom-0"
+                    className="absolute flex items-center top-0 left-0 overflow-hidden"
                 >
-                    <i className={`w-${props.size || 4} mx-1 inline-block fill-yellow-500`}>{iconStar}</i>
-                    <i className={`w-${props.size || 4} mx-1 inline-block fill-yellow-500`}>{iconStar}</i>
-                    <i className={`w-${props.size || 4} mx-1 inline-block fill-yellow-500`}>{iconStar}</i>
-                    <i className={`w-${props.size || 4} mx-1 inline-block fill-yellow-500`}>{iconStar}</i>
-                    <i className={`w-${props.size || 4} mx-1 inline-block fill-yellow-500`}>{iconStar}</i>
+                    <i className={`w-${props.size || 4} sm:w-4 w-3 mx-1 flex-shrink-0 fill-yellow-500`}>{iconStar}</i>
+                    <i className={`w-${props.size || 4} sm:w-4 w-3 mx-1 flex-shrink-0 fill-yellow-500`}>{iconStar}</i>
+                    <i className={`w-${props.size || 4} sm:w-4 w-3 mx-1 flex-shrink-0 fill-yellow-500`}>{iconStar}</i>
+                    <i className={`w-${props.size || 4} sm:w-4 w-3 mx-1 flex-shrink-0 fill-yellow-500`}>{iconStar}</i>
+                    <i className={`w-${props.size || 4} sm:w-4 w-3 mx-1 flex-shrink-0 fill-yellow-500`}>{iconStar}</i>
                 </div>
+
             </div>
+
         </div>
     );
 };

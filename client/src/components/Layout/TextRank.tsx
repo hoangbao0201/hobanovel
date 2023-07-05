@@ -10,7 +10,6 @@ interface TextStyleProps {
 }
 const TextStyle = styled.span<TextStyleProps>`
     /* background-image: url("/emotions/rank/${props => props.rank || 0}.gif"); */
-    
     -webkit-background-clip: text;
 `
 
@@ -32,7 +31,7 @@ const TextRank = (props : TextRankProps) => {
                 `duration-300 ease-in-out bg-auto bg-center line-clamp-1 whitespace-nowrap text-center
 
                 ${!props.text
-                    ? (`font-bold text-xs uppercase border rounded-sm px-1 pt-[3px] ${props.rank == 0 ? "" : ""}`) 
+                    ? (`font-bold text-xs uppercase border rounded-sm px-1 pt-[3px] drop-shadow-md ${props.rank == 0 ? "" : ""}`) 
                     : ("font-semibold text-base")} 
 
                 ${ props.rank == 0 

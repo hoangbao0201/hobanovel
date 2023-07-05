@@ -15,7 +15,7 @@ const JustUpdated = ({ novels= [] } : JustUpdatedProps) => {
         <div className="px-4">
     
             {
-                novels ? (
+                novels.length > 0 ? (
                     <table className="block relative border">
                         <tbody className="overflow-x-auto">
                             {

@@ -1,6 +1,6 @@
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 import dynamic from "next/dynamic";
-import { GetServerSideProps, GetStaticProps } from "next";
+import { GetStaticProps } from "next";
 
 import useSWR from "swr";
 import axios from "axios";
@@ -16,9 +16,20 @@ import {
 } from "@/services/novels.services";
 import Head from '@/components/Share/Head';
 import { NovelType, ReviewType } from "@/types";
-import { getReviewsByNovelHandle } from "@/services/review.services";
-import WrapperLayout from "@/components/Layout/WrapperLayout";
+import ClientOnly from "@/components/Share/ClientOnly";
 import { getAccessToken } from "@/services/cookies.servies";
+import WrapperLayout from "@/components/Layout/WrapperLayout";
+import { getReviewsByNovelHandle } from "@/services/review.services";
+import PageTitle from "@/components/Share/PageTitle";
+import { iconAngleRight } from "../../public/icons";
+
+// import Outstanding from "@/components/Share/ContentHome/Outstanding";
+// import Reading from "@/components/Share/ContentHome/Reading";
+// import JustUpdated from "@/components/Share/ContentHome/JustUpdated";
+// import HighlyRated from "@/components/Share/ContentHome/HighlyRated";
+// import JustPosted from "@/components/Share/ContentHome/JustPosted";
+// import LatestReviews from "@/components/Share/ContentHome/LatestReviews";
+// import JustCompleted from "@/components/Share/ContentHome/JustCompleted";
 
 
 type NovelHighlyRated = NovelType & { mediumScore: number };
@@ -30,7 +41,7 @@ export interface PageHomeProps {
     data: any;
     novelsOutstending?: NovelType[];
     novelsJustUpdated?: NovelType[];
-    novelsHighlyRated?: HighlyRatedProps[];
+    novelsHighlyRated?: NovelHighlyRated[];
     novelsLatestReviews?: ReviewType[];
     novelsJustCompleted?: NovelType[];
 }
@@ -87,40 +98,7 @@ const HomePage = ({
     novelsLatestReviews = [],
     novelsJustCompleted = [],
 }: PageHomeProps) => {
-    const matchesMobile = useMediaQuery("(max-width: 640px)");
     const matchesTablet = useMediaQuery("(max-width: 1024px)");
-
-    // const { data: novelReviews } = useSWR<{ reviews: any }>(
-    //     `?page=1`,
-    //     async (query) => {
-    //         const token = getAccessToken();
-    //         if(!token) {
-    //             throw new Error();
-    //         }
-    //         const res = await axios.get(`http://localhost:4000/api/reviews/get/${query}`);
-
-    //         if(!res.data.success || !res) {
-    //             throw new Error();
-    //         }
-
-    //         return {
-    //             reviews: res.data.reviews
-    //         }
-    //     },
-    //     {
-    //         onErrorRetry: (error, _, __, revalidate, { retryCount }) => {
-    //             if(error.status === 404) {
-    //                 return
-    //             }
-    //             if(retryCount >= 1) {
-    //                 return
-    //             }
-    //             setTimeout(() => {
-    //                 revalidate({ retryCount })
-    //             }, 2000)
-    //         }
-    //     }
-    // );
 
     const { data: novelReading } = useSWR<{ novels: any }>(
         `?page=1`,
@@ -161,58 +139,60 @@ const HomePage = ({
     return (
         <>
             <Head />
-            <>
-                <WrapperLayout className="pt-5">
-                    <div className="block -mx-4">
+            {/* sm:-translate-y-28 */}
+            <WrapperLayout className="sm:-translate-y-28">
+                <div className="grid">
 
-                        {/* <AdsenseForm /> */}
-
-                        <div className="lg:flex mb-5">
-                            <div className="lg:w-8/12">
-                                <h2 className="px-4 mb-4 text-xl font-semibold">Truyện nổi bật</h2>
-                                <Outstanding novels={novelsOutstending} />
-                            </div>
+                    <div className="lg:flex">
+                        <div className="lg:w-8/12 mb-8">
+                            <PageTitle>Truyện nổi bật</PageTitle>
+                            <Outstanding novels={novelsOutstending} />
+                        </div>
+                        <ClientOnly>
                             {!matchesTablet && (
-                                <div className="lg:w-4/12">
-                                    <h2 className="px-4 mb-5 text-xl font-semibold">Truyện đang đọc</h2>
+                                <div className="lg:w-4/12 mb-8">
+                                    <PageTitle>Truyện đang đọc</PageTitle>
                                     <Reading readingNovel={novelReading?.novels} />
                                 </div>
                             )}
+                        </ClientOnly>
+                    </div>
+                    
+                    <div className="max-lg:hidden mb-6">
+                        <PageTitle>Truyện mới cập nhật</PageTitle>
+                        <JustUpdated novels={novelsJustUpdated} />
+                    </div>
+
+                    <div className="lg:flex">
+                        <div className="lg:w-8/12 mb-8">
+                            <PageTitle>Truyện đánh giá cao</PageTitle>
+                            <HighlyRated novels={novelsHighlyRated as NovelHighlyRated[]} />
                         </div>
-    
-                        {!matchesTablet && (
-                            <div className="mb-5">
-                                <h2 className="px-4 mb-4 text-xl font-semibold">Truyện mới cập nhật</h2>
-                                <JustUpdated novels={novelsJustUpdated} />
-                            </div>
-                        )}
-    
-                        <div className="lg:flex">
-                            <div className="lg:w-8/12">
-                                <h2 className="px-4 mb-4 text-xl font-semibold">Truyện đánh giá cao</h2>
-                                <HighlyRated novels={novelsHighlyRated as NovelHighlyRated[]} />
-                            </div>
-                            <div className="lg:w-4/12">
-                                <h2 className="px-4 mb-4 text-xl font-semibold">Mới đánh giá</h2>
-                                <LatestReviews reviews={novelsLatestReviews} />
-                            </div>
-                        </div>
-    
-                        <div className="lg:flex">
-                            {!matchesTablet && (
-                                <div className="lg:w-4/12">
-                                    <h2 className="px-4 mb-4 text-xl font-semibold">Mới đăng</h2>
-                                    <JustPosted novels={novelsOutstending} />
-                                </div>
-                            )}
-                            <div className="lg:w-8/12">
-                                <h2 className="px-4 mb-4 text-xl font-semibold">Mới hoàn thành</h2>
-                                <JustCompleted novels={novelsJustCompleted} />
-                            </div>
+                        <div className="lg:w-4/12 mb-8">
+                            <PageTitle>Mới đánh giá</PageTitle>
+                            <LatestReviews reviews={novelsLatestReviews} />
                         </div>
                     </div>
-                </WrapperLayout>
-            </>
+
+                    <div className="lg:flex relative max-lg:hidden">
+                        {/* {!matchesTablet && ( */}
+                            <>
+                                <div className="lg:w-4/12">
+                                    <PageTitle>Mới đăng</PageTitle>
+                                    <JustPosted novels={novelsOutstending} />
+                                </div>
+                                <div className="lg:w-8/12">
+                                    <h2 className="text-[18px] uppercase font-bold px-4 mb-3 flex items-center">
+                                        <span className="">Mới hoàn thành <i className="w-4 h-4 inline-block">{iconAngleRight}</i></span>
+                                    </h2>
+                                    <JustCompleted novels={novelsJustCompleted} />
+                                </div>
+                            </>
+                        {/* )} */}
+                    </div>
+
+                </div>
+            </WrapperLayout>
         </>
     );
 };
@@ -225,7 +205,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
     const novelsOutstandingResponse = await getNovelsByOutstandingHandle(1);
     const novelsHighlyRatedResponse = await getNovelsByHighlyRatedHandle(1);
     const reviewsResponse = await getReviewsByNovelHandle(`?page=1`);
-    const novelReading = await getReadingNovelHandle(1);
+    // const novelReading = await getReadingNovelHandle(1);
 
     return {
         props: {
@@ -241,33 +221,6 @@ export const getStaticProps: GetStaticProps = async (context) => {
         revalidate: REVALIDATE_TIME,
     };
 };
-
-
-// export const getServerSideProps : GetServerSideProps = async (context) => {
-
-//     const query = context;
-//     const data = { page: 1 }
-
-//     const novelsResponse = await getNovelsByPageHandle("1");
-//     const novelsOutstandingResponse = await getNovelsByOutstandingHandle(1);
-//     const novelsHighlyRatedResponse = await getNovelsByHighlyRatedHandle(1);
-//     const reviewsResponse = await getReviewsByNovelHandle(`?page=1`);
-//     const novelReading = await getReadingNovelHandle(1);
-
-//     return {
-//         props: {
-//             novelsOutstending: novelsOutstandingResponse?.data.novels || null,
-//             novelsJustUpdated: novelsResponse?.data.novels || null,
-//             novelsReading: context.locale || null,
-//             novelsHighlyRated: novelsHighlyRatedResponse?.data.novels || null,
-
-//             novelsJustCompleted: novelsResponse?.data.novels || null,
-
-//             novelsLatestReviews: reviewsResponse?.data.reviews || null,
-
-//         },
-//     };
-// }
 
 HomePage.getLayout = (page: ReactNode) => {
     return <MainLayout isBannerPage={true}>{page}</MainLayout>;

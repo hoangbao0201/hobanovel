@@ -2,13 +2,11 @@ import Head from "next/head";
 import { ReactNode, useEffect } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
-import { useMediaQuery } from "usehooks-ts";
-import { addUserHandle, logoutUserHandle } from "@/redux/userSlice";
-import { getAccessToken, removeAccessToken } from "@/services/cookies.servies";
 
 import ScrollOnTop from "./ScrollOnTop";
 import { connectUserHandle } from "@/services/auth.services";
-import dynamic from "next/dynamic";
+import { addUserHandle, logoutUserHandle } from "@/redux/userSlice";
+import { getAccessToken, removeAccessToken } from "@/services/cookies.servies";
 
 import Header from "../partials/Header";
 import Footer from "../partials/Footer";
@@ -39,10 +37,9 @@ const MainLayout = ({
     children,
     isHeader = true,
     isFooter = true,
-    isBannerPage = true,
+    isBannerPage = false,
     autoHidden = true,
 }: MainLayoutProps) => {
-    const matchesMobile = useMediaQuery("(max-width: 640px)");
 
     const dispatch = useDispatch();
     const { isAuthenticated } = useSelector(
@@ -55,7 +52,6 @@ const MainLayout = ({
             if (!token) {
                 console.log("Không token");
                 dispatch(logoutUserHandle());
-                // removeAccessToken();
                 return;
             }
             if(!isAuthenticated) {
@@ -82,38 +78,33 @@ const MainLayout = ({
 
     return (
         <>
-            {/* <Head>
-                <style>
-                    {`
-                        body {
-                            background-color: ${bg};
-                        }
-                    `}
-                </style>
-            </Head> */}
 
-            {/* <Head>
-                <title>123</title>
-            </Head> */}
-
+            <Head><style>{`body {background-color: ${bg};}`}</style></Head>
+            
             <ScrollOnTop />
+            
+            {
+                autoHidden && <div className="w-full h-[50px]"></div>
+            }
 
-            {isHeader && <Header autoHidden={autoHidden} />}
+            { isHeader && <Header autoHidden={autoHidden} /> }
 
-            { !matchesMobile && <BannersIntro isShow={isBannerPage}/> }
+            { isBannerPage && <BannersIntro /> }
+
+            {/* <div className="w-full h-60 bg-red-500 -translate-y-28"></div> */}
 
             <main 
                 className={`${
                     isBannerPage &&
-                    `w-full min-h-[500px] top-0 overflow-hidden ${
-                        !matchesMobile && "-translate-y-28"
-                    }`
+                    `relative min-h-[500px]`
                 }`}
             >
                 {children}
             </main>
+    
 
-            {isFooter && <Footer />}
+            { isFooter && <Footer /> }
+
         </>
     );
 };

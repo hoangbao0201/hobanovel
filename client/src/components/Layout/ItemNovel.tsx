@@ -20,7 +20,6 @@ const ItemNovel = ({ novel, isRating = false, isAuthor = false, isChapterCount =
             <Link href={`/truyen/${novel.slug}`} className="drop-shadow">
                 <LazyLoad className="relative w-20 h-28 overflow-hidden shadow">
                     <BlurImage
-                        id={novel?.imageBlurHash}
                         width={80}
                         height={112}
                         alt={`truyện ${novel.title}`}

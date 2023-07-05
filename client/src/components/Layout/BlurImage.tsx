@@ -25,7 +25,7 @@ const BlurImage = (props : BlurImage) => {
                 // : "grayscale-0 blur-0"
             )}
             loading="lazy"
-            src={imgSrc}
+            src={imgSrc || "/images/novel-default.png"}
             onLoadingComplete={() => setLoading(false)}
             onError={() => setImgSrc("/images/novel-default.png")}
         />

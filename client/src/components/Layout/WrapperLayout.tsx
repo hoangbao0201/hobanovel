@@ -13,10 +13,10 @@ const WrapperLayout = (props: WrapperLayoutProps) => {
         <div
             className={cn(
                 props.className,
-                `grid transition-all max-w-5xl min-h-[300px] mx-auto bg-white sm:rounded-xl px-4`
+                `grid transition-all max-w-5xl mx-auto bg-white sm:rounded-xl px-4 py-5`
             )}
         >
-            {props.children}
+            <div className="-mx-4">{props.children}</div>
         </div>
     );
 };

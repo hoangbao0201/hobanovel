@@ -10,7 +10,7 @@ import {
     REGISTER,
 } from "redux-persist";
 import storage from "redux-persist/lib/storage";
-// import { Context, MakeStore, createWrapper } from "next-redux-wrapper";
+// import { createWrapper } from "next-redux-wrapper";
 
 import userReducer, { UserSlideState } from "./userSlice";
 import commentReducer, { CommentSliceType } from "./commentSlice";
@@ -61,3 +61,8 @@ export const persistor = persistStore(store);
 // }
 
 // export const wrapper = createWrapper<Store<RootState, AnyAction>>(makeStore)
+
+// const makeStore = () => store;
+// const wrapper = createWrapper(makeStore);
+
+// export default wrapper.withRedux(MyApp);

@@ -14,6 +14,7 @@ import SwiperButton from "../features/SwiperButton";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { apiUrl } from "@/constants";
 import { useRouter } from "next/router";
+import ClientOnly from "../Share/ClientOnly";
 
 type ResBannerProps = Pick<BannersType, "bannersId" | "bannersUrl" | "imageBlurHash" | "slug">;
 
@@ -105,13 +106,11 @@ const GridSwiperStyled = styled.div`
 `;
 
 interface BannersIntroProps {
-    isShow?: boolean;
 }
 
-const BannersIntro = ({ isShow }: BannersIntroProps) => {
+const BannersIntro = ({  }: BannersIntroProps) => {
     const matchesMobile = useMediaQuery("(max-width: 640px)");
 
-    const router = useRouter();
     const [isLoading, setLoading] = useState(true);
     const [banners, setBanners] = useState<null | BannersType>();
 
@@ -128,12 +127,6 @@ const BannersIntro = ({ isShow }: BannersIntroProps) => {
         }
     };
 
-    // useEffect(() => {
-    //     console.log(123);
-    // }, []);
-
-    // console.log(banners)
-
     useEffect(() => {
         eventGetBannersNovel();
     }, []);
@@ -143,86 +136,90 @@ const BannersIntro = ({ isShow }: BannersIntroProps) => {
     };
 
     return (
-        <nav className={`w-full relative select-none ${isShow ? "" : "hidden"}`}>
-            {matchesMobile ? (
-                <div className="relative overflow-hidden">
-                    <GridSwiperStyled className="relative">
-                        <Swiper
-                            loop={true}
-                            centeredSlides
-                            slidesPerView={1}
-                            spaceBetween={18}
-                            className=""
-                        >
-                            <SwiperButton
-                                type="prev"
-                                styleButton="absolute top-1/2 -translate-y-1/2 z-40 p-4 active:bg-opacity-80 bg-slate-50 rounded-sm bg-opacity-50 border left-[18px]"
-                                styleIcon="h-4 w-4 fill-slate-400 stroke-slate-600"
-                            />
-                            <SwiperButton
-                                type="next"
-                                styleButton="absolute top-1/2 -translate-y-1/2 z-40 p-4 active:bg-opacity-80 bg-slate-50 rounded-sm bg-opacity-50 border right-[18px]"
-                                styleIcon="h-4 w-4 fill-slate-400 stroke-slate-600"
-                            />
-
-                            {dataFakeBannersMobile.map((banner, index) => {
-                                return (
-                                    <SwiperSlide
-                                        data-banner-id={banner.bannersId}
-                                        key={index}
-                                        className=""
-                                    >
-                                        <div className="bg-white p-3">
-                                            <Link className="block relative" href={`/`}>
-                                                <Image
-                                                    width={500}
-                                                    height={500}
-                                                    alt="banner thumbnail banner"
-                                                    className="h-[200px] inset-0 block object-cover rounded-md overflow-hidden mx-auto"
-                                                    src={banner.bannersUrl}
-                                                />
-                                            </Link>
-                                        </div>
-                                    </SwiperSlide>
-                                );
-                            })}
-                        </Swiper>
-                    </GridSwiperStyled>
-                </div>
-            ) : (
-                <>
-                    <div className="w-full h-[370px] overflow-hidden align-middle inline-block">
-                        {banners ? (
-                            <Link href={`/truyen/${banners?.slug}`} className="flex justify-center">
-                                <Image
-                                    width={3000}
-                                    height={1000}
-                                    alt="banners novel"
-                                    className={cn(
-                                        "bg-black/70 group-hover:scale-105 group-hover:duration-500 object-cover h-full block duration-700 ease-in-out",
-                                        isLoading ? "scale-105" : "scale-100"
-                                    )}
-                                    onLoad={handleLoadingComplete}
-                                    onLoadingComplete={() => setLoading(false)}
-                                    blurDataURL={banners?.imageBlurHash}
-                                    placeholder="blur"
-                                    src={banners?.bannersUrl}
-                                />
-                            </Link>
-                        ) : (
-                            <div></div>
-                        )}
-                    </div>
-                    <div
-                        style={{
-                            background:
-                                "linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 70%)",
-                        }}
-                        className="w-full h-16 absolute bottom-0"
-                    ></div>
-                </>
-            )}
-        </nav>
+        <ClientOnly>
+            <nav className={`w-full relative select-none`}>
+                {
+                    matchesMobile ? (
+                        <div className="relative overflow-hidden">
+                            <GridSwiperStyled className="relative">
+                                <Swiper
+                                    loop={true}
+                                    centeredSlides
+                                    slidesPerView={1}
+                                    spaceBetween={18}
+                                    className=""
+                                >
+                                    <SwiperButton
+                                        type="prev"
+                                        styleButton="absolute top-1/2 -translate-y-1/2 z-40 p-4 active:bg-opacity-80 bg-slate-50 rounded-sm bg-opacity-50 border left-[18px]"
+                                        styleIcon="h-4 w-4 fill-slate-400 stroke-slate-600"
+                                    />
+                                    <SwiperButton
+                                        type="next"
+                                        styleButton="absolute top-1/2 -translate-y-1/2 z-40 p-4 active:bg-opacity-80 bg-slate-50 rounded-sm bg-opacity-50 border right-[18px]"
+                                        styleIcon="h-4 w-4 fill-slate-400 stroke-slate-600"
+                                    />
+    
+                                    {dataFakeBannersMobile.map((banner, index) => {
+                                        return (
+                                            <SwiperSlide
+                                                data-banner-id={banner.bannersId}
+                                                key={index}
+                                                className=""
+                                            >
+                                                <div className="bg-white p-3">
+                                                    <Link className="block relative" href={`/`}>
+                                                        <Image
+                                                            width={500}
+                                                            height={500}
+                                                            alt="banner thumbnail banner"
+                                                            className="h-[200px] inset-0 block object-cover rounded-md overflow-hidden mx-auto"
+                                                            src={banner.bannersUrl}
+                                                        />
+                                                    </Link>
+                                                </div>
+                                            </SwiperSlide>
+                                        );
+                                    })}
+                                </Swiper>
+                            </GridSwiperStyled>
+                        </div>
+                    ) : (
+                        <>
+                            <div className="w-full overflow-hidden align-middle inline-block">
+                                {banners ? (
+                                    <Link href={`/truyen/${banners?.slug}`} className="flex justify-center h-[370px]">
+                                        <Image
+                                            width={3000}
+                                            height={1000}
+                                            alt="banners novel"
+                                            className={cn(
+                                                "bg-black/70 group-hover:scale-105 group-hover:duration-500 object-cover h-full block duration-700 ease-in-out",
+                                                isLoading ? "scale-105" : "scale-100"
+                                            )}
+                                            onLoad={handleLoadingComplete}
+                                            onLoadingComplete={() => setLoading(false)}
+                                            blurDataURL={banners?.imageBlurHash}
+                                            placeholder="blur"
+                                            src={banners?.bannersUrl}
+                                        />
+                                    </Link>
+                                ) : (
+                                    <div></div>
+                                )}
+                            </div>
+                            <div
+                                style={{
+                                    background:
+                                        "linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 70%)",
+                                }}
+                                className="w-full h-16 absolute bottom-0"
+                            ></div>
+                        </>
+                    )
+                }
+            </nav>
+        </ClientOnly>
     );
 };
 
