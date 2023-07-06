@@ -96,7 +96,7 @@ const MainLayout = ({
             <main 
                 className={`${
                     isBannerPage &&
-                    `relative min-h-[500px]`
+                    `relative min-h-[500px] z-[1]`
                 }`}
             >
                 {children}

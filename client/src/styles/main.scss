@@ -5,3 +5,29 @@
     // max-width: 700px;
     min-height: 160px;
 }
+
+// pagination-banners-style
+.swiper-slide {
+    background-color: #ffff !important;
+}
+.swiper-pagination {
+    bottom: 0px !important;
+    margin-bottom: 10px !important;
+}
+.pagination-banners-style {
+    width: 32px !important;
+    height: 7px !important;
+    bottom: -30px !important;
+    // margin-top: 6px !important;
+    // margin-bottom: 6px !important;
+    border-radius: 0px !important;
+
+    transition: all ease 0.2s;
+}
+.pagination-banners-style.swiper-pagination-bullet {
+    background-color: #7d7b7b !important;
+}
+.pagination-banners-style.swiper-pagination-bullet-active {
+    background-color: #1a1a1a !important;
+    // width: 50px !important;
+}

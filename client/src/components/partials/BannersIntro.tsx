@@ -1,7 +1,7 @@
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 
-import { Pagination } from 'swiper';
+import { Autoplay, Pagination } from 'swiper';
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import 'swiper/css/pagination';
@@ -9,13 +9,14 @@ import "swiper/css/effect-coverflow";
 
 import axios from "axios";
 import Link from "next/link";
-import { apiUrl } from "@/constants";
+import { apiUrl, placeholderBlurhash } from "@/constants";
 import { BannersType } from "@/types";
 import styled from "styled-components";
 import BlurImage from "../Layout/BlurImage";
 import { useMediaQuery } from "usehooks-ts";
 // import SwiperButton from "../features/SwiperButton";
 import { ListStarLayout } from "../Layout/ListStarLayout";
+import ClientOnly from "../Share/ClientOnly";
 
 type ResBannerProps = Pick<BannersType, "bannersId" | "bannersUrl" | "imageBlurHash" | "slug">;
 
@@ -109,7 +110,7 @@ const GridSwiperStyled = styled.div`
 interface BannersIntroProps {}
 
 const BannersIntro = ({}: BannersIntroProps) => {
-    const matchesMobile = useMediaQuery("(max-width: 640px)");
+    const matchesMobile = useMediaQuery("(max-width: 475px)");
 
     const [isLoading, setLoading] = useState(true);
     const [banners, setBanners] = useState<null | BannersType>();
@@ -134,6 +135,104 @@ const BannersIntro = ({}: BannersIntroProps) => {
     const handleLoadingComplete = () => {
         setLoading(false);
     };
+
+    console.log(banners)
+
+    return (
+        // style={{ transition: "height 0.2s ease" }}
+        <nav className="relative w-full">
+            <div className="max-w-7xl lg:h-80 h-56 mx-auto overflow-hidden">
+                <ClientOnly>
+                    <GridSwiperStyled className="w-full h-full">
+                        <Swiper
+                            loop={true}
+                            centeredSlides
+                            slidesPerView={1}
+                            autoplay={{
+                                delay: 4000
+                            }}
+                            className="w-full h-full"
+                            pagination={{
+                                clickable: true,
+                                renderBullet: function (index, className) {
+                                    return '<div class="pagination-banners-style ' + className + ' "><span></span></div>';
+                                },
+                            }}
+                            modules={[Autoplay, Pagination]}
+                        >   
+    
+                            {
+                                matchesMobile ? (
+                                    <>
+                                        {
+                                            dataFakeBannersMobile ? (
+                                                dataFakeBannersMobile.map((item) => {
+                                                    return (
+                                                        <SwiperSlide
+                                                            data-banner-id={item.bannersId}
+                                                            key={item.bannersId}
+                                                            className="border"
+                                                        >
+                                                            <div className="p-4">
+                                                                <Link
+                                                                    href="/truyen/truong-sinh-theo-cuoi-vo-bat-dau"
+                                                                    className="w-full h-full"
+                                                                >
+                                                                    <Image
+                                                                        width={768}
+                                                                        height={360}
+                                                                        alt="banners novel"
+                                                                        className={`bg-black/70 rounded-md group-hover:scale-105 group-hover:duration-500 object-cover h-full block duration-700 ease-in-out ${isLoading ? "scale-105" : "scale-100"}`}
+                                                                        onLoad={handleLoadingComplete}
+                                                                        onLoadingComplete={() => setLoading(false)}
+                                                                        blurDataURL={placeholderBlurhash}
+                                                                        placeholder="blur"
+                                                                        src={item?.bannersUrl}
+                                                                    />
+                                                                </Link>
+                                                            </div>
+                                                        </SwiperSlide>
+                                                    )
+                                                })
+                                            ) : (
+                                                <></>
+                                            )
+                                        }
+                                    </>
+                                ) : (
+                                    <SwiperSlide data-banner-id={`bannerCp`} key={"bannerCp"} className="">
+                                        <Link
+                                            href="/truyen/truong-sinh-theo-cuoi-vo-bat-dau"
+                                            className="w-full h-full"
+                                        >
+                                            {
+                                                banners ? (
+                                                    <Image
+                                                        width={3000}
+                                                        height={1000}
+                                                        alt="banners novel"
+                                                        className={`bg-black/70 group-hover:scale-105 group-hover:duration-500 object-cover h-full block duration-700 ease-in-out ${isLoading ? "scale-105" : "scale-100"}`}
+                                                        onLoad={handleLoadingComplete}
+                                                        onLoadingComplete={() => setLoading(false)}
+                                                        blurDataURL={banners?.imageBlurHash}
+                                                        placeholder="blur"
+                                                        src={banners?.bannersUrl}
+                                                    />
+                                                ) : (
+                                                    <></>
+                                                )
+                                            }
+                                        </Link>
+                                    </SwiperSlide>
+                                )
+                            }
+    
+                        </Swiper>
+                    </GridSwiperStyled>
+                </ClientOnly>
+            </div>
+        </nav>
+    )
 
     // return (
     //     <ClientOnly>
@@ -231,107 +330,62 @@ const BannersIntro = ({}: BannersIntroProps) => {
     // };
 
     return (
-        // <div className="relative transition-all max-w-7xl w-full lg:h-80 h-60 mx-auto bg-gray-400 select-none">
-        <GridSwiperStyled className="relative transition-all max-w-7xl w-full lg:h-80 h-60 mx-auto bg-gray-400 select-none">
-            <Swiper
-                loop={true}
-                centeredSlides
-                slidesPerView={1}
-                spaceBetween={18}
-                className="w-full h-full"
-                // pagination={{
-                //     clickable: true,
-                // }}
-                // modules={[Pagination]}
-
-            >
-                {/* <div style={{ width: "20px", height: "20px" }}></div> */}
-                {/* <SwiperButton
-                    type="prev"
-                    styleButton="absolute bottom-0 z-40 p-4 active:bg-opacity-80 bg-slate-50 rounded-sm bg-opacity-50 border left-[18px]"
-                    styleIcon="h-4 w-4 fill-slate-400 stroke-slate-600"
-                />
-                // <SwiperButton
-                //     type="next"
-                //     styleButton="absolute bottom-0 z-40 p-4 active:bg-opacity-80 bg-slate-50 rounded-sm bg-opacity-50 border right-[18px]"
-                //     styleIcon="h-4 w-4 fill-slate-400 stroke-slate-600"
-                // /> */}
-
-                <SwiperSlide data-banner-id={1} key={1} className="">
-                    <div className="sm:hidden absolute w-full h-full bg-white/5 backdrop-blur-md" />
-                    <div
-                        className="h-full w-full bg-center"
-                        style={{
-                            backgroundImage: `URL(https://res.cloudinary.com/djrbd6ftt/image/upload/v1687581947/hobanovel/admin/banners/1687581944703.jpg)`,
-                            backgroundPosition: "center",
-                            backgroundSize: "auto 100%",
-                            backgroundRepeat: "no-repeat",
-                        }}
-                    ></div>
-                    <Link
-                        href="/truyen/truong-sinh-theo-cuoi-vo-bat-dau"
-                        className="sm:hidden absolute w-full h-full top-0 left-0 flex items-center justify-center"
-                    >
-                        <div className="flex px-10">
-                            <BlurImage
-                                width={80}
-                                height={112}
-                                alt={`truyện TRƯỜNG SINH THEO CƯỚI VỢ BẮT ĐẦU`}
-                                className="group-hover:scale-105 group-hover:duration-500 w-20 h-28 shadow-white shadow-sm"
-                                src="https://res.cloudinary.com/djrbd6ftt/image/upload/v1687593697/hobanovel/novel/thumbnail/300_ytxgyw.jpg"
-                            />
-                            <div className="ml-3 text-white">
-                                <h3
-                                    title={`truyện TRƯỜNG SINH THEO CƯỚI VỢ BẮT ĐẦU`}
-                                    className="mb-3 text-base line-clamp-2 font-semibold"
-                                >
-                                    TRƯỜNG SINH THEO CƯỚI VỢ BẮT ĐẦU ddddđ ddddđ dddddđ ddddđ
-                                    ddddd
-                                </h3>
-                                <div className="mb-2">
-                                    bởi <span>Hỉ Ái Cật Hoàng Qua</span>
+        <>
+            {/* <GridSwiperStyled className="relative transition-all max-w-7xl w-full lg:h-80 h-60 mx-auto bg-gray-400 select-none">
+                <Swiper
+                    loop={true}
+                    centeredSlides
+                    slidesPerView={1}
+                    spaceBetween={18}
+                    className="w-full h-full"
+                    // pagination={{
+                    //     clickable: true,
+                    // }}
+                    // modules={[Pagination]}
+                >
+    
+                    <SwiperSlide data-banner-id={1} key={1} className=""> */}
+                        <div className="sm:hidden absolute w-full h-full bg-white/5 backdrop-blur-md" />
+                        <div
+                            className="h-full w-full bg-center"
+                            style={{
+                                backgroundImage: `URL(https://res.cloudinary.com/djrbd6ftt/image/upload/v1687581947/hobanovel/admin/banners/1687581944703.jpg)`,
+                                backgroundPosition: "center",
+                                backgroundSize: "auto 100%",
+                                backgroundRepeat: "no-repeat",
+                            }}
+                        ></div>
+                        <Link
+                            href="/truyen/truong-sinh-theo-cuoi-vo-bat-dau"
+                            className="sm:hidden absolute w-full h-full top-0 left-0 flex items-center justify-center"
+                        >
+                            <div className="flex px-10">
+                                <BlurImage
+                                    width={80}
+                                    height={112}
+                                    alt={`truyện TRƯỜNG SINH THEO CƯỚI VỢ BẮT ĐẦU`}
+                                    className="group-hover:scale-105 group-hover:duration-500 w-20 h-28 shadow-white shadow-sm"
+                                    src="https://res.cloudinary.com/djrbd6ftt/image/upload/v1687593697/hobanovel/novel/thumbnail/300_ytxgyw.jpg"
+                                />
+                                <div className="ml-3 text-white">
+                                    <h3
+                                        title={`truyện TRƯỜNG SINH THEO CƯỚI VỢ BẮT ĐẦU`}
+                                        className="mb-3 text-base line-clamp-2 font-semibold"
+                                    >
+                                        TRƯỜNG SINH THEO CƯỚI VỢ BẮT ĐẦU ddddđ ddddđ dddddđ ddddđ
+                                        ddddd
+                                    </h3>
+                                    <div className="mb-2">
+                                        bởi <span>Hỉ Ái Cật Hoàng Qua</span>
+                                    </div>
+                                    <ListStarLayout numb={4.5} />
                                 </div>
-                                <ListStarLayout numb={4.5} />
                             </div>
-                        </div>
-                    </Link>
-                </SwiperSlide>
-            </Swiper>
-        </GridSwiperStyled>
-
-        // <div className="sm:hidden absolute w-full h-full bg-white/5 backdrop-blur-md" />
-        //     <div
-        //         className="h-full bg-center"
-        //         style={{
-        //             backgroundImage: `URL(https://res.cloudinary.com/djrbd6ftt/image/upload/v1687581947/hobanovel/admin/banners/1687581944703.jpg)`,
-        //             backgroundPosition: 'center',
-        //             backgroundSize: 'auto 100%',
-        //             backgroundRepeat: 'no-repeat'
-        //         }}
-        //     >
-        //     </div>
-
-        //     <Link href="/truyen/truong-sinh-theo-cuoi-vo-bat-dau" className="sm:hidden absolute w-full h-full top-0 left-0 flex items-center justify-center">
-        //         <div className="flex px-4">
-        //             <BlurImage
-        //                 width={80}
-        //                 height={112}
-        //                 alt={`truyện TRƯỜNG SINH THEO CƯỚI VỢ BẮT ĐẦU`}
-        //                 className="group-hover:scale-105 group-hover:duration-500 w-20 h-28 shadow-white shadow-sm"
-        //                 src="https://res.cloudinary.com/djrbd6ftt/image/upload/v1687593697/hobanovel/novel/thumbnail/300_ytxgyw.jpg"
-        //             />
-        //             <div className="ml-3 text-white">
-        //                 <h3 title={`truyện TRƯỜNG SINH THEO CƯỚI VỢ BẮT ĐẦU`} className="mb-3 text-base line-clamp-2 font-semibold">
-        //                     TRƯỜNG SINH THEO CƯỚI VỢ BẮT ĐẦU ddddđ ddddđ dddddđ ddddđ ddddd
-        //                 </h3>
-        //                 <div className="mb-2">
-        //                     bởi <span>Hỉ Ái Cật Hoàng Qua</span>
-        //                 </div>
-        //                 <ListStarLayout numb={4.5}/>
-        //             </div>
-        //         </div>
-        //     </Link> */}
-        // </div>
+                        </Link>
+                    {/* </SwiperSlide>
+                </Swiper>
+            </GridSwiperStyled> */}
+        </>
     );
 };
 

@@ -140,7 +140,7 @@ const HomePage = ({
         <>
             <Head />
             {/* sm:-translate-y-28 */}
-            <WrapperLayout className="sm:-translate-y-28">
+            <WrapperLayout className="xs:-translate-y-28">
                 <div className="grid">
 
                     <div className="lg:flex">
