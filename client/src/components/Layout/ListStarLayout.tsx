@@ -27,11 +27,11 @@ export const ListStarLayout = (props : ListStarLayoutProps) => {
                     }}
                     className="absolute flex items-center top-0 left-0 overflow-hidden"
                 >
-                    <i className={`w-${props.size || 4} sm:w-4 w-3 mx-1 flex-shrink-0 fill-yellow-500`}>{iconStar}</i>
-                    <i className={`w-${props.size || 4} sm:w-4 w-3 mx-1 flex-shrink-0 fill-yellow-500`}>{iconStar}</i>
-                    <i className={`w-${props.size || 4} sm:w-4 w-3 mx-1 flex-shrink-0 fill-yellow-500`}>{iconStar}</i>
-                    <i className={`w-${props.size || 4} sm:w-4 w-3 mx-1 flex-shrink-0 fill-yellow-500`}>{iconStar}</i>
-                    <i className={`w-${props.size || 4} sm:w-4 w-3 mx-1 flex-shrink-0 fill-yellow-500`}>{iconStar}</i>
+                    <i className={`w-${props.size || 4} sm:w-4 w-3 mx-1 flex-shrink-0 fill-yellow-400`}>{iconStar}</i>
+                    <i className={`w-${props.size || 4} sm:w-4 w-3 mx-1 flex-shrink-0 fill-yellow-400`}>{iconStar}</i>
+                    <i className={`w-${props.size || 4} sm:w-4 w-3 mx-1 flex-shrink-0 fill-yellow-400`}>{iconStar}</i>
+                    <i className={`w-${props.size || 4} sm:w-4 w-3 mx-1 flex-shrink-0 fill-yellow-400`}>{iconStar}</i>
+                    <i className={`w-${props.size || 4} sm:w-4 w-3 mx-1 flex-shrink-0 fill-yellow-400`}>{iconStar}</i>
                 </div>
 
             </div>

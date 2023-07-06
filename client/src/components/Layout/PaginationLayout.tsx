@@ -9,7 +9,7 @@ interface PaginationLayout {
 
 export const PaginationLayout = ({ countPage, currentPage, handleChangePage } : PaginationLayout) => {
 
-    console.log(countPage, currentPage)
+    // console.log(countPage, currentPage)
 
     return (
         <ul className="flex items-center gap-2 text-gray-600">

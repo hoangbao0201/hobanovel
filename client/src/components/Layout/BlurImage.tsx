@@ -19,7 +19,7 @@ const BlurImage = (props : BlurImage) => {
             className={cn(
                 props.className,
                 props.className,
-                "block duration-300 ease-in-out",
+                "block duration-300 ease-in-out object-cover align-middle",
                 // isLoading
                 // ? "grayscale blur-sm"
                 // : "grayscale-0 blur-0"

@@ -1,4 +1,5 @@
 import { Html, Head, Main, NextScript } from "next/document";
+import Script from 'next/script';
 
 export default function Document() {
     return (
@@ -12,6 +13,17 @@ export default function Document() {
 
                 <meta name="google-site-verification" content="VYr3U568eAPsZHYVfVtVFkF_41bHeGdekZrs2mV7PQk" />
                 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6688547661590907" crossOrigin="anonymous"></script>
+                {/* <script
+                    async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6688547661590907"
+                    crossOrigin="anonymous">    
+                </script> */}
+
+                {/* <Script
+                    async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6688547661590907"
+                    strategy="lazyOnload"
+                    crossOrigin="anonymous"
+                /> */}
+
                 {/* First Ad */}
                 {/* <ins className="adsbygoogle"
                     style={{ display: "block" }}

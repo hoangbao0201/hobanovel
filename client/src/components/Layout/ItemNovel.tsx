@@ -24,7 +24,7 @@ const ItemNovel = ({ novel, isRating = false, isAuthor = false, isChapterCount =
                         height={112}
                         alt={`truyện ${novel.title}`}
                         blurDataURL={novel?.imageBlurHash || placeholderBlurhash}
-                        className="group-hover:scale-105 group-hover:duration-500 object-cover h-28 w-20"
+                        className="group-hover:scale-105 group-hover:duration-500 h-28 w-20"
                         placeholder="blur"
                         src={novel?.thumbnailUrl}
                     />

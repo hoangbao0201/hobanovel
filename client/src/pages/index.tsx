@@ -175,20 +175,18 @@ const HomePage = ({
                     </div>
 
                     <div className="lg:flex relative max-lg:hidden">
-                        {/* {!matchesTablet && ( */}
-                            <>
-                                <div className="lg:w-4/12">
-                                    <PageTitle>Mới đăng</PageTitle>
-                                    <JustPosted novels={novelsOutstending} />
-                                </div>
-                                <div className="lg:w-8/12">
-                                    <h2 className="text-[18px] uppercase font-bold px-4 mb-3 flex items-center">
-                                        <span className="">Mới hoàn thành <i className="w-4 h-4 inline-block">{iconAngleRight}</i></span>
-                                    </h2>
-                                    <JustCompleted novels={novelsJustCompleted} />
-                                </div>
-                            </>
-                        {/* )} */}
+                        <>
+                            <div className="lg:w-4/12">
+                                <PageTitle>Mới đăng</PageTitle>
+                                <JustPosted novels={novelsOutstending} />
+                            </div>
+                            <div className="lg:w-8/12">
+                                <h2 className="text-[18px] uppercase font-bold px-4 mb-3 flex items-center">
+                                    <span className="">Mới hoàn thành <i className="w-4 h-4 inline-block">{iconAngleRight}</i></span>
+                                </h2>
+                                <JustCompleted novels={novelsJustCompleted} />
+                            </div>
+                        </>
                     </div>
 
                 </div>
