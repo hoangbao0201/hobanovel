@@ -1,13 +1,17 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { GetServerSideProps } from "next";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, ReactNode, useState } from "react";
 
+// import { signIn, useSession } from 'next-auth/react';
 import { useDispatch, useSelector } from "react-redux";
+
+
 import CustomInput from "@/components/Layout/CustomInput";
 import { connectUserHandle, loginUserHandle } from "@/services/auth.services";
 import { addAccessToken, getAccessTokenOnServer } from "@/services/cookies.servies";
 import { addUserHandle } from "@/redux/userSlice";
+import MainLayout from "@/components/Layout/MainLayout";
 
 const LoginPage = () => {
     const router = useRouter();
@@ -15,11 +19,15 @@ const LoginPage = () => {
     const { userLoading, isAuthenticated, currentUser } = useSelector(
         (state: any) => state.user
     );
+    // const { data: session, status } = useSession()
 
+    // state
     const [dataForm, setDataForm] = useState({
         accout: "",
         password: "",
     });
+
+    // console.log("session: ", session, status)
 
     const eventChangeValueInput = (e: ChangeEvent<HTMLInputElement>) => {
         setDataForm({
@@ -96,6 +104,20 @@ const LoginPage = () => {
                                     Đăng nhập
                                 </button>
                             </div>
+
+                            {/* Social */}
+
+                            {/* <div className="mt-2">
+                                <button
+                                    onClick={() =>
+                                        signIn()
+                                    }
+                                    className=" transition-all w-full text-center py-3 rounded bg-blue-600 hover:bg-blue-700 active:bg-blue-800 active:shadow-xl text-white"
+                                >
+                                    Github
+                                </button>
+                            </div> */}
+
                         </div>
                     </div>
                 </div>
@@ -124,3 +146,8 @@ export const getServerSideProps : GetServerSideProps = async (ctx) => {
 }
 
 export default LoginPage;
+
+
+LoginPage.getLayout = (page: ReactNode) => {
+    return <MainLayout autoHidden={false}>{page}</MainLayout>;
+};

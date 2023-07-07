@@ -1,6 +1,8 @@
 import "@/styles/main.scss";
 import "@/styles/globals.scss";
 import { Router } from "next/router";
+import type { NextPage } from "next";
+import type { AppProps } from "next/app";
 import { ReactElement, ReactNode } from "react";
 import { Inter } from "next/font/google";
 
@@ -10,22 +12,22 @@ import NProgress from "nprogress";
 import { Provider } from "react-redux";
 import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
-
-
 import { persistor, store } from "@/redux/store";
 import { PersistGate } from "redux-persist/integration/react";
+import { Session } from "next-auth";
+// import { SessionProvider } from "next-auth/react"
+
+import MainLayout from "@/components/Layout/MainLayout";
 import useScrollRestoration from "@/hook/useScrollRestoration";
 
-import type { NextPage } from "next";
-import type { AppProps } from "next/app";
-import MainLayout from "@/components/Layout/MainLayout";
-import { createWrapper } from "next-redux-wrapper";
+
+
 
 type NextPageWithLayout = NextPage & {
     getLayout?: (page: ReactElement) => ReactNode;
 };
 
-type AppPropsWithLayout = AppProps & {
+type AppPropsWithLayout = AppProps<{ session: Session }> & {
     Component: NextPageWithLayout;
 };
 
@@ -72,6 +74,7 @@ const MyApp = ({
                 font-family: ${inter.style.fontFamily};
                 }
             `}</style>
+
             <Provider store={store}>
 
                     <PersistGate loading={false} persistor={persistor}>

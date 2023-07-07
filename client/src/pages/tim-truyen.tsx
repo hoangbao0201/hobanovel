@@ -10,12 +10,12 @@ import { NovelResType } from "@/types";
 import Head from "@/components/Share/Head";
 import ItemNovel from "@/components/Layout/ItemNovel";
 import MainLayout from "@/components/Layout/MainLayout";
-import ItemNovelLazy from "@/components/Layout/ItemNovelLazy";
 import WrapperLayout from "@/components/Layout/WrapperLayout";
 import { iconAngleDouble, iconClose } from "../../public/icons";
 import { advancedSearchNovelHandle } from "@/services/novels.services";
 import { PaginationLayout } from "@/components/Layout/PaginationLayout";
-import { AdsenseForm } from "@/components/features/AdSenseForm";
+import { AdsenseForm } from "@/components/Layout/AdsLayout/AdSenseForm";
+
 
 // Data Default
 type ValuesOptionsSortType =
@@ -167,11 +167,6 @@ const SearchNovel = ({ novels, countPage, currentPage, isBox, query }: SearchNov
             <Head title="Tìm truyện nâng cao - Hobanovel" />
             <WrapperLayout className="pt-5 max-lg:max-w-3xl">
                 <div className="grid">
-
-
-                    <div className="px-4">
-                        <AdsenseForm />
-                    </div>
 
 
                     <div className="mb-4">
@@ -597,6 +592,12 @@ const SearchNovel = ({ novels, countPage, currentPage, isBox, query }: SearchNov
                             }
                         </div>
                     </div>
+                </div>
+
+                <div className="w-full px-4">
+
+                    <AdsenseForm />
+
                 </div>
             </WrapperLayout>
         </>

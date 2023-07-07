@@ -83,7 +83,7 @@ const NovelFollowPage = ({ page }: NovelFollowPageProps) => {
                                                     <div>Không có truyện</div>
                                                 )
                                             ) : (
-                                                <div className="grid gap-6 md:grid-cols-2 grid-cols-1 px-4">
+                                                <div className="grid gap-6 md:grid-cols-2 grid-cols-1">
                                                     {[1,2,3,4,5,6,7,8,9,10].map((index) => (
                                                         <ItemNovelLazy key={index} />
                                                     ))}

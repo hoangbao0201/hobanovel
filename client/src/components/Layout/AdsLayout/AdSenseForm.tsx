@@ -1,7 +1,4 @@
-
 import { useEffect } from "react";
-import ClientOnly from "../Share/ClientOnly";
-
 
 export function AdsenseForm() {
     useEffect(() => {
@@ -16,14 +13,13 @@ export function AdsenseForm() {
     return (
         <div className="text-center my-3">
             <ins
-                className="adsbygoogle"
+                className="adsbygoogle w-full"
                 style={{ display: "block" }}
                 data-ad-client="ca-pub-6688547661590907"
                 data-ad-slot="4236465460"
                 data-ad-format="auto"
-                data-full-width-responsive="true">
-            </ins>
+                data-full-width-responsive="true"
+            ></ins>
         </div>
     );
-
 }
