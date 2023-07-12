@@ -69,6 +69,8 @@ const AdminBannersPage = ({ banners, bannersMobile }: AdminBannersPageProps) => 
         setUrlNewImage(URL.createObjectURL(dataImage));
     };
 
+
+    // Handle Upload Banners
     const handleUploadBanners = async () => {
         const token = getAccessToken();
         if (!dataImage || !token || !valueInputSearch || !idNovelSelect) {
@@ -89,12 +91,14 @@ const AdminBannersPage = ({ banners, bannersMobile }: AdminBannersPageProps) => 
                 isMobile
             };
 
-            console.log(isMobile)
+            // console.log(isMobile)
             const uploadBanners: any = await addBannersHandle(
                 dataBanners as Pick<BannersType, 'novelId' | 'isMobile'> & { token: string; formData: FormData }
             );
 
-            if (uploadBanners?.data?.success) {
+            console.log(uploadBanners.banners)
+
+            if (uploadBanners?.success) {
                 const banners  = uploadBanners;
                 if(isMobile) {
                     setListBannersMobile([
@@ -148,8 +152,8 @@ const AdminBannersPage = ({ banners, bannersMobile }: AdminBannersPageProps) => 
             };
             const novelsRes = await getNovelsByDataHandle(dataNovel as any);
 
-            if (novelsRes?.data?.success) {
-                setResultListNovelsSearch(novelsRes?.data.novels);
+            if (novelsRes?.success) {
+                setResultListNovelsSearch(novelsRes?.novels);
             }
             else {
                 setResultListNovelsSearch([])
@@ -290,15 +294,12 @@ const AdminBannersPage = ({ banners, bannersMobile }: AdminBannersPageProps) => 
                                                                         className="transition-all flex cursor-pointer hover:bg-gray-100 p-3"
                                                                     >
                                                                         <div className="relative w-10 h-16 overflow-hidden shadow">
-                                                                            <Image
+                                                                            <BlurImage
                                                                                 width={85}
                                                                                 height={125}
                                                                                 alt="Image-novel"
                                                                                 className="object-cover h-full w-full"
-                                                                                src={
-                                                                                    novel.thumbnailUrl ||
-                                                                                    "/images/novel-default.png"
-                                                                                }
+                                                                                src={novel.thumbnailUrl}
                                                                             />
                                                                         </div>
                                                                         <div className="ml-3">
@@ -326,6 +327,7 @@ const AdminBannersPage = ({ banners, bannersMobile }: AdminBannersPageProps) => 
                                             { label: "Banners máy tính", text: "Banners máy tính", value: "0" },
                                             { label: "Banner điện thoại", text: "Banner điện thoại",  value: "1" }
                                         ]}
+                                        instanceId={useId()}
                                         styles={{
                                             control: (provided, state) => ({
                                                 ...provided,

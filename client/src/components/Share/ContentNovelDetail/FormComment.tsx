@@ -1,50 +1,152 @@
 import Image from "next/image";
-import { Fragment, useEffect, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
 import { CommentType } from "@/types";
-import { EditorState, convertToRaw } from "draft-js";
+// import { EditorState, convertToRaw } from "draft-js";
+import CommentItem from "./CommentItem";
 import { iconSend } from "../../../../public/icons";
 import { addCommentHandle, destroyCommentHandle, getCommentsHandle } from "@/services/comment.services";
-import CommentItem from "./CommentItem";
 import { getAccessToken } from "@/services/cookies.servies";
 import { CommentSliceType, addCommentsRDHandle, setCommentsRDHandle } from "@/redux/commentSlice";
 import { LoadingForm } from "@/components/Layout/LoadingLayout";
-import { EditorStyle } from "@/components/Layout/EditorStyle";
+// import { EditorStyle } from "@/components/Layout/EditorStyle";
 import { dataFakeBannersMobile } from "@/components/partials/BannersIntro";
+import InputText from "@/components/features/InputText";
 
 
 interface FormCommentProps {
     tab?: number;
     novelId?: string;
+    chapterId?: string
 }
 
-const FormComment = ({ tab, novelId }: FormCommentProps) => {
+const FormComment = ({ tab, novelId, chapterId }: FormCommentProps) => {
     const dispatch = useDispatch();
     const { currentUser, isAuthenticated } = useSelector((state: any) => state.user);
+    
     const { isLoading, comments } : CommentSliceType = useSelector(
         (state: any) => state.comment
     );
 
-    // ---
-
-
-
-    // ---
-    // const socket = useRef<Socket>(io("http://localhost:4000"));
     const [hasLoadedData, setHasLoadedData] = useState<boolean>(false);
+    const [commentText, setCommentText] = useState("");
+    const [sender, setSender] = useState({
+        senderId: currentUser?.userId || '',
+        senderUsername: currentUser?.username || '',
+        senderName: currentUser?.name || '',
+    })
+    const [isFormSend, setIsFormSend] = useState(false);
 
     const getListComments = async () => {
+        try {
+            const commentsResponse = await getCommentsHandle(novelId);
 
-        const dataComments = { novelId }
-        const commentsResponse = await getCommentsHandle(dataComments as CommentType);
+            if (commentsResponse?.success) {
+                dispatch(setCommentsRDHandle(Array.from((commentsResponse.comments))))
+            }
 
-        if (commentsResponse?.data.success) {
-            dispatch(setCommentsRDHandle(Array.from((commentsResponse.data.comments))))
+            setHasLoadedData(true);
+
+        } catch (error) {
+            
         }
-        setHasLoadedData(true);
     };
 
+    // Handle Send Comment
+    const handleSendComment = async () => {
+        const token = getAccessToken();
+        if(!isAuthenticated || !token) {
+            alert("Vui lòng đăng nhập để bình luận.")
+            return;
+        }
+        if(commentText.length < 17) {
+            alert("Nội dung bình luận quá ngắn, tối thiểu 10 ký tự!");
+            return;
+        }
+        if(sender?.senderName.length < 10) {
+            return;
+        }
+        
+        try {
+            const dataReq = {
+                token,
+                novelId,
+                chapterId,
+                commentText,
+                senderName: sender.senderName
+            }
+            const commentRes = await addCommentHandle(dataReq);
+            if (commentRes?.success) {
+
+                setCommentText('');
+
+                const newComment = {
+                    commentId: commentRes.commentId,
+                    commentText: commentText,
+
+                    parentId: null,
+                    senderId: currentUser.userId,
+                    senderName: sender.senderName,
+                    senderUsername: currentUser.username,
+                    senderRank: currentUser.rank || 0,
+
+                    novelId: novelId,
+                    chapterId: chapterId || null,
+                    
+                    createdAt: String(new Date()),
+                    updatedAt: String(new Date()),
+                }
+
+                dispatch(addCommentsRDHandle(newComment));
+            }
+
+            
+        } catch (error) {
+            // console.log(error);
+        }
+    };    
+
+    // Handle Destroy Comment
+    const handleDestroyComment = async (senderId: string, commentId: string) => {
+
+        console.log(currentUser?.userId, senderId)
+        if(currentUser?.userId !== senderId && currentUser.userId != 1) {
+            console.log(1)
+            return;
+        }
+        
+        try {
+            const token = getAccessToken();
+            if (!token) {
+                return;
+            }
+            
+            const reviewResponse = await destroyCommentHandle(commentId, token);
+            if(reviewResponse?.success) {
+                const filterComments = comments.filter((comment) => comment?.commentId !== commentId);
+                dispatch(setCommentsRDHandle(filterComments))
+            }
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    // Handle Set Name Sender
+    const handleOnchangeSender = (e : ChangeEvent<HTMLInputElement>) => {
+        setSender({
+            ...sender,
+            [e.target.name]: e.target.value
+        })
+    }
+
+    // Handle Set Comment Text
+    const handleOnchangeCommentText = (value: string) => {
+        setCommentText(value)
+    }
+
+    // Call Function "getListComments" and set state "setHasLoadedData"
     useEffect(() => {
         if (tab === 3 && !hasLoadedData) {
             getListComments();
@@ -52,104 +154,68 @@ const FormComment = ({ tab, novelId }: FormCommentProps) => {
         }
     }, [tab, hasLoadedData]);
 
-    const [commentText, setCommentText] = useState(() => EditorState.createEmpty());
 
-    const handleSendComment = async () => {
-        if (!isAuthenticated) {
-            console.log("Bạn chưa đăng nhập");
-            return;
-        }
-        if (!commentText) {
-            console.log("Data not found");
-            return;
-        }
+    // console.log({
+    //     ...sender,
+    //     commentText,
+    //     novelId: novelId || null,
+    //     chapterId: chapterId || null
+    // })
 
-        try {
-            const token = getAccessToken();
-            if (!token) {
-                return;
-            }
-
-            const data = {
-                token,
-                novelId,
-                commentText: JSON.stringify(convertToRaw(commentText.getCurrentContent())),
-            };
-            
-            
-            const commentResponse = await addCommentHandle(data as CommentType & { token: string });
-            if (commentResponse?.success) {
-                const newComment = {
-                    commentId: commentResponse.commentId,
-                    commentText: String(data.commentText),
-                    countReplyComment: null,
-                    novelId: String(novelId),
-                    chapterId: null,
-                    parentId: null,
-                    rank: currentUser.rank,
-                    userId: currentUser.userId,
-                    name: currentUser?.name,
-                    createdAt: String(new Date()),
-                    updatedAt: String(new Date()),
-                }
-                dispatch(addCommentsRDHandle(newComment));
-                // socket.current.emit("send_message", newComment);
-            }
-
-            setCommentText(EditorState.createEmpty());
-        } catch (error) {
-            setCommentText(EditorState.createEmpty());
-            console.log(error);
-        }
-    };
-
-    // ---
-    
-
-    const handleDestroyComment = async (userId: string, commentId: string) => {
-        if(currentUser?.userId !== userId) {
-            return;
-        }
-        try {
-            const token = getAccessToken();
-            if (!token) {
-                return;
-            }
-            const dataComment = {
-                token,
-                commentId
-            }
-            const reviewResponse = await destroyCommentHandle(dataComment as CommentType & { token: string });
-            if(reviewResponse?.data.success) {
-                const filterComments = comments.filter((comment) => comment?.commentId !== commentId);
-                dispatch(setCommentsRDHandle(filterComments))
-            }
-            console.log(reviewResponse)
-        } catch (error) {
-            console.log(error)
-        }
-    }
 
     return (
         <div className="flex">
             <div className="lg:w-8/12 w-full px-4">
 
-                <div className="flex mb-10">
-                    <div className="flex-1 pr-24 pl-2 py-2 border bg-gray-100 border-opacity-5 relative">
-                        <EditorStyle
+                <div className="relative grid mb-8">
+
+                        {
+                            !isFormSend ? (
+                                <div
+                                    onClick={() => setIsFormSend(true)}
+                                    className="px-3 pt-1 p-7 text-sm cursor-text text-gray-500 border rounded-sm"
+                                >
+                                    Mời bạn thảo luận, vui lòng không spam, share link kiếm tiền, thiếu lành mạnh,... để tránh bị khóa tài khoản
+                                </div>
+                            ) : (
+                                <>
+                                    <InputText
+                                        text={commentText}
+                                        isShow={isFormSend}
+                                        handleOnchange={handleOnchangeCommentText}
+                                    />
+                                    <div className="flex mt-3 gap-3">
+                                        <input
+                                            name="senderName"
+                                            className="border rounded w-full px-3 py-1 focus:outline-none focus:border-blue-700"
+                                            value={sender.senderName}
+                                            onChange={handleOnchangeSender}
+                                            placeholder="Họ tên (bắt buộc)"
+                                        />
+                                        <input
+                                            disabled={isAuthenticated}
+                                            className="border rounded w-full px-3 py-1 focus:outline-none focus:border-blue-700"
+                                            value={sender.senderUsername}
+                                        />
+    
+                                        <button
+                                            onClick={handleSendComment}
+                                            className="right-0 text-right py-2 px-4 rounded-sm transition-colors bg-yellow-600 hover:bg-yellow-700"
+                                        >
+                                            <i className="w-6 h-6 fill-white block translate-x-[1px]">
+                                                {iconSend}
+                                            </i>
+                                        </button>
+                                    </div>
+                                </>
+                            )
+                        }
+
+                        {/* <EditorStyle
                             name="comment"
                             text={commentText}
                             handleOnchange={setCommentText}
-                        />
-                        <button
-                            onClick={handleSendComment}
-                            className="py-2 px-4 rounded-sm transition-all bg-yellow-600 hover:bg-yellow-700 absolute bottom-4 right-4"
-                        >
-                            <i className="w-6 h-6 fill-white block translate-x-[1px]">
-                                {iconSend}
-                            </i>
-                        </button>
-                    </div>
+                        /> */}
                 </div>
 
                 <ul className="transition-all ease-linear">

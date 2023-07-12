@@ -1,9 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { CommentType } from "@/types";
+import { CommentItemType, CommentType } from "@/types";
 
 export interface CommentSliceType {
     isLoading: boolean
-    comments: CommentType[]
+    comments: CommentItemType[]
 }
 
 const initialState: CommentSliceType = {

@@ -1,6 +1,5 @@
 import { useState } from "react";
 
-import EmojiPicker from "./EmojiPicker";
 import { ContentState, Editor, EditorState, convertToRaw } from "draft-js";
 
 
@@ -30,9 +29,7 @@ const CommentInput = () => {
 
     return (
         <>
-            <div className="w-full">
-                <EmojiPicker />
-                
+            <div className="w-full">                
                 
                 <div className="border p-3">
                     <Editor editorState={editorState} onChange={onEditorStateChange} />

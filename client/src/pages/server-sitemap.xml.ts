@@ -1,6 +1,7 @@
 // pages/sitemap.xml.js
 
 import { getAllNovelForSeoHandle } from "@/services/novels.services";
+import { GetServerSideProps, GetServerSidePropsContext } from "next";
 
 const URL = "https://hobanovel.online";
  
@@ -53,7 +54,7 @@ function generateSiteMap(novels : any) {
     );
 }
 
-export async function getServerSideProps({ res } : any) {
+export const getServerSideProps : GetServerSideProps = async ({ res } : GetServerSidePropsContext) => {
     const dataRes = await getAllNovelForSeoHandle();
 
     // Generate the XML sitemap with the blog data

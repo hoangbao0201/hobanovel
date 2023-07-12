@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 
 import moment from "moment";
 import "moment/locale/vi";
@@ -16,7 +16,7 @@ import {
 import { placeholderBlurhash } from "@/constants";
 import BlurImage from "@/components/Layout/BlurImage";
 import { EditorStyle } from "@/components/Layout/EditorStyle";
-import { CommentType, UserType } from "@/types";
+import { CommentItemType, UserType } from "@/types";
 import {
     iconArrowTurnUp,
     iconComment,
@@ -32,67 +32,83 @@ import {
     getReplyCommentsHandle,
 } from "@/services/comment.services";
 import TextRank from "@/components/Layout/TextRank";
+import InputText from "@/components/features/InputText";
 
 interface CommentItemProps {
     novelId?: string;
     user?: UserType;
-    comment: CommentType;
+    comment: CommentItemType;
     handleDeleteComment: any;
 }
 
 const CommentItem = ({ comment, user, handleDeleteComment }: CommentItemProps) => {
     const [isFormSend, setIsFormSend] = useState<boolean>(false);
     const [isReplyComment, setIsReplyComment] = useState<boolean>(false);
-    const [replyComments, setReplyComments] = useState<CommentType[]>([]);
-    const [commentText, setCommentText] = useState(() => EditorState.createEmpty());
-
+    const [replyComments, setReplyComments] = useState<CommentItemType[]>([]);
+    const [commentText, setCommentText] = useState('');
+    const [receiver, setReceiver] = useState<{
+        receiverId: string
+        receiverUsername: string
+        receiverName: string
+    }>({
+        receiverId: "",
+        receiverUsername: "",
+        receiverName: ""
+    })
+    const [sender, setSender] = useState({
+        senderId: user?.userId || '',
+        senderUsername: user?.username || '',
+        senderName: user?.name || '',
+    })
     // ---
     
-
     // ---
 
-    const handleAddReplyComment = async () => {
+    // Handle Send Reply Comment
+    const handleSendReplyComment = async () => {
         const token = getAccessToken();
-        if (!token) {
-            console.log("Bạn chưa đăng nhập");
+        if (!user?.userId || !token) {
             return;
         }
-        if (!commentText) {
-            console.log("Data not found");
-            return;
-        }
-        try {
-            const dataReplyComment = {
-                token,
-                commentId: comment.commentId,
-                commentText: JSON.stringify(convertToRaw(commentText.getCurrentContent())),
-            };
-            const commentResponse = await addReplyCommentHandle(
-                dataReplyComment as CommentType & { token: string }
-            );
 
-            // console.log(commentResponse);
+        try {
+            const dataReplyCommentReq = {
+                parentId: comment.commentId,
+                senderName: sender.senderName,
+                receiverId: receiver.receiverId,
+                commentText: commentText,
+                token: token,
+            };
+            const commentResponse = await addReplyCommentHandle(dataReplyCommentReq);
 
             if (commentResponse?.success) {
-                setCommentText(() => EditorState.createEmpty());
-                const dataReplyCommentNew: any = {
-                    receiverName: comment.name,
-                    receiverId: comment.userId,
-                    senderName: user?.name ?? "",
-                    senderId: user?.userId ?? "",
-                    senderRank: user?.rank ?? 0,
-                    commentText: dataReplyComment.commentText,
-                    commentId: commentResponse?.commentId,
+                setCommentText('');
+
+                const dataReplyCommentNew: CommentItemType = {
+                    commentId: commentResponse.commentId,
+                    commentText: dataReplyCommentReq.commentText,
+
+                    senderId: user.userId,
+                    senderName: sender.senderName,
+                    senderUsername: user.username,
+                    senderRank: user.rank || 0,
+
+                    ...receiver,
+                    
+                    avatarUrl: user.avatarUrl || null,
+                    avatarPublicId: user.avatarPublicId || null,
+
                     createdAt: new Date(),
                     updatedAt: new Date(),
                 };
                 setReplyComments([...replyComments, dataReplyCommentNew]);
             }
         } catch (error) {
-            console.log(error);
+            // console.log(error);
         }
     };
 
+    // Handle Get Reply Comments
     const handleGetReplyComments = async () => {
         setIsReplyComment(true);
         setIsFormSend(true);
@@ -101,19 +117,18 @@ const CommentItem = ({ comment, user, handleDeleteComment }: CommentItemProps) =
                 page: 1,
                 commentId: comment.commentId,
             };
-            const commentsResponse = await getReplyCommentsHandle(
-                dataComments as CommentType & { page: number }
-            );
-            // console.log(commentsResponse)
-            if (commentsResponse?.data.success) {
-                setReplyComments([...commentsResponse?.data?.comments]);
+            const commentsResponse = await getReplyCommentsHandle(dataComments.commentId, dataComments.page);
+
+            if (commentsResponse?.success) {
+                setReplyComments([...commentsResponse?.comments]);
             }
         } catch (error) {
-            console.log(error);
+            // console.log(error);
         }
     };
 
-    const handleDestroyReplyComment = async (commentId: string | undefined) => {
+    // Handle Delete Reply Comment
+    const handleDestroyReplyComment = async (commentId: string) => {
         if (!user?.userId || !comment.commentId) {
             return;
         }
@@ -126,24 +141,58 @@ const CommentItem = ({ comment, user, handleDeleteComment }: CommentItemProps) =
                 commentId: commentId,
                 token,
             };
-            const commentResponse = await destroyReplyCommentHandle(
-                dataReplyComment as CommentType & { token: string }
-            );
-            if (commentResponse?.data.success) {
+            const commentResponse = await destroyReplyCommentHandle(dataReplyComment.commentId, token);
+            if (commentResponse?.success) {
                 const filterReplyComments = replyComments.filter(
                     (replyComment) => replyComment?.commentId !== commentId
                 );
                 setReplyComments(filterReplyComments);
             }
         } catch (error) {
-            console.log(error);
+            // console.log(error);
         }
     };
+
+    // Handle Set Is Show Form Reply Comment
+    const handleSetIsForm = (rc: { rcId: string, rcUsername: string, rcName: string }) => {
+        if(receiver.receiverId === rc.rcId) {
+            setIsFormSend(false);
+            setReceiver({
+                receiverId: "",
+                receiverUsername: "",
+                receiverName: ""
+            })
+        }
+        else {
+            setIsFormSend(true)
+            setReceiver({
+                receiverId: rc.rcId,
+                receiverUsername: rc.rcUsername,
+                receiverName: rc.rcName
+            })
+        }
+        // setIsFormSend((value) => !value);
+    }
+
+    // Handle Set Name Sender
+    const handleOnchangeSender = (e : ChangeEvent<HTMLInputElement>) => {
+        setSender({
+            ...sender,
+            [e.target.name]: e.target.value
+        })
+    }
+
+    // Handle Set Comment Text
+    const handleOnchangeCommentText = (value: string) => {
+        setCommentText(value)
+    }
+
+    // console.log(receiver)
 
     return (
         <div className="flex mb-4">
             <Link
-                href={`/user/1`}
+                href={`/user/${comment.senderUsername}`}
                 className="w-10 h-10 mt-2 rounded-full overflow-hidden shadow align-middle inline-block"
             >
                 <BlurImage
@@ -171,18 +220,18 @@ const CommentItem = ({ comment, user, handleDeleteComment }: CommentItemProps) =
                 <div className="">
                     <div className="bg-gray-100 border p-2">
                         <div className="flex flex-wrap gap-2 items-center mb-3">
-                            <TextRank className="" rank={comment.rank || 0} text={comment.name}/>
-                            <TextRank className="" rank={comment.rank || 0}/>
+                            <TextRank className="" rank={comment.senderRank || 0} text={comment.senderName}/>
+                            <TextRank className="" rank={comment.senderRank || 0}/>
                         </div>
-                        <div className="text-gray-600 text-base">
-                            {convertFromRaw(
-                                JSON.parse(comment?.commentText || "")
-                            ).getPlainText()}
-                        </div>
+                        <div className="text-gray-600 text-base" dangerouslySetInnerHTML={{__html: comment.commentText}}></div>
                     </div>
                     <div className="flex text-sm gap-2 text-[#3f94d5] fill-[#3f94d5] font-semibold">
                         <button
-                            onClick={() => setIsFormSend((value) => !value)}
+                            onClick={() => handleSetIsForm({
+                                rcId: comment.senderId,
+                                rcUsername: comment.senderUsername,
+                                rcName: comment.senderName
+                            })}
                             className="flex items-center gap-1"
                         >
                             <i className="w-3 h-3 block">{iconComment}</i>
@@ -200,15 +249,19 @@ const CommentItem = ({ comment, user, handleDeleteComment }: CommentItemProps) =
                             className="p-0"
                             content={
                                 <div className="-mx-[9px]">
-                                    <div
-                                        onClick={() =>
-                                            handleDeleteComment(
-                                                comment?.userId,
-                                                comment?.commentId
-                                            )
-                                        }
-                                        className="py-2 px-3 cursor-pointer hover:bg-gray-300"
-                                    >Xóa</div>
+                                    {
+                                        ( (comment?.senderId == user?.userId) || (user?.userId == "1") ) && (
+                                            <div
+                                                onClick={() =>
+                                                    handleDeleteComment(
+                                                        comment?.senderId,
+                                                        comment?.commentId
+                                                    )
+                                                }
+                                                className="py-2 px-3 cursor-pointer hover:bg-gray-300"
+                                            >Xóa</div>
+                                        )
+                                    }
                                     <div
                                         className="py-2 px-3 cursor-pointer hover:bg-gray-300"
                                     >Báo cáo vi phạm</div>
@@ -254,7 +307,7 @@ const CommentItem = ({ comment, user, handleDeleteComment }: CommentItemProps) =
                                     >
                                         <div className="flex mb-3">
                                             <Link
-                                                href={`/user/1`}
+                                                href={`/user/${replyComment.senderUsername}`}
                                                 className="w-8 h-8 rounded-full overflow-hidden shadow align-middle inline-block"
                                             >
                                                 <BlurImage
@@ -292,6 +345,8 @@ const CommentItem = ({ comment, user, handleDeleteComment }: CommentItemProps) =
                                                         <div className="flex flex-wrap gap-2 items-center mb-3">
                                                             <TextRank className="" rank={replyComment.senderRank || 0} text={replyComment.senderName}/>
                                                             <TextRank className="" rank={replyComment.senderRank || 0}/>
+
+                                                            {/* <span>{replyComment.senderId} - {user?.userId}</span> */}
                                                         </div>
                                                         <div className="flex flex-wrap text-gray-600 text-base">
                                                             <Link
@@ -304,17 +359,16 @@ const CommentItem = ({ comment, user, handleDeleteComment }: CommentItemProps) =
                                                                     }
                                                                 </h2>
                                                             </Link>
-                                                            {convertFromRaw(
-                                                                JSON.parse(
-                                                                    replyComment?.commentText ||
-                                                                        ""
-                                                                )
-                                                            ).getPlainText()}
+                                                            <div className="" dangerouslySetInnerHTML={{__html: replyComment.commentText}}></div>
                                                         </div>
                                                     </div>
                                                     <div className="flex text-sm gap-2 text-[#3f94d5] fill-[#3f94d5] font-semibold">
                                                         <button
-                                                            onClick={() => setIsFormSend((value) => !value)}
+                                                            onClick={() =>handleSetIsForm({
+                                                                rcId: replyComment.senderId,
+                                                                rcUsername: replyComment.senderUsername,
+                                                                rcName: replyComment.senderName
+                                                            })}
                                                             className="flex items-center gap-1"
                                                         >
                                                             <i className="w-3 h-3 block">{iconComment}</i>
@@ -332,14 +386,18 @@ const CommentItem = ({ comment, user, handleDeleteComment }: CommentItemProps) =
                                                             className="p-0"
                                                             content={
                                                                 <div className="-mx-[9px]">
-                                                                    <div
-                                                                        onClick={() =>
-                                                                            handleDestroyReplyComment(
-                                                                                replyComment?.commentId
-                                                                            )
-                                                                        }
-                                                                        className="py-2 px-3 cursor-pointer hover:bg-gray-300"
-                                                                    >Xóa</div>
+                                                                    {
+                                                                        ( (replyComment.senderId == user?.userId) || (user?.username == "admin") ) && (
+                                                                            <div
+                                                                                onClick={() =>
+                                                                                    handleDestroyReplyComment(
+                                                                                        replyComment?.commentId
+                                                                                    )
+                                                                                }
+                                                                                className="py-2 px-3 cursor-pointer hover:bg-gray-300"
+                                                                            >Xóa</div>
+                                                                        )
+                                                                    }
                                                                     <div
                                                                         className="py-2 px-3 cursor-pointer hover:bg-gray-300"
                                                                     >Báo cáo vi phạm</div>
@@ -356,7 +414,7 @@ const CommentItem = ({ comment, user, handleDeleteComment }: CommentItemProps) =
                                                                 {iconOclock}
                                                             </i>
                                                             <span className="whitespace-nowrap">
-                                                                {moment(replyComment.createdAt).fromNow()}
+                                                                {moment(new Date(replyComment.createdAt)).fromNow()}
                                                             </span>
                                                         </div>
                                                     </div>
@@ -370,28 +428,29 @@ const CommentItem = ({ comment, user, handleDeleteComment }: CommentItemProps) =
                     )}
 
                     {isFormSend && (
-                        <div className="flex">
-                            <Link
-                                href={`/user/1`}
-                                className="w-8 h-8 mt-2 rounded-full overflow-hidden shadow align-middle inline-block"
-                            >
-                                <Image
-                                    width={500}
-                                    height={500}
-                                    alt="image-demo"
-                                    className="object-cover w-8 h-8"
-                                    src={`${user?.avatarUrl ?? "/images/50.jpg"}`}
+                        <div className="mt-7">
+                            <InputText
+                                text={commentText}
+                                isShow={isFormSend}
+                                handleOnchange={handleOnchangeCommentText}
+                            />
+                            <div className="flex mt-3 gap-3">
+                                <input
+                                    name="senderName"
+                                    className="border rounded w-full px-3 py-1 focus:outline-none focus:border-blue-700"
+                                    value={sender.senderName}
+                                    onChange={handleOnchangeSender}
+                                    placeholder="Họ tên (bắt buộc)"
                                 />
-                            </Link>
-                            <div className="flex-1 ml-3 py-2 pl-2 pr-24 border bg-gray-100 border-opacity-5 relative">
-                                <EditorStyle
-                                    name="comment"
-                                    text={commentText}
-                                    handleOnchange={setCommentText}
+                                <input
+                                    disabled={!!user?.username}
+                                    className="border rounded w-full px-3 py-1 focus:outline-none focus:border-blue-700"
+                                    value={sender.senderUsername}
                                 />
+
                                 <button
-                                    onClick={handleAddReplyComment}
-                                    className="py-2 px-4 rounded-sm transition-all bg-yellow-600 hover:bg-yellow-700 absolute bottom-4 right-4"
+                                    onClick={handleSendReplyComment}
+                                    className="right-0 text-right py-2 px-4 rounded-sm transition-colors bg-yellow-600 hover:bg-yellow-700"
                                 >
                                     <i className="w-6 h-6 fill-white block translate-x-[1px]">
                                         {iconSend}

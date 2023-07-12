@@ -136,7 +136,7 @@ const BannersIntro = ({}: BannersIntroProps) => {
         setLoading(false);
     };
 
-    console.log(banners)
+    // console.log(banners)
 
     return (
         // style={{ transition: "height 0.2s ease" }}

@@ -17,33 +17,36 @@ export interface BannersType extends NovelType {
     updatedAt: Date
 }
 
-export interface CommentItemWith {
-    countReplyComment?: string | null
-    receiverName?: string
-    receiverId?: string
-    senderName?: string
-    senderId?: string
 
-    name?: string
-    rank?: number
-    senderRank?: number
-    username?: string
-    avatarUrl?: string
-    avatarPublicId?: string
-}
-
-export interface CommentType extends CommentItemWith {
+// extends CommentItemWith {
+export interface CommentType {
     commentId: string
     commentText: string
     createdAt: Date
     updatedAt: Date
 
     parentId?: string | null | undefined
-    userId: string
-    chapterId?: string | null | undefined
-    novelId?: string | null | undefined
+    senderId: string
+    receiverId?: string
+
+    novelId?: string
+    chapterId?: string
 }
 
+export interface CommentItemType extends CommentType {
+    countReplyComment?: number
+
+    senderUsername: string
+    senderName: string
+    senderRank: number
+
+    receiverUsername?: string
+    receiverName?: string
+    receiverRank?: string
+
+    avatarUrl: string | null
+    avatarPublicId: string | null
+}
 // export interface ReviewItemWith extends NovelType {
 //     countReplyReview?: string | null
 //     receiverName?: string

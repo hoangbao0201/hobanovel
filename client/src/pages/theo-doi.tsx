@@ -16,6 +16,7 @@ import PageTitle from "@/components/Share/PageTitle";
 import ItemNovel from "@/components/Layout/ItemNovel";
 import ItemNovelLazy from "@/components/Layout/ItemNovelLazy";
 import BlurImage from "@/components/Layout/BlurImage";
+import Breadcrumb from "@/components/Share/Breadcrumb";
 
 
 interface NovelFollowPageProps {
@@ -54,6 +55,12 @@ const NovelFollowPage = ({ page }: NovelFollowPageProps) => {
         <>
             <Head title={`Truyện đang theo dõi - HobaNovel chính thức - HobaNovel`} />
             <WrapperLayout className="bg-[#f9f9f9] my-5">
+
+                <Breadcrumb 
+                    path={[
+                        { title: `Theo dõi`, url: `/theo-doi` },
+                    ]}
+                />
                 
                 <ClientOnly>
                     <div className="grid">

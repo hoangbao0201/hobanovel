@@ -66,7 +66,7 @@ const FormReviews = ({ tab, novelId }: FormReviewsProps) => {
         }
         const reviewsResponse = await getReviewsByNovelHandle(`${novelId}?page=1`);
         if (reviewsResponse?.data.success) {
-            console.log(reviewsResponse.data.reviews);
+            // console.log(reviewsResponse.data.reviews);
             setBodyContent(reviewsResponse.data.reviews);
         }
         setHasLoadedData(true);

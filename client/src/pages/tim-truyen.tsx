@@ -15,6 +15,7 @@ import { iconAngleDouble, iconClose } from "../../public/icons";
 import { advancedSearchNovelHandle } from "@/services/novels.services";
 import { PaginationLayout } from "@/components/Layout/PaginationLayout";
 import { AdsenseForm } from "@/components/Layout/AdsLayout/AdSenseForm";
+import { REVALIDATE_TIME } from "@/constants";
 
 
 // Data Default
@@ -606,7 +607,17 @@ const SearchNovel = ({ novels, countPage, currentPage, isBox, query }: SearchNov
 export default SearchNovel;
 
 export const getServerSideProps : GetServerSideProps = async (context: GetServerSidePropsContext) => {
-    const { query } = context;
+    const { query, res } = context;
+
+    // console.log(query)
+
+    // caching
+    res.setHeader(
+        'Cache-Control',
+        `public, s-maxage=${REVALIDATE_TIME}, stale-while-revalidate=${
+            REVALIDATE_TIME * 6
+        }`,
+    );
 
     const {
         page = 1,

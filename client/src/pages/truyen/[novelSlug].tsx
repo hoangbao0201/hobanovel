@@ -29,6 +29,7 @@ import ClientOnly from "@/components/Share/ClientOnly";
 import LazyLoad from "react-lazy-load";
 
 import ContentNovelDetail from "@/components/Share/ContentNovelDetail";
+import Breadcrumb from "@/components/Share/Breadcrumb";
 // import FormIntroduce from "@/components/Share/ContentNovelDetail/FormIntroduce";
 // import FormReviews from "@/components/Share/ContentNovelDetail/FormReviews";
 // import FormListChapters from "@/components/Share/ContentNovelDetail/FormListChapters";
@@ -180,6 +181,13 @@ const NovelDetailPage = ({ novel, tab } : NovelDetailPageProps) => {
 
             <WrapperLayout className="pt-5 max-lg:max-w-3xl">
                 <div className="grid">
+
+                    <Breadcrumb 
+                        path={[
+                            { title: 'Truyện', url: '' },
+                            { title: `${novel?.title}`, url: `/truyen/${novel?.slug}` },
+                        ]}
+                    />
 
                     <ContentNovelDetail
                         novel={novel}

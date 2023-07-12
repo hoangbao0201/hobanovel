@@ -5,23 +5,23 @@ import { apiUrl } from "@/constants";
 export const addBannersHandle = async (data : Partial<Pick<BannersType, 'novelId' | 'isMobile'>> & { token: string, formData: FormData }) => {
     try {
         const { novelId, isMobile = false, token, formData } = data;
-        if(!token) {
-            return null;
-        }
-    
+
         const uploadBannerResponse = await axios.post(`${apiUrl}/api/banners/add/${novelId}?isMobile=${isMobile ? '1' : '0'}`, formData, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
         })
     
-        if(uploadBannerResponse.data.success) {
-            return uploadBannerResponse
-        }
-        
-        return null;
+        return uploadBannerResponse.data;
     } catch (error) {
-        return error;
+        if(axios.isAxiosError(error) && error.response?.data) {
+            return error.response.data;
+        } else {
+            return {
+                success: false,
+                message: (error as Error).message
+            };
+        }
     }
 }
 export const getSingleBannersHandle = async () => {

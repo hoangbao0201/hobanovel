@@ -23,10 +23,12 @@ export interface CommentType {
     updatedAt: Date
 
     parentId: string
-    userId: string
-    chapterId: string
-    novelId: string
+    senderId: string
+    senderName: string
     receiverId: string
+
+    novelId: string
+    chapterId: string
 }
 
 export interface ReviewType {
