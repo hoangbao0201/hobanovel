@@ -36,7 +36,7 @@ const TextRank = (props : TextRankProps) => {
 
                 ${ props.rank == 0 
                     ? "text-gray-700" 
-                    : "text-transparent" }`,
+                    : "text-black/10" }`,
 
             )}
         >{props.text || LEVEL_VALUE[props.rank].value }</TextStyle>

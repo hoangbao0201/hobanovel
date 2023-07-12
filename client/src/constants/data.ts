@@ -29,7 +29,7 @@ export const LEVEL_VALUE = [
     { id: 3, value: "Kim Đan" },
     { id: 4, value: "Nguyên Anh" },
     { id: 5, value: "Hóa Thần" },
-    { id: 6, value: "Dung Hư" },
+    { id: 6, value: "Luyện Hư" },
     { id: 7, value: "Sáng Tạo Đạo Giả" },
 ]
 

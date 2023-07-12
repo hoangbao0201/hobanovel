@@ -203,7 +203,7 @@ export const getNovelBySlugHandle = async ({ slug } : NovelType) => {
                 
                 (SELECT COUNT(IF(chapters.createdAt >= DATE_SUB(NOW(), INTERVAL 1 WEEK), 1, NULL)) FROM chapters chapters WHERE chapters.novelId = novels.novelId) AS newChapterCount,
                 
-                (SELECT COALESCE(reviews.mediumScore, 5) FROM reviews WHERE reviews.novelId = novels.novelId AND reviews.parentId IS NULL) AS mediumScore,
+                (SELECT COALESCE(AVG(reviews.mediumScore), 5) FROM reviews WHERE reviews.novelId = novels.novelId AND reviews.parentId IS NULL) AS mediumScore,
                 
                 (SELECT COALESCE(history_reading.chapterRead, 1) FROM history_reading WHERE history_reading.novelId = novels.novelId AND history_reading.userId = 1) AS chapterRead,
                 

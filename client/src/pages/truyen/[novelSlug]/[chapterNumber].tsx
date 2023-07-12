@@ -13,6 +13,7 @@ import {
     increaseViewChapterHandle,
 } from "@/services/chapter.services";
 import {
+    iconAngleDouble,
     iconArrowTop,
     iconAuthor,
     iconBook,
@@ -33,12 +34,10 @@ import { getAccessToken } from "@/services/cookies.servies";
 import { LoadingButton, LoadingForm } from "@/components/Layout/LoadingLayout";
 import { checkFollowNovelHandle, followNovelHandle, unfollowNovelHandle } from "@/services/follow.services";
 import OptionsListChapter from "@/components/Share/ContentChapter/OptionsListChapter";
-import ClientOnly from "@/components/Share/ClientOnly";
 import Head from "@/components/Share/Head";
 import { REVALIDATE_TIME_DETAILS_PAGE } from "@/constants";
-import CommentItem from "@/components/Share/ContentNovelDetail/CommentItem";
-import { addCommentHandle, getCommentsHandle } from "@/services/comment.services";
 import Breadcrumb from "@/components/Share/Breadcrumb";
+import BlurImage from "@/components/Layout/BlurImage";
 
 interface Params extends ParsedUrlQuery {
     slug: string;
@@ -394,6 +393,18 @@ const ChapterDetailPage = ({ chapter }: ChapterDetailPageProps) => {
                                         </span>
                                     </li>
                                 </ul>
+
+                                <div className="flex justify-center my-5">
+                                    <div className="max-w-[500px] border border-gray-200">
+                                        <BlurImage
+                                            alt="image head"
+                                            width={500}
+                                            height={500}
+                                            className="w-full h-full object-cover block"
+                                            src="https://res.cloudinary.com/djrbd6ftt/image/upload/v1689146231/hobanovel/admin/image-head_x5c1um.jpg"
+                                        />
+                                    </div>
+                                </div>
             
                                 <div
                                     className="sm:text-2xl px-6 text-xl leading-relaxed overflow-hidden"
@@ -401,6 +412,27 @@ const ChapterDetailPage = ({ chapter }: ChapterDetailPageProps) => {
                                         __html: chapter?.content || "Lỗi hiển thị",
                                     }}
                                 />
+
+
+                                
+                               {/* <div className="bg-gray-100 my-10 py-10 ">
+                                    <div className="flex items-center justify-center gap-4 px-6 text-2xl py-10  font-bold uppercase">
+                                        <TextRank rank={0} />
+                                        <i className="w-4 h-4 block rotate-90">{iconAngleDouble}</i>
+                                        <TextRank rank={1} />
+                                        <i className="w-4 h-4 block rotate-90">{iconAngleDouble}</i>
+                                        <TextRank rank={2} />
+                                        <i className="w-4 h-4 block rotate-90">{iconAngleDouble}</i>
+                                        <TextRank rank={3} />
+                                        <i className="w-4 h-4 block rotate-90">{iconAngleDouble}</i>
+                                        <TextRank rank={4} />
+                                        <i className="w-4 h-4 block rotate-90">{iconAngleDouble}</i>
+                                        <TextRank rank={5} />
+                                        <i className="w-4 h-4 block rotate-90">{iconAngleDouble}</i>
+                                        <TextRank rank={6} />
+                                    </div>
+                                    <div className="flex justify-center"><TextRank rank={7} /></div>
+                               </div> */}
             
                                 {/* Pagination */}
                                 <ul className="flex px-4 justify-between mt-8 mb-5">
@@ -430,6 +462,18 @@ const ChapterDetailPage = ({ chapter }: ChapterDetailPageProps) => {
                                         </Link>
                                     </li>
                                 </ul>
+
+                                <div className="flex justify-center">
+                                    <div className="w-full">
+                                        <BlurImage
+                                            alt="image head"
+                                            width={1200}
+                                            height={1200}
+                                            className="w-full h-full object-cover block"
+                                            src="https://res.cloudinary.com/djrbd6ftt/image/upload/v1689167556/hobanovel/admin/image-footer-01_rvlidd.jpg"
+                                        />
+                                    </div>
+                                </div>
                             </div>
                         )
                     }
