@@ -12,6 +12,7 @@ function generateSiteMap(novels : any) {
             <urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9">
                 <!-- Add the static URLs manually -->
 
+<<<<<<< HEAD
             <url>
                 <loc>${URL}</loc>
                 <lastmod>${new Date()}</lastmod>
@@ -25,6 +26,8 @@ function generateSiteMap(novels : any) {
                 <priority>1</priority>
             </url>
 
+=======
+>>>>>>> 966bb17a9562e52c0f56760962a0d08359057f32
             ${novels.map((novel : any) => {
                 return (
                     `
@@ -44,11 +47,9 @@ function generateSiteMap(novels : any) {
 export const getServerSideProps : GetServerSideProps = async ({ res } : GetServerSidePropsContext) => {
     const dataRes = await getAllNovelForSeoHandle();
 
-    // Generate the XML sitemap with the blog data
     const sitemap = generateSiteMap(dataRes);
 
     res.setHeader("Content-Type", "text/xml");
-    // Send the XML to the browser
     res.write(sitemap);
     res.end();
 
