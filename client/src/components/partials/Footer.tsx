@@ -15,24 +15,9 @@ const Footer = () => {
                     </h1>
 
                     <ul className="gap-x-6 text-base mt-3 flex flex-wrap justify-center">
-                        <li>
-                            <Link href="/">
-                                Điều khoản dịch vụ
-                            </Link>
-                        </li>
-                        <li>
+                        <li className="border py-2 px-3 rounded-md bg-gray-300 border-gray-700">
                             <Link href="/chinh-sach-bao-mat">
                                 Chính sách bảo mật
-                            </Link>
-                        </li>
-                        <li>
-                            <Link href="/">
-                                Về bản quyền
-                            </Link>
-                        </li>
-                        <li>
-                            <Link href="/">
-                                Hướng dẫn sử dụng
                             </Link>
                         </li>
                     </ul>

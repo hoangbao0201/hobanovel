@@ -64,7 +64,8 @@ const FormComment = ({ tab, novelId, chapterId }: FormCommentProps) => {
             alert("Nội dung bình luận quá ngắn, tối thiểu 10 ký tự!");
             return;
         }
-        if(sender?.senderName.length < 10) {
+        if(sender?.senderName.length < 5) {
+            alert("Tên tài khoản tối thiểu 5 ký tự!");
             return;
         }
         

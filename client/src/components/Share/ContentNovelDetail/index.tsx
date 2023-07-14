@@ -8,9 +8,10 @@ import BlurImage from "@/components/Layout/BlurImage";
 import { convertViewsCount } from "@/utils/convertViewsCount";
 import { LoadingButton } from "@/components/Layout/LoadingLayout";
 import { ListStarLayout } from "@/components/Layout/ListStarLayout";
-import { iconAuthor, iconClose, iconHeartFull } from "../../../../public/icons";
+import { iconAuthor, iconClose, iconHeartFull, iconTimes } from "../../../../public/icons";
 import { NovelBySlugType } from "@/types";
 import { placeholderBlurhash } from "@/constants";
+import { ItemLazy } from "@/components/Layout/ItemLazy";
 
 interface ContentNovelDetailProps {
     novel: NovelBySlugType;
@@ -137,7 +138,7 @@ const ContentNovelDetail = ({
                     `}
                 >
                     <>
-                        <i className="w-3 block fill-white sm:mr-1">
+                        <i className="w-4 h-4 block fill-white sm:mr-1 mb-[1px]">
                             {isFollow === null ? (
                                 <LoadingButton className="text-white" />
                             ) : isFollow ? (
@@ -146,7 +147,9 @@ const ContentNovelDetail = ({
                                 iconHeartFull
                             )}
                         </i>
-                        <span className="text-white text-sm whitespace-nowrap">Theo dõi</span>
+                        <span className="text-white text-sm whitespace-nowrap">
+                            { isFollow ? "Bỏ theo dõi" : "Theo dõi" }
+                        </span>
                     </>
                 </button>
                 <ul className="lg:text-base text-sm flex flex-wrap gap-2">

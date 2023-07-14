@@ -28,15 +28,20 @@ const modules = {
 interface InputTextProps {
     text: string;
     isShow: boolean;
+    receiver?: {
+        receiverId: string,
+        receiverUsername: string,
+        receiverName: string
+    }
     handleOnchange: (value: string) => void;
 }
 
-const InputText = ({ text, isShow, handleOnchange }: InputTextProps) => {
+const InputText = ({ text, isShow, receiver, handleOnchange }: InputTextProps) => {
     const quillRef: any = useRef(null);
 
     // Handle Add Emoji
     const handleAddEmoji = (emoji: string) => {
-        const content = text + " " + emoji;
+        const content = text + '<p>' + emoji + '</p>';
         handleOnchange(content);
     };
 
@@ -56,6 +61,15 @@ const InputText = ({ text, isShow, handleOnchange }: InputTextProps) => {
                 {/* <button onClick={handleButtonClick} className="border">
                     focus
                 </button> */}
+
+                {
+                    receiver && (
+                        <div className="border-x py-2 px-3 flex items-center flex-wrap">
+                            <span className="mr-2 font-semibold">Người nhận:</span>
+                            <span className="text-sm border bg-gray-200 py-1 px-2 select-none">{receiver?.receiverName}</span>
+                        </div>
+                    )
+                }
 
                 <ReactQuill
                     // ref={quillRef}

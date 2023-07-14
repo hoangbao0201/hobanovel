@@ -12,12 +12,13 @@ import SearchInput from "../Layout/SearchInput";
 
 
 interface NavOverProps {
+    routerP?: any
     user?: UserType | null
     isShow?: boolean
     handle: () => void
     handleLogout: () => void
 }
-export const NavOver = ({ user = null, isShow = false, handle, handleLogout } : NavOverProps) => {
+export const NavOver = ({ routerP, user = null, isShow = false, handle, handleLogout } : NavOverProps) => {
     const router = useRouter();
     const matchesMobile = useMediaQuery("(max-width: 768px)");
 
@@ -106,10 +107,10 @@ export const NavOver = ({ user = null, isShow = false, handle, handleLogout } : 
                         ) : (
                             <>
                                 <div className="py-2 border-b">
-                                    <Link href={`/auth/login`}>Đăng nhập</Link>
+                                    <Link href={`/auth/login?callbackurl=${router.query?.callbackurl ? `${router.query.callbackurl}` : router.asPath || "/"}`}>Đăng nhập</Link>
                                 </div>
                                 <div className="py-2">
-                                    <Link href={`/auth/register`}>Đăng kí</Link>
+                                    <Link href={`/auth/register?callbackurl=${router.query?.callbackurl ? `${router.query.callbackurl}` : router.asPath || "/"}`}>Đăng kí</Link>
                                 </div>
                             </>
                         )

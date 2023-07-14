@@ -10,24 +10,20 @@ function generateSiteMap(novels : any) {
     return (
         `<?xml version="1.0" encoding="UTF-8"?>
             <urlset xmlns="https://www.sitemaps.org/schemas/sitemap/0.9">
-                <!-- Add the static URLs manually -->
 
-<<<<<<< HEAD
             <url>
                 <loc>${URL}</loc>
-                <lastmod>${new Date()}</lastmod>
+                <lastmod>${new Date().toISOString()}</lastmod>
                 <changefreq>hourly</changefreq>
                 <priority>1</priority>
             </url>
             <url>
                 <loc>${URL}/tim-truyen</loc>
-                <lastmod>${new Date()}</lastmod>
+                <lastmod>${new Date().toISOString()}</lastmod>
                 <changefreq>hourly</changefreq>
                 <priority>1</priority>
             </url>
 
-=======
->>>>>>> 966bb17a9562e52c0f56760962a0d08359057f32
             ${novels.map((novel : any) => {
                 return (
                     `

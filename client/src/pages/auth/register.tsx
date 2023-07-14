@@ -31,7 +31,7 @@ const RegisterPage = () => {
             const registerResponse = await registerUserHandle(dataForm as any);
 
             if (registerResponse?.success) {
-                router.push("/auth/login");
+                router.push("/auth/login?callbackurl=" + router?.query?.callbackurl as string || "/");
             }
         } catch (error) {
             console.log(error);
@@ -54,7 +54,7 @@ const RegisterPage = () => {
                         <div className="grid">
                             <h1 className="mb-3 text-3xl font-semibold">Đăng kí tài khoản</h1>
                             <h3 className="mb-6">
-                                Already have an account? <Link className="ml-3 text-blue-700 font-semibold" href="/auth/login">Sign In</Link>
+                                Already have an account? <Link className="ml-3 text-blue-700 font-semibold" href={`/auth/login?callback=${router.query.callback as string || "/"}`}>Sign In</Link>
                             </h3>
                             <div>
                                 <CustomInput value={dataForm.name} name="name" handleOnchangeValue={eventChangeValueInput} label="Fullname" id="fullnameInputRegister"/>

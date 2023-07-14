@@ -1,6 +1,5 @@
 import { useRouter } from "next/router";
 import { PROPERTIES_NOVEL } from "@/constants/data";
-import { GetServerSideProps, GetServerSidePropsContext } from "next";
 import { Fragment, ReactNode, useEffect, useId, useState } from "react";
 
 import Select from "react-select";
@@ -15,7 +14,7 @@ import { iconAngleDouble, iconClose } from "../../public/icons";
 import { advancedSearchNovelHandle } from "@/services/novels.services";
 import { PaginationLayout } from "@/components/Layout/PaginationLayout";
 import { AdsenseForm } from "@/components/Layout/AdsLayout/AdSenseForm";
-import { REVALIDATE_TIME } from "@/constants";
+import ItemNovelLazy from "@/components/Layout/ItemNovelLazy";
 
 
 // Data Default
@@ -67,14 +66,10 @@ interface QuerySearchNovelProps extends querySearchNovelTypes {
     viewFrame: number[];
 }
 interface SearchNovelProps {
-    novels: NovelResType[]
-    countPage: number
-    currentPage: number
-    query: any
-    isBox: boolean
+    queryPage: string
 }
 
-const SearchNovel = ({ novels, countPage, currentPage, isBox, query }: SearchNovelProps) => {
+const SearchNovel = ({ queryPage }: SearchNovelProps) => {
     const router = useRouter();
     const matchesMobile = useMediaQuery("(max-width: 640px)");
 
@@ -88,7 +83,11 @@ const SearchNovel = ({ novels, countPage, currentPage, isBox, query }: SearchNov
         viewFrame: [],
     });
     const [optionSort, setOptionSort] = useState<ValuesOptionsSortType>("novel_new");
-    const [isBoxSearch, setIsBoxSearch] = useState<boolean>(isBox);
+    const [isBoxSearch, setIsBoxSearch] = useState<boolean>(false);
+    const [listNovels, setListNovels] = useState<NovelResType[]>([])
+    const [isLoad, setIsLoad] = useState<boolean>(true)
+    const [currentPage, setCurrentPage] = useState(1)
+    const [countPage, setCountPage] = useState(1)
 
     // Handle Change Page
     const handleChangePage = ({
@@ -128,8 +127,87 @@ const SearchNovel = ({ novels, countPage, currentPage, isBox, query }: SearchNov
             ...value,
             [key]: value[key].filter((index) => index !== data),
         }));
-    };
+    }
 
+    // Get Novels By Query
+    const handleGetNovelsByQuery = async ({ queryOb, page, sortBy, isBox = false } : { queryOb: QuerySearchNovelProps, page: number, sortBy: string, isBox?: boolean }) => {
+        try {
+            const cvQueryOb = new URLSearchParams(queryOb as any).toString()
+
+            
+            const queryR = `sort_by=${sortBy}&page=${page}&${cvQueryOb}&isBox=${isBox == true ? true : false}`
+
+            
+            const getNovelsRes = await advancedSearchNovelHandle(queryR || '')
+            if (!getNovelsRes.success || !getNovelsRes) {
+                throw new Error();
+            }
+            
+            // console.log(getNovelsRes)
+
+            setListNovels(getNovelsRes.novels);
+            setCountPage(getNovelsRes?.countPage || 1);
+            setIsLoad(false);
+            
+            } catch (error) {
+                console.log(error)
+                setListNovels([])
+                setIsLoad(false);
+        }
+    }
+
+    // Handle CV query
+    const handleCvQuery = (query : {
+        genres?: string
+        status?: string
+        personality?: string
+        scene?: string
+        classify?: string
+        viewFrame?: string
+
+        page?: string
+        sort_by?: ValuesOptionsSortType
+        isBox?: string
+    }) => {
+
+        const { genres, status, personality, scene, classify, viewFrame, page = '1', sort_by = "novel_new", isBox = false } = query
+
+        
+        const queryOb : QuerySearchNovelProps = {
+            genres: genres ? JSON.parse(`[${genres}]`) : [],
+            status: status ? JSON.parse(`[${status}]`) : [],
+            personality: personality ? JSON.parse(`[${personality}]`) : [],
+            scene: scene ? JSON.parse(`[${scene}]`) : [],
+            classify: classify ? JSON.parse(`[${classify}]`) : [],
+            viewFrame: viewFrame ? JSON.parse(`[${viewFrame}]`) : []
+        }
+        setQuerySearchNovel(queryOb)
+        
+        setCurrentPage(Number(page) || 1)
+        setOptionSort(sort_by)
+        setIsBoxSearch(isBox == 'true' ? true : false)
+        handleGetNovelsByQuery({ queryOb: queryOb, sortBy: sort_by, page: Number(page) || 1 });
+    }
+
+    // Is Show Box Search
+    useEffect(() => {
+        const bodyElement = document.querySelector("body");
+        if (isBoxSearch && matchesMobile) {
+            bodyElement?.classList.add("overflow-hidden");
+        } else {
+            bodyElement?.classList.remove("overflow-hidden");
+        }
+    }, [isBoxSearch, matchesMobile]);
+
+    // Call Get Data
+    useEffect(() => {
+        setIsLoad(true)
+        handleCvQuery(router.query)
+    }, [router.query])
+
+
+
+    // CV html
     // Get List Check Query
     const listCheckQuery = Object.keys(querySearchNovel).map((key, indexParent) => (
         <Fragment key={indexParent}>
@@ -145,23 +223,6 @@ const SearchNovel = ({ novels, countPage, currentPage, isBox, query }: SearchNov
             ))}
         </Fragment>
     ));
-
-    // Is Show Box Search
-    useEffect(() => {
-        const bodyElement = document.querySelector("body");
-        if (isBoxSearch && matchesMobile) {
-            bodyElement?.classList.add("overflow-hidden");
-        } else {
-            bodyElement?.classList.remove("overflow-hidden");
-        }
-    }, [isBoxSearch, matchesMobile]);
-
-    // Check Hidden Box Search
-    useEffect(() => {
-        if(isBox != isBoxSearch) {
-            setIsBoxSearch(isBox);
-        }
-    }, [router])
 
     return (
         <>
@@ -563,32 +624,39 @@ const SearchNovel = ({ novels, countPage, currentPage, isBox, query }: SearchNov
 
                         <div className="grid mt-5">
                             {
-                                // !isLoad ? (
-                                novels.length > 0 ? (
-                                    <>
-                                        <div className="grid gap-6 md:grid-cols-2 grid-cols-1 px-4 mb-4">
-                                            {novels.map((novel) => {
-                                                return (
-                                                    <Fragment key={novel.novelId}>
-                                                        <ItemNovel
-                                                            novel={novel}
-                                                            isAuthor={true}
-                                                            isChapterCount={true}
-                                                        />
-                                                    </Fragment>
-                                                );
-                                            })}
-                                        </div>
-                                        <div className="flex justify-center my-5">
-                                            <PaginationLayout
-                                                countPage={countPage}
-                                                currentPage={currentPage}
-                                                handleChangePage={handleNextPage}
-                                            />
-                                        </div>
-                                    </>
+                                !isLoad ? (
+                                    listNovels.length > 0 ? (
+                                        <>
+                                            <div className="grid gap-6 md:grid-cols-2 grid-cols-1 px-4 mb-4">
+                                                {listNovels.map((novel) => {
+                                                    return (
+                                                        <Fragment key={novel.novelId}>
+                                                            <ItemNovel
+                                                                novel={novel}
+                                                                isAuthor={true}
+                                                                isChapterCount={true}
+                                                            />
+                                                        </Fragment>
+                                                    );
+                                                })}
+                                            </div>
+                                            <div className="flex justify-center my-5">
+                                                <PaginationLayout
+                                                    countPage={countPage}
+                                                    currentPage={currentPage}
+                                                    handleChangePage={handleNextPage}
+                                                />
+                                            </div>
+                                        </>
+                                    ) : (
+                                        <div className="px-4">Không có truyện nào</div>
+                                    )   
                                 ) : (
-                                    <div className="px-4">Không có truyện nào</div>
+                                    <div className="grid gap-6 md:grid-cols-2 grid-cols-1 px-4">
+                                        {[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20].map((index) => (
+                                            <ItemNovelLazy key={index} />
+                                        ))}
+                                    </div>
                                 )
                             }
                         </div>
@@ -606,48 +674,20 @@ const SearchNovel = ({ novels, countPage, currentPage, isBox, query }: SearchNov
 };
 export default SearchNovel;
 
-export const getServerSideProps : GetServerSideProps = async (context: GetServerSidePropsContext) => {
-    const { query, res } = context;
+export const getServerSideProps = async (
+    context: any
+) => {
+    const { query } = context;    
 
-    // console.log(query)
-
-    // caching
-    res.setHeader(
-        'Cache-Control',
-        `public, s-maxage=${REVALIDATE_TIME}, stale-while-revalidate=${
-            REVALIDATE_TIME * 6
-        }`,
-    );
-
-    const {
-        page = 1,
-        isBox = false,
-    } = query;
-
-    const cvQueryOb = new URLSearchParams(query as any).toString();
-
-    const getNovelsRes = await advancedSearchNovelHandle(cvQueryOb || "");
-    if (!getNovelsRes.success) {
+    try {
         return {
             props: {
-                novels: getNovelsRes?.novels || [],
-                countPage: Number(getNovelsRes?.countPage) || 1,
-                currentPage: Number(page) || 1,
-                query: cvQueryOb,
-                isBoxSearch: isBox === "true" ? true : (isBox === "false" ? false : false)
-            }
-        }
+                queryPage: query
+            },
+        };
+    } catch (error) {
+        return { notFound: true };
     }
-
-    return {
-        props: {
-            novels: getNovelsRes.novels,
-            countPage: Number(getNovelsRes?.countPage) || 1,
-            currentPage: Number(page) || 1,
-            query: cvQueryOb,
-            isBox: isBox === "true" ? true : (isBox === "false" ? false : false)
-        },
-    };
 };
 
 SearchNovel.getLayout = (page: ReactNode) => {

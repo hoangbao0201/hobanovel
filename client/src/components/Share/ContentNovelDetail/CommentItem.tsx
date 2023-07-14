@@ -70,6 +70,14 @@ const CommentItem = ({ comment, user, handleDeleteComment }: CommentItemProps) =
         if (!user?.userId || !token) {
             return;
         }
+        if(commentText.length < 17) {
+            alert("Nội dung bình luận quá ngắn, tối thiểu 10 ký tự!");
+            return;
+        }
+        if(sender?.senderName.length < 5) {
+            alert("Tên tài khoản tối thiểu 5 ký tự!");
+            return;
+        }
 
         try {
             const dataReplyCommentReq = {
@@ -223,7 +231,7 @@ const CommentItem = ({ comment, user, handleDeleteComment }: CommentItemProps) =
                             <TextRank className="" rank={comment.senderRank || 0} text={comment.senderName}/>
                             <TextRank className="" rank={comment.senderRank || 0}/>
                         </div>
-                        <div className="text-gray-600 text-base" dangerouslySetInnerHTML={{__html: comment.commentText}}></div>
+                        <div className="text-gray-600 text-base" dangerouslySetInnerHTML={{ __html: comment.commentText }}></div>
                     </div>
                     <div className="flex text-sm gap-2 text-[#3f94d5] fill-[#3f94d5] font-semibold">
                         <button
@@ -432,6 +440,7 @@ const CommentItem = ({ comment, user, handleDeleteComment }: CommentItemProps) =
                             <InputText
                                 text={commentText}
                                 isShow={isFormSend}
+                                receiver={receiver}
                                 handleOnchange={handleOnchangeCommentText}
                             />
                             <div className="flex mt-3 gap-3">

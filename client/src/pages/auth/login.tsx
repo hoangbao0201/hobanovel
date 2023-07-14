@@ -1,6 +1,6 @@
 
 import Link from "next/link";
-import { useRouter } from "next/router";
+import { Router, useRouter } from "next/router";
 import { GetServerSideProps } from "next";
 import { ChangeEvent, ReactNode, useEffect, useState } from "react";
 
@@ -54,15 +54,17 @@ const LoginPage = () => {
 
                 if (userResponse?.success) {
                     dispatch(addUserHandle(userResponse.user));
-                    router.back();
+
+                    const callbackurl = router?.query?.callbackurl as string ?? "/"
+                    router.push(callbackurl)
                 }
             }
         } catch (error) {
-            console.log(error)
+            // console.log(error)
         }
     };
 
-    // console.log(document.cookie)
+    // console.log(router.query.callbackurl)
 
     // const handleLoginOnSocial = async () => {
     //     try {
@@ -199,9 +201,14 @@ const LoginPage = () => {
 
 export const getServerSideProps : GetServerSideProps = async (ctx) => {
 
-    const token = getAccessTokenOnServer(ctx.req.headers.cookie as string)
-    const userResponse = await connectUserHandle(token as string);
+    const token = getAccessTokenOnServer(ctx.req.headers.cookie as string);
+    if(!token) {
+        return {
+            props: {}
+        }
+    }
 
+    const userResponse = await connectUserHandle(token as string);
     if(userResponse?.success) {
         return {
             redirect: {
