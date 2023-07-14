@@ -62,7 +62,7 @@ const LoginPage = () => {
         }
     };
 
-    // console.log(router)
+    // console.log(document.cookie)
 
     // const handleLoginOnSocial = async () => {
     //     try {
