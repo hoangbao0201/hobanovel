@@ -1,25 +1,31 @@
+
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { GetServerSideProps } from "next";
-import { ChangeEvent, ReactNode, useState } from "react";
+import { ChangeEvent, ReactNode, useEffect, useState } from "react";
 
-// import { signIn, useSession } from 'next-auth/react';
+// import { signIn, signOut, useSession } from 'next-auth/react';
 import { useDispatch, useSelector } from "react-redux";
+import jwt from "jsonwebtoken";
 
 
 import CustomInput from "@/components/Layout/CustomInput";
-import { connectUserHandle, loginUserHandle } from "@/services/auth.services";
+import { connectUserBySocialHanlde, connectUserHandle, loginUserHandle } from "@/services/auth.services";
 import { addAccessToken, getAccessTokenOnServer } from "@/services/cookies.servies";
 import { addUserHandle } from "@/redux/userSlice";
 import MainLayout from "@/components/Layout/MainLayout";
 
 const LoginPage = () => {
     const router = useRouter();
+
     const dispatch = useDispatch();
+    // const { data: session, status } = useSession()
+
     const { userLoading, isAuthenticated, currentUser } = useSelector(
         (state: any) => state.user
     );
-    // const { data: session, status } = useSession()
+
+
 
     // state
     const [dataForm, setDataForm] = useState({
@@ -27,8 +33,7 @@ const LoginPage = () => {
         password: "",
     });
 
-    // console.log("session: ", session, status)
-
+    // Event Onchange Values
     const eventChangeValueInput = (e: ChangeEvent<HTMLInputElement>) => {
         setDataForm({
             ...dataForm,
@@ -57,7 +62,36 @@ const LoginPage = () => {
         }
     };
 
-    // console.log(dataForm)
+    // console.log(router)
+
+    // const handleLoginOnSocial = async () => {
+    //     try {
+    //         if(session?.user) {
+    //             const { name, email, image } = session.user;
+    //             if(!name || !email) {
+    //                 return
+    //             }
+    //             const avatar = image || null;
+
+    //             // JWT
+    //             const connectUser = await connectUserBySocialHanlde({ name, email, avatar });
+
+    //             if(connectUser.success) {
+    //                 dispatch(addUserHandle(connectUser.user));
+    //                 router.back();
+    //             }
+    //         }
+    //     } catch (error) {
+    //         console.log(error)
+    //     }
+    // }
+
+    // useEffect(() => {
+    //     if(status == "authenticated") {
+    //         handleLoginOnSocial()
+    //     }
+    // }, [session])
+    // console.log(session, status)
 
     return (
         <>
@@ -105,18 +139,55 @@ const LoginPage = () => {
                                 </button>
                             </div>
 
-                            {/* Social */}
 
+
+                            {/* Social */}
                             {/* <div className="mt-2">
                                 <button
                                     onClick={() =>
-                                        signIn()
+                                        signIn("github")
                                     }
                                     className=" transition-all w-full text-center py-3 rounded bg-blue-600 hover:bg-blue-700 active:bg-blue-800 active:shadow-xl text-white"
                                 >
-                                    Github
+                                    Signin Github
+                                </button>
+                            </div>
+                            <div className="mt-2">
+                                <button
+                                    onClick={() =>
+                                        signIn("facebook")
+                                    }
+                                    className=" transition-all w-full text-center py-3 rounded bg-blue-600 hover:bg-blue-700 active:bg-blue-800 active:shadow-xl text-white"
+                                >
+                                    Signin Facebook
+                                </button>
+                            </div>
+                            <div className="mt-2">
+                                <button
+                                    onClick={() =>
+                                        signIn("google")
+                                    }
+                                    className=" transition-all w-full text-center py-3 rounded bg-blue-600 hover:bg-blue-700 active:bg-blue-800 active:shadow-xl text-white"
+                                >
+                                    Signin Google
+                                </button>
+                            </div>
+
+
+
+                            <div className="mt-2">
+                                <button
+                                    onClick={() =>
+                                        signOut()
+                                    }
+                                    className=" transition-all w-full text-center py-3 rounded bg-blue-600 hover:bg-blue-700 active:bg-blue-800 active:shadow-xl text-white"
+                                >
+                                    Sign out
                                 </button>
                             </div> */}
+
+
+
 
                         </div>
                     </div>

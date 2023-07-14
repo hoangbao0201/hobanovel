@@ -16,6 +16,7 @@ import { useClickOutSide } from "@/hook/useClickOutSide";
 import { GENRES_VALUE, RANK_VALUE } from "@/constants/data";
 import { removeAccessToken } from "@/services/cookies.servies";
 import ClientOnly from "../Share/ClientOnly";
+// import { signOut } from "next-auth/react";
 
 interface HeaderProps {
     autoHidden?: boolean
@@ -71,6 +72,7 @@ const Header = ({ autoHidden = true } : HeaderProps) => {
 
     const eventLogoutUser = () => {
         dispatch(logoutUserHandle());
+        // signOut()
         removeAccessToken()
         window.location.reload();
     }

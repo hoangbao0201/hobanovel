@@ -7,6 +7,8 @@ import { ReactElement, ReactNode } from "react";
 import { Inter } from "next/font/google";
 
 
+import { Session } from "next-auth";
+// import { SessionProvider } from "next-auth/react"
 import "nprogress/nprogress.css";
 import NProgress from "nprogress";
 import { Provider } from "react-redux";
@@ -14,8 +16,6 @@ import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import { persistor, store } from "@/redux/store";
 import { PersistGate } from "redux-persist/integration/react";
-import { Session } from "next-auth";
-// import { SessionProvider } from "next-auth/react"
 
 import MainLayout from "@/components/Layout/MainLayout";
 import useScrollRestoration from "@/hook/useScrollRestoration";
@@ -75,23 +75,33 @@ const MyApp = ({
                 }
             `}</style>
 
-            <Provider store={store}>
 
-                    <PersistGate loading={false} persistor={persistor}>
-                        
-                        {() => getLayout(<Component {...pageProps} />)}
+            {/* <SessionProvider session={session}> */}
+                <Provider store={store}>
 
-                    </PersistGate>
+                        <PersistGate loading={false} persistor={persistor}>
+                            
+                                {() => getLayout(<Component {...pageProps} />)}
 
+                        </PersistGate>
 
-            </Provider>
+                </Provider>
+            {/* </SessionProvider> */}
+                
+
             <ToastContainer />
         </>
     )
-
+    
 }
-
 export default MyApp;
+
+
+
+{/* <SessionProvider session={session}>
+    {(<Component {...pageProps} />)}
+</SessionProvider> */}
+
 
 
 // const makeStore = () => store;

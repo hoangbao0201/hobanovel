@@ -50,7 +50,7 @@ const MainLayout = ({
         try {
             const token = getAccessToken();
             if (!token) {
-                console.log("Không token");
+                // console.log("Không token");
                 dispatch(logoutUserHandle());
                 return;
             }
@@ -66,7 +66,7 @@ const MainLayout = ({
                 }
             }
         } catch (error) {
-            console.log(error);
+            // console.log(error);
             removeAccessToken();
             dispatch(logoutUserHandle());
         }

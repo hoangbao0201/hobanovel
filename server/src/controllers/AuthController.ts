@@ -63,16 +63,16 @@ export const loginUser = async (req: Request, res: Response) => {
             })
         }
 
-        const existingUser : UserType[] | null = await getUserByAccoutHandle(accout as string);
-        if(!existingUser?.length) {
+        const existingUser = await getUserByAccoutHandle(accout as string);
+        if(!existingUser?.success || !existingUser?.data?.length ) {
             return res.status(400).json({
                 success: false,
-                message: "Wrong password or username!"
+                message: "Wrong password or username!",
             })
         }
 
         // Verify password
-        const verifyPassword = bcrypt.compareSync(password, existingUser[0].password);
+        const verifyPassword = bcrypt.compareSync(password, existingUser.data[0].password);
         if(!verifyPassword) {
             return res.status(400).json({
                 code: 400,
@@ -84,7 +84,7 @@ export const loginUser = async (req: Request, res: Response) => {
         // JWT
         const accessToken = await jwt.sign(
             {
-                userId: existingUser[0].userId,
+                userId: existingUser.data[0].userId,
             },
             process.env.ACCESS_TOKEN_SETCRET as string
         );
@@ -92,8 +92,8 @@ export const loginUser = async (req: Request, res: Response) => {
         return res.json({
             success: true,
             message: "Login user successful",
-            accessToken: accessToken,
-            userId: existingUser[0].userId
+            accessToken: accessToken,   
+            userId: existingUser.data[0].userId
         })
         
     } catch (error) {
@@ -104,4 +104,83 @@ export const loginUser = async (req: Request, res: Response) => {
         };
     }
 
+}
+
+export const connectUserBySocial = async (req: Request, res: Response) => {
+    try {
+        const { name, email, avatar } = req.body;
+        if(!name || !email || !avatar) {
+            return res.status(400).json({
+                success: false,
+                message: "Data not found"
+            })
+        }
+
+
+        // Check existingUser
+        const existingUser = await getUserByAccoutHandle(email as string);
+        if(existingUser?.data?.length) {
+            // JWT
+            const accessToken = await jwt.sign(
+                {
+                    userId: existingUser.data[0].userId,
+                },
+                process.env.ACCESS_TOKEN_SETCRET as string
+            );
+
+            return res.json({
+                success: true,
+                message: "Login user successful",
+                accessToken: accessToken,
+                user: existingUser.data
+            })
+        }
+
+        const dataCreate = { 
+            name: name,
+            username: email.split("@")[0],
+            email: email,
+            password: "123",
+            avatarUrl: avatar
+        }
+        // Create user
+        const createUser = await createUserHandle(dataCreate)
+        if(!createUser.success) {
+            return res.status(400).json({
+                success: false,
+                message: "Create User Error",
+                error: createUser.error
+            })
+        }
+
+        const existingUserNew = await getUserByAccoutHandle(email as string);
+        if(!existingUserNew.success || !existingUserNew.data?.length) {
+            return res.status(400).json({
+                success: false,
+                message: "tạo xong, nhưng lấy thất bại"
+            })
+        }
+
+        // JWT
+        const accessToken = await jwt.sign(
+            {
+                userId: existingUserNew.data[0].userId,
+            },
+            process.env.ACCESS_TOKEN_SETCRET as string
+        );
+
+        return res.json({
+            success: true,
+            message: "Login user successful",
+            accessToken: accessToken,
+            user: existingUserNew.data
+        })
+        
+    } catch (error) {
+        return {
+            code: 500,
+            success: false,
+            message: `Internal server error ${error}`,
+        };
+    }
 }

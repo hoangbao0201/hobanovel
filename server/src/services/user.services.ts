@@ -27,16 +27,16 @@ export const getUserByUsernameEmailHandle = async ({ username, email }: UserType
     }
 };
 
-export const createUserHandle = async ({ name, username, email, password }: UserType) => {
+export const createUserHandle = async ({ name, username, email, password, avatarUrl = null }: Pick<UserType, 'name' | 'username' | "email" | 'password' | 'avatarUrl'>) => {
     try {
         const connection = await pool.getConnection();
 
         // Hash password
         const hashPassword = bcrypt.hashSync(password, 10);
-        const valuesCreateUser = [name, username, email, hashPassword];
+        const valuesCreateUser = [name, username, email, hashPassword, avatarUrl];
 
         const qCreateUser = `
-            INSERT INTO USERS(name, username, email, password)
+            INSERT INTO USERS(name, username, email, password, avatarUrl)
             VALUES (?)
         `
         const [rows] = await connection.query(qCreateUser, [valuesCreateUser]);
@@ -67,9 +67,15 @@ export const getUserByAccoutHandle = async (accout : string) => {
 
         connection.release();
 
-        return rows as UserType[]
+        return {
+            success: true,
+            data: rows as UserType[] || []
+        }
     } catch (error) {
-        return null
+        return {
+            success: false,
+            error: error
+        }
     }
 }
 
@@ -97,7 +103,7 @@ export const getUserByIdHandle = async ({userId} : UserType) => {
         const connection = await pool.getConnection();
 
         const qGetUser = `
-            SELECT userId, name, username, email, rank, description, createdAt FROM USERS 
+            SELECT userId, name, username, email, rank, description, avatarUrl, createdAt FROM USERS 
             WHERE userId = ?
         `
 
@@ -112,3 +118,57 @@ export const getUserByIdHandle = async ({userId} : UserType) => {
 
 }
 
+// export const updateUserSignInSocialHanlde = async (data : Partial<UserType>) => {
+//     try {
+
+//         const { name, email, avatarUrl } = data
+
+//         const connection = await pool.getConnection();
+
+//         const qCreateUser = `
+//             UPDATE USERS
+//             set name = ?, 
+//             WHERE email = ?
+//         `
+//         const [rows] = await connection.query(qCreateUser, [name,]);
+
+//         connection.release();
+
+//         return {
+//             success: true,
+//             data: rows as UserType[]
+//         }
+//     } catch (error) {
+//         return {
+//             success: false,
+//             error: error.message
+//         }
+//     }
+// }
+// export const connectUserBySocialHanlde = async ({ name, email, image } : { name: string, email: string, image: string }) => {
+//     try {
+//         const connection = await pool.getConnection();
+
+//         // Hash password
+//         const hashPassword = bcrypt.hashSync(process.env.ACCESS_TOKEN_SETCRET as string, 10);
+//         const valuesCreateUser = [name, email, hashPassword, image];
+
+//         const qCreateUser = `
+//             INSERT INTO USERS(name, email, password, avatarUrl)
+//             VALUES (?)
+//         `
+//         const [rows] = await connection.query(qCreateUser, [valuesCreateUser]);
+
+//         connection.release();
+
+//         return {
+//             success: true,
+//             data: rows as UserType[]
+//         }
+//     } catch (error) {
+//         return {
+//             success: false,
+//             error: error.message
+//         }
+//     }
+// }

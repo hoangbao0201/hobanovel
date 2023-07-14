@@ -60,3 +60,29 @@ export const registerUserHandle = async (data: UserType) => {
         }
     }
 }
+
+export const connectUserBySocialHanlde = async (data: { name: string, email: string, avatar: string | null }) => {
+    try {
+        const { name, email, avatar }= data;
+
+        const userRes = await axios.post(`${apiUrl}/api/auth/account/verification`, {
+            name, email, avatar
+        }, {
+            // headers: {
+            //     Authorization: `Bearer ${token}`
+            // }
+        })
+
+        return userRes.data;
+    } catch (error) {
+        if(axios.isAxiosError(error) && error.response?.data) {
+            return error.response.data;
+        } else {
+            return {
+                success: false,
+                message: (error as Error).message
+            };
+        }
+    }
+}
+

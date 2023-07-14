@@ -80,7 +80,7 @@ export interface UserType {
     description: string
     candy: number
     flower: number
-    avatarUrl: string
+    avatarUrl: string | null
     avatarPublicId: string
     createdAt: Date
     updatedAt: Date
