@@ -80,6 +80,11 @@ export const NavOver = ({ routerP, user = null, isShow = false, handle, handleLo
                             Con trai
                         </Link>
                     </li>
+                    <li className="py-2">
+                        <a target="_blank" href={`https://www.facebook.com/hobanovel`}>
+                            Group
+                        </a>
+                    </li>
 
 
                 </ul>

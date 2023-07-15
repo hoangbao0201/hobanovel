@@ -21,6 +21,7 @@ export interface BannersType extends NovelType {
 // extends CommentItemWith {
 export interface CommentType {
     commentId: string
+    chapterNumber?: number
     commentText: string
     createdAt: Date
     updatedAt: Date
@@ -63,25 +64,31 @@ export interface CommentItemType extends CommentType {
 
 
 
-export interface ChapterType {
-    chapterId: string
-    novelId: string
-
-    views: string
-    novelName: string
-    novelSlug: string
-    title: string
-    content: string
-    chapterNumber: number
-    createdAt: Date
-    updatedAt: Date
-}
 
 // Follow Novel
 export interface NovelFollowerType {
     novelFollowerId: string
     novelId: string
     userId: string
+}
+
+
+
+// User
+export interface UserType {
+    userId: string
+    name: string
+    username: string
+    email: string
+    rank: number
+    password: string
+    description?: string
+    candy?: number
+    flower?: number
+    avatarUrl?: string
+    avatarPublicId?: string
+    createdAt: Date
+    updatedAt: Date
 }
 
 // Novel
@@ -106,19 +113,17 @@ export interface NovelType {
     updatedAt: Date
 }
 
-// User
-export interface UserType {
-    userId: string
-    name: string
-    username: string
-    email: string
-    rank: number
-    password: string
-    description?: string
-    candy?: number
-    flower?: number
-    avatarUrl?: string
-    avatarPublicId?: string
+// Chapter
+export interface ChapterType {
+    chapterId: string
+    novelId: string
+
+    views: string
+    novelName: string
+    novelSlug: string
+    title: string
+    content: string
+    chapterNumber: number
     createdAt: Date
     updatedAt: Date
 }

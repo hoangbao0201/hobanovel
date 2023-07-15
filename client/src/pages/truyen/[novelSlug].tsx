@@ -1,32 +1,23 @@
-import Link from "next/link";
 import dynamic from "next/dynamic";
 import { ReactNode, useEffect, useState } from "react";
 import {
     GetStaticPaths, GetStaticProps, GetStaticPropsContext
 } from "next";
 
-import Tippy from "@tippyjs/react";
 import { useSelector } from "react-redux";
 import { useMediaQuery } from "usehooks-ts";
 import { ParsedUrlQuery } from "querystring";
 import { Tab, Transition } from "@headlessui/react";
 
 import Head from "@/components/Share/Head";
-import { PROPERTIES_NOVEL } from "@/constants/data";
-import BlurImage from "@/components/Layout/BlurImage";
 import MainLayout from "@/components/Layout/MainLayout";
 import { NovelBySlugType, NovelFollowerType } from "@/types";
 import { getAccessToken } from "@/services/cookies.servies";
 import WrapperLayout from "@/components/Layout/WrapperLayout";
-import { convertViewsCount } from "@/utils/convertViewsCount";
 import { getNovelBySlugHandle } from "@/services/novels.services";
-import { LoadingButton } from "@/components/Layout/LoadingLayout";
-import { ListStarLayout } from "@/components/Layout/ListStarLayout";
-import { iconAuthor, iconClose, iconHeartFull } from "../../../public/icons";
 import { REVALIDATE_TIME_DETAILS_PAGE, placeholderBlurhash } from "@/constants";
 import { checkFollowNovelHandle, followNovelHandle, unfollowNovelHandle } from "@/services/follow.services";
 import ClientOnly from "@/components/Share/ClientOnly";
-import LazyLoad from "react-lazy-load";
 
 import ContentNovelDetail from "@/components/Share/ContentNovelDetail";
 import Breadcrumb from "@/components/Share/Breadcrumb";
@@ -51,7 +42,7 @@ const FormListChapters = dynamic(
     } as ImportCallOptions)
 )
 const FormComment = dynamic(
-    () => import("../../components/Share/ContentNovelDetail/FormComment", {
+    () => import("../../components/Share/FormComment/index", {
         ssr: false,
     } as ImportCallOptions)
 )
@@ -167,14 +158,6 @@ const NovelDetailPage = ({ novel, tab } : NovelDetailPageProps) => {
         }
     }
 
-
-    // const getLayout = (page : ReactNode) => {
-    //     return (
-    //         <MainLayout isBannerPage={false}>
-    //             {page}
-    //         </MainLayout>
-    //     )
-    // };
     return (
         <>  
             <Head title={`${novel?.title || "hobanovel"} [Tới Chap ${novel?.chapterCount || 1}] Tiếng Việt - HobaNovel`}/>
@@ -305,10 +288,11 @@ const NovelDetailPage = ({ novel, tab } : NovelDetailPageProps) => {
                                         leaveFrom="opacity-100"
                                         leaveTo="opacity-0"
                                     >
-                                        <FormComment
+                                        {/* <FormComment
                                             tab={numberTab}
                                             novelId={novel?.novelId}
-                                        />
+                                        /> */}
+                                        <FormComment novelId={novel?.novelId}/>
                                     </Transition>
                                 </Tab.Panel>
                                 

@@ -15,6 +15,7 @@ import { advancedSearchNovelHandle } from "@/services/novels.services";
 import { PaginationLayout } from "@/components/Layout/PaginationLayout";
 import { AdsenseForm } from "@/components/Layout/AdsLayout/AdSenseForm";
 import ItemNovelLazy from "@/components/Layout/ItemNovelLazy";
+import SelectOptions from "@/components/features/SelectOptions";
 
 
 // Data Default
@@ -546,80 +547,89 @@ const SearchNovel = ({ queryPage }: SearchNovelProps) => {
 
                     </div>
                     <div>
-                        <div className={`flex h-9 gap-2 items-center top-0 left-0`}>
-                            <Select
-                                isSearchable={false}
-                                defaultValue={optionsSort.new[0]}
-                                className="text-sm font-semibold"
-                                options={optionsSort.new}
-                                instanceId={useId()}
-                                styles={{
-                                    control: (provided, state) => ({
-                                        ...provided,
-                                        outline: "none",
-                                        boxShadow: "none",
-                                        border: "none",
-                                        borderRadius: "0px",
-                                        height: "32px",
-                                        cursor: "pointer",
-                                    }),
-                                }}
-                                onChange={(select: any) =>
-                                    handleChangePage({ sortBy: select.id, page: 1 })
-                                }
-                            />
-                            <Select
-                                isSearchable={false}
-                                defaultValue={optionsSort.rating[0]}
-                                className="text-sm font-semibold"
-                                options={optionsSort.rating}
-                                instanceId={useId()}
-                                styles={{
-                                    control: (provided, state) => ({
-                                        ...provided,
-                                        outline: "none",
-                                        boxShadow: "none",
-                                        border: "none",
-                                        borderRadius: "0px",
-                                        height: "32px",
-                                        cursor: "pointer",
-                                    }),
-                                }}
-                                onChange={(select: any) =>
-                                    handleChangePage({ sortBy: select.id, page: 1 })
-                                }
-                            />
-
-                            <button
-                                className={`p-1 text-sm font-semibold rounded-sm px-2 whitespace-nowrap ${
-                                    optionSort === "follow_count" ? "bg-gray-200" : ""
-                                }`}
-                                onClick={() =>
-                                    handleChangePage({ sortBy: "follow_count", page: 1 })
-                                }
-                            >
-                                Theo dõi
-                            </button>
-                            <button
-                                className={`p-1 text-sm font-semibold rounded-sm px-2 whitespace-nowrap ${
-                                    optionSort === "comment_count" ? "bg-gray-200" : ""
-                                }`}
-                                onClick={() =>
-                                    handleChangePage({ sortBy: "comment_count", page: 1 })
-                                }
-                            >
-                                Bình luận
-                            </button>
-                            <button
-                                className={`p-1 text-sm font-semibold rounded-sm px-2 whitespace-nowrap ${
-                                    optionSort === "chapter_count" ? "bg-gray-200" : ""
-                                }`}
-                                onClick={() =>
-                                    handleChangePage({ sortBy: "chapter_count", page: 1 })
-                                }
-                            >
-                                Số chương
-                            </button>
+                        <div className="grid pl-4">
+                            {/* <ul className={`[&>li]:inline-block [&>li]:cursor-pointer`}> */}
+                            <ul className={`flex items-center [&>li]:cursor-pointer whitespace-nowrap`}>
+                                <li>
+                                    <Select
+                                        isSearchable={false}
+                                        defaultValue={optionsSort.new[0]}
+                                        className="text-sm font-semibold"
+                                        options={optionsSort.new}
+                                        instanceId={useId()}
+                                        styles={{
+                                            control: (provided, state) => ({
+                                                ...provided,
+                                                outline: "none",
+                                                boxShadow: "none",
+                                                border: "none",
+                                                borderRadius: "0px",
+                                                height: "32px",
+                                                cursor: "pointer",
+                                            }),
+                                        }}
+                                        onChange={(select: any) =>
+                                            handleChangePage({ sortBy: select.id, page: 1 })
+                                        }
+                                    />
+                                </li>
+                                <li>
+                                    <Select
+                                        isSearchable={false}
+                                        defaultValue={optionsSort.rating[0]}
+                                        className="text-sm font-semibold"
+                                        options={optionsSort.rating}
+                                        instanceId={useId()}
+                                        styles={{
+                                            control: (provided, state) => ({
+                                                ...provided,
+                                                outline: "none",
+                                                boxShadow: "none",
+                                                border: "none",
+                                                borderRadius: "0px",
+                                                height: "32px",
+                                                cursor: "pointer",
+                                            }),
+                                        }}
+                                        onChange={(select: any) =>
+                                            handleChangePage({ sortBy: select.id, page: 1 })
+                                        }
+                                    />
+                                </li>
+    
+                                <li
+                                    className={`p-1 text-sm font-semibold rounded-sm px-2 ${
+                                        optionSort === "follow_count" ? "bg-gray-200" : ""
+                                    }`}
+                                    onClick={() =>
+                                        handleChangePage({ sortBy: "follow_count", page: 1 })
+                                    }
+                                >
+                                    Theo dõi
+                                </li>
+                                <li
+                                    className={`p-1 text-sm font-semibold rounded-sm px-2 ${
+                                        optionSort === "comment_count" ? "bg-gray-200" : ""
+                                    }`}
+                                    onClick={() =>
+                                        handleChangePage({ sortBy: "comment_count", page: 1 })
+                                    }
+                                >
+                                    Bình luận
+                                </li>
+                                <li
+                                    className={`p-1 text-sm font-semibold rounded-sm px-2 ${
+                                        optionSort === "chapter_count" ? "bg-gray-200" : ""
+                                    }`}
+                                    onClick={() =>
+                                        handleChangePage({ sortBy: "chapter_count", page: 1 })
+                                    }
+                                >
+                                    Số chương
+                                </li>
+    
+    
+                            </ul>
                         </div>
 
                         <div className="grid mt-5">

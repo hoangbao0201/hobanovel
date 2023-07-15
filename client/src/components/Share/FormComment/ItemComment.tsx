@@ -230,6 +230,12 @@ const CommentItem = ({ comment, user, handleDeleteComment }: CommentItemProps) =
                         <div className="flex flex-wrap gap-2 items-center mb-3">
                             <TextRank className="" rank={comment.senderRank || 0} text={comment.senderName}/>
                             <TextRank className="" rank={comment.senderRank || 0}/>
+                            
+                            {
+                                comment?.chapterNumber && (
+                                    <span className="text-blue-600 italic text-xs">Chapter {comment.chapterNumber}</span>
+                                )
+                            }
                         </div>
                         <div className="text-gray-600 text-base" dangerouslySetInnerHTML={{ __html: comment.commentText }}></div>
                     </div>
@@ -286,7 +292,7 @@ const CommentItem = ({ comment, user, handleDeleteComment }: CommentItemProps) =
                                 {iconOclock}
                             </i>
                             <span className="whitespace-nowrap">
-                                {moment(comment.createdAt).fromNow()}
+                                {moment(new Date(comment.createdAt)).fromNow()}
                             </span>
                         </div>
                     </div>
@@ -344,12 +350,6 @@ const CommentItem = ({ comment, user, handleDeleteComment }: CommentItemProps) =
                                                 ></span>
                                                 <div>
                                                     <div className="bg-gray-100 border p-2">
-                                                        {/* <div className="flex items-center pb-2 mb-2 border-b gap-2 text-sm">
-                                                            <div className="line-clamp-1 flex items-center">
-                                                                <TextRank className="uppercase max-sm:text-xs" rank={replyComment.senderRank || 0} text={replyComment.senderName + `${" "}-`}/>
-                                                                <TextRank className="uppercase ml-2 max-sm:text-xs" rank={replyComment.senderRank || 0}/>
-                                                            </div>
-                                                        </div> */}
                                                         <div className="flex flex-wrap gap-2 items-center mb-3">
                                                             <TextRank className="" rank={replyComment.senderRank || 0} text={replyComment.senderName}/>
                                                             <TextRank className="" rank={replyComment.senderRank || 0}/>

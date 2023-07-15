@@ -38,6 +38,7 @@ import Head from "@/components/Share/Head";
 import { REVALIDATE_TIME_DETAILS_PAGE } from "@/constants";
 import Breadcrumb from "@/components/Share/Breadcrumb";
 import BlurImage from "@/components/Layout/BlurImage";
+import FormComment from "@/components/Share/FormComment";
 
 interface Params extends ParsedUrlQuery {
     slug: string;
@@ -52,7 +53,6 @@ const ChapterDetailPage = ({ chapter }: ChapterDetailPageProps) => {
     const paginationRef = useRef<HTMLDivElement>(null)
     const paginationFakeRef = useRef<HTMLDivElement>(null)
     const [isFixed, setIsFixed] = useState(false);
-    const [commentsChapter, setCommentsChapter] = useState([])
     const [isFollow, setIsFollow] = useState<null | boolean>(null)
     const [isOptionsListChapter, setIsOptionsListChapter] = useState<boolean>(false)
     const { isAuthenticated, currentUser, userLoading } = useSelector((state: any) => state.user);
@@ -118,38 +118,6 @@ const ChapterDetailPage = ({ chapter }: ChapterDetailPageProps) => {
     const handleChangeOntionsListChapter = () => {
         setIsOptionsListChapter(value => !value)
     }
-    // Handle Get Comments Chapter
-    // const handleGetCommentsChapter = async () => {
-    //     try {
-    //         const commentsRes = await getCommentsHandle({ novelId: chapter?.novelId, chapterId: chapter?.chapterId, page: 1 })
-
-    //         if(commentsRes.success) {
-    //             setCommentsChapter(commentsRes.comments)
-    //         }
-
-    //     } catch (error) {
-            
-    //     }
-    // }
-    // const handleAddCommentChapter = async () => {
-    //     const token = getAccessToken();
-    //     if(!token) {
-    //         return
-    //     }
-    //     try {
-    //         const commentRes = await addCommentHandle({
-    //             token: token,
-    //             commentText: "",
-    //             novelId: chapter?.novelId,
-    //             chapterId: chapter?.chapterId
-    //         })
-    //     } catch (error) {
-            
-    //     }
-    // }
-
-    // console.log(commentsChapter)
-
 
     // Increase view chapter
     useEffect(() => {
@@ -175,7 +143,7 @@ const ChapterDetailPage = ({ chapter }: ChapterDetailPageProps) => {
                         chapterRead: String(chapter?.chapterNumber),
                         token: token,
                     };
-                    console.log("readingNovelHandle");
+                    // console.log("readingNovelHandle");
                     readingNovelHandle(
                         dataReadingNovel as Pick<
                             HistoryReadingType,
@@ -228,7 +196,7 @@ const ChapterDetailPage = ({ chapter }: ChapterDetailPageProps) => {
             const query = `${chapter?.novelId}?token=${token}`
             const checkFollowRes = await checkFollowNovelHandle(query);
 
-            console.log(checkFollowRes)
+            // console.log(checkFollowRes)
 
             if(checkFollowRes.success) {
                 setIsFollow(checkFollowRes.isFollow)
@@ -238,7 +206,7 @@ const ChapterDetailPage = ({ chapter }: ChapterDetailPageProps) => {
 
             setIsFollow(false)
         } catch (error) {
-            console.log(error)
+            // console.log(error)
             setIsFollow(false)
         }
     }
@@ -254,13 +222,6 @@ const ChapterDetailPage = ({ chapter }: ChapterDetailPageProps) => {
             }
         }
     }, [chapter])
-
-    // Call funciton "handleGetCommentsChapter" for the first time
-    // useEffect(() => {
-    //     if(chapter?.chapterId) {
-    //         handleGetCommentsChapter()
-    //     }
-    // }, [])
 
     return (
         <>
@@ -283,7 +244,7 @@ const ChapterDetailPage = ({ chapter }: ChapterDetailPageProps) => {
             
                                 {/* Pagination */}
                                 <div className="border-b pb-3 mb-7 mt-4">
-                                    <div ref={paginationRef} className={`transition-all top-0 left-0 right-0 py-1 ${isFixed ? 'fixed bg-gray-200' : ''}`}>
+                                    <div ref={paginationRef} className={`transition-all top-0 left-0 right-0 py-1 ${isFixed ? 'fixed bg-gray-200 z-20' : ''}`}>
                                         <ul className="lg:max-w-5xl mx-auto flex items-center justify-center gap-1">
             
                                             <li>
@@ -412,64 +373,44 @@ const ChapterDetailPage = ({ chapter }: ChapterDetailPageProps) => {
                                         __html: chapter?.content || "Lỗi hiển thị",
                                     }}
                                 />
-
-
-                                
-                               {/* <div className="bg-gray-100 my-10 py-10 ">
-                                    <div className="flex items-center justify-center gap-4 px-6 text-2xl py-10  font-bold uppercase">
-                                        <TextRank rank={0} />
-                                        <i className="w-4 h-4 block rotate-90">{iconAngleDouble}</i>
-                                        <TextRank rank={1} />
-                                        <i className="w-4 h-4 block rotate-90">{iconAngleDouble}</i>
-                                        <TextRank rank={2} />
-                                        <i className="w-4 h-4 block rotate-90">{iconAngleDouble}</i>
-                                        <TextRank rank={3} />
-                                        <i className="w-4 h-4 block rotate-90">{iconAngleDouble}</i>
-                                        <TextRank rank={4} />
-                                        <i className="w-4 h-4 block rotate-90">{iconAngleDouble}</i>
-                                        <TextRank rank={5} />
-                                        <i className="w-4 h-4 block rotate-90">{iconAngleDouble}</i>
-                                        <TextRank rank={6} />
-                                    </div>
-                                    <div className="flex justify-center"><TextRank rank={7} /></div>
-                               </div> */}
             
                                 {/* Pagination */}
-                                <ul className="flex px-4 justify-between mt-8 mb-5">
-                                    <li>
+                                <ul className="flex px-4 justify-center mt-8 mb-5">
+                                    <li className="mx-1">
                                         <Link
                                             href={`/truyen/${chapter?.novelSlug}/chuong-${
                                                 chapter?.chapterNumber - 1
                                             }`}
-                                            className={`sm:py-2 sm:px-7 py-2 px-4 border rounded-full flex items-center bg-white bg-opacity-50 sm:text-base text-sm font-semibold select-none ${
-                                                chapter?.chapterNumber == 1 &&
-                                                "pointer-events-none text-gray-400 fill-gray-400"
+                                            className={`text-white fill-white rounded flex items-center justify-center px-[10px] h-9 select-none ${
+                                                chapter?.chapterNumber == 1 ?
+                                                "pointer-events-none bg-black/30 " : "bg-[#d9534f] hover:bg-[#ac2925]"
                                             }`}
                                         >
-                                            <i className="-rotate-90 w-3 mr-2 block">{iconArrowTop}</i>
-                                            Chương trước
+                                            <i className="w-4 h-4 mr-1 mt-[1px] block">{iconChevronLeft}</i><span>Chap trước</span>
                                         </Link>
                                     </li>
-                                    <li>
+                                    <li className="mx-1">
                                         <Link
                                             href={`/truyen/${chapter?.novelSlug}/chuong-${
                                                 chapter?.chapterNumber + 1
                                             }`}
-                                            className={`sm:py-2 sm:px-7 py-2 px-4 border rounded-full flex items-center bg-white bg-opacity-50 sm:text-base text-sm font-semibold select-none`}
+                                            className={`text-white fill-white rounded flex items-center justify-center px-[10px] h-9 select-none ${
+                                                chapter?.chapterNumber == chapter?.chapterCount ?
+                                                "pointer-events-none bg-black/30 " : "bg-[#d9534f] hover:bg-[#ac2925]"
+                                            }`}
                                         >
-                                            Chương sau
-                                            <i className="rotate-90 w-3 ml-2 block">{iconArrowTop}</i>
+                                            <span>Chap sau</span><i className="w-4 h-4 ml-1 mt-[1px] block">{iconChevronRight}</i>
                                         </Link>
                                     </li>
                                 </ul>
 
-                                <div className="flex justify-center">
+                                <div className="overflow-hidden mb-4">
                                     <div className="w-full">
                                         <BlurImage
                                             alt="image head"
                                             width={1200}
                                             height={1200}
-                                            className="w-full h-full object-cover block"
+                                            className="w-full object-cover block"
                                             src="https://res.cloudinary.com/djrbd6ftt/image/upload/v1689167556/hobanovel/admin/image-footer-01_rvlidd.jpg"
                                         />
                                     </div>
@@ -478,29 +419,24 @@ const ChapterDetailPage = ({ chapter }: ChapterDetailPageProps) => {
                         )
                     }
 
+                    <Breadcrumb 
+                        path={[
+                            { title: 'Truyện', url: '/' },
+                            { title: `${chapter?.novelName}`, url: `/truyen/${chapter?.novelSlug}` },
+                            { title: `Chapter ${chapter?.chapterNumber}`, url: `/truyen/${chapter?.novelSlug}/chuong-${chapter?.chapterNumber}`}
+                        ]}
+                    />
+
                     <div className="">
 
                         <ul className="transition-all ease-linear">
-                            {/* {
-                                 ? (
-                                    <LoadingForm theme="dark"/>
-                                ) : (
-                                    comments.length === 0 ? (
-                                        <li>Hãy là người đầu tiên bình luận</li>
-                                    ) : (
-                                        comments?.map((comment) => {
-                                            return (
-                                                <li key={comment.commentId}>
-                                                    <CommentItem key={comment?.commentId} comment={comment} user={currentUser} handleDeleteComment={handleDestroyComment}/>
-                                                </li>
-                                            );
-                                        })
-                                    )
-                                )
-                            } */}
+                            
+                            <FormComment novelId={chapter?.novelId} chapterId={chapter?.chapterId} chapterNumber={chapter?.chapterNumber} />
+
                         </ul>
                         
                     </div>
+
 
                 </div>
             </WrapperLayout>

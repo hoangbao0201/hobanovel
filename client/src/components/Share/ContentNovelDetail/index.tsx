@@ -37,6 +37,7 @@ const ContentNovelDetail = ({
                 <BlurImage
                     width={208}
                     height={280}
+                    key={`image-${novel.slug}`}
                     alt={`truyện ${novel?.title}`}
                     blurDataURL={novel?.imageBlurHash || placeholderBlurhash}
                     className="group-hover:scale-105 group-hover:duration-500 mx-auto object-cover shadow"

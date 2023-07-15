@@ -4,24 +4,66 @@ const Footer = () => {
 
     return (
         <>
-            <footer style={{ background: "URL('/images/footer-bg.png') no-repeat bottom" }} className={`w-full bg-white border-t border-t-gray-100`}>
+            <footer style={{ background: "#fff URL('/images/footer-bg.png') no-repeat bottom" }} className={`w-full py-4 border-t border-t-gray-100`}>
                 {/* <div  className="absolute w-full h-200px"></div> */}
-                <div className="max-w-7xl min-h-[200px] mx-auto flex items-center flex-col h-12 px-3 justify-center">
+                <div className="max-lg:max-w-3xl max-w-5xl min-h-[200px] mx-auto px-4 lg:flex">
 
-                    <h1 className="font-semibold text-2xl mb-3">hobanovel</h1>
-                    
-                    <h1 className="text-sm max-w-4xl w-full text-center line-clamp-2">
-                        hobanovel là nền tảng mở trực tuyến, miễn phí đọc truyện chữ được convert hoặc dịch kỹ lưỡng, do các converter và dịch giả đóng góp, rất nhiều truyện hay và nổi bật được cập nhật nhanh nhất với đủ các thể loại tiên hiệp, kiếm hiệp, huyền ảo ... 
-                    </h1>
-
-                    <ul className="gap-x-6 text-base mt-3 flex flex-wrap justify-center">
-                        <li className="border py-2 px-3 rounded-md bg-gray-300 border-gray-700">
+                    <div itemScope itemType="http://schema.org/Organization" className="lg:w-2/5 mb-4 max-lg:border-b border-gray-600">
+                        <h1 className="font-semibold text-2xl mb-3">
+                            <Link itemProp="url" href="/">hobanovel</Link>
+                        </h1>
+                        
+                        {/* <h1 className="text-sm max-w-4xl w-full line-clamp-2">
+                            hobanovel là nền tảng mở trực tuyến, miễn phí đọc truyện chữ được convert hoặc dịch kỹ lưỡng, do các converter và dịch giả đóng góp, rất nhiều truyện hay và nổi bật được cập nhật nhanh nhất với đủ các thể loại tiên hiệp, kiếm hiệp, huyền ảo ... 
+                        </h1> */}
+    
+                        <div className="mb-2">
                             <Link href="/chinh-sach-bao-mat">
                                 Chính sách bảo mật
                             </Link>
-                        </li>
-                    </ul>
+                        </div>
+    
+                        <p className="mb-2">Copyright © 2022 HobaNovel</p>
+                    </div>
+
+                    <div className="lg:w-3/5">
+                        <h4 className="mb-4">Từ khóa</h4>
+                        <ul className="flex flex-wrap gap-2 text-xs whitespace-nowrap text-center [&>li]:bg-slate-200 [&>li]:border [&>li]:border-gray-500 [&>li]:p-1">
+                            <li><Link target="_self" href="/">Truyện chữ</Link></li>
+                            <li><Link target="_self" href="/">Truyện chữ online</Link></li>
+                            <li><Link target="_self" href="/">Đọc truyện chữ</Link></li>
+                            <li><Link target="_self" href="/">Truyện chữ hay</Link></li>
+
+                            <li><Link target="_self" href="/">Truyện tranh</Link></li>
+                            <li><Link target="_self" href="/">Truyen tranh online</Link></li>
+                            <li><Link target="_self" href="/">Đọc truyện tranh</Link></li>
+                            <li><Link target="_self" href="/">Truyện tranh hot</Link></li>
+                            <li><Link target="_self" href="/">Truyện tranh hay</Link></li>
+
+                            <li><Link target="_self" href="/h">Truyện ngôn tình</Link></li>
+                            <li><Link target="_self" href="/">Manhwa</Link></li>
+                            <li><Link target="_self" href="/">Manga</Link></li>
+                            <li><Link target="_self" href="/">Manhua</Link></li>
+
+                            <li><Link target="_self" href="/">truyenaudiocv</Link></li>
+                            <li><Link target="_self" href="/">metruyenchu</Link></li>
+                            <li><Link target="_self" href="/">truyencv</Link></li>
+                            <li><Link target="_self" href="/">truyentutien</Link></li>
+
+                            <li><Link target="_self" href="/">nettruyen</Link></li>
+                            <li><Link target="_self" href="/">mi2manga</Link></li>
+                            <li><Link target="_self" href="/">doctruyen3q</Link></li>
+                            <li><Link target="_self" href="/">toptruyen</Link></li>
+                            <li><Link target="_self" href="/">cmanga</Link></li>
+                            <li><Link target="_self" href="/">vlogtruyen</Link></li>
+                            <li><Link target="_self" href="/">blogtruyen</Link></li>
+                            <li><Link target="_self" href="/">truyentranhaudio</Link></li>
+                            <li><Link target="_self" href="/">vcomi</Link></li>
+                        </ul>
+                    </div>
+
                 </div>
+
             </footer>
         </>
     )

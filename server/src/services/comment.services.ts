@@ -33,10 +33,18 @@ export const addCommentByNovelHandle = async (data: CommentType ) => {
 
 export const getCommentsHandle = async (data : Partial<CommentType> & { page: number }) => {
     try {
-        const connection = await pool.getConnection();
-
         const { conditions, params } = CommentSearchConditions(data);
         
+        const connection = await pool.getConnection();
+
+        // Get countPage
+        const qGetCountPage = `
+            SELECT COUNT(*) as countPage FROM comments
+            WHERE ${conditions}
+        `
+        const [rowsGetCountPage] : any = await connection.query(qGetCountPage, [...params]);
+        
+        // Get comments
         const qGetComment = `
             SELECT comments.*, 
             us_sender.userId as senderId, comments.senderName as senderName, us_sender.username as senderUsername, us_sender.rank as senderRank, 
@@ -60,7 +68,8 @@ export const getCommentsHandle = async (data : Partial<CommentType> & { page: nu
 
         return {
             success: true,
-            data: rows
+            data: rows,
+            countPage: rowsGetCountPage
         };
     } catch (error) {
         return {

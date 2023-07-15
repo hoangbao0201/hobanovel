@@ -18,6 +18,7 @@ export interface BannersType extends NovelType {
 
 export interface CommentType {
     commentId: string
+    chapterNumber: string
     commentText: string
     createdAt: Date
     updatedAt: Date

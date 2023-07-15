@@ -2,9 +2,9 @@ import { apiUrl } from "@/constants";
 import axios from "axios";
 
 
-export const getCommentsHandle = async (novelId?: string, chapterId?: string, page?: number) => {
+export const getCommentsHandle = async (novelId?: string, chapterId?: string, chapterNumber?: number, page?: number) => {
     try {
-        const commentsRes = await axios.get(`${apiUrl}/api/comments/get?novelId=${novelId || ''}&chapterId=${chapterId || ''}&page=${page || ''}`);
+        const commentsRes = await axios.get(`${apiUrl}/api/comments/get?novelId=${novelId || ''}&chapterId=${chapterId || ''}&chapterNumber=${chapterNumber || ''}&page=${page || ''}`);
 
         return commentsRes.data
     } catch (error) {
@@ -19,13 +19,14 @@ export const getCommentsHandle = async (novelId?: string, chapterId?: string, pa
     }
 };
 
-export const addCommentHandle = async (data : { receiverId?: string, novelId?: string, chapterId?: string, commentText: string, token: string, senderName: string }) => {
+export const addCommentHandle = async (data : { receiverId?: string, novelId?: string, chapterId?: string, chapterNumber?: number, commentText: string, token: string, senderName: string }) => {
     try {
-        const { receiverId = '', novelId = '', chapterId = '', commentText, senderName } = data
+        const { receiverId = '', novelId = '', chapterId = '', chapterNumber = '', commentText, senderName } = data
         const commentsRes = await axios.post(`${apiUrl}/api/comments/add`, {
             receiverId: receiverId,
             novelId: novelId,
             chapterId: chapterId,
+            chapterNumber: chapterNumber,
             senderName: senderName,
             commentText: commentText,
         }, {

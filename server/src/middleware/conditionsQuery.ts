@@ -1,7 +1,7 @@
 import { CommentType, NovelType, ReviewType } from "../types";
 
 export const CommentSearchConditions = (data : Partial<CommentType>) => {
-    const { novelId = '', chapterId = '', commentId = '', commentText = '', senderId, receiverId, senderName = '' } = data
+    const { novelId = '', chapterId = '', chapterNumber = '', commentId = '', commentText = '', senderId = '', receiverId = '', senderName = '' } = data
 
     const into = [] // with values insert
     const values : string[] = [] // with columns insert
@@ -32,6 +32,12 @@ export const CommentSearchConditions = (data : Partial<CommentType>) => {
         values.push("chapterId")
         conditions.push('comments.chapterId = ?');
         params.push(String(chapterId));
+    }
+    if (chapterNumber !== '') {
+        into.push(chapterNumber)
+        values.push("chapterNumber")
+        conditions.push('comments.chapterNumber = ?');
+        params.push(String(chapterNumber));
     }
     if (senderName !== '') {
         into.push(senderName)

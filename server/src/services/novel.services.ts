@@ -8,6 +8,7 @@ import { getBlurDataURL } from "../utils/getBlurDataURL";
 import { NovelSearchConditions, fieldGetNovel, getAdvancedNovelConditions } from "../middleware/conditionsQuery";
 import { PROPERTIES_NOVEL } from "../constants";
 
+
 export const createNovelByDataHandle = async (data : NovelType, userId : string) => {
     try {
         const {
@@ -598,8 +599,8 @@ export const getAdvancedNovelHandle = async (data: any) => {
 
         return {
             success: true,
-            countPage: rowsGetCountPage,
             data: rows,
+            countPage: rowsGetCountPage,
         }
 
     } catch (error) {

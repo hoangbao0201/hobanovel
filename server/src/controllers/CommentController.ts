@@ -6,9 +6,9 @@ import { addReplyCommentHandle, addCommentByNovelHandle, destroyReplyCommentByNo
 export const addCommentByNovel = async (req: Request, res: Response) => {
     try {
 
-        const { receiverId = '', novelId = '', chapterId = '', commentText, senderName = '' } = req.body;
+        const { receiverId = '', novelId = '', chapterId = '', chapterNumber = '', commentText, senderName = '' } = req.body;
 
-        if(commentText.length < 10) {
+        if(commentText.length < 16) {
             return res.status(400).json({
                 success: false,
                 message: "Data not found"
@@ -19,9 +19,10 @@ export const addCommentByNovel = async (req: Request, res: Response) => {
             senderId: res.locals.user.userId,
             novelId: novelId,
             chapterId: chapterId,
+            chapterNumber: chapterNumber,
             commentText: commentText,
             receiverId: receiverId,
-            senderName: senderName.length > 10 ? senderName : res.locals.user.name
+            senderName: senderName.length > 4 ? senderName : res.locals.user.name
         }
         const commentResult : any = await addCommentByNovelHandle(dataComment as CommentType)
         if(!commentResult.success) {
@@ -49,16 +50,17 @@ export const addCommentByNovel = async (req: Request, res: Response) => {
 
 export const getComments = async (req: Request, res: Response) => {
     try {
-        const { novelId = '', chapterId = '', page = 1 } = req.query
+        const { novelId = '', chapterId = '', chapterNumber = '', page = 1 } = req.query
 
         const dataComments = {
             novelId: novelId,
             chapterId: chapterId,
+            chapterNumber: chapterNumber,
             page: Number(page) || 1
         }
         const commentResult = await getCommentsHandle(dataComments as Partial<CommentType> & { page: number });
         if(!commentResult.success) {
-            return res.status(400).json({
+            return res.status(400).json({  
                 success: false,
                 message: "Get comments Error",
                 error: commentResult.error,
@@ -69,6 +71,8 @@ export const getComments = async (req: Request, res: Response) => {
             success: true,
             message: "Get comments successful",
             comments: commentResult.data,
+            countPage: Math.ceil(commentResult?.countPage[0]?.countPage/10) || 1,
+            // query: commentResult.countPage
         })
         
     } catch (error) {
@@ -162,7 +166,7 @@ export const addReplyComment = async (req: Request, res: Response) => {
             parentId: parentId,
             
             senderId: res.locals.user.userId,
-            senderName: senderName,
+            senderName: senderName.length > 4 ? senderName : res.locals.user.name,
 
             receiverId: receiverId,
 
