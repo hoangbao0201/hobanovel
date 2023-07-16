@@ -75,6 +75,7 @@ const InputText = ({ text, isShow, receiver, handleOnchange }: InputTextProps) =
                     // ref={quillRef}
                     theme="snow"
                     value={text}
+                    className="max-h-72 overflow-y-auto"
                     onChange={(value : any) => handleOnchange(value)}
                     modules={modules}
                 />

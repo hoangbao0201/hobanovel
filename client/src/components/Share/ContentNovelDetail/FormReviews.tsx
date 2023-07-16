@@ -89,6 +89,7 @@ const FormReviews = ({ tab, novelId }: FormReviewsProps) => {
     });
     const [commentText, setCommentText] = useState(() => EditorState.createEmpty());
 
+    // Event Onchange Value
     const eventOnchangeDataValue = (e: ChangeEvent<HTMLInputElement>) => {
         setDataValue({
             ...dataValue,
@@ -96,6 +97,7 @@ const FormReviews = ({ tab, novelId }: FormReviewsProps) => {
         });
     };
 
+    // Handle Send Review
     const handleSendReviews = async () => {
         if (!isAuthenticated) {
             console.log("Bạn chưa đăng nhập");
@@ -157,6 +159,7 @@ const FormReviews = ({ tab, novelId }: FormReviewsProps) => {
         }
     };
 
+    // Handle Delete Review
     const handleDestroyReview = async (userId: string, reviewId: string) => {
         if(currentUser?.userId !== userId) {
             return;

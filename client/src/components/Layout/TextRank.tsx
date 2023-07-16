@@ -21,26 +21,35 @@ interface TextRankProps extends WithClassName {
 
 const TextRank = (props : TextRankProps) => {
 
-
     return (
         <TextStyle
-            style={props.rank == 0 ? {  } : { backgroundImage: `url("/emotions/rank/${props.rank}.gif")`, borderImage: `url("/emotions/rank/${props.rank}.gif") 2 round` }}
+            style={props.rank == 0 ? {  } : { 
+                // backgroundImage: `url("/emotions/rank/${props.rank}.gif")`, 
+                // borderImage: `url("/emotions/rank/${props.rank}.gif") 2 round` 
+            }}
             rank={props.rank || 1}
             className={cn(
                 props.className,
-                `duration-300 ease-in-out bg-auto bg-center line-clamp-1 whitespace-nowrap text-center
+                `
+                    whitespace-nowrap overflow-hidden relative
 
-                ${!props.text
-                    ? (`font-bold text-xs uppercase border rounded-sm px-1 pt-[3px] drop-shadow-md ${props.rank == 0 ? "" : ""}`) 
-                    : ("font-semibold text-base")} 
+                    ${
+                        props.text
+                            ? ("font-bold")
+                            : (`text-xs border px-2 rounded-sm border-orange-600 text-orange-600`)
+                    }
 
-                ${ props.rank == 0 
-                    ? "text-gray-700" 
-                    : "text-black/10" }`,
-
+                `,
             )}
-        >{props.text || LEVEL_VALUE[props.rank].value }</TextStyle>
+        >
+            {props.text || LEVEL_VALUE[props.rank <= 180 ? Math.round(props.rank/20) : 9].value }
+            {!props.text && <span style={{ width: `${ (((props.rank%20)*100)/20) || 100 }%` }} className={`absolute block top-0 right-0 bottom-0 left-0 bg-yellow-500/40`}></span>}
+        </TextStyle>
     )
 }
+
+// ${ props.rank == 0 
+//     ? "text-gray-800" 
+//     : "text-gray-800" }
 
 export default TextRank;

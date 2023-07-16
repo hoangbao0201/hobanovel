@@ -8,7 +8,7 @@ import CommentItem from "./ItemComment";
 import { iconSend } from "../../../../public/icons";
 import { addCommentHandle, destroyCommentHandle, getCommentsHandle } from "@/services/comment.services";
 import { getAccessToken } from "@/services/cookies.servies";
-import { CommentSliceType, addCommentsRDHandle, setCommentsRDHandle } from "@/redux/commentSlice";
+import { CommentSliceType, addCommentsRDHandle, destroyCommentsNovelRDHandle, loadCommentsNovelRDHandle, setCommentsRDHandle } from "@/redux/commentSlice";
 import { LoadingForm } from "@/components/Layout/LoadingLayout";
 // import { EditorStyle } from "@/components/Layout/EditorStyle";
 import { dataFakeBannersMobile } from "@/components/partials/BannersIntro";
@@ -25,23 +25,23 @@ interface FormCommentProps {
 const FormComment = ({ novelId, chapterId, chapterNumber }: FormCommentProps) => {
     const dispatch = useDispatch();
     const { currentUser, isAuthenticated } = useSelector((state: any) => state.user);
-    const { isLoading, comments } : CommentSliceType = useSelector(
+    const { loadComment, comments } : CommentSliceType = useSelector(
         (state: any) => state.comment
     );
-
+    
     const anchorRef = useRef<HTMLAnchorElement>(null);
-
+    
     const [commentText, setCommentText] = useState("");
     const [sender, setSender] = useState({
         senderId: currentUser?.userId || '',
         senderUsername: currentUser?.username || '',
         senderName: currentUser?.name || '',
     })
+    const [loadComments, setLoadComments] = useState(false);
     const [isFormSend, setIsFormSend] = useState(false);
     const [currentPage, setCurrentPage] = useState(1)
     const [countPage, setCountPage] = useState(1)
 
-    // console.log(novelId, chapterId, chapterNumber, 1)
 
     const handleOpTop = () => {
         if (anchorRef.current) {
@@ -51,8 +51,8 @@ const FormComment = ({ novelId, chapterId, chapterNumber }: FormCommentProps) =>
 
     // Handle Next Page
     const handleNextPage = (page: number) => {
+        setLoadComments(true);
         setCurrentPage(page);
-        handleOpTop();
     }
 
     // Handle Get Comments
@@ -62,8 +62,15 @@ const FormComment = ({ novelId, chapterId, chapterNumber }: FormCommentProps) =>
 
             if (commentsResponse?.success) {
                 setCountPage(commentsResponse?.countPage || 1)
-                dispatch(setCommentsRDHandle(Array.from((commentsResponse.comments))))
+                dispatch(setCommentsRDHandle(Array.from(commentsResponse.comments)))
+
+                if(loadComments) {
+                    handleOpTop();
+                    setLoadComments(false);
+                }
             }
+
+
         } catch (error) {
             
         }
@@ -129,7 +136,6 @@ const FormComment = ({ novelId, chapterId, chapterNumber }: FormCommentProps) =>
     const handleDestroyComment = async (senderId: string, commentId: string) => {
 
         if(currentUser?.userId !== senderId && currentUser.userId != 1) {
-            console.log(1)
             return;
         }
         
@@ -141,8 +147,7 @@ const FormComment = ({ novelId, chapterId, chapterNumber }: FormCommentProps) =>
             
             const reviewResponse = await destroyCommentHandle(commentId, token);
             if(reviewResponse?.success) {
-                const filterComments = comments.filter((comment) => comment?.commentId !== commentId);
-                dispatch(setCommentsRDHandle(filterComments))
+                dispatch(destroyCommentsNovelRDHandle({ commentId }))
             }
 
         } catch (error) {
@@ -162,7 +167,6 @@ const FormComment = ({ novelId, chapterId, chapterNumber }: FormCommentProps) =>
     const handleOnchangeCommentText = (value: string) => {
         setCommentText(value)
     }
-
 
     useEffect(() => {
         handleGetComments();
@@ -220,7 +224,7 @@ const FormComment = ({ novelId, chapterId, chapterNumber }: FormCommentProps) =>
             </div>
 
             {
-                isLoading ? (
+                loadComment ? (
                     <LoadingForm theme="dark"/>
                 ) : (
                     <ul className="transition-all ease-linear px-4 min-h-[250px]">
@@ -252,6 +256,11 @@ const FormComment = ({ novelId, chapterId, chapterNumber }: FormCommentProps) =>
                     </ul>
                 )
             }
+
+            <div className={`${loadComments ? 'block' : 'hidden'} top-[36%] left-[42%] z-[99999] border rounded-md bg-white fixed text-black py-1 pr-5 pl-3 text-sm shadow-md`}>
+                <img className="max-w-full inline-block align-middle" src="/emotions/loading-small.gif"/>
+                <span className="align-middle">Đang xử lí</span>
+            </div>
 
             {/* <button onClick={handleOpTop}>lên</button> */}
         </div>

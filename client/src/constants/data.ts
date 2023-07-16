@@ -30,7 +30,9 @@ export const LEVEL_VALUE = [
     { id: 4, value: "Nguyên Anh" },
     { id: 5, value: "Hóa Thần" },
     { id: 6, value: "Luyện Hư" },
-    { id: 7, value: "Sáng Tạo Đạo Giả" },
+    { id: 7, value: "Hợp thể" },
+    { id: 8, value: "Đại thừa" },
+    { id: 9, value: "Sáng Tạo Đạo Giả" },
 ]
 
 type PROPERTIES_NOVEL_TYPES = {

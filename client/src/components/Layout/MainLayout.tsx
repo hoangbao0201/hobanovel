@@ -101,6 +101,7 @@ const MainLayout = ({
             >
                 {children}
             </main>
+
     
 
             { isFooter && <Footer /> }
