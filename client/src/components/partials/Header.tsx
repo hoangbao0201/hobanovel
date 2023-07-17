@@ -8,17 +8,17 @@ import { useMediaQuery } from "usehooks-ts";
 import { NavOver } from "./NavOver";
 import BlurImage from "../Layout/BlurImage";
 import SearchInput from "../Layout/SearchInput";
-import { iconBars, iconComment, iconTimes } from "../../../public/icons";
+import { iconBars, iconTimes } from "../../../public/icons";
 import { placeholderBlurhash } from "@/constants";
 import { logoutUserHandle } from "@/redux/userSlice";
-import { LoadingForm } from "../Layout/LoadingLayout";
 import { useClickOutSide } from "@/hook/useClickOutSide";
 import { GENRES_VALUE, RANK_VALUE } from "@/constants/data";
 import { removeAccessToken } from "@/services/cookies.servies";
 import ClientOnly from "../Share/ClientOnly";
 import { useRouter } from "next/router";
-import LazyLoad from "react-lazy-load";
-// import { signOut } from "next-auth/react";
+import { CommentsNotify } from "./CommentsNotify";
+
+
 
 interface HeaderProps {
     autoHidden?: boolean
@@ -37,13 +37,11 @@ const Header = ({ autoHidden = true } : HeaderProps) => {
     const userDropdownRef = useRef<any>()
     const genresDropdownRef = useRef<any>();
     const rankDropdownRef = useRef<any>();
-    const notifyDropdownRef = useRef<any>();
 
     const [isHeader, setIsHeader] = useState(true);
     const [isDropdownGenres, setIsDropdownGenres] = useState(false);
     const [isDropdownRank, setIsDropdownRank] = useState(false);
     const [isDropdownUser, setIsDropdownUser] = useState(false);
-    const [isDropdownNotify, setIsDropdownNotify] = useState(false);
     const [isNavOver, setIsNavOver] = useState(false);
 
     useEffect(() => {
@@ -74,9 +72,6 @@ const Header = ({ autoHidden = true } : HeaderProps) => {
     const handleHiddenDropdownUser = () => {
         setIsDropdownUser(false);
     }
-    const handleHiddenDropdownNotify = () => {
-        setIsDropdownNotify(false);
-    }
 
     const eventLogoutUser = () => {
         dispatch(logoutUserHandle());
@@ -88,14 +83,13 @@ const Header = ({ autoHidden = true } : HeaderProps) => {
     useClickOutSide(genresDropdownRef, handleHiddenDropdownGenres);
     useClickOutSide(rankDropdownRef, handleHiddenDropdownRank);
     useClickOutSide(userDropdownRef, handleHiddenDropdownUser);
-    useClickOutSide(notifyDropdownRef, handleHiddenDropdownNotify);
+    
 
     useEffect(() => {
         if(!isHeader) {
             setIsDropdownGenres(false);
             setIsDropdownRank(false);
             setIsDropdownUser(false);
-            setIsDropdownNotify(false);
         }
     }, [isHeader])
 
@@ -182,37 +176,10 @@ const Header = ({ autoHidden = true } : HeaderProps) => {
                         <SearchInput className="max-w-md"/>
                     </div>
                     
-
-                    <div className="ml-auto mr-2 h-[50px]">
-                        <button onClick={() => setIsDropdownNotify(value => !value)} className={`h-[50px]  top-0 px-2 ${isDropdownNotify ? 'bg-white [&>i]:fill-blue-400' : ''}`}>
-                            <i className="w-6 h-6 mx-1 block fill-gray-500">{iconComment}</i>
-                        </button>
-                        <div ref={notifyDropdownRef} className={`absolute ${isDropdownNotify ? "block" : "hidden"} md:right-14 right-0  bg-white top-[50px] shadow-lg rounded z-20`}>
-                            <div className="md:max-w-lg w-full grid">
-                                <div className="px-4 py-3 border-b whitespace-nowrap text-center font-semibold">Thông báo</div>
-                                <ul className="max-h-96 overflow-y-auto">
-                                    <li className="hover:bg-slate-100 border-b">
-                                        <Link className="flex px-4 py-3" href="/">
-                                            <LazyLoad className="w-12 h-12 flex-shrink-0 mt-1 border rounded overflow-hidden">
-                                                <BlurImage
-                                                    alt="image avatar"
-                                                    width={50}
-                                                    height={50}
-                                                    src={`/images/avatar-default-2.png`}
-                                                    className="w-12 h-12 object-cover"
-                                                />
-                                            </LazyLoad>
-                                            <div className="pl-3 text-sm">
-                                                <strong className="">Nguyễn Hoàng Bảo</strong>&nbsp;đã nhắc đến bạn ở bình luận trong&nbsp;
-                                                <strong className="">BẮT ĐẦU GIÁO HOA HUẤN LUYỆN QUÂN SỰ ĐƯA DƯA HẤU</strong>
-                                            </div>
-                                        </Link>
-                                    </li>
-                                </ul>
-                                <Link className="text-center hover:bg-slate-100 border-t py-1 font-semibold" href="/">Xem tất cả</Link>
-                            </div>
-                        </div>
+                    <div className="ml-auto">
+                        <CommentsNotify receiverId={currentUser?.userId}/>
                     </div>
+                    
                     <div className="flex">
                                     
                         <ClientOnly>

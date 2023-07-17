@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { CommentType } from "../types";
-import { addReplyCommentHandle, addCommentByNovelHandle, destroyReplyCommentByNovelHandle, destroyCommentByNovelHandle, getReplyCommentHandle, getCommentsHandle } from "../services/comment.services";
+import { addReplyCommentHandle, addCommentByNovelHandle, destroyReplyCommentByNovelHandle, destroyCommentByNovelHandle, getReplyCommentHandle, getCommentsHandle, getCommentNotifyHandle } from "../services/comment.services";
 
 // Register User | /api/auth/register
 export const addCommentByNovel = async (req: Request, res: Response) => {
@@ -73,7 +73,56 @@ export const getComments = async (req: Request, res: Response) => {
             message: "Get comments successful",
             comments: commentResult.data,
             countPage: Math.ceil(commentResult?.countPage[0]?.countPage/10) || 1,
-            // query: commentResult.countPage
+        })
+        
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: `Internal server error ${error}`,
+        });
+    }
+}
+
+export const getCommentNotify = async (req: Request, res: Response) => {
+    try {
+        const { page = 1 } = req.query
+        const commentResult = await getCommentNotifyHandle(res.locals.user.userId, Number(page) || 1);
+        if(!commentResult.success) {
+            return res.status(400).json({  
+                success: false,
+                message: "Get comments Error",
+                error: commentResult.error,
+            })
+        }
+        
+        return res.json({
+            success: true,
+            message: "Get comments successful",
+            comments: commentResult.data,
+        })
+        
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: `Internal server error ${error}`,
+        });
+    }
+}
+export const getCommentNotifyRead = async (_req: Request, res: Response) => {
+    try {
+        // const commentResult = await getCommentNotifyHandle(res.locals.user.userId, Number(page) || 1);
+        // if(!commentResult.success) {
+        //     return res.status(400).json({  
+        //         success: false,
+        //         message: "Get comments Error",
+        //         error: commentResult.error,
+        //     })
+        // }
+        
+        return res.json({
+            success: true,
+            message: "Get comments successful",
+            // comments: commentResult.data,
         })
         
     } catch (error) {
@@ -154,7 +203,7 @@ export const destroyReplyCommentByNovel = async (req: Request, res: Response) =>
 
 export const addReplyComment = async (req: Request, res: Response) => {
     try {
-        const { parentId = '', receiverId = '', senderName = '', commentText = '' } = req.body
+        const { parentId = '', novelId = '', receiverId = '', senderName = '', commentText = '' } = req.body
 
         if(!commentText) {
             return res.status(400).json({
@@ -165,6 +214,7 @@ export const addReplyComment = async (req: Request, res: Response) => {
 
         const dataComments = {
             parentId: parentId,
+            novelId: novelId,
             
             senderId: res.locals.user.userId,
             senderName: senderName.length > 4 ? senderName : res.locals.user.name,

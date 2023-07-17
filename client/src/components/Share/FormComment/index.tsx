@@ -23,7 +23,9 @@ interface FormCommentProps {
 }
 
 const FormComment = ({ novelId, chapterId, chapterNumber }: FormCommentProps) => {
+
     const dispatch = useDispatch();
+    
     const { currentUser, isAuthenticated } = useSelector((state: any) => state.user);
     const { loadComment, comments } : CommentSliceType = useSelector(
         (state: any) => state.comment
@@ -43,6 +45,7 @@ const FormComment = ({ novelId, chapterId, chapterNumber }: FormCommentProps) =>
     const [countPage, setCountPage] = useState(1)
 
 
+    // Handle On Top
     const handleOpTop = () => {
         if (anchorRef.current) {
             anchorRef.current.scrollIntoView({});
@@ -70,7 +73,6 @@ const FormComment = ({ novelId, chapterId, chapterNumber }: FormCommentProps) =>
                     setLoadComments(false);
                 }
 
-                console.log(loadComments)
             }
 
 
@@ -93,6 +95,9 @@ const FormComment = ({ novelId, chapterId, chapterNumber }: FormCommentProps) =>
         if(sender?.senderName.length < 5) {
             alert("Tên tài khoản tối thiểu 5 ký tự!");
             return;
+        }
+        if(!novelId) {
+            return
         }
         
         try {
@@ -181,51 +186,54 @@ const FormComment = ({ novelId, chapterId, chapterNumber }: FormCommentProps) =>
     
                 <a ref={anchorRef} href="#target"></a>
     
-                <div className="relative grid mb-8 px-4">
-    
-                    {
-                        !isFormSend ? (
-                            <div
-                                onClick={() => setIsFormSend(true)}
-                                className="p-4 h-28 text-sm cursor-text text-gray-400 border border-gray-400 rounded-sm"
-                            >
-                                Mời bạn thảo luận, vui lòng không spam, share link kiếm tiền, thiếu lành mạnh,... để tránh bị khóa tài khoản
-                            </div>
-                        ) : (
-                            <>
-                                <InputText
-                                    text={commentText}
-                                    isShow={isFormSend}
-                                    handleOnchange={handleOnchangeCommentText}
-                                />
-                                <div className="flex mt-3 gap-3">
-                                    <input
-                                        name="senderName"
-                                        className="border rounded w-full px-3 py-1 focus:outline-none focus:border-blue-700"
-                                        value={sender.senderName}
-                                        onChange={handleOnchangeSender}
-                                        placeholder="Họ tên (bắt buộc)"
-                                    />
-                                    <input
-                                        disabled={isAuthenticated}
-                                        className="border rounded w-full px-3 py-1 focus:outline-none focus:border-blue-700"
-                                        value={sender.senderUsername}
-                                    />
-    
-                                    <button
-                                        onClick={handleSendComment}
-                                        className="right-0 text-right py-2 px-4 rounded-sm transition-colors bg-yellow-600 hover:bg-yellow-700"
+                {
+                    novelId && (  
+                        <div className="relative grid mb-8 px-4">
+                            {
+                                !isFormSend ? (
+                                    <div
+                                        onClick={() => setIsFormSend(true)}
+                                        className="p-4 h-28 text-sm cursor-text text-gray-400 border border-gray-400 rounded-sm"
                                     >
-                                        <i className="w-6 h-6 fill-white block translate-x-[1px]">
-                                            {iconSend}
-                                        </i>
-                                    </button>
-                                </div>
-                            </>
-                        )
-                    }
-    
-                </div>
+                                        Mời bạn thảo luận, vui lòng không spam, share link kiếm tiền, thiếu lành mạnh,... để tránh bị khóa tài khoản
+                                    </div>
+                                ) : (
+                                    <>
+                                        <InputText
+                                            text={commentText}
+                                            isShow={isFormSend}
+                                            handleOnchange={handleOnchangeCommentText}
+                                        />
+                                        <div className="flex mt-3 gap-3">
+                                            <input
+                                                name="senderName"
+                                                className="border rounded w-full px-3 py-1 focus:outline-none focus:border-blue-700"
+                                                value={sender.senderName}
+                                                onChange={handleOnchangeSender}
+                                                placeholder="Họ tên (bắt buộc)"
+                                            />
+                                            <input
+                                                disabled={isAuthenticated}
+                                                className="border rounded w-full px-3 py-1 focus:outline-none focus:border-blue-700"
+                                                value={sender.senderUsername}
+                                            />
+            
+                                            <button
+                                                onClick={handleSendComment}
+                                                className="right-0 text-right py-2 px-4 rounded-sm transition-colors bg-yellow-600 hover:bg-yellow-700"
+                                            >
+                                                <i className="w-6 h-6 fill-white block translate-x-[1px]">
+                                                    {iconSend}
+                                                </i>
+                                            </button>
+                                        </div>
+                                    </>
+                                )
+                            }
+            
+                        </div>
+                    )
+                }
     
                 {
                     loadComment ? (
@@ -240,10 +248,11 @@ const FormComment = ({ novelId, chapterId, chapterNumber }: FormCommentProps) =>
                                         {
                                             comments?.map((comment) => {
                                                 return (
-                                                    <li key={comment.commentId}>
+                                                    <li key={comment.commentId} className="grid">
                                                         <CommentItem
                                                             key={comment?.commentId}
-                                                            position={novelId ? (chapterId ? ("chapter") : ("novel")) : ("home")}
+                                                            novelId={novelId}
+                                                            chapterId={chapterId}
                                                             comment={comment}
                                                             user={currentUser}
                                                             handleDeleteComment={handleDestroyComment}

@@ -190,7 +190,8 @@ const HomePage = ({
                         </>
                     </div>
 
-                    <div>
+                    <div className="mt-8">
+                        <PageTitle>Bình luận mới</PageTitle>
                         <FormComment />
                     </div>
 

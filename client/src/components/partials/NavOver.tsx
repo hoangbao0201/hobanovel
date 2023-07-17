@@ -44,43 +44,43 @@ export const NavOver = ({ routerP, user = null, isShow = false, handle, handleLo
                 
                 <SearchInput className="text-gray-900"/>
                 
-                <ul className="block uppercase text-sm">
-                    <li className="py-2">
+                <ul className="block uppercase text-sm [&>li>a]:block [&>li>a]:py-2">
+                    <li className="">
                         <Link href={`/`}>
                             Trang chủ
                         </Link>
                     </li>
-                    <li className="py-2">
+                    <li className="">
                         <Link href={`/`}>
                             Hot
                         </Link>
                     </li>
-                    <li className="py-2">
+                    <li className="">
                         <Link href={`/theo-doi`}>
                             Theo dõi
                         </Link>
                     </li>
-                    <li className="py-2">
+                    <li className="">
                         <Link href={`/`}>
                             Lịch sử
                         </Link>
                     </li>
-                    <li className="py-2">
+                    <li className="">
                         <Link href='/tim-truyen?sort_by=novel_new'>
                             Tìm truyện
                         </Link>
                     </li>
-                    <li className="py-2">
+                    <li className="">
                         <Link href={`/tim-truyen?viewFrame=2`}>
                             Con gái
                         </Link>
                     </li>
-                    <li className="py-2">
+                    <li className="">
                         <Link href={`/tim-truyen?viewFrame=1`}>
                             Con trai
                         </Link>
                     </li>
-                    <li className="py-2">
+                    <li className="">
                         <a target="_blank" href={`https://www.facebook.com/hobanovel`}>
                             Group
                         </a>

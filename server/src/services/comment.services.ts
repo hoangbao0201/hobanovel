@@ -69,7 +69,8 @@ export const getCommentsHandle = async (data : Partial<CommentType> & { page: nu
         return {
             success: true,
             data: rows,
-            countPage: rowsGetCountPage
+            countPage: rowsGetCountPage,
+            query: qGetComment
         };
     } catch (error) {
         return {
@@ -128,18 +129,18 @@ export const destroyReplyCommentByNovelHandle = async ({ commentId, senderId } :
     }
 };
 
-export const addReplyCommentHandle = async (data : Pick<CommentType, 'parentId' | 'senderId' | 'senderName' | 'receiverId' | 'commentText'>) => {
+export const addReplyCommentHandle = async (data : Pick<CommentType, 'parentId' | 'novelId' | 'senderId' | 'senderName' | 'receiverId' | 'commentText'>) => {
     try {
-        const { parentId, senderId, senderName, receiverId, commentText } = data
+        const { parentId, novelId, senderId, senderName, receiverId, commentText } = data
 
         const connection = await pool.getConnection();
 
         const qAddComment = `
-            INSERT INTO comments(parentId, senderId, senderName, receiverId, commentText)
-            VALUES (?, ?, ?, ?, ?)
+            INSERT INTO comments(parentId, novelId, senderId, senderName, receiverId, commentText)
+            VALUES (?, ?, ?, ?, ?, ?)
         `;
 
-        const [rows] = await connection.query(qAddComment, [parentId, senderId, senderName, receiverId, commentText]);
+        const [rows] = await connection.query(qAddComment, [parentId, novelId, senderId, senderName, receiverId, commentText]);
 
         connection.release();
 
@@ -190,3 +191,60 @@ export const getReplyCommentHandle = async (data : CommentType & { page: number 
         };
     }
 };
+
+export const getCommentNotifyHandle = async (receiverId: string, page: number) => {
+    try {
+        const connection = await pool.getConnection();
+
+        const qGetComment = `
+            SELECT comments.parentId, comments.commentId, comments.senderName, comments.isRead, comments.createdAt, novels.title, novels.slug FROM comments
+                LEFT JOIN novels ON novels.novelId = comments.novelId
+            WHERE comments.receiverId = ? AND comments.senderId != ?
+            ORDER BY comments.createdAt DESC
+            LIMIT 8 OFFSET ?
+        `;
+
+        const [rows] = await connection.query(qGetComment, [receiverId, receiverId, (Number(page) - 1) * 8]);
+
+        connection.release();
+
+        return {
+            success: true,
+            data: rows as CommentType[],
+        };
+    } catch (error) {
+        return {
+            success: false,
+            error: error.message,
+        };
+    }
+};
+export const getCommentNotifyReadHandle = async (receiverId: string) => {
+    try {
+        const connection = await pool.getConnection();
+
+        const qGetComment = `
+            SELECT comments.parentId, comments.commentId, comments.senderName, comments.isRead, comments.createdAt, novels.title, novels.slug FROM comments
+                LEFT JOIN novels ON novels.novelId = comments.novelId
+            WHERE comments.receiverId = ? AND comments.senderId != ?
+            ORDER BY comments.createdAt DESC
+            LIMIT 8 OFFSET ?
+        `;
+
+        const [rows] = await connection.query(qGetComment, [receiverId]);
+
+        connection.release();
+
+        return {
+            success: true,
+            data: rows as CommentType[],
+        };
+    } catch (error) {
+        return {
+            success: false,
+            error: error.message,
+        };
+    }
+};
+
+

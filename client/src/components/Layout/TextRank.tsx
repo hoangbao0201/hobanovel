@@ -41,10 +41,13 @@ const TextRank = (props : TextRankProps) => {
 
                     ${
                         props.text
-                            ? ("font-bold text-black/10")
+                            ? ("font-bold")
                             : (`text-xs border px-2 rounded-sm`)
                     }
 
+                    ${
+                        id == 0 ? "text-gray-800" : "text-black/10"
+                    }
                 `,
             )}
         >

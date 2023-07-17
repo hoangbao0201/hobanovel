@@ -31,13 +31,14 @@ import { useClickOutSide } from "@/hook/useClickOutSide";
 import { ShowToastify } from "@/components/features/ShowToastify";
 
 interface CommentItemProps {
-    position?: 'home' | 'novel' | 'chapter' 
+    novelId?: string
+    chapterId?: string
     user?: UserType;
     comment: CommentItemType;
     handleDeleteComment: (senderId: string, commentId: string) => void
 }
 
-const CommentItem = ({ position, comment, user, handleDeleteComment }: CommentItemProps) => {
+const CommentItem = ({ novelId, chapterId, comment, user, handleDeleteComment }: CommentItemProps) => {
 
     const [isFormSend, setIsFormSend] = useState<boolean>(false);
     const [isReplyComment, setIsReplyComment] = useState<boolean>(false);
@@ -57,9 +58,7 @@ const CommentItem = ({ position, comment, user, handleDeleteComment }: CommentIt
         senderUsername: user?.username || '',
         senderName: user?.name || '',
     })
-    // ---
     
-    // ---
 
     // Handle Send Reply Comment
     const handleSendReplyComment = async () => {
@@ -76,10 +75,14 @@ const CommentItem = ({ position, comment, user, handleDeleteComment }: CommentIt
             alert("Tên tài khoản tối thiểu 5 ký tự!");
             return;
         }
+        if(!novelId) {
+            return;
+        }
 
         try {
             const dataReplyCommentReq = {
                 parentId: comment.commentId,
+                novelId: novelId,
                 senderName: sender.senderName,
                 receiverId: receiver.receiverId,
                 commentText: commentText,
@@ -196,24 +199,22 @@ const CommentItem = ({ position, comment, user, handleDeleteComment }: CommentIt
 
     return (
         <div className="mb-3">
-            <div className="mb-3">
-                <Comment user={user} comment={comment} position={position} handleSetFormSend={handleSetIsForm} handleDestroyComment={handleDeleteComment}/>
-                
-                <div className="ml-[52px]">
-                    {
-                        !!comment.countReplyComment && !isReplyComment && (
-                            <button
-                                onClick={handleGetReplyComments}
-                                className="p-1 text-sm flex items-center cursor-pointer"
-                            >
-                                <i className="w-3 h-3 mr-2 block translate-y-[1px] rotate-90 fill-gray-700">
-                                    {iconArrowTurnUp}
-                                </i>
-                                {comment?.countReplyComment} phản hồi
-                            </button>
-                        )
-                    }
-                </div>
+            <Comment position={novelId ? (chapterId ? ("chapter") : ("novel")) : ("home")} user={user} comment={comment} handleSetFormSend={handleSetIsForm} handleDestroyComment={handleDeleteComment}/>
+            
+            <div className="ml-[52px]">
+                {
+                    !!comment.countReplyComment && !isReplyComment && (
+                        <button
+                            onClick={handleGetReplyComments}
+                            className="ml-4 p-1 text-sm flex items-center cursor-pointer"
+                        >
+                            <i className="w-3 mr-2 block flex-shrink translate-y-[1px] rotate-90 fill-gray-700">
+                                {iconArrowTurnUp}
+                            </i>
+                            {comment?.countReplyComment} phản hồi
+                        </button>
+                    )
+                }
             </div>
 
             <div className="ml-[52px]">
@@ -224,7 +225,7 @@ const CommentItem = ({ position, comment, user, handleDeleteComment }: CommentIt
                                 replyComments.map((replyComment) => {
                                     return (
                                         <li key={replyComment.commentId}>
-                                            <Comment user={user} comment={replyComment} position={position} handleSetFormSend={handleSetIsForm} handleDestroyComment={handleDestroyReplyComment}/>
+                                            <Comment user={user} comment={replyComment} position={novelId ? (chapterId ? ("chapter") : ("novel")) : ("home")} handleSetFormSend={handleSetIsForm} handleDestroyComment={handleDestroyReplyComment}/>
                                         </li>
                                     )
                                 })
@@ -362,21 +363,28 @@ export const Comment = ({ user, comment, position, handleSetFormSend, handleDest
                         }
                         <div className="text-gray-600 text-base" dangerouslySetInnerHTML={{ __html: comment.commentText }}></div>
                     </div>
-                    <div className="flex text-sm gap-2 text-[#3f94d5] fill-[#3f94d5] font-semibold">
-                        <button
-                            onClick={() => handleSetFormSend({
-                                rcId: comment.senderId,
-                                rcUsername: comment.senderUsername,
-                                rcName: comment.senderName
-                            })}
-                            className="flex items-center gap-1"
-                        >
-                            <i className="w-3 h-3 block">{iconComment}</i>
-                            <span>Phản hồi</span>
-                        </button>
+
+
+         
+                    <div className="flex my-1 text-sm text-[#3f94d5] fill-[#3f94d5] font-semibold">
+                        {
+                            position !== "home" && (
+                                <button
+                                    onClick={() => handleSetFormSend({
+                                        rcId: comment.senderId,
+                                        rcUsername: comment.senderUsername,
+                                        rcName: comment.senderName
+                                    })}
+                                    className="flex items-center gap-1 mr-2"
+                                >
+                                    <i className="w-3 h-3 block">{iconComment}</i>
+                                    <span>Phản hồi</span>
+                                </button>
+                            )
+                        }
 
                         <div ref={optionRef} className="relative">
-                            <button onClick={() => setIsOptions(value => !value)} className="p-2 rounded-full">
+                            <button onClick={() => setIsOptions(value => !value)} className="p-2 rounded-full hover:bg-gray-200">
                                 <i className="w-3 h-3 block">{iconEllipsis}</i>
                             </button>
                             {
@@ -415,6 +423,7 @@ export const Comment = ({ user, comment, position, handleSetFormSend, handleDest
                             </span>
                         </div>
                     </div>
+
                 </div>
             </div>
 
