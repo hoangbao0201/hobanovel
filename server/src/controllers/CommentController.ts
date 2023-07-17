@@ -50,11 +50,12 @@ export const addCommentByNovel = async (req: Request, res: Response) => {
 
 export const getComments = async (req: Request, res: Response) => {
     try {
-        const { novelId = '', chapterId = '', chapterNumber = '', page = 1 } = req.query
+        const { novelId = '', receiverId = '', chapterId = '', chapterNumber = '', page = 1 } = req.query
 
         const dataComments = {
             novelId: novelId,
             chapterId: chapterId,
+            receiverId: receiverId,
             chapterNumber: chapterNumber,
             page: Number(page) || 1
         }

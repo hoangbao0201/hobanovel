@@ -22,6 +22,7 @@ import WrapperLayout from "@/components/Layout/WrapperLayout";
 import { getReviewsByNovelHandle } from "@/services/review.services";
 import PageTitle from "@/components/Share/PageTitle";
 import { iconAngleRight } from "../../public/icons";
+import FormComment from "@/components/Share/FormComment";
 
 // import Outstanding from "@/components/Share/ContentHome/Outstanding";
 // import Reading from "@/components/Share/ContentHome/Reading";
@@ -187,6 +188,10 @@ const HomePage = ({
                                 <JustCompleted novels={novelsJustCompleted} />
                             </div>
                         </>
+                    </div>
+
+                    <div>
+                        <FormComment />
                     </div>
 
                 </div>

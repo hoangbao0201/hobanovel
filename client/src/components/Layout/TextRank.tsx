@@ -4,6 +4,7 @@ import cn from "clsx"
 import styled from "styled-components";
 import { WithClassName } from "@/types/common";
 import { LEVEL_VALUE } from "@/constants/data";
+import { CalLevel } from "@/utils/CalLevel";
 
 interface TextStyleProps {
     rank: number;
@@ -21,12 +22,17 @@ interface TextRankProps extends WithClassName {
 
 const TextRank = (props : TextRankProps) => {
 
+    const { position: { id, color, value }, scale } = CalLevel(props.rank)
+
     return (
         <TextStyle
-            style={props.rank == 0 ? {  } : { 
-                // backgroundImage: `url("/emotions/rank/${props.rank}.gif")`, 
-                // borderImage: `url("/emotions/rank/${props.rank}.gif") 2 round` 
-            }}
+            style={
+                props.text ? { 
+                    backgroundImage: id > 0 && id < 8 ? ( `url("/emotions/rank/${id}.gif")` ) : '', 
+                } : { 
+                    color: color, borderColor: color
+                }
+            }
             rank={props.rank || 1}
             className={cn(
                 props.className,
@@ -35,15 +41,15 @@ const TextRank = (props : TextRankProps) => {
 
                     ${
                         props.text
-                            ? ("font-bold")
-                            : (`text-xs border px-2 rounded-sm border-orange-600 text-orange-600`)
+                            ? ("font-bold text-black/10")
+                            : (`text-xs border px-2 rounded-sm`)
                     }
 
                 `,
             )}
         >
-            {props.text || LEVEL_VALUE[props.rank <= 180 ? Math.round(props.rank/20) : 9].value }
-            {!props.text && <span style={{ width: `${ (((props.rank%20)*100)/20) || 100 }%` }} className={`absolute block top-0 right-0 bottom-0 left-0 bg-yellow-500/40`}></span>}
+            {props.text || value }
+            {!props.text && <span style={{ width: `${scale}%`, backgroundColor: `${color}`, opacity: `0.4` }} className={`absolute block top-0 right-0 bottom-0 left-0 bg-[${color}]/40`}></span>}
         </TextStyle>
     )
 }
@@ -51,5 +57,9 @@ const TextRank = (props : TextRankProps) => {
 // ${ props.rank == 0 
 //     ? "text-gray-800" 
 //     : "text-gray-800" }
+
+
+// backgroundImage: `url("/emotions/rank/${props.rank}.gif")`, 
+// borderImage: `url("/emotions/rank/${props.rank}.gif") 2 round` 
 
 export default TextRank;

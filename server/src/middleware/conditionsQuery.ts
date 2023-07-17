@@ -12,15 +12,16 @@ export const CommentSearchConditions = (data : Partial<CommentType>) => {
         into.push(senderId);
         values.push("senderId")
     }
-    if (receiverId !== '') {
-        into.push(receiverId);
-        values.push("comments.receiverId = ?")
-    }
     if (commentText !== '') {
         values.push("commentText")
         into.push(String(commentText));
     }
-    
+    if (receiverId !== '') {
+        into.push(receiverId);
+        values.push("comments.receiverId = ?")
+        conditions.push('comments.receiverId = ?');
+        params.push(String(receiverId));
+    }
     if (novelId !== '') {
         into.push(novelId)
         values.push("novelId")

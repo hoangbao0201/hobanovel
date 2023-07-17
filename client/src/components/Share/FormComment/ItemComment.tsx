@@ -31,15 +31,13 @@ import { useClickOutSide } from "@/hook/useClickOutSide";
 import { ShowToastify } from "@/components/features/ShowToastify";
 
 interface CommentItemProps {
-    novelId?: string;
+    position?: 'home' | 'novel' | 'chapter' 
     user?: UserType;
     comment: CommentItemType;
     handleDeleteComment: (senderId: string, commentId: string) => void
 }
 
-const CommentItem = ({ comment, user, handleDeleteComment }: CommentItemProps) => {
-
-    const dispatch = useDispatch();
+const CommentItem = ({ position, comment, user, handleDeleteComment }: CommentItemProps) => {
 
     const [isFormSend, setIsFormSend] = useState<boolean>(false);
     const [isReplyComment, setIsReplyComment] = useState<boolean>(false);
@@ -196,12 +194,10 @@ const CommentItem = ({ comment, user, handleDeleteComment }: CommentItemProps) =
         setCommentText(value)
     }
 
-    // console.log(receiver)
-
     return (
         <div className="mb-3">
             <div className="mb-3">
-                <Comment user={user} comment={comment} handleSetFormSend={handleSetIsForm} handleDestroyComment={handleDeleteComment}/>
+                <Comment user={user} comment={comment} position={position} handleSetFormSend={handleSetIsForm} handleDestroyComment={handleDeleteComment}/>
                 
                 <div className="ml-[52px]">
                     {
@@ -228,7 +224,7 @@ const CommentItem = ({ comment, user, handleDeleteComment }: CommentItemProps) =
                                 replyComments.map((replyComment) => {
                                     return (
                                         <li key={replyComment.commentId}>
-                                            <Comment user={user} comment={replyComment} handleSetFormSend={handleSetIsForm} handleDestroyComment={handleDestroyReplyComment}/>
+                                            <Comment user={user} comment={replyComment} position={position} handleSetFormSend={handleSetIsForm} handleDestroyComment={handleDestroyReplyComment}/>
                                         </li>
                                     )
                                 })
@@ -282,12 +278,13 @@ export default CommentItem;
 
 
 interface CommentProps {
-    user?: UserType;
-    comment: CommentItemType;
+    user?: UserType
+    comment: CommentItemType
+    position?: 'home' | 'novel' | 'chapter' 
     handleSetFormSend: ({ rcId, rcUsername, rcName } : { rcId: string, rcUsername: string, rcName: string }) => void
     handleDestroyComment: (senderId: string, commentId: string) => void
 }
-export const Comment = ({ user, comment, handleSetFormSend, handleDestroyComment } : CommentProps) => {
+export const Comment = ({ user, comment, position, handleSetFormSend, handleDestroyComment } : CommentProps) => {
 
     const optionRef = useRef<HTMLDivElement>(null)
     const [isOptions, setIsOptions] = useState(false);
@@ -307,6 +304,7 @@ export const Comment = ({ user, comment, handleSetFormSend, handleDestroyComment
 
     return (
         <div className="flex">
+
             <Link
                 href={`/user/${comment.senderUsername}`}
                 className="w-10 h-10 mt-2 rounded-full overflow-hidden shadow align-middle inline-block"
@@ -335,7 +333,9 @@ export const Comment = ({ user, comment, handleSetFormSend, handleDestroyComment
                 ></span>
     
                 <div className="">
+                
                     <div className="bg-gray-100 border p-2">
+
                         <div className="flex flex-wrap gap-2 items-center mb-3">
                             <TextRank className="" rank={comment.senderRank || 0} text={comment.senderName}/>
                             <TextRank className="" rank={comment.senderRank || 0}/>

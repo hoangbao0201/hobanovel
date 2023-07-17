@@ -23,16 +23,16 @@ export const RANK_VALUE = [
 ]
 
 export const LEVEL_VALUE = [
-    { id: 0, value: "Phàm nhân" },
-    { id: 1, value: "Luyện Khí" },
-    { id: 2, value: "Trúc cơ" },
-    { id: 3, value: "Kim Đan" },
-    { id: 4, value: "Nguyên Anh" },
-    { id: 5, value: "Hóa Thần" },
-    { id: 6, value: "Luyện Hư" },
-    { id: 7, value: "Hợp thể" },
-    { id: 8, value: "Đại thừa" },
-    { id: 9, value: "Sáng Tạo Đạo Giả" },
+    { id: 0, value: "Phàm nhân", color: "" },
+    { id: 1, value: "Luyện Khí", color: "#2a72b9" },
+    { id: 2, value: "Trúc cơ", color: "#b12d31" },
+    { id: 3, value: "Kim Đan", color: "#da772c" },
+    { id: 4, value: "Nguyên Anh", color: "#e9d918" },
+    { id: 5, value: "Hóa Thần", color: "#5563ad" },
+    { id: 6, value: "Luyện Hư", color: "#c0264d" },
+    { id: 7, value: "Hợp thể", color: "#1bb24c" },
+    { id: 7, value: "Đại thừa", color: "#463e99" },
+    { id: 7, value: "Sáng Tạo Đạo Giả", color: "#363076" },
 ]
 
 type PROPERTIES_NOVEL_TYPES = {

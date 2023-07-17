@@ -17,12 +17,15 @@ import ItemNovel from "@/components/Layout/ItemNovel";
 import ItemNovelLazy from "@/components/Layout/ItemNovelLazy";
 import BlurImage from "@/components/Layout/BlurImage";
 import Breadcrumb from "@/components/Share/Breadcrumb";
+import { useRouter } from "next/router";
 
 
 interface NovelFollowPageProps {
     page: number;
 }
 const NovelFollowPage = ({ page }: NovelFollowPageProps) => {
+
+    const router = useRouter()
 
     const { isAuthenticated } = useSelector(
         (state: any) => state.user
@@ -107,7 +110,7 @@ const NovelFollowPage = ({ page }: NovelFollowPageProps) => {
                                     <div className="mb-4">
                                         Bạn chưa theo dõi truyện nào cả. Để theo dõi truyện, nhấn vào Theo
                                         dõi như hình bên dưới: Bạn nên{" "}
-                                        <Link className="text-blue-600 font-" href="/auth/login"><u>Đăng nhập</u></Link> để truy cập truyện đã
+                                        <Link className="text-blue-600 font-" href={`/auth/login?callbackurl=${router.query?.callbackurl ? `${router.query.callbackurl}` : router.asPath || "/"}`}><u>Đăng nhập</u></Link> để truy cập truyện đã
                                         theo dõi của bạn ở bất cứ đâu
                                     </div>
     
