@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import jwt from "jsonwebtoken";
 
 
-import CustomInput from "@/components/Layout/CustomInput";
+import CustomInput from "@/components/Share/CustomInput";
 import { connectUserBySocialHanlde, connectUserHandle, loginUserHandle } from "@/services/auth.services";
 import { addAccessToken, getAccessTokenOnServer } from "@/services/cookies.servies";
 import { addUserHandle } from "@/redux/userSlice";

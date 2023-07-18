@@ -13,9 +13,9 @@ import { getAccessToken } from "@/services/cookies.servies";
 import { getFollowNovelHandle } from "@/services/follow.services";
 import ClientOnly from "@/components/Share/ClientOnly";
 import PageTitle from "@/components/Share/PageTitle";
-import ItemNovel from "@/components/Layout/ItemNovel";
-import ItemNovelLazy from "@/components/Layout/ItemNovelLazy";
-import BlurImage from "@/components/Layout/BlurImage";
+import ItemNovel from "@/components/Share/ItemNovel";
+import ItemNovelLazy from "@/components/Share/ItemNovelLazy";
+import BlurImage from "@/components/Share/BlurImage";
 import Breadcrumb from "@/components/Share/Breadcrumb";
 import { useRouter } from "next/router";
 

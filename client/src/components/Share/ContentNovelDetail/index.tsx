@@ -4,14 +4,14 @@ import Tippy from "@tippyjs/react";
 import LazyLoad from "react-lazy-load";
 
 import { PROPERTIES_NOVEL } from "@/constants/data";
-import BlurImage from "@/components/Layout/BlurImage";
+import BlurImage from "@/components/Share/BlurImage";
 import { convertViewsCount } from "@/utils/convertViewsCount";
 import { LoadingButton } from "@/components/Layout/LoadingLayout";
-import { ListStarLayout } from "@/components/Layout/ListStarLayout";
+import { ListStarLayout } from "@/components/Share/ListStarLayout";
 import { iconAuthor, iconClose, iconHeartFull, iconTimes } from "../../../../public/icons";
 import { NovelBySlugType } from "@/types";
 import { placeholderBlurhash } from "@/constants";
-import { ItemLazy } from "@/components/Layout/ItemLazy";
+import { ItemLazy } from "@/components/Share/ItemLazy";
 
 interface ContentNovelDetailProps {
     novel: NovelBySlugType;
@@ -33,7 +33,7 @@ const ContentNovelDetail = ({
 
     return (
         <article className="mb-6 sm:flex">
-            <Link href={`/truyen/${novel.slug}`} className="sm:w-3/12 w-full max-sm:mb-6 px-4 text-center justify-center">
+            <div className="sm:w-3/12 w-full max-sm:mb-6 px-4 text-center justify-center">
                 <BlurImage
                     width={208}
                     height={280}
@@ -44,7 +44,7 @@ const ContentNovelDetail = ({
                     placeholder="blur"
                     src={novel?.thumbnailUrl}
                 />
-            </Link>
+            </div>
             <div className="sm:w-9/12 max-sm:mx-auto px-4">
                 <h1 className="sm:text-xl text-base  line-clamp-2 font-semibold uppercase mb-3 max-sm:text-center">
                     {novel?.title}
@@ -149,7 +149,7 @@ const ContentNovelDetail = ({
                             )}
                         </i>
                         <span className="text-white text-sm whitespace-nowrap">
-                            { isFollow ? "Bỏ theo dõi" : "Theo dõi" }
+                            { isFollow ? "Theo dõi" : "Theo dõi" }
                         </span>
                     </>
                 </button>

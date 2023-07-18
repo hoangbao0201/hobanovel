@@ -10,7 +10,7 @@ import 'tippy.js/themes/light-border.css';
 import { EditorState, convertFromRaw, convertToRaw } from "draft-js";
 
 import { placeholderBlurhash } from "@/constants";
-import BlurImage from "@/components/Layout/BlurImage";
+import BlurImage from "@/components/Share/BlurImage";
 import { getAccessToken } from "@/services/cookies.servies";
 import { EditorStyle } from "@/components/Layout/EditorStyle";
 import { ReplyReviewType, ReviewType, UserType } from "@/types";
@@ -22,7 +22,7 @@ import {
     iconOclock,
     iconSend
 } from "../../../../public/icons";
-import TextRank from "@/components/Layout/TextRank";
+import TextRank from "@/components/Share/TextRank";
 
 interface ReviewItemProps {
     novelId?: string;

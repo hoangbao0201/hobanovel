@@ -1,16 +1,34 @@
 import Link from "next/link";
-import { useEffect, useRef } from "react";
+import { ComponentType, useEffect, useRef } from "react";
 
-import 'react-virtualized/styles.css';
-import {AutoSizer, Grid, GridCellProps} from 'react-virtualized';
-
-import 'react-perfect-scrollbar/dist/css/styles.css';
 import styled from "styled-components";
+import { Virtuoso, VirtuosoGrid } from 'react-virtuoso'
+import OverlayLayout from "@/components/Layout/OverlayLayout";
 
-const OptionListStyle = styled.div`
-    overflow-y: scroll;
-    height: calc(100vh - 200px);
-`
+
+// import 'react-perfect-scrollbar/dist/css/styles.css';
+// import styled from "styled-components";
+
+
+
+const ListContainer = styled.div`
+    display: grid;
+    scroll-behavior: smooth;
+    scroll-snap-type: y mandatory;
+    height: fit;
+    @media (min-width: 768px) {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+    @media (min-width: 1024px) {
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+    }
+`;
+
+const ItemContainer = styled.div`
+    padding: 0.5rem;
+    width: full;
+    height: full;
+`;
 
 
 interface OptionsListChapterProps {
@@ -25,80 +43,72 @@ const OptionsListChapter = ({ chapterNumber, isShow = false, handle, slug, chapt
 
     const chapterListRef = useRef<any>(null);
 
-    useEffect(() => {
-        // chapterListRef.current?.scrollToIndex({ index: chapterCurrent, behavior: "smooth", align: "center" });
+    // useEffect(() => {
+    //     const bodyElement = document.querySelector('body');
 
-        // Hidden scroll body
-        const bodyElement = document.querySelector('body');
-
-        if (isShow) {
-            bodyElement?.classList.add('overflow-hidden');
-        } else {
-            bodyElement?.classList.remove('overflow-hidden');
-        }
-    }, [isShow]);
+    //     if (isShow) {
+    //         bodyElement?.classList.add('overflow-hidden');
+    //     } else {
+    //         bodyElement?.classList.remove('overflow-hidden');
+    //     }
+    // }, [isShow]);
 
     
 
-    const gridRef = useRef<Grid>(null);
+    // const gridRef = useRef<Grid>(null);
 
-    useEffect(() => {
-    if (gridRef.current) {
-        gridRef.current.scrollToCell({
-            columnIndex: 0,
-            rowIndex: chapterCurrent,
-        });
-    }
-    }, []);
+    // useEffect(() => {
+    // if (gridRef.current) {
+    //     gridRef.current.scrollToCell({
+    //         columnIndex: 0,
+    //         rowIndex: chapterCurrent,
+    //     });
+    // }
+    // }, []);
 
 
 
     return (
-        <div className={`${isShow ? 'fixed block' : 'hidden'} top-0 left-0 right-0 bottom-0 inset-0 z-[1000]  bg-black/10 overflow-hidden overflow-y-scroll`}>
-            <div className="pt-[60px] pb-[40px] px-4 h-screen">
-                <div className="mx-auto h-full max-w-lg w-full bg-white relative border drop-shadow-lg rounded-lg">
+        <>
+        
+            <OverlayLayout
+                handle={() => handle()}
+                isShow={isShow}
+            >
 
-                    <div className="w-full h-[50px] border-b">
-
+                    <div className="w-full px-4 py-3 border-b">
+                        <input
+                            className="px-3 py-1 w-2/3 border focus:border-blue-500 focus:shadow-blue-50 shadow outline-none rounded-md"
+                            placeholder="Nhập số  chap, ví dụ: 100"
+                        />
                     </div>
 
-                    <AutoSizer>
-                        {({ height, width }) => (
-                            <Grid
-                                ref={gridRef}
-                                className=""
-                                height={height - 200}
-                                width={width}
-                                rowCount={chapterNumber}
-                                columnCount={1}
-                                rowHeight={30} // Adjust the row height as needed
-                                columnWidth={width}
-                                cellRenderer={({ columnIndex, key, rowIndex, style }: GridCellProps) => (
-                                    <div key={key} style={style}>
-                                        <Link
-                                            onClick={() => handle()}
-                                            href={`/truyen/${slug}/chuong-${rowIndex + 1}`}
-                                            className={`min-w-[100px] block py-1 px-3 border rounded-sm whitespace-nowrap text-center ${
-                                                chapterCurrent === rowIndex + 1 ? 'border-red-600 text-red-600' : ''
-                                            }`}
-                                        >
-                                            Chapter {rowIndex + 1}
-                                        </Link>
-                                    </div>
-                                )}
-                            />
-                        )}
-                    </AutoSizer>
-
-                    
-    
-                    <div className="border-t h-[50px] flex items-center">
-                        <span onClick={() => handle()} className="py-1 px-3 border rounded-md ml-auto mr-5 cursor-pointer select-none">Đóng</span>
+                    <div className="py-4">
+                        <VirtuosoGrid
+                            ref={chapterListRef}
+                            className=""
+                            style={{ height: 'calc(100vh - 200px)' }}
+                            totalCount={chapterNumber}
+                            overscan={80}
+                            listClassName="flex flex-wrap gap-2 sm:text-[14px] text-[13px] px-3"
+                            itemContent={(index) => {
+                                return (
+                                    <Link
+                                        onClick={() => handle()}
+                                        href={`/truyen/${slug}/chuong-${index+1}`} key={index}
+                                        className={`min-w-[100px] block py-1 border rounded-sm whitespace-nowrap text-center overflow-hidden
+                                            ${chapterCurrent == index+1 ? 'border-red-600 text-red-600' : "hover:border-gray-200 hover:bg-gray-100"}`}
+                                    >
+                                        Chapter {index + 1}
+                                    </Link>
+                                )
+                            }}
+                        />
                     </div>
-    
-                </div>
-            </div>
-        </div>
+
+            </OverlayLayout>
+        
+        </>
     )
 }
 

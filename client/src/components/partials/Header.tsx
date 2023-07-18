@@ -6,8 +6,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useMediaQuery } from "usehooks-ts";
 
 import { NavOver } from "./NavOver";
-import BlurImage from "../Layout/BlurImage";
-import SearchInput from "../Layout/SearchInput";
+import BlurImage from "../Share/BlurImage";
+import SearchInput from "../Share/SearchInput";
 import { iconBars, iconTimes } from "../../../public/icons";
 import { placeholderBlurhash } from "@/constants";
 import { logoutUserHandle } from "@/redux/userSlice";

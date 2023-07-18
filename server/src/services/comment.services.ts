@@ -173,10 +173,10 @@ export const getReplyCommentHandle = async (data : CommentType & { page: number 
 
             WHERE comments.parentId = ? 
             ORDER BY comments.createdAt ASC
-            LIMIT 5 OFFSET ?
+            LIMIT 10 OFFSET ?
         `;
 
-        const [rows] = await connection.query(qGetComment, [data.commentId, (Number(data.page) - 1) * 5]);
+        const [rows] = await connection.query(qGetComment, [data.commentId, (Number(data.page) - 1) * 10]);
 
         connection.release();
 
@@ -219,19 +219,17 @@ export const getCommentNotifyHandle = async (receiverId: string, page: number) =
         };
     }
 };
-export const getCommentNotifyReadHandle = async (receiverId: string) => {
+export const addReadCommentNotifyHandle = async (commentId: string, receiverId: string) => {
     try {
         const connection = await pool.getConnection();
 
-        const qGetComment = `
-            SELECT comments.parentId, comments.commentId, comments.senderName, comments.isRead, comments.createdAt, novels.title, novels.slug FROM comments
-                LEFT JOIN novels ON novels.novelId = comments.novelId
-            WHERE comments.receiverId = ? AND comments.senderId != ?
-            ORDER BY comments.createdAt DESC
-            LIMIT 8 OFFSET ?
+        const qReadComment = `
+            UPDATE comments
+            SET comments.isRead = 1
+            WHERE comments.commentId = ? AND comments.receiverId = ? AND comments.isRead = 0
         `;
 
-        const [rows] = await connection.query(qGetComment, [receiverId]);
+        const [rows] = await connection.query(qReadComment, [commentId, receiverId]);
 
         connection.release();
 

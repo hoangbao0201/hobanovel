@@ -23,6 +23,7 @@ import ClientOnly from "@/components/Share/ClientOnly";
 import ContentNovelDetail from "@/components/Share/ContentNovelDetail";
 import Breadcrumb from "@/components/Share/Breadcrumb";
 import { iconClose } from "../../../public/icons";
+import OverlayLayout from "@/components/Layout/OverlayLayout";
 // import FormIntroduce from "@/components/Share/ContentNovelDetail/FormIntroduce";
 // import FormReviews from "@/components/Share/ContentNovelDetail/FormReviews";
 // import FormListChapters from "@/components/Share/ContentNovelDetail/FormListChapters";
@@ -69,7 +70,7 @@ const NovelDetailPage = ({ novel, tab } : NovelDetailPageProps) => {
 
     const [numberTab, setNumberTab] = useState(0);
     const [isFollow, setIsFollow] = useState<null | boolean>(null)
-    const [isFormComments, setIsFormComments] = useState(false);
+    const [isFormComments, setIsFormComments] = useState<string | null>(null);
 
     // Handle Check Follow
     const handleCheckFollowNovel = async () => {
@@ -165,9 +166,10 @@ const NovelDetailPage = ({ novel, tab } : NovelDetailPageProps) => {
     }
 
     useEffect(() => {
+        const token = getAccessToken();
         const commentId = router.asPath.split('#comment-')[1];
-        if(commentId && !isNaN(Number(commentId))) {
-            setIsFormComments(true)
+        if(commentId && !isNaN(Number(commentId)) && token) {
+            setIsFormComments(commentId as string)
         }
     }, [router]);
 
@@ -175,25 +177,23 @@ const NovelDetailPage = ({ novel, tab } : NovelDetailPageProps) => {
         <>  
 
             {
-                isFormComments && (
-                    <div className="fixed top-0 right-0 bottom-0 left-0 z-20 bg-black/10">
-                        <div className="max-w-lg w-full mx-auto my-10 ">
-                            <div className="mx-3 py-3 bg-white rounded-md border drop-shadow-lg">
-                                <div className="pb-2 px-4 mb-4 flex items-center border-b">
-                                    <h5 className="font-semibold">Bình luận mới</h5>
-                                    <button onClick={() => setIsFormComments(false)} className="ml-auto p-2 hover:bg-gray-200 rounded-full">
-                                        <i className="w-4 h-4 block">{iconClose}</i>
-                                    </button>
-                                </div>
-
-                                <div className="px-4">Đang trong quá trình phát triển</div>
-
-                                {/* <div>
-                                    <FormComment novelId={novel?.novelId}/>
-                                </div> */}
-                            </div>
+                !!isFormComments && (
+                    <OverlayLayout
+                        isShow={!!isFormComments}
+                        handle={() => setIsFormComments(null)}
+                    >
+                        <div className="px-4 py-4 mb-4 border-b">
+                            <h4 className="w-2/3 font-semibold">Bình luận mới</h4>
                         </div>
-                    </div>
+
+                        <FormComment
+                            novelId={novel?.novelId}
+                            commentId={isFormComments}
+                            isRpComment={true}
+                            isFormSendComment={false}
+                        />
+
+                    </OverlayLayout>
                 )
             }
 
@@ -325,10 +325,6 @@ const NovelDetailPage = ({ novel, tab } : NovelDetailPageProps) => {
                                         leaveFrom="opacity-100"
                                         leaveTo="opacity-0"
                                     >
-                                        {/* <FormComment
-                                            tab={numberTab}
-                                            novelId={novel?.novelId}
-                                        /> */}
                                         <FormComment novelId={novel?.novelId}/>
                                     </Transition>
                                 </Tab.Panel>

@@ -5,7 +5,7 @@ import LazyLoad from "react-lazy-load";
 import { placeholderBlurhash } from "@/constants";
 import { convertFromRaw } from "draft-js";
 import { ReviewType } from "@/types";
-import BlurImage from "@/components/Layout/BlurImage";
+import BlurImage from "@/components/Share/BlurImage";
 
 interface LatestReviewsProps {
     reviews?:  ReviewType[]

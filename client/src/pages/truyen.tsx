@@ -1,6 +1,6 @@
 import { ReactNode, useEffect } from "react";
 
-import ItemNovelLazy from "@/components/Layout/ItemNovelLazy";
+import ItemNovelLazy from "@/components/Share/ItemNovelLazy";
 import MainLayout from "@/components/Layout/MainLayout";
 import WrapperLayout from "@/components/Layout/WrapperLayout"
 import Head from "@/components/Share/Head";

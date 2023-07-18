@@ -6,7 +6,7 @@ import { useMediaQuery } from "usehooks-ts";
 
 import { UserType } from "@/types";
 import { useRouter } from "next/router";
-import SearchInput from "../Layout/SearchInput";
+import SearchInput from "../Share/SearchInput";
 
 
 

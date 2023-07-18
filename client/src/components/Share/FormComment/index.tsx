@@ -1,28 +1,27 @@
-import Image from "next/image";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
-import { CommentType } from "@/types";
-// import { EditorState, convertToRaw } from "draft-js";
+
 import CommentItem from "./ItemComment";
 import { iconSend } from "../../../../public/icons";
 import { addCommentHandle, destroyCommentHandle, getCommentsHandle } from "@/services/comment.services";
 import { getAccessToken } from "@/services/cookies.servies";
-import { CommentSliceType, addCommentsRDHandle, destroyCommentsNovelRDHandle, loadCommentsNovelRDHandle, setCommentsRDHandle } from "@/redux/commentSlice";
+import { CommentSliceType, addCommentsRDHandle, destroyCommentsNovelRDHandle, setCommentsRDHandle } from "@/redux/commentSlice";
 import { LoadingForm } from "@/components/Layout/LoadingLayout";
-// import { EditorStyle } from "@/components/Layout/EditorStyle";
-import { dataFakeBannersMobile } from "@/components/partials/BannersIntro";
 import InputText from "@/components/features/InputText";
-import { PaginationLayout } from "@/components/Layout/PaginationLayout";
+import { PaginationLayout } from "@/components/Share/PaginationLayout";
 
 
 interface FormCommentProps {
+    commentId?: string;
     novelId?: string;
     chapterId?: string;
     chapterNumber?: number
+    isFormSendComment?: boolean
+    isRpComment?: boolean
 }
 
-const FormComment = ({ novelId, chapterId, chapterNumber }: FormCommentProps) => {
+const FormComment = ({commentId, novelId, chapterId, chapterNumber, isFormSendComment = true, isRpComment = false }: FormCommentProps) => {
 
     const dispatch = useDispatch();
     
@@ -62,7 +61,7 @@ const FormComment = ({ novelId, chapterId, chapterNumber }: FormCommentProps) =>
     // Handle Get Comments
     const handleGetComments = async (next?: boolean, page?: number) => {
         try {
-            const commentsResponse = await getCommentsHandle(novelId, chapterId, chapterNumber, page || currentPage);
+            const commentsResponse = await getCommentsHandle(commentId, novelId, chapterId, chapterNumber, page || currentPage);
 
             if (commentsResponse?.success) {
                 setCountPage(commentsResponse?.countPage || 1)
@@ -176,6 +175,7 @@ const FormComment = ({ novelId, chapterId, chapterNumber }: FormCommentProps) =>
         setCommentText(value)
     }
 
+    //Call Handle Get Comments
     useEffect(() => {
         handleGetComments();
     }, [novelId, chapterId])
@@ -187,7 +187,7 @@ const FormComment = ({ novelId, chapterId, chapterNumber }: FormCommentProps) =>
                 <a ref={anchorRef} href="#target"></a>
     
                 {
-                    novelId && (  
+                    novelId && isFormSendComment && (  
                         <div className="relative grid mb-8 px-4">
                             {
                                 !isFormSend ? (
@@ -239,7 +239,7 @@ const FormComment = ({ novelId, chapterId, chapterNumber }: FormCommentProps) =>
                     loadComment ? (
                         <LoadingForm theme="dark"/>
                     ) : (
-                        <ul className="transition-all ease-linear px-4 min-h-[250px]">
+                        <ul className="transition-all ease-linear px-4 min-h-[120px]">
                             {
                                 comments.length === 0 ? (
                                     <li>Hãy là người đầu tiên bình luận</li>
@@ -255,6 +255,7 @@ const FormComment = ({ novelId, chapterId, chapterNumber }: FormCommentProps) =>
                                                             chapterId={chapterId}
                                                             comment={comment}
                                                             user={currentUser}
+                                                            isRpComment={isRpComment}
                                                             handleDeleteComment={handleDestroyComment}
                                                         />
                                                     </li>

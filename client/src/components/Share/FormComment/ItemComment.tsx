@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ChangeEvent, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 
 import moment from "moment";
 import "moment/locale/vi";
@@ -9,7 +9,7 @@ import 'tippy.js/themes/light-border.css';
 import { useDispatch, useSelector } from "react-redux";
 
 import { placeholderBlurhash } from "@/constants";
-import BlurImage from "@/components/Layout/BlurImage";
+import BlurImage from "@/components/Share/BlurImage";
 import { CommentItemType, UserType } from "@/types";
 import {
     iconArrowTurnUp,
@@ -24,7 +24,7 @@ import {
     destroyReplyCommentHandle,
     getReplyCommentsHandle,
 } from "@/services/comment.services";
-import TextRank from "@/components/Layout/TextRank";
+import TextRank from "@/components/Share/TextRank";
 import InputText from "@/components/features/InputText";
 import { CommentSliceType, addReplyRDHandle } from "@/redux/commentSlice";
 import { useClickOutSide } from "@/hook/useClickOutSide";
@@ -34,14 +34,15 @@ interface CommentItemProps {
     novelId?: string
     chapterId?: string
     user?: UserType;
-    comment: CommentItemType;
+    comment: CommentItemType
+    isRpComment?: boolean
     handleDeleteComment: (senderId: string, commentId: string) => void
 }
 
-const CommentItem = ({ novelId, chapterId, comment, user, handleDeleteComment }: CommentItemProps) => {
+const CommentItem = ({ novelId, chapterId, comment, user, isRpComment = false, handleDeleteComment }: CommentItemProps) => {
 
     const [isFormSend, setIsFormSend] = useState<boolean>(false);
-    const [isReplyComment, setIsReplyComment] = useState<boolean>(false);
+    const [isReplyComment, setIsReplyComment] = useState<boolean>(isRpComment);
     const [replyComments, setReplyComments] = useState<CommentItemType[]>([]);
     const [commentText, setCommentText] = useState('');
     const [receiver, setReceiver] = useState<{
@@ -59,7 +60,6 @@ const CommentItem = ({ novelId, chapterId, comment, user, handleDeleteComment }:
         senderName: user?.name || '',
     })
     
-
     // Handle Send Reply Comment
     const handleSendReplyComment = async () => {
         const token = getAccessToken();
@@ -131,6 +131,7 @@ const CommentItem = ({ novelId, chapterId, comment, user, handleDeleteComment }:
                 setReplyComments([...commentsResponse?.comments]);
             }
         } catch (error) {
+            setReplyComments([])
         }
     };
 
@@ -196,6 +197,13 @@ const CommentItem = ({ novelId, chapterId, comment, user, handleDeleteComment }:
     const handleOnchangeCommentText = (value: string) => {
         setCommentText(value)
     }
+
+    // Call Handle Get Reply Comments
+    useEffect(() => {
+        if(isRpComment) {
+            handleGetReplyComments();
+        }
+    }, [])
 
     return (
         <div className="mb-3">

@@ -9,7 +9,7 @@ import { addBannersHandle, getMultipleBannersHandle } from "@/services/banners.s
 import { getAccessToken } from "@/services/cookies.servies";
 import { BannersType, NovelType } from "@/types";
 import { LoadingButton, LoadingSearch } from "@/components/Layout/LoadingLayout";
-import BlurImage from "@/components/Layout/BlurImage";
+import BlurImage from "@/components/Share/BlurImage";
 import { placeholderBlurhash } from "@/constants";
 import { useDebounce } from "@/hook/useDebounce";
 import { getNovelsByDataHandle } from "@/services/novels.services";

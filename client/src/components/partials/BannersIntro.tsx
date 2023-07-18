@@ -12,10 +12,10 @@ import Link from "next/link";
 import { apiUrl, placeholderBlurhash } from "@/constants";
 import { BannersType } from "@/types";
 import styled from "styled-components";
-import BlurImage from "../Layout/BlurImage";
+import BlurImage from "../Share/BlurImage";
 import { useMediaQuery } from "usehooks-ts";
 // import SwiperButton from "../features/SwiperButton";
-import { ListStarLayout } from "../Layout/ListStarLayout";
+import { ListStarLayout } from "../Share/ListStarLayout";
 import ClientOnly from "../Share/ClientOnly";
 
 type ResBannerProps = Pick<BannersType, "bannersId" | "bannersUrl" | "imageBlurHash" | "slug">;

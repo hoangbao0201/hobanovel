@@ -4,7 +4,7 @@ import LazyLoad from "react-lazy-load";
 
 import { placeholderBlurhash } from "@/constants";
 import { useSelector } from "react-redux";
-import BlurImage from "@/components/Layout/BlurImage";
+import BlurImage from "@/components/Share/BlurImage";
 
 interface ReadingProps {
     readingNovel?: any

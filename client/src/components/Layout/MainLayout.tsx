@@ -3,7 +3,7 @@ import { ReactNode, useEffect } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
 
-import ScrollOnTop from "./ScrollOnTop";
+import ScrollOnTop from "../Share/ScrollOnTop";
 import { connectUserHandle } from "@/services/auth.services";
 import { addUserHandle, logoutUserHandle } from "@/redux/userSlice";
 import { getAccessToken, removeAccessToken } from "@/services/cookies.servies";

@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { CommentType } from "../types";
-import { addReplyCommentHandle, addCommentByNovelHandle, destroyReplyCommentByNovelHandle, destroyCommentByNovelHandle, getReplyCommentHandle, getCommentsHandle, getCommentNotifyHandle } from "../services/comment.services";
+import { addReplyCommentHandle, addCommentByNovelHandle, destroyReplyCommentByNovelHandle, destroyCommentByNovelHandle, getReplyCommentHandle, getCommentsHandle, getCommentNotifyHandle, addReadCommentNotifyHandle } from "../services/comment.services";
 
 // Register User | /api/auth/register
 export const addCommentByNovel = async (req: Request, res: Response) => {
@@ -50,9 +50,10 @@ export const addCommentByNovel = async (req: Request, res: Response) => {
 
 export const getComments = async (req: Request, res: Response) => {
     try {
-        const { novelId = '', receiverId = '', chapterId = '', chapterNumber = '', page = 1 } = req.query
+        const { commentId = '', novelId = '', receiverId = '', chapterId = '', chapterNumber = '', page = 1 } = req.query
 
         const dataComments = {
+            commentId: commentId,
             novelId: novelId,
             chapterId: chapterId,
             receiverId: receiverId,
@@ -108,21 +109,23 @@ export const getCommentNotify = async (req: Request, res: Response) => {
         });
     }
 }
-export const getCommentNotifyRead = async (_req: Request, res: Response) => {
+export const addReadCommentNotify = async (req: Request, res: Response) => {
     try {
-        // const commentResult = await getCommentNotifyHandle(res.locals.user.userId, Number(page) || 1);
-        // if(!commentResult.success) {
-        //     return res.status(400).json({  
-        //         success: false,
-        //         message: "Get comments Error",
-        //         error: commentResult.error,
-        //     })
-        // }
+        const { commendId } = req.params
+
+        const commentRes = await addReadCommentNotifyHandle(commendId, res.locals.user.userId);
+        if(!commentRes.success) {
+            return res.status(400).json({  
+                success: false,
+                message: "Get comments Error",
+                error: commentRes.error,
+            })
+        }
         
         return res.json({
             success: true,
-            message: "Get comments successful",
-            // comments: commentResult.data,
+            message: "Read notify comments successful",
+            // comments: commentRes.data,
         })
         
     } catch (error) {

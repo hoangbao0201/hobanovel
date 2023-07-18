@@ -9,7 +9,7 @@ import LazyLoad from "react-lazy-load";
 import { NovelType } from "@/types";
 import { useDebounce } from "@/hook/useDebounce";
 import { getNovelsByDataHandle } from "@/services/novels.services";
-import { LoadingSearch } from "./LoadingLayout";
+import { LoadingSearch } from "../Layout/LoadingLayout";
 import { iconClose, iconList, iconTimes } from "../../../public/icons";
 import { PROPERTIES_NOVEL } from "@/constants/data";
 import { WithClassName } from "@/types/common";

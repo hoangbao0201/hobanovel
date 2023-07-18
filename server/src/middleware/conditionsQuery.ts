@@ -8,19 +8,10 @@ export const CommentSearchConditions = (data : Partial<CommentType>) => {
     const conditions : string[] = ['comments.parentId IS NULL'] // with conditions where
     const params : Array<string | number> = [] // with values where
 
-    if (senderId !== '') {
-        into.push(senderId);
-        values.push("senderId")
-    }
-    if (commentText !== '') {
-        values.push("commentText")
-        into.push(String(commentText));
-    }
-    if (receiverId !== '') {
-        into.push(receiverId);
-        values.push("comments.receiverId = ?")
-        conditions.push('comments.receiverId = ?');
-        params.push(String(receiverId));
+    // ---
+    if (commentId !== '') {
+        conditions.push('comments.commentId = ?');
+        params.push(String(commentId));
     }
     if (novelId !== '') {
         into.push(novelId)
@@ -40,16 +31,31 @@ export const CommentSearchConditions = (data : Partial<CommentType>) => {
         conditions.push('comments.chapterNumber = ?');
         params.push(String(chapterNumber));
     }
+    // ---
+    if (senderId !== '') {
+        into.push(senderId);
+        values.push("senderId")
+        conditions.push('comments.senderId = ?');
+        params.push(String(senderId));
+    }
     if (senderName !== '') {
         into.push(senderName)
         values.push("comments.senderName")
-        params.push(String(senderName));
     }
-    if (commentId !== '') {
-        values.push("commentId")
-        conditions.push('comments.commentId = ?');
-        params.push(String(commentId));
+    if (receiverId !== '') {
+        into.push(receiverId);
+        values.push("comments.receiverId = ?")
+        conditions.push('comments.receiverId = ?');
+        params.push(String(receiverId));
     }
+    // ---
+    if (commentText !== '') {
+        values.push("commentText")
+        into.push(String(commentText));
+    }
+    // ---
+    
+    
 
     const conbinedConditions = conditions.length > 0 ? conditions.join(" AND ") : conditions
     const conbinedValues = values.length > 0 ? values.join(',') : values

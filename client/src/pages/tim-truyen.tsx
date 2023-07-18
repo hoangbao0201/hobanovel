@@ -7,15 +7,14 @@ import { useMediaQuery } from "usehooks-ts";
 
 import { NovelResType } from "@/types";
 import Head from "@/components/Share/Head";
-import ItemNovel from "@/components/Layout/ItemNovel";
+import ItemNovel from "@/components/Share/ItemNovel";
 import MainLayout from "@/components/Layout/MainLayout";
 import WrapperLayout from "@/components/Layout/WrapperLayout";
 import { iconAngleDouble, iconClose } from "../../public/icons";
 import { advancedSearchNovelHandle } from "@/services/novels.services";
-import { PaginationLayout } from "@/components/Layout/PaginationLayout";
+import { PaginationLayout } from "@/components/Share/PaginationLayout";
 import { AdsenseForm } from "@/components/Layout/AdsLayout/AdSenseForm";
-import ItemNovelLazy from "@/components/Layout/ItemNovelLazy";
-import SelectOptions from "@/components/features/SelectOptions";
+import ItemNovelLazy from "@/components/Share/ItemNovelLazy";
 
 
 // Data Default

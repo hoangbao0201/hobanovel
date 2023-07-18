@@ -4,7 +4,7 @@ import { ReactNode, useState } from "react";
 import MainLayout from "@/components/Layout/MainLayout";
 import AccountLayout from "@/components/Layout/AccountLayout";
 import Head from "@/components/Share/Head";
-import { ListStarLayout } from "@/components/Layout/ListStarLayout";
+import { ListStarLayout } from "@/components/Share/ListStarLayout";
 
 interface AccountPageProps {
 

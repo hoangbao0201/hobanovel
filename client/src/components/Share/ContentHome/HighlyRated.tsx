@@ -1,7 +1,7 @@
 import { Fragment } from "react";
 
 import { NovelType } from "@/types";
-import ItemNovel from "@/components/Layout/ItemNovel";
+import ItemNovel from "@/components/Share/ItemNovel";
 
 type NovelHighlyRated = NovelType & { mediumScore: number }
 

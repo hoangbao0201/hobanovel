@@ -2,9 +2,9 @@ import { apiUrl } from "@/constants";
 import axios from "axios";
 
 
-export const getCommentsHandle = async (novelId?: string, chapterId?: string, chapterNumber?: number, page?: number) => {
+export const getCommentsHandle = async (commentId?: string, novelId?: string, chapterId?: string, chapterNumber?: number, page?: number) => {
     try {
-        const commentsRes = await axios.get(`${apiUrl}/api/comments/get?novelId=${novelId || ''}&chapterId=${chapterId || ''}&chapterNumber=${chapterNumber || ''}&page=${page || ''}`);
+        const commentsRes = await axios.get(`${apiUrl}/api/comments/get?commentId=${commentId || ''}&novelId=${novelId || ''}&chapterId=${chapterId || ''}&chapterNumber=${chapterNumber || ''}&page=${page || ''}`);
 
         return commentsRes.data
     } catch (error) {
@@ -137,9 +137,30 @@ export const destroyReplyCommentHandle = async (commentId: string, token: string
     }
 };
 
-export const getCommentsNotifyHandle = async (receiverId: string, page: number, token: string) => {
+export const getCommentsNotifyHandle = async (page: number, token: string) => {
     try {
         const commentsRes = await axios.get(`${apiUrl}/api/comments/get/notify?page=${page}`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+
+        return commentsRes.data
+    } catch (error) {
+        if(axios.isAxiosError(error) && error.response?.data) {
+            return error.response.data;
+        } else {
+            return {
+                success: false,
+                message: (error as Error).message
+            };
+        }
+    }
+};
+
+export const readCommentNotifyHandle = async (commendId: string, token: string) => {
+    try {
+        const commentsRes = await axios.post(`${apiUrl}/api/comments/add/read/notify/${commendId}`, {}, {
             headers: {
                 Authorization: `Bearer ${token}`
             }

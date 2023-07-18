@@ -11,7 +11,7 @@ import { getAccessToken } from "@/services/cookies.servies";
 import { EditorStyle } from "@/components/Layout/EditorStyle";
 import { iconSend, iconStar } from "../../../../public/icons";
 import { addReviewsByDataHandle, destroyReviewsByNovelHandle, getReviewsByNovelHandle } from "@/services/review.services";
-import { ListStarLayout } from "@/components/Layout/ListStarLayout";
+import { ListStarLayout } from "@/components/Share/ListStarLayout";
 import { checkValueReviewNovel } from "@/utils/checkValueReviewNovel";
 
 
@@ -192,11 +192,11 @@ const FormReviews = ({ tab, novelId }: FormReviewsProps) => {
                                     matchesMobile ? "Tính cách" : "Tính cách nhân vật"
                                 }
                             </span>
-                            <span className="w-full">
+                            <span className="w-full px-3">
                                 <input
                                     onChange={eventOnchangeDataValue}
                                     name="pointPersonality"
-                                    className="cursor-pointer bg-orange-200 rounded-full appearance-none h-1"
+                                    className="w-full cursor-pointer bg-orange-200 rounded-full appearance-none h-1"
                                     value={dataValue.pointPersonality}
                                     min="0"
                                     max="5"
@@ -215,11 +215,11 @@ const FormReviews = ({ tab, novelId }: FormReviewsProps) => {
                                     matchesMobile ? "Nội dung" : "Nội dung cốt truyện"
                                 }
                             </span>
-                            <span className="w-full">
+                            <span className="w-full px-3">
                                 <input
                                     onChange={eventOnchangeDataValue}
                                     name="pointStoryline"
-                                    className="cursor-pointer bg-orange-200 rounded-full appearance-none h-1"
+                                    className="w-full cursor-pointer bg-orange-200 rounded-full appearance-none h-1"
                                     value={dataValue.pointStoryline}
                                     min="0"
                                     max="5"
@@ -238,11 +238,11 @@ const FormReviews = ({ tab, novelId }: FormReviewsProps) => {
                                     matchesMobile ? "Bố cục" : "Bố cục thế giới"
                                 }
                             </span>
-                            <span className="w-full">
+                            <span className="w-full px-3">
                                 <input
                                     onChange={eventOnchangeDataValue}
                                     name="pointScene"
-                                    className="cursor-pointer bg-orange-200 rounded-full appearance-none h-1"
+                                    className="w-full cursor-pointer bg-orange-200 rounded-full appearance-none h-1"
                                     value={dataValue.pointScene}
                                     min="0"
                                     max="5"
@@ -261,11 +261,11 @@ const FormReviews = ({ tab, novelId }: FormReviewsProps) => {
                                     matchesMobile ? "Bản dịch" : "Chất lượng bản dịch"
                                 }
                             </span>
-                            <span className="w-full">
+                            <span className="w-full px-3">
                                 <input
                                     onChange={eventOnchangeDataValue}
                                     name="pointTranslation"
-                                    className="cursor-pointer bg-orange-200 rounded-full appearance-none h-1"
+                                    className="w-full cursor-pointer bg-orange-200 rounded-full appearance-none h-1"
                                     value={dataValue.pointTranslation}
                                     min="0"
                                     max="5"

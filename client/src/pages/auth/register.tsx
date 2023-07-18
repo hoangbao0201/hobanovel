@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { GetServerSideProps } from "next";
 import { ChangeEvent, useState } from "react";
 
-import CustomInput from "@/components/Layout/CustomInput";
+import CustomInput from "@/components/Share/CustomInput";
 import { connectUserHandle, registerUserHandle } from "@/services/auth.services";
 import { getAccessTokenOnServer } from "@/services/cookies.servies";
 

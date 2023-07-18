@@ -37,8 +37,9 @@ import OptionsListChapter from "@/components/Share/ContentChapter/OptionsListCha
 import Head from "@/components/Share/Head";
 import { REVALIDATE_TIME_DETAILS_PAGE } from "@/constants";
 import Breadcrumb from "@/components/Share/Breadcrumb";
-import BlurImage from "@/components/Layout/BlurImage";
+import BlurImage from "@/components/Share/BlurImage";
 import FormComment from "@/components/Share/FormComment";
+import OverlayLayout from "@/components/Layout/OverlayLayout";
 
 interface Params extends ParsedUrlQuery {
     slug: string;
@@ -242,8 +243,34 @@ const ChapterDetailPage = ({ chapter }: ChapterDetailPageProps) => {
                         {
                             chapter && (
                                 <div>
-                                    <OptionsListChapter slug={chapter?.novelSlug} isShow={isOptionsListChapter} handle={handleChangeOntionsListChapter} chapterNumber={Number(chapter?.chapterCount)} chapterCurrent={chapter?.chapterNumber}/>
+                                    <OptionsListChapter
+                                        slug={chapter?.novelSlug}
+                                        isShow={isOptionsListChapter}
+                                        handle={handleChangeOntionsListChapter}
+                                        chapterNumber={Number(chapter?.chapterCount)}
+                                        chapterCurrent={chapter?.chapterNumber}
+                                    />
                 
+
+
+                                    {/* <OverlayLayout
+                                        HeadTI={() => {
+                                            return (
+                                                <div className="w-full">
+                                                    <input
+                                                        className="px-3 py-1 w-2/3 border focus:border-blue-500 focus:shadow-blue-50 shadow outline-none rounded-md"
+                                                        placeholder="Nhập số  chap, ví dụ: 100"
+                                                    />
+                                                </div>
+                                            )
+                                        }}
+                                        isShow={isOptionsListChapter}
+                                        handle={() => setIsOptionsListChapter(false)}
+                                    >
+                                        <div className="px-4">Hello</div>
+                                    </OverlayLayout> */}
+
+
                                     <div className="border-b pb-3 mb-7 mt-4">
                                         <div ref={paginationRef} className={`transition-all top-0 left-0 right-0 py-1 ${isFixed ? 'fixed bg-gray-200 z-20' : ''}`}>
                                             <ul className="lg:max-w-5xl mx-auto flex items-center justify-center gap-1">
@@ -274,7 +301,7 @@ const ChapterDetailPage = ({ chapter }: ChapterDetailPageProps) => {
                                                     </Link>
                                                 </li>
                 
-                                                <li className="bg-white px-2 h-9 flex items-center text-sm select-none cursor-pointer border rounded-sm" onClick={handleChangeOntionsListChapter}>
+                                                <li className="hover:border-gray-600 leading-9 border cursor-pointer rounded-sm bg-white min-w-[115px] text-center h-9 sm:text-base text-sm" onClick={handleChangeOntionsListChapter}>
                                                     Chapter {chapter?.chapterNumber || 1}
                                                 </li>
                 
@@ -302,7 +329,7 @@ const ChapterDetailPage = ({ chapter }: ChapterDetailPageProps) => {
                                                     >
                                                         
                                                         <>
-                                                            <i className="w-3 block fill-white sm:mr-1">
+                                                            <i className="w-4 block fill-white sm:mr-1">
                                                                 {isFollow === null ? (
                                                                     <LoadingButton className="text-white"/>
                                                                 ) : (

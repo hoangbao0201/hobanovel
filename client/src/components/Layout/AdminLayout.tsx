@@ -1,9 +1,7 @@
 import Link from "next/link";
-import { ReactNode, useState } from "react";
-import { iconSteal } from "../../../../public/icons";
-// import Head from "next/head";
-// import styled from "styled-components";
-// import "@"
+import { ReactNode } from "react";
+
+import { iconSteal } from "../../../public/icons";
 
 interface AdminLayoutProps {
     children?: ReactNode;
