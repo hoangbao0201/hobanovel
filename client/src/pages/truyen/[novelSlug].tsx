@@ -173,13 +173,15 @@ const NovelDetailPage = ({ novel, tab } : NovelDetailPageProps) => {
         }
     }, [router]);
 
+    // console.log(!!isFormComments)
+
     return (
         <>  
 
             {
                 !!isFormComments && (
                     <OverlayLayout
-                        isShow={!!isFormComments}
+                        isShow={isFormComments}
                         handle={() => setIsFormComments(null)}
                     >
                         <div className="px-4 py-4 mb-4 border-b">

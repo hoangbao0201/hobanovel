@@ -6,7 +6,7 @@ import CommentItem from "./ItemComment";
 import { iconSend } from "../../../../public/icons";
 import { addCommentHandle, destroyCommentHandle, getCommentsHandle } from "@/services/comment.services";
 import { getAccessToken } from "@/services/cookies.servies";
-import { CommentSliceType, addCommentsRDHandle, destroyCommentsNovelRDHandle, setCommentsRDHandle } from "@/redux/commentSlice";
+import { CommentSliceType, addCommentsRDHandle, destroyCommentsNovelRDHandle, loadCommentsNovelRDHandle, setCommentsRDHandle } from "@/redux/commentSlice";
 import { LoadingForm } from "@/components/Layout/LoadingLayout";
 import InputText from "@/components/features/InputText";
 import { PaginationLayout } from "@/components/Share/PaginationLayout";
@@ -73,10 +73,8 @@ const FormComment = ({commentId, novelId, chapterId, chapterNumber, isFormSendCo
                 }
 
             }
-
-
         } catch (error) {
-            
+            dispatch(setCommentsRDHandle([]))
         }
     };
 
@@ -177,6 +175,7 @@ const FormComment = ({commentId, novelId, chapterId, chapterNumber, isFormSendCo
 
     //Call Handle Get Comments
     useEffect(() => {
+        dispatch(loadCommentsNovelRDHandle(true))
         handleGetComments();
     }, [novelId, chapterId])
 
