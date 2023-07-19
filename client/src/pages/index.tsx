@@ -23,6 +23,7 @@ import { getReviewsByNovelHandle } from "@/services/review.services";
 import PageTitle from "@/components/Share/PageTitle";
 import { iconAngleRight } from "../../public/icons";
 import FormComment from "@/components/Share/FormComment";
+import { AdsenseForm } from "@/components/Share/AdsenseForm";
 
 // import Outstanding from "@/components/Share/ContentHome/Outstanding";
 // import Reading from "@/components/Share/ContentHome/Reading";
@@ -189,6 +190,14 @@ const HomePage = ({
                             </div>
                         </>
                     </div>
+
+                    <ClientOnly>
+                        <div className="w-full px-4">
+        
+                            <AdsenseForm />
+        
+                        </div>
+                    </ClientOnly>
 
                     <div className="mt-8">
                         <PageTitle>Bình luận mới</PageTitle>

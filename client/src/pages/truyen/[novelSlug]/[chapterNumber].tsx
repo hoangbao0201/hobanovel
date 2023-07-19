@@ -41,6 +41,7 @@ import BlurImage from "@/components/Share/BlurImage";
 import FormComment from "@/components/Share/FormComment";
 import OverlayLayout from "@/components/Layout/OverlayLayout";
 import ClientOnly from "@/components/Share/ClientOnly";
+import { AdsenseForm } from "@/components/Share/AdsenseForm";
 
 interface Params extends ParsedUrlQuery {
     slug: string;
@@ -57,7 +58,6 @@ const ChapterDetailPage = ({ chapter }: ChapterDetailPageProps) => {
     
     const [isFixed, setIsFixed] = useState(false);
     const [isFollow, setIsFollow] = useState<null | boolean>(null)
-    const [isOptionsListChapter, setIsOptionsListChapter] = useState<boolean>(false)
     const { isAuthenticated, currentUser, userLoading } = useSelector((state: any) => state.user);
 
 
@@ -115,11 +115,6 @@ const ChapterDetailPage = ({ chapter }: ChapterDetailPageProps) => {
         } catch (error) {
             console.log(error)
         }
-    }
-
-    // Set Options Chapters
-    const handleChangeOntionsListChapter = () => {
-        setIsOptionsListChapter(value => !value)
     }
 
     // Increase view chapter
@@ -244,35 +239,6 @@ const ChapterDetailPage = ({ chapter }: ChapterDetailPageProps) => {
                         {
                             chapter && (
                                 <div>
-                                    <ClientOnly>
-                                        <OptionsListChapter
-                                            slug={chapter?.novelSlug}
-                                            isShow={isOptionsListChapter}
-                                            handle={handleChangeOntionsListChapter}
-                                            chapterNumber={Number(chapter?.chapterCount)}
-                                            chapterCurrent={chapter?.chapterNumber}
-                                        />
-                                    </ClientOnly>
-                
-
-
-                                    {/* <OverlayLayout
-                                        HeadTI={() => {
-                                            return (
-                                                <div className="w-full">
-                                                    <input
-                                                        className="px-3 py-1 w-2/3 border focus:border-blue-500 focus:shadow-blue-50 shadow outline-none rounded-md"
-                                                        placeholder="Nhập số  chap, ví dụ: 100"
-                                                    />
-                                                </div>
-                                            )
-                                        }}
-                                        isShow={isOptionsListChapter}
-                                        handle={() => setIsOptionsListChapter(false)}
-                                    >
-                                        <div className="px-4">Hello</div>
-                                    </OverlayLayout> */}
-
 
                                     <div className="border-b pb-3 mb-7 mt-4">
                                         <div ref={paginationRef} className={`transition-all top-0 left-0 right-0 py-1 ${isFixed ? 'fixed bg-gray-200 z-20' : ''}`}>
@@ -303,10 +269,12 @@ const ChapterDetailPage = ({ chapter }: ChapterDetailPageProps) => {
                                                         <i className="w-4 h-4 fill-white block">{iconChevronLeft}</i>
                                                     </Link>
                                                 </li>
-                
-                                                <li className="hover:border-gray-600 leading-9 border cursor-pointer rounded-sm bg-white min-w-[115px] text-center h-9 sm:text-base text-sm" onClick={handleChangeOntionsListChapter}>
-                                                    Chapter {chapter?.chapterNumber || 1}
-                                                </li>
+
+                                                <OptionsListChapter
+                                                    slug={chapter?.novelSlug}
+                                                    chapterNumber={Number(chapter?.chapterCount)}
+                                                    chapterCurrent={chapter?.chapterNumber}
+                                                />
                 
                                                 <li>
                                                     <Link
@@ -456,6 +424,14 @@ const ChapterDetailPage = ({ chapter }: ChapterDetailPageProps) => {
                             ]}
                         />
                     </>
+
+                    <ClientOnly>
+                        <div className="w-full px-4">
+        
+                            <AdsenseForm />
+        
+                        </div>
+                    </ClientOnly>
 
 
                     <div className="">

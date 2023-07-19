@@ -13,9 +13,9 @@ import WrapperLayout from "@/components/Layout/WrapperLayout";
 import { iconAngleDouble, iconClose } from "../../public/icons";
 import { advancedSearchNovelHandle } from "@/services/novels.services";
 import { PaginationLayout } from "@/components/Share/PaginationLayout";
-import { AdsenseForm } from "@/components/Layout/AdsLayout/AdSenseForm";
 import ItemNovelLazy from "@/components/Share/ItemNovelLazy";
 import ClientOnly from "@/components/Share/ClientOnly";
+import { AdsenseForm } from "@/components/Share/AdsenseForm";
 
 
 // Data Default
