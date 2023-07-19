@@ -65,7 +65,6 @@ const OptionsListChapter = ({ chapterNumber, isShow = false, handle, slug, chapt
                             className=""
                             style={{ height: 'calc(100vh - 200px)' }}
                             totalCount={chapterNumber}
-                            overscan={80}
                             listClassName="flex flex-wrap gap-2 sm:text-[14px] text-[13px] px-3"
                             itemContent={(index) => {
                                 return (

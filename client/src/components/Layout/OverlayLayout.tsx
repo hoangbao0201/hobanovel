@@ -1,5 +1,6 @@
 import { ReactNode, useEffect } from "react";
 import { iconClose } from "../../../public/icons";
+import { useRouter } from "next/router";
 
 
 interface OverlayLayoutProps {
@@ -10,6 +11,7 @@ interface OverlayLayoutProps {
 
 const OverlayLayout = ({ children, isShow, handle }: OverlayLayoutProps) => {
 
+    const router = useRouter();
     const bodyElement = document.querySelector('body');
 
     useEffect(() => {
@@ -29,6 +31,10 @@ const OverlayLayout = ({ children, isShow, handle }: OverlayLayoutProps) => {
         bodyElement?.classList.remove('pr-4');
         handle()
     }
+
+    useEffect(() => {
+        handleHiddenNotifyComment()
+    }, [router])
 
     return (
         <div className={`${ isShow ? 'fixed block overflow-y-scroll' : 'hidden' } transition-all z-50 top-0 right-0 bottom-0 left-0 bg-black/10`}>
