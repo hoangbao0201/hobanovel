@@ -1,5 +1,4 @@
 import dynamic from "next/dynamic";
-import { useRouter } from "next/router";
 import { ReactNode, useEffect, useState } from "react";
 import {
     GetStaticPaths, GetStaticProps, GetStaticPropsContext
@@ -22,8 +21,7 @@ import ClientOnly from "@/components/Share/ClientOnly";
 
 import ContentNovelDetail from "@/components/Share/ContentNovelDetail";
 import Breadcrumb from "@/components/Share/Breadcrumb";
-import { iconClose } from "../../../public/icons";
-import OverlayLayout from "@/components/Layout/OverlayLayout";
+import { FormCommentReceiver } from "@/components/Share/ContentNovelDetail/FormCommentReceiver";
 // import FormIntroduce from "@/components/Share/ContentNovelDetail/FormIntroduce";
 // import FormReviews from "@/components/Share/ContentNovelDetail/FormReviews";
 // import FormListChapters from "@/components/Share/ContentNovelDetail/FormListChapters";
@@ -62,15 +60,13 @@ export interface NovelDetailPageProps {
 
 const NovelDetailPage = ({ novel, tab } : NovelDetailPageProps) => {
 
-    const router = useRouter();
-
     const matchesMobile = useMediaQuery('(max-width: 640px)')
 
     const { isAuthenticated, currentUser, userLoading } = useSelector((state: any) => state.user);
 
     const [numberTab, setNumberTab] = useState(0);
     const [isFollow, setIsFollow] = useState<null | boolean>(null)
-    const [isFormComments, setIsFormComments] = useState<string | null>(null);
+    
 
     // Handle Check Follow
     const handleCheckFollowNovel = async () => {
@@ -165,39 +161,14 @@ const NovelDetailPage = ({ novel, tab } : NovelDetailPageProps) => {
         }
     }
 
-    useEffect(() => {
-        const token = getAccessToken();
-        const commentId = router.asPath.split('#comment-')[1];
-        if(commentId && !isNaN(Number(commentId)) && token) {
-            setIsFormComments(commentId as string)
-        }
-    }, [router]);
-
-    // console.log(!!isFormComments)
-
     return (
         <>  
 
-            {
-                !!isFormComments && (
-                    <OverlayLayout
-                        isShow={isFormComments}
-                        handle={() => setIsFormComments(null)}
-                    >
-                        <div className="px-4 py-4 mb-4 border-b">
-                            <h4 className="w-2/3 font-semibold">Bình luận mới</h4>
-                        </div>
-
-                        <FormComment
-                            novelId={novel?.novelId}
-                            commentId={isFormComments}
-                            isRpComment={true}
-                            isFormSendComment={false}
-                        />
-
-                    </OverlayLayout>
-                )
-            }
+            <ClientOnly>
+                <FormCommentReceiver
+                    novelId={novel?.novelId}
+                />
+            </ClientOnly>
 
             <Head title={`${novel?.title || "hobanovel"} [Tới Chap ${novel?.chapterCount || 1}] Tiếng Việt - HobaNovel`}/>
 

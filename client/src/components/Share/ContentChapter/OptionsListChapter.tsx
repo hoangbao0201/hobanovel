@@ -49,6 +49,19 @@ const OptionsListChapter = ({ chapterNumber, slug, chapterCurrent } : OptionsLis
         setIsOptionsListChapter(value => !value)
     }
 
+    useEffect(() => {
+        const bodyElement = document.querySelector('body');
+        
+        if (isOptionsListChapter) {
+            bodyElement?.classList.add('overflow-hidden');
+            bodyElement?.classList.add('pr-4');
+        }
+        else {
+            bodyElement?.classList.remove('overflow-hidden');
+            bodyElement?.classList.remove('pr-4');
+        }
+    }, [isOptionsListChapter]);
+
     return (
         <>
             <li className="hover:border-gray-600 leading-9 border cursor-pointer rounded-sm bg-white min-w-[115px] text-center h-9 sm:text-base text-sm" onClick={handleChangeOntionsListChapter}>
