@@ -40,6 +40,7 @@ import Breadcrumb from "@/components/Share/Breadcrumb";
 import BlurImage from "@/components/Share/BlurImage";
 import FormComment from "@/components/Share/FormComment";
 import OverlayLayout from "@/components/Layout/OverlayLayout";
+import ClientOnly from "@/components/Share/ClientOnly";
 
 interface Params extends ParsedUrlQuery {
     slug: string;
@@ -243,13 +244,15 @@ const ChapterDetailPage = ({ chapter }: ChapterDetailPageProps) => {
                         {
                             chapter && (
                                 <div>
-                                    <OptionsListChapter
-                                        slug={chapter?.novelSlug}
-                                        isShow={isOptionsListChapter}
-                                        handle={handleChangeOntionsListChapter}
-                                        chapterNumber={Number(chapter?.chapterCount)}
-                                        chapterCurrent={chapter?.chapterNumber}
-                                    />
+                                    <ClientOnly>
+                                        <OptionsListChapter
+                                            slug={chapter?.novelSlug}
+                                            isShow={isOptionsListChapter}
+                                            handle={handleChangeOntionsListChapter}
+                                            chapterNumber={Number(chapter?.chapterCount)}
+                                            chapterCurrent={chapter?.chapterNumber}
+                                        />
+                                    </ClientOnly>
                 
 
 

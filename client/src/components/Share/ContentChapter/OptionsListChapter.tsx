@@ -4,6 +4,7 @@ import { ComponentType, useEffect, useRef } from "react";
 import styled from "styled-components";
 import { Virtuoso, VirtuosoGrid } from 'react-virtuoso'
 import OverlayLayout from "@/components/Layout/OverlayLayout";
+import ClientOnly from "../ClientOnly";
 
 
 // import 'react-perfect-scrollbar/dist/css/styles.css';
@@ -42,31 +43,6 @@ interface OptionsListChapterProps {
 const OptionsListChapter = ({ chapterNumber, isShow = false, handle, slug, chapterCurrent } : OptionsListChapterProps ) => {
 
     const chapterListRef = useRef<any>(null);
-
-    // useEffect(() => {
-    //     const bodyElement = document.querySelector('body');
-
-    //     if (isShow) {
-    //         bodyElement?.classList.add('overflow-hidden');
-    //     } else {
-    //         bodyElement?.classList.remove('overflow-hidden');
-    //     }
-    // }, [isShow]);
-
-    
-
-    // const gridRef = useRef<Grid>(null);
-
-    // useEffect(() => {
-    // if (gridRef.current) {
-    //     gridRef.current.scrollToCell({
-    //         columnIndex: 0,
-    //         rowIndex: chapterCurrent,
-    //     });
-    // }
-    // }, []);
-
-
 
     return (
         <>

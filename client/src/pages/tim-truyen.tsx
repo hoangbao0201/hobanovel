@@ -15,6 +15,7 @@ import { advancedSearchNovelHandle } from "@/services/novels.services";
 import { PaginationLayout } from "@/components/Share/PaginationLayout";
 import { AdsenseForm } from "@/components/Layout/AdsLayout/AdSenseForm";
 import ItemNovelLazy from "@/components/Share/ItemNovelLazy";
+import ClientOnly from "@/components/Share/ClientOnly";
 
 
 // Data Default
@@ -672,11 +673,14 @@ const SearchNovel = ({ queryPage }: SearchNovelProps) => {
                     </div>
                 </div>
 
-                <div className="w-full px-4">
-
-                    <AdsenseForm />
-
-                </div>
+                <ClientOnly>
+                    <div className="w-full px-4">
+    
+                        <AdsenseForm />
+    
+                    </div>
+                </ClientOnly>
+                
             </WrapperLayout>
         </>
     );
