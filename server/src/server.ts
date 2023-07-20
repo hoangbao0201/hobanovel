@@ -13,15 +13,16 @@ import bannerRouter from "./routes/banner"
 import updateRouter from "./routes/update"
 import followRouter from "./routes/follow"
 
+import http from "http"
 
 const app = express()
 const PORT = process.env.PORT || 4000
 app.use(cors())
 
 
-import http from "http"
 // import { Server } from "socket.io"
 const server = http.createServer(app);
+
 
 // const io = new Server(server, { 
 //     cors: {
@@ -46,7 +47,9 @@ app.use(express.urlencoded({ extended: true }));
 
 const main = async () => {
 
+    // Connect Redis
 
+    
     // Routes
     app.use("/api/auth", authRouter);
     app.use("/api/users", userRouter);

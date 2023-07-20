@@ -10,6 +10,8 @@ import { CommentSliceType, addCommentsRDHandle, destroyCommentsNovelRDHandle, lo
 import { LoadingForm } from "@/components/Layout/LoadingLayout";
 import InputText from "@/components/features/InputText";
 import { PaginationLayout } from "@/components/Share/PaginationLayout";
+import { ShowToastify } from "@/components/features/ShowToastify";
+import { error } from "console";
 
 
 interface FormCommentProps {
@@ -129,11 +131,17 @@ const FormComment = ({commentId, novelId, chapterId, chapterNumber, isFormSendCo
                 }
 
                 dispatch(addCommentsRDHandle(newComment));
+
+                return;
             }
 
-            
+            alert(commentRes.message as string);
+            // ShowToastify({
+            //     data: commentRes.message as string,
+            //     type: "error"
+            // });
         } catch (error) {
-            // console.log(error);
+            console.log(error);
         }
     };    
 

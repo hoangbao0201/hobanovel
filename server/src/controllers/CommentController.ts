@@ -2,9 +2,22 @@ import { Request, Response } from "express";
 import { CommentType } from "../types";
 import { addReplyCommentHandle, addCommentByNovelHandle, destroyReplyCommentByNovelHandle, destroyCommentByNovelHandle, getReplyCommentHandle, getCommentsHandle, getCommentNotifyHandle, addReadCommentNotifyHandle } from "../services/comment.services";
 
+import { setRedis, ttlRedis } from "../models/limiter";
+
 // Register User | /api/auth/register
 export const addCommentByNovel = async (req: Request, res: Response) => {
     try {
+
+        const ip = (req.headers['x-forwarded-for'] || req.connection.remoteAddress) as string;
+
+        const times = await ttlRedis(ip);
+        if(times >= 0) {
+            return res.json({
+                success: false,
+                message: `Bạn bình luận quá nhanh. Vui lòng đợi ${times} giây nữa để bình luận tiếp!`
+            })
+        }
+        await setRedis(ip, 1, 10);
 
         const { receiverId = '', novelId = '', chapterId = '', chapterNumber = '', commentText, senderName = '' } = req.body;
 

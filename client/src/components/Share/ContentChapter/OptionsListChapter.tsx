@@ -65,7 +65,7 @@ const OptionsListChapter = ({ chapterNumber, slug, chapterCurrent } : OptionsLis
     return (
         <>
             <li className="hover:border-gray-600 leading-9 border cursor-pointer rounded-sm bg-white min-w-[115px] text-center h-9 sm:text-base text-sm" onClick={handleChangeOntionsListChapter}>
-                Chapter {chapterNumber || 1}
+                Chapter {chapterCurrent || 1}
             </li>
 
             <div className={`${ isOptionsListChapter ? 'fixed block overflow-y-scroll' : 'hidden' } transition-all z-50 top-0 right-0 bottom-0 left-0 bg-black/10`}>
