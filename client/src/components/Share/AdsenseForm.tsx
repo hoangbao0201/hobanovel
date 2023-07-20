@@ -10,6 +10,7 @@ export const AdsenseForm = () => {
                 style={{ display: "block" }}
                 layout="in-article"
                 format="auto"
+                responsive="true"
             />
         </div>
     );
