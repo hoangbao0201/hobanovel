@@ -222,6 +222,7 @@ const ChapterDetailPage = ({ chapter }: ChapterDetailPageProps) => {
     }, [chapter])
 
     return (
+        
         <>
             <Head title={`${chapter ? chapter?.novelName : ''} Chap ${chapter ? chapter?.chapterNumber : ''} Next Chap ${chapter ? chapter?.chapterNumber + 1 : ''} - HobaNovel`}/>
             <WrapperLayout bg="bg-[#eae4d3]" className="lg:max-w-5xl">
@@ -230,8 +231,8 @@ const ChapterDetailPage = ({ chapter }: ChapterDetailPageProps) => {
                     <Breadcrumb 
                         path={[
                             { title: 'Truyện', url: '/' },
-                            { title: `${chapter?.novelName}`, url: `/truyen/${chapter?.novelSlug}` },
-                            { title: `Chapter ${chapter?.chapterNumber}`, url: `/truyen/${chapter?.novelSlug}/chuong-${chapter?.chapterNumber}`}
+                            { title: `${chapter?.novelName || ''}`, url: `/truyen/${chapter?.novelSlug || ''}` },
+                            { title: `Chapter ${chapter?.chapterNumber || ''}`, url: `/truyen/${chapter?.novelSlug || ''}/chuong-${chapter?.chapterNumber || ''}`}
                         ]}
                     />
 
@@ -425,14 +426,9 @@ const ChapterDetailPage = ({ chapter }: ChapterDetailPageProps) => {
                         />
                     </>
 
-                    <ClientOnly>
-                        <div className="w-full relative px-4">
+                    
+                    <AdsenseForm />
         
-                            <AdsenseForm />
-        
-                        </div>
-                    </ClientOnly>
-
 
                     <div className="">
 
@@ -448,6 +444,7 @@ const ChapterDetailPage = ({ chapter }: ChapterDetailPageProps) => {
                 </div>
             </WrapperLayout>
         </>
+                
     );
 };
 

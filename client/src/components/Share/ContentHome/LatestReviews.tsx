@@ -13,10 +13,6 @@ interface LatestReviewsProps {
 
 const LatestReviews = ({ reviews } : LatestReviewsProps) => {
 
-    // console.log("reviews: ", reviews)
-
-    // console.log(reviews)
-
     return (
         <ul className="px-4 mb-4">
 

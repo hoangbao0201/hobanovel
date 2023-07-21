@@ -673,13 +673,9 @@ const SearchNovel = ({ queryPage }: SearchNovelProps) => {
                     </div>
                 </div>
 
-                <ClientOnly>
-                    <div className="w-full relative px-4">
     
-                        <AdsenseForm />
+                <AdsenseForm />
     
-                    </div>
-                </ClientOnly>
                 
             </WrapperLayout>
         </>

@@ -13,7 +13,6 @@ const HighlyRated = ({ novels = [] } : HighlyRatedProps) => {
 
     return (
         <ul className="px-4 mb-4 grid md:grid-cols-2 grid-cols-1 gap-6">
-
             {   
                 novels?.length ? (
                     novels.map((novel) => {

@@ -48,10 +48,10 @@ const JustPosted = ({ novels = [] } : JustPostedProps) => {
     }
 
     return (
-        <div className="px-4 overflow-hidden">
+        <div className="px-4">
             <div className="px-4 py-5 rounded-lg bg-gray-100 mb-3 min-h-[400px]">
     
-                <GridSwiperStyled className="relative">
+                <GridSwiperStyled className="relative overflow-hidden">
                     <Swiper
                         loop={true}
                         centeredSlides
@@ -83,8 +83,6 @@ const JustPosted = ({ novels = [] } : JustPostedProps) => {
                             styleIcon="h-4 w-4 fill-slate-400 stroke-slate-600"   
                         />
                         
-                        {/* <div className="absolute w-full top-1/2 -translate-y-1/2 z-40 flex justify-between">
-                        </div> */}
                         {
                             novels.map((novel, index) => {
                                 return ( 
@@ -102,10 +100,7 @@ const JustPosted = ({ novels = [] } : JustPostedProps) => {
                                 )
                             })
                         }
-    
-                        {/* <div className="flex overflow-hidden"> */}
-                        {/* </div> */}
-    
+
                     </Swiper>
                 </GridSwiperStyled>
     

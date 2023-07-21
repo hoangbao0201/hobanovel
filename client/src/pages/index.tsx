@@ -1,37 +1,22 @@
-import { ReactNode, useState } from "react";
+import { ReactNode } from "react";
 import dynamic from "next/dynamic";
 import { GetStaticProps } from "next";
 
-import useSWR from "swr";
-import axios from "axios";
-import { useMediaQuery } from "usehooks-ts";
-
-import { REVALIDATE_TIME, apiUrl } from "@/constants";
+import { REVALIDATE_TIME } from "@/constants";
 import MainLayout from "@/components/Layout/MainLayout";
 import {
     getNovelsByHighlyRatedHandle,
     getNovelsByOutstandingHandle,
     getNovelsByPageHandle,
-    getReadingNovelHandle,
 } from "@/services/novels.services";
 import Head from '@/components/Share/Head';
 import { NovelType, ReviewType } from "@/types";
-import ClientOnly from "@/components/Share/ClientOnly";
-import { getAccessToken } from "@/services/cookies.servies";
 import WrapperLayout from "@/components/Layout/WrapperLayout";
 import { getReviewsByNovelHandle } from "@/services/review.services";
 import PageTitle from "@/components/Share/PageTitle";
 import { iconAngleRight } from "../../public/icons";
 import FormComment from "@/components/Share/FormComment";
 import { AdsenseForm } from "@/components/Share/AdsenseForm";
-
-// import Outstanding from "@/components/Share/ContentHome/Outstanding";
-// import Reading from "@/components/Share/ContentHome/Reading";
-// import JustUpdated from "@/components/Share/ContentHome/JustUpdated";
-// import HighlyRated from "@/components/Share/ContentHome/HighlyRated";
-// import JustPosted from "@/components/Share/ContentHome/JustPosted";
-// import LatestReviews from "@/components/Share/ContentHome/LatestReviews";
-// import JustCompleted from "@/components/Share/ContentHome/JustCompleted";
 
 
 type NovelHighlyRated = NovelType & { mediumScore: number };
@@ -100,48 +85,10 @@ const HomePage = ({
     novelsLatestReviews = [],
     novelsJustCompleted = [],
 }: PageHomeProps) => {
-    const matchesTablet = useMediaQuery("(max-width: 1024px)");
-
-    const { data: novelReading } = useSWR<{ novels: any }>(
-        `?page=1`,
-        async (query) => {
-            const token = getAccessToken();
-            if (!token) {
-                throw new Error();
-            }
-            const res = await axios.get(`${apiUrl}/api/novels/reading${query}`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-
-            if (!res.data.success || !res) {
-                throw new Error();
-            }
-
-            return {
-                novels: res.data.novels,
-            };
-        },
-        {
-            onErrorRetry: (error, _, __, revalidate, { retryCount }) => {
-                if (error.status === 404) {
-                    return;
-                }
-                if (retryCount >= 1) {
-                    return;
-                }
-                setTimeout(() => {
-                    revalidate({ retryCount });
-                }, 2000);
-            },
-        }
-    );
 
     return (
         <>
             <Head />
-            {/* sm:-translate-y-28 */}
             <WrapperLayout className="xs:-translate-y-28">
                 <div className="grid">
 
@@ -150,14 +97,10 @@ const HomePage = ({
                             <PageTitle>Truyện nổi bật</PageTitle>
                             <Outstanding novels={novelsOutstending} />
                         </div>
-                        <ClientOnly>
-                            {!matchesTablet && (
-                                <div className="lg:w-4/12 mb-8">
-                                    <PageTitle>Truyện đang đọc</PageTitle>
-                                    <Reading readingNovel={novelReading?.novels} />
-                                </div>
-                            )}
-                        </ClientOnly>
+                        <div className="lg:w-4/12 lg:block hidden mb-8">
+                            <PageTitle>Truyện đang đọc</PageTitle>
+                            <Reading />
+                        </div>
                     </div>
                     
                     <div className="max-lg:hidden mb-6">
@@ -177,27 +120,19 @@ const HomePage = ({
                     </div>
 
                     <div className="lg:flex relative max-lg:hidden">
-                        <>
-                            <div className="lg:w-4/12">
-                                <PageTitle>Mới đăng</PageTitle>
-                                <JustPosted novels={novelsOutstending} />
-                            </div>
-                            <div className="lg:w-8/12">
-                                <h2 className="text-[18px] uppercase font-bold px-4 mb-3 flex items-center">
-                                    <span className="">Mới hoàn thành <i className="w-4 h-4 inline-block">{iconAngleRight}</i></span>
-                                </h2>
-                                <JustCompleted novels={novelsJustCompleted} />
-                            </div>
-                        </>
+                        <div className="lg:w-4/12">
+                            <PageTitle>Mới đăng</PageTitle>
+                            <JustPosted novels={novelsOutstending} />
+                        </div>
+                        <div className="lg:w-8/12">
+                            <h2 className="text-[18px] uppercase font-bold px-4 mb-3 flex items-center">
+                                <span className="">Mới hoàn thành <i className="w-4 h-4 inline-block">{iconAngleRight}</i></span>
+                            </h2>
+                            <JustCompleted novels={novelsJustCompleted} />
+                        </div>
                     </div>
 
-                    <ClientOnly>
-                        <div className="w-full relative px-4">
-        
-                            <AdsenseForm />
-        
-                        </div>
-                    </ClientOnly>
+                    <AdsenseForm />
 
                     <div className="mt-8">
                         <PageTitle>Bình luận mới</PageTitle>
@@ -211,8 +146,8 @@ const HomePage = ({
 };
 
 export const getStaticProps: GetStaticProps = async (context) => {
-    const query = context;
-    const data = { page: 1 };
+    // const query = context;
+    // const data = { page: 1 };
 
     const novelsResponse = await getNovelsByPageHandle("1");
     const novelsOutstandingResponse = await getNovelsByOutstandingHandle(1);

@@ -17,7 +17,7 @@ const ItemNovel = ({ novel, isRating = false, isAuthor = false, isChapterCount =
 
     return (
         <div className={`flex ${isRating && 'items-center'}`}>
-            <Link href={`/truyen/${novel.slug}`} className="drop-shadow">
+            <Link href={`/truyen/${novel.slug}`} className="drop-shadow flex-shrink-0">
                 <LazyLoad className="relative w-20 h-28 overflow-hidden shadow">
                     <BlurImage
                         width={80}

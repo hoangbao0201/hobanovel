@@ -3,9 +3,9 @@ import { Adsense } from "@ctrl/react-adsense";
 
 export const AdsenseForm = () => {
     return (
-        <div className="text-center adsbygoogle my-3">
+        <div className="relative block overflow-hidden my-3">
             <Adsense
-                style={{ display: "block" }}
+                style={{ display: "block", maxWidth: "100%", width: "100%" }}
                 client="ca-pub-6688547661590907"
                 slot="6844017742"
                 format="auto"

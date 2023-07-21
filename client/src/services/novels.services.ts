@@ -140,28 +140,24 @@ export const readingNovelHandle = async (data: Pick<HistoryReadingType, 'novelId
     }
 };
 
-export const getReadingNovelHandle = async (page: number) => {
+export const getReadingNovelHandle = async (page: number, token: string) => {
     try {
-        const token = getAccessToken();
-
-        if(!token) {
-            return null
-        }
-
-        const readingNovelRes = await axios.post(
-            `${apiUrl}/api/novels/reading?page=${page || 1}`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-        if (readingNovelRes.data.success) {
-            return readingNovelRes;
-        }
+        const novelsRes = await axios.get(`${apiUrl}/api/novels/reading?page=${page}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
     
-        return null;
+        return novelsRes.data;
     } catch (error) {
-        // console.log(error)
-        return null;
+        if(axios.isAxiosError(error) && error.response?.data) {
+            return error.response.data;
+        } else {
+            return {
+                success: false,
+                message: (error as Error).message
+            };
+        }
     }
 };
 

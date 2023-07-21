@@ -49,7 +49,7 @@ const Breadcrumb = ({ path }: BreadcrumbProps) => {
                                             itemType="http://schema.org/Thing"
                                             href={item.url}
                                         >
-                                            <span itemProp="name">{item.title}</span>
+                                            <span itemProp="name">{item?.title}</span>
                                         </Link>
                                     </li>
                                 </Fragment>

@@ -1,6 +1,7 @@
-import { PROPERTIES_NOVEL } from "@/constants/data";
-import { NovelType } from "@/types";
 import Link from "next/link";
+
+import { NovelType } from "@/types";
+import { PROPERTIES_NOVEL } from "@/constants/data";
 
 
 interface JustUpdatedProps {
@@ -8,8 +9,6 @@ interface JustUpdatedProps {
 }
 
 const JustUpdated = ({ novels= [] } : JustUpdatedProps) => {
-
-    // console.log("J: ", novels)
 
     return (
         <div className="px-4">
