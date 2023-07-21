@@ -1,26 +1,23 @@
 import { Request, Response } from "express";
 import { CommentType } from "../types";
 import { addReplyCommentHandle, addCommentByNovelHandle, destroyReplyCommentByNovelHandle, destroyCommentByNovelHandle, getReplyCommentHandle, getCommentsHandle, getCommentNotifyHandle, addReadCommentNotifyHandle } from "../services/comment.services";
-
-import { setRedis, ttlRedis } from "../models/limiter";
+import { canComment, setComment } from "../middleware/canComment";
 
 // Register User | /api/auth/register
 export const addCommentByNovel = async (req: Request, res: Response) => {
     try {
 
-        const ip = (req.headers['x-forwarded-for'] || req.connection.remoteAddress) as string;
-
-        const times = await ttlRedis(ip);
-        if(times >= 0) {
+        // const ip = (req.headers['x-forwarded-for'] || req.connection.remoteAddress) as string;
+        const checkCommect = await canComment(res.locals.user.userId);
+        if(!checkCommect.success) {
             return res.json({
                 success: false,
-                message: `Bạn bình luận quá nhanh. Vui lòng đợi ${times} giây nữa để bình luận tiếp!`
+                message: checkCommect?.message,
+                error: checkCommect?.error
             })
         }
-        await setRedis(ip, 1, 10);
 
         const { receiverId = '', novelId = '', chapterId = '', chapterNumber = '', commentText, senderName = '' } = req.body;
-
         if(commentText.length < 16) {
             return res.status(400).json({
                 success: false,
@@ -45,6 +42,8 @@ export const addCommentByNovel = async (req: Request, res: Response) => {
                 error: commentResult.error,
             })
         }
+
+        await setComment(res.locals.user.userId);
         
         return res.json({
             success: true,

@@ -14,6 +14,8 @@ import updateRouter from "./routes/update"
 import followRouter from "./routes/follow"
 
 import http from "http"
+// import redis from "redis";
+import redisConnect from './helpers/init_redis'
 
 const app = express()
 const PORT = process.env.PORT || 4000
@@ -44,11 +46,11 @@ const server = http.createServer(app);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-
 const main = async () => {
 
     // Connect Redis
-
+    redisConnect.on("error", (err) => console.log("Redis Client Error", err));
+    redisConnect.on("connect", () => console.log("Connected to Redis"));
     
     // Routes
     app.use("/api/auth", authRouter);

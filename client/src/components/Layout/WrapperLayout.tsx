@@ -10,14 +10,16 @@ interface WrapperLayoutProps extends WithClassName<object> {
 
 const WrapperLayout = (props: WrapperLayoutProps) => {
     return (
-        <div
-            className={cn(
-                props.className,
-                `grid transition-all max-w-5xl mx-auto bg-white sm:rounded-xl px-4 py-5`
-            )}
-        >
-            <div className="-mx-4">{props.children}</div>
-        </div>
+        <>
+            <div
+                className={cn(
+                    props.className,
+                    `grid transition-all max-w-5xl mx-auto bg-white sm:rounded-xl px-4 py-5`
+                )}
+            >
+                <div className="-mx-4">{props.children}</div>
+            </div>
+        </>
     );
 };
 

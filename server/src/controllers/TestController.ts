@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+// import { canComment } from "../middleware/canComment";
 
 // import { setRedis, ttlRedis } from "../models/limiter";
 
@@ -18,9 +19,12 @@ export const testDemo = async (_req: Request, res: Response) => {
         // }
         // await setRedis(ip, 1);
 
+        // const name = await canComment()
+
         return res.json({
             success: true,
             message: "Test successful",
+            name: name
         })
     } catch (error) {
         return res.status(500).json({

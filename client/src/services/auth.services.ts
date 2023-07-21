@@ -43,7 +43,7 @@ export const loginUserHandle = async (data: UserType & { accout: string }) => {
     }
 }
 
-export const registerUserHandle = async (data: UserType) => {
+export const registerUserHandle = async (data: Pick<UserType, 'name' | 'username' | 'email' | 'password'>) => {
     try {
         const userRes = await axios.post(`${apiUrl}/api/auth/register`, data)
 

@@ -4,13 +4,22 @@ import MainLayout from "@/components/Layout/MainLayout";
 import WrapperLayout from "@/components/Layout/WrapperLayout";
 import Link from "next/link";
 import Head from "@/components/Share/Head";
+import Breadcrumb from "@/components/Share/Breadcrumb";
 
 const PolicyPage = () => {
     return (
         <>
             <Head title="Chính sách bảo mật - hobanovel" description="Chính sách bảo mật ❶✔️ Web đọc truyện tranh online lớn nhất - Truyện tranh hay nhất, chất lượng được cập nhật liên tục mỗi ngày"/>
             <WrapperLayout>
+
+                <Breadcrumb 
+                    path={[
+                        { title: "Chính sách bảo mật", url: "/chinh-sach-bao-mat" },
+                    ]}
+                />
+
                 <div className="px-4">
+
                     <h1 className="text-2xl font-extrabold mb-5">Chính sách bảo mật</h1>
     
                     <h2 className="text-xl font-bold mb-4">Chúng tôi là ai</h2>

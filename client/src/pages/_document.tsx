@@ -19,9 +19,11 @@ export default function Document() {
                     content="VYr3U568eAPsZHYVfVtVFkF_41bHeGdekZrs2mV7PQk"
                 />
 
-                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6688547661590907"
-                    crossOrigin="anonymous"></script>
-
+                <script
+                    async
+                    src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6688547661590907"
+                    crossOrigin="anonymous"
+                ></script>
 
                 {/* <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6688547661590907"
                     crossOrigin="anonymous"></script>
@@ -34,7 +36,6 @@ export default function Document() {
                 <script>
                     (adsbygoogle = window.adsbygoogle || []).push({});
                 </script> */}
-
             </Head>
             <body>
                 <Main />

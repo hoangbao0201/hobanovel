@@ -426,7 +426,7 @@ const ChapterDetailPage = ({ chapter }: ChapterDetailPageProps) => {
                     </>
 
                     <ClientOnly>
-                        <div className="w-full px-4">
+                        <div className="w-full relative px-4">
         
                             <AdsenseForm />
         

@@ -22,6 +22,7 @@ import ClientOnly from "@/components/Share/ClientOnly";
 import ContentNovelDetail from "@/components/Share/ContentNovelDetail";
 import Breadcrumb from "@/components/Share/Breadcrumb";
 import { FormCommentReceiver } from "@/components/Share/ContentNovelDetail/FormCommentReceiver";
+import { AdsenseForm } from "@/components/Share/AdsenseForm";
 // import FormIntroduce from "@/components/Share/ContentNovelDetail/FormIntroduce";
 // import FormReviews from "@/components/Share/ContentNovelDetail/FormReviews";
 // import FormListChapters from "@/components/Share/ContentNovelDetail/FormListChapters";
@@ -326,6 +327,14 @@ const NovelDetailPage = ({ novel, tab } : NovelDetailPageProps) => {
                             </Tab.Panels>
                         </Tab.Group>
                     </div>
+
+                    <ClientOnly>
+                        <div className="w-full relative px-4">
+        
+                            <AdsenseForm />
+        
+                        </div>
+                    </ClientOnly>
 
                 </div>
             </WrapperLayout>
