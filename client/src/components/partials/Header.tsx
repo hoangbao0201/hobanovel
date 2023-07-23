@@ -17,6 +17,7 @@ import { removeAccessToken } from "@/services/cookies.servies";
 import ClientOnly from "../Share/ClientOnly";
 import { useRouter } from "next/router";
 import { CommentsNotify } from "./CommentsNotify";
+import { signOut } from "next-auth/react";
 
 
 
@@ -74,10 +75,10 @@ const Header = ({ autoHidden = true } : HeaderProps) => {
     }
 
     const eventLogoutUser = () => {
-        dispatch(logoutUserHandle());
-        // signOut()
+        signOut()
         removeAccessToken()
-        window.location.reload();
+        dispatch(logoutUserHandle());
+        // window.location.reload();
     }
 
     useClickOutSide(genresDropdownRef, handleHiddenDropdownGenres);
@@ -215,7 +216,7 @@ const Header = ({ autoHidden = true } : HeaderProps) => {
                                                         placeholder="blur"
                                                         src={
                                                             currentUser.avatarUrl ||
-                                                            "/images/avatar-default-2.png"
+                                                            "/images/avatar-default.png"
                                                         }
                                                     />
                                                 </button>
@@ -229,7 +230,7 @@ const Header = ({ autoHidden = true } : HeaderProps) => {
                                                         className="w-11 h-11 object-cover"
                                                         src={
                                                             currentUser.thumbnailUrl ||
-                                                            "/images/avatar-default-2.png"
+                                                            "/images/avatar-default.png"
                                                         }
                                                     />
                                                     <div className="ml-3 flex-1 line-clamp-1">{currentUser.username}</div>

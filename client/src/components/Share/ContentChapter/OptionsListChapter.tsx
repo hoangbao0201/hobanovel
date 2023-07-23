@@ -1,10 +1,9 @@
 import Link from "next/link";
-import { ComponentType, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+
+import { VirtuosoGrid } from 'react-virtuoso'
 
 import styled from "styled-components";
-import { Virtuoso, VirtuosoGrid } from 'react-virtuoso'
-import OverlayLayout from "@/components/Layout/OverlayLayout";
-import ClientOnly from "../ClientOnly";
 import { iconClose } from "../../../../public/icons";
 
 
@@ -42,6 +41,8 @@ interface OptionsListChapterProps {
 const OptionsListChapter = ({ chapterNumber, slug, chapterCurrent } : OptionsListChapterProps ) => {
 
     const chapterListRef = useRef<any>(null);
+
+    const [nextPage, setNextPage] = useState(chapterCurrent - 1)
     const [isOptionsListChapter, setIsOptionsListChapter] = useState<boolean>(false)
 
     // Set Options Chapters
@@ -62,6 +63,12 @@ const OptionsListChapter = ({ chapterNumber, slug, chapterCurrent } : OptionsLis
         }
     }, [isOptionsListChapter]);
 
+    useEffect(() => {
+        // chapterListRef.current.scrollToIndex({
+        //     index: nextPage,
+        // });
+    }, [nextPage])
+
     return (
         <>
             <li className="hover:border-gray-600 leading-9 border cursor-pointer rounded-sm bg-white min-w-[115px] text-center h-9 sm:text-base text-sm" onClick={handleChangeOntionsListChapter}>
@@ -80,8 +87,9 @@ const OptionsListChapter = ({ chapterNumber, slug, chapterCurrent } : OptionsLis
                         <div className="min-h-[400px]">
                             <div className="w-full px-4 py-3 border-b">
                                 <input
-                                    className="px-3 py-1 w-2/3 border focus:border-blue-500 focus:shadow-blue-50 shadow outline-none rounded-md"
+                                    type="number"
                                     placeholder="Nhập số  chap, ví dụ: 100"
+                                    className="px-3 py-1 w-2/3 border focus:border-blue-500 focus:shadow-blue-50 shadow outline-none rounded-md"
                                 />
                             </div>
 

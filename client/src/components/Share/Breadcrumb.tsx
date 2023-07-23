@@ -34,25 +34,24 @@ const Breadcrumb = ({ path }: BreadcrumbProps) => {
                     <>
                         {path.map((item, index) => {
                             return (
-                                <Fragment key={index}>
-                                    <li
-                                        itemScope
-                                        itemProp="itemListElement"
-                                        itemType="http://schema.org/ListItem"
-                                        className="text-blue-500"
+                                <li
+                                    key={index}
+                                    itemScope
+                                    itemProp="itemListElement"
+                                    itemType="http://schema.org/ListItem"
+                                    className="text-blue-500"
+                                >
+                                    <i className="w-3 h-3 mr-2 inline-block flex-shrink fill-gray-400 rotate-90">
+                                        {iconAngleDouble}
+                                    </i>
+                                    <Link
+                                        itemProp="item"
+                                        itemType="http://schema.org/Thing"
+                                        href={item.url}
                                     >
-                                        <i className="w-3 h-3 mr-2 inline-block flex-shrink fill-gray-400 rotate-90">
-                                            {iconAngleDouble}
-                                        </i>
-                                        <Link
-                                            itemProp="item"
-                                            itemType="http://schema.org/Thing"
-                                            href={item.url}
-                                        >
-                                            <span itemProp="name">{item?.title}</span>
-                                        </Link>
-                                    </li>
-                                </Fragment>
+                                        <span itemProp="name">{item.title}</span>
+                                    </Link>
+                                </li>
                             );
                         })}
                     </>

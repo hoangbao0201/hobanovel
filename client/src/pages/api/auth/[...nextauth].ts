@@ -1,32 +1,60 @@
-// import NextAuth, { Session, User } from "next-auth";
-// import GithubProvider from "next-auth/providers/github";
-// import FacebookProvider from "next-auth/providers/facebook";
-// import GoogleProvider from "next-auth/providers/google";
+import NextAuth, { Session, User } from "next-auth";
+import GoogleProvider from "next-auth/providers/google";
+import GithubProvider from "next-auth/providers/github";
+import FacebookProvider from "next-auth/providers/facebook";
 
-// interface CustomUser extends User {
-//     tokenCv?: string;
-// }
 
-// export default NextAuth({
-//     providers: [
-//         GithubProvider({
-//             clientId: "4523926d484d11d47436",
-//             clientSecret: "51f34193e205f06c1f8c462caaf28660f8281fc0",
-//         }),
-//         FacebookProvider({
-//             clientId: "1130584121043505",
-//             clientSecret: "234525da06e202a238b8cd313770de8f",
-//         }),
-//         GoogleProvider({
-//             clientId:
-//                 "377296193685-2f90ipkk132sa8r2aiuuq357id7bee29.apps.googleusercontent.com",
-//             clientSecret: "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",
-//         }),
-//     ],
+export default NextAuth({
+    providers: [
+        GithubProvider({
+            clientId: process.env.NEXT_PUBLIC_GITHUB_ID as string,
+            clientSecret: process.env.NEXT_PUBLIC_GITHUB_SECRET as string,
+        }),
+        FacebookProvider({
+            clientId: process.env.NEXT_PUBLIC_FACEBOOK_ID as string,
+            clientSecret: process.env.NEXT_PUBLIC_FACEBOOK_SECRET as string,
+        }),
+        GoogleProvider({
+            clientId: process.env.NEXT_PUBLIC_GOOGLE_ID as string,
+            clientSecret: process.env.NEXT_PUBLIC_GOOGLE_SECRET as string,
+        }),
+    ],
 
-//     secret: process.env.NEXT_PUBLIC_NEXTAUTH_SECRET as string,
+    secret: process.env.NEXT_PUBLIC_NEXTAUTH_SECRET as string,
 
-//     callbacks: {
-//     },
+    pages: {
+        signIn: "/",
+        error: "/api/auth/login",
+    },
 
-// });
+    callbacks: {
+        async session({ session, user, token }) {
+            // if (session.user && session.user.email && session.user.name && session.user.image) {
+            //     const dataReq = {
+            //         name: user.name as string,
+            //         username: user.email.split("@")[0],
+            //         email: user.email,
+            //         avatarUrl: user.image as string,
+            //         token: token
+            //     }
+            //     const userRes = await checkExistUserByAccoutHandle(dataReq);
+
+            //     if (userRes.success) {
+            //         return {
+            //             ...session,
+            //             success: true,
+            //             data: userRes
+            //             // token: userRes.token,
+            //         };
+            //     }
+            // }
+
+            return {
+                ...session,
+                success: false,
+                token: token
+            };
+        },
+
+    },
+});

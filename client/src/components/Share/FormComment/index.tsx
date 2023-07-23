@@ -1,3 +1,4 @@
+import dynamic from "next/dynamic"; 
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
@@ -8,11 +9,16 @@ import { addCommentHandle, destroyCommentHandle, getCommentsHandle } from "@/ser
 import { getAccessToken } from "@/services/cookies.servies";
 import { CommentSliceType, addCommentsRDHandle, destroyCommentsNovelRDHandle, loadCommentsNovelRDHandle, setCommentsRDHandle } from "@/redux/commentSlice";
 import { LoadingForm } from "@/components/Layout/LoadingLayout";
-import InputText from "@/components/features/InputText";
 import { PaginationLayout } from "@/components/Share/PaginationLayout";
-import { ShowToastify } from "@/components/features/ShowToastify";
-import { error } from "console";
+import { CommentItemType } from "@/types";
 
+// import InputText from "@/components/features/InputText";
+
+const InputText = dynamic(
+    () => import("../../features/InputText", {
+        ssr: false,
+    } as ImportCallOptions)
+)
 
 interface FormCommentProps {
     commentId?: string;
@@ -113,11 +119,14 @@ const FormComment = ({commentId, novelId, chapterId, chapterNumber, isFormSendCo
 
                 setCommentText('');
 
-                const newComment = {
+                const newComment= {
                     commentId: commentRes.commentId,
                     commentText: commentText,
 
                     parentId: null,
+                    avatarUrl: currentUser.avatarUrl || null,
+                    avatarPublicId: currentUser.avatarPublicId || null,
+
                     senderId: currentUser.userId,
                     senderName: sender.senderName,
                     senderUsername: currentUser.username,
@@ -136,12 +145,8 @@ const FormComment = ({commentId, novelId, chapterId, chapterNumber, isFormSendCo
             }
 
             alert(commentRes.message as string);
-            // ShowToastify({
-            //     data: commentRes.message as string,
-            //     type: "error"
-            // });
         } catch (error) {
-            console.log(error);
+            alert(error as string);
         }
     };    
 

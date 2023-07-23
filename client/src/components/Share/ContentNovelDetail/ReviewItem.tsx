@@ -139,7 +139,7 @@ const ReviewItem = ({ novelId, review, user, handleDeleteReview }: ReviewItemPro
                     blurDataURL={placeholderBlurhash}
                     className="group-hover:scale-105 group-hover:duration-500 object-cover w-10 h-10"
                     placeholder="blur"
-                    src={ review.avatarUrl || "/images/avatar-default-2.png" }
+                    src={ review.avatarUrl || "/images/avatar-default.png" }
                 />
             </Link>
             <div className="ml-3 flex-1 relative">

@@ -2,14 +2,17 @@ import express from "express"
 const router = express.Router()
 
 import { verifyToken } from "../middleware/verifyToken";
-import { connectUser, getUserById, getUserByUsername } from "../controllers/UserController";
+import { checkExistUserByAccout, connectUser, getUserById, updatePasswordUser } from "../controllers/UserController";
 
 
 
 
 
-router.get("/id/:id", getUserById)
-router.get("/username/:username", getUserByUsername)
+router.post("/exist", checkExistUserByAccout);
+
+router.get("/id/:id", getUserById);
+
+router.post("/update/password", verifyToken, updatePasswordUser);
 
 router.get("/", verifyToken, connectUser);
 

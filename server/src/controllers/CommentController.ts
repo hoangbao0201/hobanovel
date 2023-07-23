@@ -6,8 +6,7 @@ import { canComment, setComment } from "../middleware/canComment";
 // Register User | /api/auth/register
 export const addCommentByNovel = async (req: Request, res: Response) => {
     try {
-
-        // const ip = (req.headers['x-forwarded-for'] || req.connection.remoteAddress) as string;
+        // Check Comment
         const checkCommect = await canComment(res.locals.user.userId);
         if(!checkCommect.success) {
             return res.json({
@@ -18,6 +17,7 @@ export const addCommentByNovel = async (req: Request, res: Response) => {
         }
 
         const { receiverId = '', novelId = '', chapterId = '', chapterNumber = '', commentText, senderName = '' } = req.body;
+
         if(commentText.length < 16) {
             return res.status(400).json({
                 success: false,
@@ -49,7 +49,6 @@ export const addCommentByNovel = async (req: Request, res: Response) => {
             success: true,
             message: "Create comment successful",
             commentId: commentResult.data.insertId
-            // data: commentResult.data
         })
         
     } catch (error) {
@@ -123,7 +122,7 @@ export const getCommentNotify = async (req: Request, res: Response) => {
 }
 export const addReadCommentNotify = async (req: Request, res: Response) => {
     try {
-        const { commendId } = req.params
+        const { commendId } = req.params;
 
         const commentRes = await addReadCommentNotifyHandle(commendId, res.locals.user.userId);
         if(!commentRes.success) {
@@ -137,7 +136,6 @@ export const addReadCommentNotify = async (req: Request, res: Response) => {
         return res.json({
             success: true,
             message: "Read notify comments successful",
-            // comments: commentRes.data,
         })
         
     } catch (error) {
@@ -218,6 +216,16 @@ export const destroyReplyCommentByNovel = async (req: Request, res: Response) =>
 
 export const addReplyComment = async (req: Request, res: Response) => {
     try {
+        // Check Comment
+        const checkCommect = await canComment(res.locals.user.userId);
+        if(!checkCommect.success) {
+            return res.json({
+                success: false,
+                message: checkCommect?.message,
+                error: checkCommect?.error
+            })
+        }
+
         const { parentId = '', novelId = '', receiverId = '', senderName = '', commentText = '' } = req.body
 
         if(!commentText) {
@@ -246,14 +254,13 @@ export const addReplyComment = async (req: Request, res: Response) => {
                 error: commentResponse.error,
             })
         }
+
+        await setComment(res.locals.user.userId);
         
         return res.json({
             success: true,
             message: "Add comments successful",
             commentId: commentResponse.data.insertId
-            // comment: {
-            //     commentId: commentResponse?.data?.insertId || null,
-            // }
         })
         
     } catch (error) {

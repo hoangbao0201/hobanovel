@@ -10,7 +10,6 @@ import {
     REGISTER,
 } from "redux-persist";
 import storage from "redux-persist/lib/storage";
-// import { createWrapper } from "next-redux-wrapper";
 
 import userReducer, { UserSlideState } from "./userSlice";
 import commentReducer, { CommentSliceType } from "./commentSlice";

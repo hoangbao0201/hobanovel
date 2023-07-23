@@ -32,7 +32,7 @@ export const createUserHandle = async ({ name, username, email, password, avatar
         const connection = await pool.getConnection();
 
         // Hash password
-        const hashPassword = bcrypt.hashSync(password, 10);
+        const hashPassword = password ? bcrypt.hashSync(password, 10) : null;
         const valuesCreateUser = [name, username, email, hashPassword, avatarUrl];
 
         const qCreateUser = `
@@ -69,7 +69,7 @@ export const getUserByAccoutHandle = async (accout : string) => {
 
         return {
             success: true,
-            data: rows as UserType[] || []
+            data: rows as UserType[]
         }
     } catch (error) {
         return {
@@ -92,9 +92,44 @@ export const getUserByUsernameHandle = async ({ username } : UserType) => {
 
         connection.release();
 
-        return rows as UserType[]
+        return {
+            success: true,
+            data: rows as UserType[]
+        }
     } catch (error) {
-        return null
+        return {
+            success: false,
+            error: error.message
+        }
+    }
+}
+
+export const updatePasswordUserHandle = async ({ userId, email, password } : UserType) => {
+    try {
+        // Hash password
+        const hashPassword = password ? bcrypt.hashSync(password, 10) : null;
+        
+        const connection = await pool.getConnection();
+
+        const qUpdatePasswordUser = `
+            UPDATE users
+            SET users.password = ?
+            WHERE users.userId = ? AND users.email = ?
+        `
+
+        const [rows] = await connection.query(qUpdatePasswordUser, [hashPassword, userId, email]);
+
+        connection.release();
+
+        return {
+            success: true,
+            data: rows as UserType[]
+        }
+    } catch (error) {
+        return {
+            success: false,
+            error: error.message
+        }
     }
 }
 

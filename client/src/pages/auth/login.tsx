@@ -1,31 +1,31 @@
 
 import Link from "next/link";
-import { Router, useRouter } from "next/router";
+import Image from "next/image"
+import { useRouter } from "next/router";
 import { GetServerSideProps } from "next";
-import { ChangeEvent, ReactNode, useEffect, useState } from "react";
+import { ChangeEvent, FormEvent, ReactNode, useEffect, useState } from "react";
 
-// import { signIn, signOut, useSession } from 'next-auth/react';
+import { getSession, signIn, useSession } from 'next-auth/react';
 import { useDispatch, useSelector } from "react-redux";
-import jwt from "jsonwebtoken";
 
 
 import CustomInput from "@/components/Share/CustomInput";
-import { connectUserBySocialHanlde, connectUserHandle, loginUserHandle } from "@/services/auth.services";
+import { connectUserHandle, loginUserHandle } from "@/services/auth.services";
 import { addAccessToken, getAccessTokenOnServer } from "@/services/cookies.servies";
-import { addUserHandle } from "@/redux/userSlice";
+import { addUserHandle, loadingUserHandle } from "@/redux/userSlice";
 import MainLayout from "@/components/Layout/MainLayout";
+import { checkExistUserByAccoutHandle } from "@/services/user.services";
+import FormLayout from "@/components/Layout/FormLayout";
 
 const LoginPage = () => {
     const router = useRouter();
 
+    const { data: session, status } : any = useSession();
+    
     const dispatch = useDispatch();
-    // const { data: session, status } = useSession()
-
     const { userLoading, isAuthenticated, currentUser } = useSelector(
         (state: any) => state.user
     );
-
-
 
     // state
     const [dataForm, setDataForm] = useState({
@@ -41,8 +41,16 @@ const LoginPage = () => {
         });
     };
 
-    const eventSubmitForm = async (e: any) => {
+    // Event Submit Form
+    const eventSubmitForm = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+
+        if(!dataForm.accout || !dataForm.password) {
+            console.log("Chưa điền thông tin");
+            return;
+        }
+
+        dispatch(loadingUserHandle(true));
 
         try {
             const loginResponse = await loginUserHandle(dataForm as any);
@@ -59,45 +67,56 @@ const LoginPage = () => {
                     router.push(callbackurl)
                 }
             }
+
+            dispatch(loadingUserHandle(false));
         } catch (error) {
-            // console.log(error)
+            dispatch(loadingUserHandle(false));
         }
     };
 
-    // console.log(router.query.callbackurl)
+    const handleLogin = async () => {
+        dispatch(loadingUserHandle(true));
+        try {
+            if(session?.user && session.user.name && session.user.email && session.user.image) {
+                const dataReq = {
+                    name: session.user.name as string,
+                    username: session.user.email.split("@")[0],
+                    email: session.user.email,
+                    avatarUrl: session.user.image as string,
+                    token: session?.token ? "" : ""
+                }
+                const userRes = await checkExistUserByAccoutHandle(dataReq);
+                if(userRes.success) {
+                    addAccessToken(userRes.token);
+                    const userResponse = await connectUserHandle(userRes.token);
+                    dispatch(addUserHandle(userResponse.user));
 
-    // const handleLoginOnSocial = async () => {
-    //     try {
-    //         if(session?.user) {
-    //             const { name, email, image } = session.user;
-    //             if(!name || !email) {
-    //                 return
-    //             }
-    //             const avatar = image || null;
+                    if(userRes.exist) {
+                        const callbackurl = router?.query?.callbackurl as string ?? "/";
+                        router.push(callbackurl);
+                    }
+                    else {
+                        const callbackurl = router?.query?.callbackurl as string ?? "/";
+                        router.push("/secure/update-password?callbackurl=" + callbackurl);
+                    }
+                }
+            }
 
-    //             // JWT
-    //             const connectUser = await connectUserBySocialHanlde({ name, email, avatar });
+            dispatch(loadingUserHandle(false))
+        } catch (error) {
+            dispatch(loadingUserHandle(false));
+        }
+    }
 
-    //             if(connectUser.success) {
-    //                 dispatch(addUserHandle(connectUser.user));
-    //                 router.back();
-    //             }
-    //         }
-    //     } catch (error) {
-    //         console.log(error)
-    //     }
-    // }
-
-    // useEffect(() => {
-    //     if(status == "authenticated") {
-    //         handleLoginOnSocial()
-    //     }
-    // }, [session])
-    // console.log(session, status)
+    useEffect(() => {
+        if(status == "authenticated") {
+            handleLogin()
+        }
+    }, [status])
 
     return (
         <>
-            <div className="bg-slate-100 min-h-screen">
+            <div className="bg-slate-100 min-h-screen transition-all ease-linear">
                 <div className="mx-auto max-w-[500px]">
                     <h2 className="py-10 flex justify-center">
                         <Link className="" href="/">
@@ -105,10 +124,11 @@ const LoginPage = () => {
                         </Link>
                     </h2>
 
-                    <div className="w-full min-h-[300px] py-6 px-10 drop-shadow-md bg-white">
-                        <div className="grid">
-                            <h1 className="mb-7 text-center text-3xl font-semibold">
-                                LOGIN
+                    <FormLayout loading={userLoading} className="w-full min-h-[300px] drop-shadow-md bg-white" classChild="py-6 sm:px-10 px-5">
+
+                        <form onSubmit={eventSubmitForm} className="grid">
+                            <h1 className="pl-4 mb-7 border-l-4 border-blue-700 text-3xl font-semibold">
+                                Đăng nhập
                             </h1>
                             <div>
                                 <CustomInput
@@ -134,65 +154,64 @@ const LoginPage = () => {
                             </div>
                             <div className="mt-2">
                                 <button
-                                    onClick={eventSubmitForm}
                                     className=" transition-all w-full text-center py-3 rounded bg-blue-600 hover:bg-blue-700 active:bg-blue-800 active:shadow-xl text-white"
                                 >
                                     Đăng nhập
                                 </button>
                             </div>
 
+                        </form>
 
-
-                            {/* Social */}
-                            {/* <div className="mt-2">
-                                <button
-                                    onClick={() =>
-                                        signIn("github")
-                                    }
-                                    className=" transition-all w-full text-center py-3 rounded bg-blue-600 hover:bg-blue-700 active:bg-blue-800 active:shadow-xl text-white"
-                                >
-                                    Signin Github
-                                </button>
-                            </div>
-                            <div className="mt-2">
-                                <button
-                                    onClick={() =>
-                                        signIn("facebook")
-                                    }
-                                    className=" transition-all w-full text-center py-3 rounded bg-blue-600 hover:bg-blue-700 active:bg-blue-800 active:shadow-xl text-white"
-                                >
-                                    Signin Facebook
-                                </button>
-                            </div>
-                            <div className="mt-2">
-                                <button
-                                    onClick={() =>
-                                        signIn("google")
-                                    }
-                                    className=" transition-all w-full text-center py-3 rounded bg-blue-600 hover:bg-blue-700 active:bg-blue-800 active:shadow-xl text-white"
-                                >
-                                    Signin Google
-                                </button>
-                            </div>
-
-
-
-                            <div className="mt-2">
-                                <button
-                                    onClick={() =>
-                                        signOut()
-                                    }
-                                    className=" transition-all w-full text-center py-3 rounded bg-blue-600 hover:bg-blue-700 active:bg-blue-800 active:shadow-xl text-white"
-                                >
-                                    Sign out
-                                </button>
-                            </div> */}
-
-
-
-
+                        {/* Social */}
+                        <div className="transition-all mt-5 [&>button]:mb-3 [&>button]:border [&>button>img]:absolute [&>button>img]:left-0 [&>button>img]:top-0 [&>button]:relative text-gray-800">
+                            <button
+                                onClick={() =>
+                                    signIn("facebook")
+                                }
+                                className="flex justify-center items-center h-10 px-1 py-2 w-full rounded hover:bg-gray-100 active:bg-gray-200 active:shadow-xl"
+                            >
+                                <Image
+                                    width={15}
+                                    height={15}
+                                    alt="icon facebook"
+                                    className="w-7 h-7 block my-[5px] ml-3 border-r pr-2"
+                                    src={`/emotions/iconFB.svg`}
+                                />
+                                Signin Facebook
+                            </button>
+                            <button
+                                onClick={() =>
+                                    signIn("google")
+                                }
+                                className="flex justify-center items-center h-10 px-1 py-2 w-full rounded hover:bg-gray-100 active:bg-gray-200 active:shadow-xl"
+                            >
+                                <Image
+                                    width={15}
+                                    height={15}
+                                    alt="icon facebook"
+                                    className="w-7 h-7 block my-[5px] ml-3 border-r pr-2"
+                                    src={`/emotions/iconGG.svg`}
+                                />
+                                Signin Google
+                            </button>
+                            <button
+                                onClick={() =>
+                                    signIn("github")
+                                }
+                                className="flex justify-center items-center h-10 px-1 py-2 w-full rounded hover:bg-gray-100 active:bg-gray-200 active:shadow-xl"
+                            >
+                                <Image
+                                    width={15}
+                                    height={15}
+                                    alt="icon facebook"
+                                    className="w-7 h-7 block my-[5px] ml-3 border-r pr-2"
+                                    src={`/emotions/iconGH.svg`}
+                                />
+                                Signin Github
+                            </button>
                         </div>
-                    </div>
+
+                    </FormLayout>
                 </div>
             </div>
         </>
@@ -201,6 +220,7 @@ const LoginPage = () => {
 
 export const getServerSideProps : GetServerSideProps = async (ctx) => {
 
+    const session = await getSession(ctx);
     const token = getAccessTokenOnServer(ctx.req.headers.cookie as string);
     if(!token) {
         return {
@@ -209,7 +229,7 @@ export const getServerSideProps : GetServerSideProps = async (ctx) => {
     }
 
     const userResponse = await connectUserHandle(token as string);
-    if(userResponse?.success) {
+    if(userResponse?.success || session) {
         return {
             redirect: {
                 destination: "/",

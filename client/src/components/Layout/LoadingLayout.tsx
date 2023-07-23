@@ -99,27 +99,6 @@ export const LoadingButton = (props : LoadingProps) => {
 };
 
 const LoadingSearchStyle = styled.span`
-    /* & {
-        width: 20px;
-        height: 20px;
-        display: inline-block;
-        position: relative;
-        background: #ccc;
-        box-sizing: border-box;
-        animation: flipX 1s linear infinite;
-    }
-
-    @keyframes flipX {
-        0% {
-            transform: perspective(200px) rotateX(0deg) rotateY(0deg);
-        }
-        50% {
-            transform: perspective(200px) rotateX(-180deg) rotateY(0deg);
-        }
-        100% {
-            transform: perspective(200px) rotateX(-180deg) rotateY(-180deg);
-        }
-    } */
 
     width: 20px;
     height: 20px;
@@ -146,3 +125,17 @@ export const LoadingSearch = ({ theme, className }: LoadingProps) => {
         ></LoadingSearchStyle>
     );
 };
+
+
+// const LoadingLineFormStyle = styled.div`
+//     width: 100%;
+//     height: 3px;
+//     background-color: red;
+// `;
+// export const LoadingLineForm = ({ theme, className }: LoadingProps) => {
+//     return (
+//         <LoadingLineFormStyle
+//             // className={`${theme === "dark" ? "" : ""} ${className}`}
+//         ></LoadingLineFormStyle>
+//     );
+// };

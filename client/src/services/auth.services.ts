@@ -61,7 +61,7 @@ export const registerUserHandle = async (data: Pick<UserType, 'name' | 'username
     }
 }
 
-export const connectUserBySocialHanlde = async (data: { name: string, email: string, avatar: string | null }) => {
+export const connectUserAuthHanlde = async (data: { name: string, email: string, avatar: string | null }) => {
     try {
         const { name, email, avatar }= data;
 

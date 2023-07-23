@@ -30,7 +30,7 @@ const LatestReviews = ({ reviews } : LatestReviewsProps) => {
                                             blurDataURL={placeholderBlurhash}
                                             className="group-hover:scale-105 group-hover:duration-500 object-cover w-10 h-10"
                                             placeholder="blur"
-                                            src="/images/avatar-default-2.png"
+                                            src="/images/avatar-default.png"
                                         />
                                     </LazyLoad>
                                 </Link>

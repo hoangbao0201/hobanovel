@@ -302,11 +302,19 @@ const RegisterPage = () => {
                         </Link>
                     </h2>
     
-                    <div className="w-full min-h-[300px] py-6 px-10 drop-shadow-md bg-white">
+                    <div className="w-full min-h-[300px] py-6 sm:px-10 px-4 drop-shadow-md bg-white">
                         <div className="grid">
-                            <h1 className="mb-3 text-3xl font-semibold">Đăng kí tài khoản</h1>
+                            <h1 className="mb-3 text-2xl font-semibold">Đăng kí tài khoản</h1>
                             <h3 className="mb-6">
-                                Already have an account? <Link className="ml-3 text-blue-700 font-semibold" href={`/auth/login?callback=${router.query.callback as string || "/"}`}>Sign In</Link>
+                                Bạn có đã có tài khoản?{" "}
+                                <Link
+                                    className="ml-3 text-sm text-blue-700 font-semibold"
+                                    href={`/auth/login?callback=${
+                                        (router.query.callback as string) || "/"
+                                    }`}
+                                >
+                                    Đăng nhập ngay
+                                </Link>
                             </h3>
                             <div>
                                 <CustomInput value={dataForm.name} name="name" handleOnchangeValue={eventChangeValueInput} label="Fullname" id="fullnameInputRegister"/>
@@ -314,19 +322,23 @@ const RegisterPage = () => {
                                 <CustomInput value={dataForm.email} name="email" handleOnchangeValue={eventChangeValueInput} label="email" id="emailInputRegister"/>
                                 <CustomInput value={dataForm.password} name="password" handleOnchangeValue={eventChangeValueInput} type="password" label="Password" id="passwordInputRegister"/>
                             </div>
-                            <div className="flex items-center mb-3">
-                                <input className="w-6 h-6 mr-3 cursor-pointer rounded-t" type="checkbox"/>
-                                <div className="text-sm">
-                                    I agree to the {" "}
-                                    <Link className="text-blue-700 underline decoration-solid hover:decoration-2" href="/">
-                                        Subscription Service Agreement    
-                                    </Link>,{" "}
-                                    <Link className="text-blue-700 underline decoration-solid hover:decoration-2" href="/">
-                                        Privacy Policy    
-                                    </Link>, and{" "}
-                                    <Link className="text-blue-700 underline decoration-solid hover:decoration-2" href="/">
-                                        Data Processing Terms
-                                    </Link>.
+                            
+                            <div className="flex items-center ml-1 mb-6 mt-5">
+                                <input
+                                    // checked={dataForm.acceptTerms}
+                                    // onChange={handleCheckboxChange}
+                                    type="checkbox"
+                                    className="w-5 h-5 flex-shrink-0 mr-3 cursor-pointer rounded-t"
+                                />
+
+                                <div className="sm:text-[15px] text-[13px]">
+                                    Tôi đồng ý với Thỏa thuận dịch vụ đăng ký{", "}
+                                    <Link
+                                        className="text-blue-700 underline decoration-solid hover:decoration-2"
+                                        href="/chinh-sach-bao-mat"
+                                    >
+                                        Chính sách quyền riêng tư và Điều khoản xử lý dữ liệu.
+                                    </Link>
                                 </div>
                             </div>
                             <div className="mt-2">

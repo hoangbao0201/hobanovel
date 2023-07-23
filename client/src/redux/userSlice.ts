@@ -5,8 +5,6 @@ export interface UserSlideState {
     currentUser: UserType | null
     userLoading: boolean
     isAuthenticated: boolean
-
-    // isFollow: boolean
 }
 
 const initialState: UserSlideState = {
@@ -34,6 +32,9 @@ export const counterSlice = createSlice({
             state.userLoading = false
             state.isAuthenticated = false
         },
+        loadingUserHandle: (state, action) => {
+            state.userLoading = action.payload;
+        }
         // followNovelRDHanlde: (state) => {
         //     state.isFollow = true
         // },
@@ -43,6 +44,6 @@ export const counterSlice = createSlice({
     },
 });
 
-export const { addUserHandle, authFailedHandle, logoutUserHandle } = counterSlice.actions;
+export const { addUserHandle, authFailedHandle, logoutUserHandle, loadingUserHandle } = counterSlice.actions;
 
 export default counterSlice.reducer;

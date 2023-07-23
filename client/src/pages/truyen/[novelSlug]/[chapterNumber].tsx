@@ -2,46 +2,43 @@ import Link from "next/link";
 import { ReactNode, useEffect, useRef, useState } from "react";
 import { GetStaticPaths, GetStaticProps, GetStaticPropsContext } from "next";
 
-import MainLayout from "@/components/Layout/MainLayout";
+import { useSelector } from "react-redux";
 import { ParsedUrlQuery } from "querystring";
+
+import MainLayout from "@/components/Layout/MainLayout";
 import { ChapterDetailResType, HistoryReadingType, NovelFollowerType } from "@/types";
 
-import { useSelector } from "react-redux";
 
 import {
     getChapterDetailHandle,
     increaseViewChapterHandle,
 } from "@/services/chapter.services";
 import {
-    iconAngleDouble,
-    iconArrowTop,
     iconAuthor,
     iconBook,
     iconChevronLeft,
     iconChevronRight,
-    iconClose,
     iconHeartFull,
     iconHome,
     iconList,
     iconOclock,
     iconT,
+    iconTimes,
 } from "../../../../public/icons";
-import { convertTime } from "@/utils/convertTime";
-import WrapperLayout from "@/components/Layout/WrapperLayout";
-import { getCountWords } from "@/utils/getCountWords";
-import { readingNovelHandle } from "@/services/novels.services";
-import { getAccessToken } from "@/services/cookies.servies";
-import { LoadingButton, LoadingForm } from "@/components/Layout/LoadingLayout";
-import { checkFollowNovelHandle, followNovelHandle, unfollowNovelHandle } from "@/services/follow.services";
-import OptionsListChapter from "@/components/Share/ContentChapter/OptionsListChapter";
 import Head from "@/components/Share/Head";
-import { REVALIDATE_TIME_DETAILS_PAGE } from "@/constants";
-import Breadcrumb from "@/components/Share/Breadcrumb";
+import { convertTime } from "@/utils/convertTime";
 import BlurImage from "@/components/Share/BlurImage";
+import { getCountWords } from "@/utils/getCountWords";
+import Breadcrumb from "@/components/Share/Breadcrumb";
 import FormComment from "@/components/Share/FormComment";
-import OverlayLayout from "@/components/Layout/OverlayLayout";
-import ClientOnly from "@/components/Share/ClientOnly";
+import { REVALIDATE_TIME_DETAILS_PAGE } from "@/constants";
 import { AdsenseForm } from "@/components/Share/AdsenseForm";
+import { getAccessToken } from "@/services/cookies.servies";
+import WrapperLayout from "@/components/Layout/WrapperLayout";
+import { readingNovelHandle } from "@/services/novels.services";
+import { LoadingButton, LoadingForm } from "@/components/Layout/LoadingLayout";
+import OptionsListChapter from "@/components/Share/ContentChapter/OptionsListChapter";
+import { checkFollowNovelHandle, followNovelHandle, unfollowNovelHandle } from "@/services/follow.services";
 
 interface Params extends ParsedUrlQuery {
     slug: string;
@@ -231,197 +228,199 @@ const ChapterDetailPage = ({ chapter }: ChapterDetailPageProps) => {
                     <Breadcrumb 
                         path={[
                             { title: 'Truyện', url: '/' },
-                            { title: `${chapter?.novelName || ''}`, url: `/truyen/${chapter?.novelSlug || ''}` },
-                            { title: `Chapter ${chapter?.chapterNumber || ''}`, url: `/truyen/${chapter?.novelSlug || ''}/chuong-${chapter?.chapterNumber || ''}`}
+                            { title: `${chapter?.novelName || "_"}`, url: `/truyen/${chapter?.novelSlug || "_"}` },
+                            { title: `Chapter ${chapter?.chapterNumber || "_"}`, url: `/truyen/${chapter?.novelSlug || "_"}/chuong-${chapter?.chapterNumber || "_"}`}
                         ]}
                     />
 
                     <>
                         {
                             chapter && (
-                                <div>
+                                <>
+                                    <div>
 
-                                    <div className="border-b pb-3 mb-7 mt-4">
-                                        <div ref={paginationRef} className={`transition-all top-0 left-0 right-0 py-1 ${isFixed ? 'fixed bg-gray-200 z-20' : ''}`}>
-                                            <ul className="lg:max-w-5xl mx-auto flex items-center justify-center gap-1">
-                
-                                                <li>
-                                                    <Link href="/" className="h-9 px-1 flex items-center">
-                                                        <i className="w-5 h-5 fill-[#d9534f] hover:fill-[#ac2925] block">{iconHome}</i>
-                                                    </Link>
-                                                </li>
-                
-                                                <li>
-                                                    <Link href={`/truyen/${chapter?.novelSlug}`} className="h-9 px-1 flex items-center">
-                                                        <i className="w-5 h-5 fill-[#d9534f] hover:fill-[#ac2925] block">{iconList}</i>
-                                                    </Link>
-                                                </li>
-                
-                                                <li>
-                                                    <Link
-                                                        href={`/truyen/${chapter?.novelSlug}/chuong-${
-                                                            chapter?.chapterNumber - 1
-                                                        }`}
-                                                        className={`rounded-l-lg flex items-center justify-center px-[10px] h-9 select-none ${
-                                                            chapter?.chapterNumber == 1 ?
-                                                            "pointer-events-none bg-black/30 " : "bg-[#d9534f] hover:bg-[#ac2925]"
-                                                        }`}
-                                                    >
-                                                        <i className="w-4 h-4 fill-white block">{iconChevronLeft}</i>
-                                                    </Link>
-                                                </li>
+                                        <div className="border-b pb-3 mb-7 mt-4">
+                                            <div ref={paginationRef} className={`transition-all top-0 left-0 right-0 py-1 ${isFixed ? 'fixed bg-gray-200 z-20' : ''}`}>
+                                                <ul className="lg:max-w-5xl mx-auto flex items-center justify-center gap-1">
+                    
+                                                    <li>
+                                                        <Link href="/" className="h-9 px-1 flex items-center">
+                                                            <i className="w-5 h-5 fill-[#d9534f] hover:fill-[#ac2925] block">{iconHome}</i>
+                                                        </Link>
+                                                    </li>
+                    
+                                                    <li>
+                                                        <Link href={`/truyen/${chapter?.novelSlug}`} className="h-9 px-1 flex items-center">
+                                                            <i className="w-5 h-5 fill-[#d9534f] hover:fill-[#ac2925] block">{iconList}</i>
+                                                        </Link>
+                                                    </li>
+                    
+                                                    <li>
+                                                        <Link
+                                                            href={`/truyen/${chapter?.novelSlug}/chuong-${
+                                                                chapter?.chapterNumber - 1
+                                                            }`}
+                                                            className={`rounded-l-lg flex items-center justify-center px-[10px] h-9 select-none ${
+                                                                chapter?.chapterNumber == 1 ?
+                                                                "pointer-events-none bg-black/30 " : "bg-[#d9534f] hover:bg-[#ac2925]"
+                                                            }`}
+                                                        >
+                                                            <i className="w-4 h-4 fill-white block">{iconChevronLeft}</i>
+                                                        </Link>
+                                                    </li>
 
-                                                <OptionsListChapter
-                                                    slug={chapter?.novelSlug}
-                                                    chapterNumber={Number(chapter?.chapterCount)}
-                                                    chapterCurrent={chapter?.chapterNumber}
-                                                />
-                
-                                                <li>
-                                                    <Link
-                                                        href={`/truyen/${chapter?.novelSlug}/chuong-${
-                                                            chapter?.chapterNumber + 1
-                                                        }`}
-                                                        className={`rounded-r-lg flex items-center justify-center px-[10px] h-9 select-none ${
-                                                            chapter?.chapterNumber == chapter?.chapterCount ?
-                                                            "pointer-events-none bg-black/30 " : "bg-[#d9534f] hover:bg-[#ac2925]"
-                                                        }`}
-                                                    >
-                                                        <i className="w-4 h-4 fill-white block">{iconChevronRight}</i>
-                                                    </Link>
-                                                </li>
-                
-                                                <li>
-                                                    <button onClick={isFollow ? handleUnfollowNovel : handleFollowNovel}
-                                                        className={`select-none flex items-center h-9 px-3 rounded-md max-sm:mr-8 
-                                                            ${ isFollow === null || (
-                                                                isFollow ? 'bg-[#d9534f] hover:bg-[#ac2925]' : 'bg-[#5cb85c] hover:bg-[#449d44]'
-                                                            )}
-                                                        `}
-                                                    >
-                                                        
-                                                        <>
-                                                            <i className="w-4 block fill-white sm:mr-1">
-                                                                {isFollow === null ? (
-                                                                    <LoadingButton className="text-white"/>
-                                                                ) : (
-                                                                    isFollow ? iconClose : iconHeartFull
+                                                    <OptionsListChapter
+                                                        slug={chapter?.novelSlug}
+                                                        chapterNumber={Number(chapter?.chapterCount)}
+                                                        chapterCurrent={chapter?.chapterNumber}
+                                                    />
+                    
+                                                    <li>
+                                                        <Link
+                                                            href={`/truyen/${chapter?.novelSlug}/chuong-${
+                                                                chapter?.chapterNumber + 1
+                                                            }`}
+                                                            className={`rounded-r-lg flex items-center justify-center px-[10px] h-9 select-none ${
+                                                                chapter?.chapterNumber == chapter?.chapterCount ?
+                                                                "pointer-events-none bg-black/30 " : "bg-[#d9534f] hover:bg-[#ac2925]"
+                                                            }`}
+                                                        >
+                                                            <i className="w-4 h-4 fill-white block">{iconChevronRight}</i>
+                                                        </Link>
+                                                    </li>
+                    
+                                                    <li>
+                                                        <button onClick={isFollow ? handleUnfollowNovel : handleFollowNovel}
+                                                            className={`select-none flex items-center h-9 px-3 rounded-md max-sm:mr-8 
+                                                                ${ isFollow === null || (
+                                                                    isFollow ? 'bg-[#d9534f] hover:bg-[#ac2925]' : 'bg-[#5cb85c] hover:bg-[#449d44]'
                                                                 )}
-                                                            </i>
-                                                            <span className="text-white whitespace-nowrap sm:block hidden">Theo dõi</span>
-                                                        </>
-                                                    </button>
-                                                </li>
-                
-                                            </ul>
+                                                            `}
+                                                        >
+                                                            
+                                                            <>
+                                                                <i className="w-4 block fill-white sm:mr-1">
+                                                                    {isFollow === null ? (
+                                                                        <LoadingButton className="text-white"/>
+                                                                    ) : (
+                                                                        isFollow ? iconTimes : iconHeartFull
+                                                                    )}
+                                                                </i>
+                                                                <span className="text-white whitespace-nowrap sm:block hidden">Theo dõi</span>
+                                                            </>
+                                                        </button>
+                                                    </li>
+                    
+                                                </ul>
+                                            </div>
+                                            <div ref={paginationFakeRef} className={`transition-all top-0 left-0 right-0 py-1 h-9 ${isFixed ? 'block' : 'hidden'}`}></div>
                                         </div>
-                                        <div ref={paginationFakeRef} className={`transition-all top-0 left-0 right-0 py-1 h-9 ${isFixed ? 'block' : 'hidden'}`}></div>
-                                    </div>
-                
-                
-                                    <h1 title={`chương ${chapter?.chapterNumber}: ${chapter?.title}`} className="sm:text-2xl lg:line-clamp-1 text-xl line-clamp-2 px-4 font-semibold mb-4">
-                                        Chương {chapter?.chapterNumber}: {chapter?.title}
-                                    </h1>
-                
-                                    <ul className="mb-4 px-4 sm:flex justify-between gap-2">
-                                        <li className="flex items-center mb-2">
-                                            <i className="w-4 block">{iconBook}</i>
-                                            <h2 title={`truyện ${chapter?.novelName}`} className="ml-2">
+                    
+                    
+                                        <h1 title={`chương ${chapter?.chapterNumber}: ${chapter?.title}`} className="sm:text-2xl lg:line-clamp-1 text-xl line-clamp-2 px-4 font-semibold mb-4">
+                                            Chương {chapter?.chapterNumber}: {chapter?.title}
+                                        </h1>
+                    
+                                        <ul className="mb-4 px-4 sm:flex justify-between gap-2">
+                                            <li className="flex items-center mb-2">
+                                                <i className="w-4 block">{iconBook}</i>
+                                                <h2 title={`truyện ${chapter?.novelName}`} className="ml-2">
+                                                    <Link
+                                                        href={`/truyen/${chapter?.novelSlug}`}
+                                                        className="line-clamp-1"
+                                                    >
+                                                        {chapter?.novelName}
+                                                    </Link>
+                                                </h2>
+                                            </li>
+                                            <li className="flex items-center mb-2">
+                                                <i className="w-4 block">{iconAuthor}</i>
+                                                <time className="line-clamp-1 sm:text-base text-sm ml-2">
+                                                    {chapter?.creator}
+                                                </time>
+                                            </li>
+                                            <li className="flex items-center mb-2">
+                                                <i className="w-3 block">{iconT}</i>
+                                                <span className="line-clamp-1 sm:text-base text-sm ml-2">
+                                                    {getCountWords(chapter?.content) || ""}
+                                                </span>
+                                            </li>
+                                            <li className="flex items-center mb-2">
+                                                <i className="w-4 block">{iconOclock}</i>
+                                                <span className="line-clamp-1 sm:text-base text-sm ml-2">
+                                                    {convertTime(chapter?.updatedAt) || ""}
+                                                </span>
+                                            </li>
+                                        </ul>
+        
+                                        <div className="flex justify-center my-5">
+                                            <div className="max-w-[500px] border border-gray-200">
+                                                <BlurImage
+                                                    alt="image head"
+                                                    width={500}
+                                                    height={500}
+                                                    className="w-full h-full object-cover block"
+                                                    src="https://res.cloudinary.com/djrbd6ftt/image/upload/v1689146231/hobanovel/admin/image-head_x5c1um.jpg"
+                                                />
+                                            </div>
+                                        </div>
+                    
+                                        <div
+                                            className="sm:text-2xl px-6 text-xl leading-relaxed overflow-hidden"
+                                            dangerouslySetInnerHTML={{
+                                                __html: chapter?.content || "Lỗi hiển thị",
+                                            }}
+                                        />
+                    
+                                        <ul className="flex px-4 justify-center mt-8 mb-5">
+                                            <li className="mx-1">
                                                 <Link
-                                                    href={`/truyen/${chapter?.novelSlug}`}
-                                                    className="line-clamp-1"
+                                                    href={`/truyen/${chapter?.novelSlug}/chuong-${
+                                                        chapter?.chapterNumber - 1
+                                                    }`}
+                                                    className={`text-white fill-white rounded flex items-center justify-center px-[10px] h-9 select-none ${
+                                                        chapter?.chapterNumber == 1 ?
+                                                        "pointer-events-none bg-black/30 " : "bg-[#d9534f] hover:bg-[#ac2925]"
+                                                    }`}
                                                 >
-                                                    {chapter?.novelName}
+                                                    <i className="w-4 h-4 mr-1 mt-[1px] block">{iconChevronLeft}</i><span>Chap trước</span>
                                                 </Link>
-                                            </h2>
-                                        </li>
-                                        <li className="flex items-center mb-2">
-                                            <i className="w-4 block">{iconAuthor}</i>
-                                            <time className="line-clamp-1 sm:text-base text-sm ml-2">
-                                                {chapter?.creator}
-                                            </time>
-                                        </li>
-                                        <li className="flex items-center mb-2">
-                                            <i className="w-3 block">{iconT}</i>
-                                            <span className="line-clamp-1 sm:text-base text-sm ml-2">
-                                                {getCountWords(chapter?.content) || ""}
-                                            </span>
-                                        </li>
-                                        <li className="flex items-center mb-2">
-                                            <i className="w-4 block">{iconOclock}</i>
-                                            <span className="line-clamp-1 sm:text-base text-sm ml-2">
-                                                {convertTime(chapter?.updatedAt) || ""}
-                                            </span>
-                                        </li>
-                                    </ul>
-    
-                                    <div className="flex justify-center my-5">
-                                        <div className="max-w-[500px] border border-gray-200">
-                                            <BlurImage
-                                                alt="image head"
-                                                width={500}
-                                                height={500}
-                                                className="w-full h-full object-cover block"
-                                                src="https://res.cloudinary.com/djrbd6ftt/image/upload/v1689146231/hobanovel/admin/image-head_x5c1um.jpg"
-                                            />
+                                            </li>
+                                            <li className="mx-1">
+                                                <Link
+                                                    href={`/truyen/${chapter?.novelSlug}/chuong-${
+                                                        chapter?.chapterNumber + 1
+                                                    }`}
+                                                    className={`text-white fill-white rounded flex items-center justify-center px-[10px] h-9 select-none ${
+                                                        chapter?.chapterNumber == chapter?.chapterCount ?
+                                                        "pointer-events-none bg-black/30 " : "bg-[#d9534f] hover:bg-[#ac2925]"
+                                                    }`}
+                                                >
+                                                    <span>Chap sau</span><i className="w-4 h-4 ml-1 mt-[1px] block">{iconChevronRight}</i>
+                                                </Link>
+                                            </li>
+                                        </ul>
+        
+                                        <div className="overflow-hidden mb-4">
+                                            <div className="w-full">
+                                                <BlurImage
+                                                    alt="image head"
+                                                    width={1200}
+                                                    height={1200}
+                                                    className="w-full object-cover block"
+                                                    src="https://res.cloudinary.com/djrbd6ftt/image/upload/v1689167556/hobanovel/admin/image-footer-01_rvlidd.jpg"
+                                                />
+                                            </div>
                                         </div>
                                     </div>
-                
-                                    <div
-                                        className="sm:text-2xl px-6 text-xl leading-relaxed overflow-hidden"
-                                        dangerouslySetInnerHTML={{
-                                            __html: chapter?.content || "Lỗi hiển thị",
-                                        }}
-                                    />
-                
-                                    <ul className="flex px-4 justify-center mt-8 mb-5">
-                                        <li className="mx-1">
-                                            <Link
-                                                href={`/truyen/${chapter?.novelSlug}/chuong-${
-                                                    chapter?.chapterNumber - 1
-                                                }`}
-                                                className={`text-white fill-white rounded flex items-center justify-center px-[10px] h-9 select-none ${
-                                                    chapter?.chapterNumber == 1 ?
-                                                    "pointer-events-none bg-black/30 " : "bg-[#d9534f] hover:bg-[#ac2925]"
-                                                }`}
-                                            >
-                                                <i className="w-4 h-4 mr-1 mt-[1px] block">{iconChevronLeft}</i><span>Chap trước</span>
-                                            </Link>
-                                        </li>
-                                        <li className="mx-1">
-                                            <Link
-                                                href={`/truyen/${chapter?.novelSlug}/chuong-${
-                                                    chapter?.chapterNumber + 1
-                                                }`}
-                                                className={`text-white fill-white rounded flex items-center justify-center px-[10px] h-9 select-none ${
-                                                    chapter?.chapterNumber == chapter?.chapterCount ?
-                                                    "pointer-events-none bg-black/30 " : "bg-[#d9534f] hover:bg-[#ac2925]"
-                                                }`}
-                                            >
-                                                <span>Chap sau</span><i className="w-4 h-4 ml-1 mt-[1px] block">{iconChevronRight}</i>
-                                            </Link>
-                                        </li>
-                                    </ul>
-    
-                                    <div className="overflow-hidden mb-4">
-                                        <div className="w-full">
-                                            <BlurImage
-                                                alt="image head"
-                                                width={1200}
-                                                height={1200}
-                                                className="w-full object-cover block"
-                                                src="https://res.cloudinary.com/djrbd6ftt/image/upload/v1689167556/hobanovel/admin/image-footer-01_rvlidd.jpg"
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
+                                </>
                             )
                         }
                         <Breadcrumb 
                             path={[
                                 { title: 'Truyện', url: '/' },
-                                { title: `${chapter?.novelName}`, url: `/truyen/${chapter?.novelSlug}` },
-                                { title: `Chapter ${chapter?.chapterNumber}`, url: `/truyen/${chapter?.novelSlug}/chuong-${chapter?.chapterNumber}`}
+                                { title: `${chapter?.novelName || "_"}`, url: `/truyen/${chapter?.novelSlug || "_"}` },
+                                { title: `Chapter ${chapter?.chapterNumber || "_"}`, url: `/truyen/${chapter?.novelSlug || "_"}/chuong-${chapter?.chapterNumber || "_"}`}
                             ]}
                         />
                     </>

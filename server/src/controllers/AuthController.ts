@@ -64,7 +64,7 @@ export const loginUser = async (req: Request, res: Response) => {
         }
 
         const existingUser = await getUserByAccoutHandle(accout as string);
-        if(!existingUser?.success || !existingUser?.data?.length ) {
+        if(!existingUser?.success || !existingUser?.data?.length || !existingUser.data[0].password ) {
             return res.status(400).json({
                 success: false,
                 message: "Wrong password or username!",
@@ -106,7 +106,7 @@ export const loginUser = async (req: Request, res: Response) => {
 
 }
 
-export const connectUserBySocial = async (req: Request, res: Response) => {
+export const checkUser = async (req: Request, res: Response) => {
     try {
         const { name, email, avatar } = req.body;
         if(!name || !email || !avatar) {

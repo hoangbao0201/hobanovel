@@ -1,15 +1,25 @@
 import dynamic from "next/dynamic";
-import { forwardRef, useEffect, useRef } from "react";
+import { forwardRef, useEffect, useRef, useState } from "react";
 
 // import ReactQuill from "react-quill";
 import styled from "styled-components";
 import "react-quill/dist/quill.snow.css";
 import EmojiPicker from "./EmojiPicker";
 
-const ReactQuill = dynamic(() => import("react-quill"), {
-    ssr: false,
-    loading: () => <p>Loading ...</p>,
-});
+// const ReactQuill = dynamic(() => import("react-quill"), {
+//     ssr: false,
+//     loading: () => <p></p>,
+// });
+
+const ReactQuill = dynamic(
+    async () => {
+        const { default: RQ } = await import("react-quill");
+
+        // eslint-disable-next-line react/display-name
+        return ({ forwardedRef, ...props } : any) => <RQ ref={forwardedRef} {...props} />;
+    },
+    { ssr: false }
+);
 
 // ---
 const CustomizeReactQuillStyle = styled.div`
@@ -29,19 +39,21 @@ interface InputTextProps {
     text: string;
     isShow: boolean;
     receiver?: {
-        receiverId: string,
-        receiverUsername: string,
-        receiverName: string
-    }
+        receiverId: string;
+        receiverUsername: string;
+        receiverName: string;
+    };
     handleOnchange: (value: string) => void;
 }
 
 const InputText = ({ text, isShow, receiver, handleOnchange }: InputTextProps) => {
-    const quillRef: any = useRef(null);
+    const quillRef : any= useRef(null);
+
+    const [editorLoaded, setEditorLoaded] = useState(false);
 
     // Handle Add Emoji
     const handleAddEmoji = (emoji: string) => {
-        const content = text + '<p>' + emoji + '</p>';
+        const content = text + "<p>" + emoji + "</p>";
         handleOnchange(content);
     };
 
@@ -53,6 +65,27 @@ const InputText = ({ text, isShow, receiver, handleOnchange }: InputTextProps) =
         }
     };
 
+    const handle = async () => {
+
+        // await ReactQuill
+
+        // console.log(quillRef)
+
+        // if (quillRef?.current) {
+            // quillRef.current.getEditor().setText("");
+            // quillRef?.current.focus();
+            // console.log(quillRef)
+        // }
+        console.log(ReactQuill)
+
+    };
+
+    useEffect(() => {
+        handle();
+    }, [quillRef])
+
+    
+
     return (
         <>
             <CustomizeReactQuillStyle className="text-base">
@@ -62,24 +95,28 @@ const InputText = ({ text, isShow, receiver, handleOnchange }: InputTextProps) =
                     focus
                 </button> */}
 
-                {
-                    receiver && (
-                        <div className="border-x py-2 px-3 flex items-center flex-wrap">
-                            <span className="mr-2 font-semibold">Người nhận:</span>
-                            <span className="text-sm border bg-gray-200 py-1 px-2 select-none">{receiver?.receiverName}</span>
-                        </div>
-                    )
-                }
-
+                {receiver && (
+                    <div className="border-x py-2 px-3 flex items-center flex-wrap">
+                        <span className="mr-2 font-semibold">Người nhận:</span>
+                        <span className="text-sm border bg-gray-200 py-1 px-2 select-none">
+                            {receiver?.receiverName}
+                        </span>
+                    </div>
+                )}
+                
                 <ReactQuill
-                    // ref={quillRef}
+                    forwardedRef={quillRef}
                     theme="snow"
                     value={text}
                     className="max-h-72 overflow-y-auto"
-                    onChange={(value : any) => handleOnchange(value)}
+                    oncFocus={() => console.log(123)}
+                    onChange={(value: any) => handleOnchange(value)}
                     modules={modules}
                 />
 
+                {/* <button className="border" onClick={handle}>
+                    test
+                </button> */}
             </CustomizeReactQuillStyle>
         </>
     );

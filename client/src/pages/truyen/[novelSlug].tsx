@@ -15,7 +15,7 @@ import { NovelBySlugType, NovelFollowerType } from "@/types";
 import { getAccessToken } from "@/services/cookies.servies";
 import WrapperLayout from "@/components/Layout/WrapperLayout";
 import { getNovelBySlugHandle } from "@/services/novels.services";
-import { REVALIDATE_TIME, placeholderBlurhash } from "@/constants";
+import { REVALIDATE_TIME } from "@/constants";
 import { checkFollowNovelHandle, followNovelHandle, unfollowNovelHandle } from "@/services/follow.services";
 import ClientOnly from "@/components/Share/ClientOnly";
 
@@ -187,7 +187,7 @@ const NovelDetailPage = ({ novel, tab } : NovelDetailPageProps) => {
                             novel={novel}
                             isFollow={isFollow}
                             handleFollowNovel={handleFollowNovel}
-                            handleUnfollowNovel={handleUnfollowNovel}   
+                            handleUnfollowNovel={handleUnfollowNovel}
                         />
 
                         

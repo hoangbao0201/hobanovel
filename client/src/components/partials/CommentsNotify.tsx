@@ -123,7 +123,7 @@ export const CommentsNotify = ({ receiverId } : CommentsNotifyProps) => {
                                                                                 alt="image avatar"
                                                                                 width={50}
                                                                                 height={50}
-                                                                                src={`/images/avatar-default-2.png`}
+                                                                                src={`/images/avatar-default.png`}
                                                                                 className="w-12 h-12 object-cover"
                                                                             />
                                                                         </LazyLoad>

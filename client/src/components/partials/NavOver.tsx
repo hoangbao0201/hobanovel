@@ -102,7 +102,7 @@ export const NavOver = ({ routerP, user = null, isShow = false, handle, handleLo
                                         className="w-11 h-11 object-cover"
                                         src={
                                             user.avatarUrl ||
-                                            "/images/avatar-default-2.png"
+                                            "/images/avatar-default.png"
                                         }
                                     />
                                     <div className="ml-3 flex-1 line-clamp-1">{user.name}</div>

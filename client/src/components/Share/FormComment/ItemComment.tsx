@@ -3,10 +3,6 @@ import { ChangeEvent, useEffect, useRef, useState } from "react";
 
 import moment from "moment";
 import "moment/locale/vi";
-import Tippy from '@tippyjs/react';
-import 'tippy.js/dist/tippy.css';
-import 'tippy.js/themes/light-border.css';
-import { useDispatch, useSelector } from "react-redux";
 
 import { placeholderBlurhash } from "@/constants";
 import BlurImage from "@/components/Share/BlurImage";
@@ -26,7 +22,6 @@ import {
 } from "@/services/comment.services";
 import TextRank from "@/components/Share/TextRank";
 import InputText from "@/components/features/InputText";
-import { CommentSliceType, addReplyRDHandle } from "@/redux/commentSlice";
 import { useClickOutSide } from "@/hook/useClickOutSide";
 import { ShowToastify } from "@/components/features/ShowToastify";
 
@@ -111,9 +106,13 @@ const CommentItem = ({ novelId, chapterId, comment, user, isRpComment = false, h
                     updatedAt: new Date(),
                 };
                 setReplyComments([...replyComments, dataReplyCommentNew]);
+
+                return;
             }
+
+            alert(commentResponse.message as string);
         } catch (error) {
-            // console.log(error);
+            alert(error as string);
         }
     };
 
@@ -325,7 +324,7 @@ export const Comment = ({ user, comment, position, handleSetFormSend, handleDest
                     blurDataURL={placeholderBlurhash}
                     className="group-hover:scale-105 group-hover:duration-500 object-cover w-10 h-10"
                     placeholder="blur"
-                    src="/images/avatar-default-2.png"
+                    src={`${comment?.avatarUrl || "/images/avatar-default.png"}`}
                 />
             </Link>
 

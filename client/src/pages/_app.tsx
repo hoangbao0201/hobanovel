@@ -8,7 +8,7 @@ import { Inter } from "next/font/google";
 
 
 import { Session } from "next-auth";
-// import { SessionProvider } from "next-auth/react"
+import { SessionProvider } from "next-auth/react"
 import "nprogress/nprogress.css";
 import NProgress from "nprogress";
 import { Provider } from "react-redux";
@@ -76,7 +76,7 @@ const MyApp = ({
             `}</style>
 
 
-            {/* <SessionProvider session={session}> */}
+            <SessionProvider session={session}>
                 <Provider store={store}>
 
                         <PersistGate loading={false} persistor={persistor}>
@@ -86,7 +86,7 @@ const MyApp = ({
                         </PersistGate>
 
                 </Provider>
-            {/* </SessionProvider> */}
+            </SessionProvider>
                 
 
             <ToastContainer />

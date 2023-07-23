@@ -137,17 +137,19 @@ const ContentNovelDetail = ({ novel, handleUnfollowNovel, handleFollowNovel, isF
                         `}
                     >
                         <>
-                            <i className="w-4 h-4 block fill-white sm:mr-1 mb-[1px]">
                                 {isFollow === null ? (
                                     <LoadingButton className="text-white" />
                                 ) : isFollow ? (
-                                    iconClose
+                                    <i className="w-3 h-3 block fill-white sm:mr-1 mb-[1px]">
+                                        {iconTimes}
+                                    </i>
                                 ) : (
-                                    iconHeartFull
+                                    <i className="w-4 h-4 block fill-white sm:mr-1 mb-[1px]">
+                                        {iconHeartFull}
+                                    </i>
                                 )}
-                            </i>
                             <span className="text-white text-sm whitespace-nowrap">
-                                { isFollow ? "Theo dõi" : "Theo dõi" }
+                                { isFollow ? "Bỏ theo dõi" : "Theo dõi" }
                             </span>
                         </>
                     </button>

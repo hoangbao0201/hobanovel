@@ -47,7 +47,7 @@ export const getCommentsHandle = async (data : Partial<CommentType> & { page: nu
         // Get comments
         const qGetComment = `
             SELECT comments.*, 
-            us_sender.userId as senderId, comments.senderName as senderName, us_sender.username as senderUsername, us_sender.rank as senderRank, 
+            us_sender.userId as senderId, comments.senderName as senderName, us_sender.username as senderUsername, us_sender.avatarUrl, us_sender.rank as senderRank, 
             countReplyComment.count AS countReplyComment
 
             FROM comments
@@ -162,7 +162,7 @@ export const getReplyCommentHandle = async (data : CommentType & { page: number 
 
         const qGetComment = `
             SELECT comments.*, 
-            us_sender.userId as senderId, comments.senderName as senderName, us_sender.username as senderUsername, us_sender.rank as senderRank, 
+            us_sender.userId as senderId, comments.senderName as senderName, us_sender.username as senderUsername, us_sender.avatarUrl, us_sender.rank as senderRank, 
             us_receiver.userID as receiverId, us_receiver.name as receiverName, us_receiver.username as receiverUsername  
             
             FROM comments
