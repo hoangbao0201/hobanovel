@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken"
 import { Request, Response } from "express";
-import { createUserHandle, getUserByAccoutHandle, getUserByIdHandle, getUserByUsernameHandle, updatePasswordUserHandle } from "../services/user.services";
+import { createUserHandle, getUserByAccoutHandle, getUserByIdHandle, updatePasswordUserHandle } from "../services/user.services";
 import { UserType } from "../types";
 
 

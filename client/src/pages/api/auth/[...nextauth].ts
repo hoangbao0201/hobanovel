@@ -21,40 +21,4 @@ export default NextAuth({
     ],
 
     secret: process.env.NEXT_PUBLIC_NEXTAUTH_SECRET as string,
-
-    pages: {
-        signIn: "/",
-        error: "/api/auth/login",
-    },
-
-    callbacks: {
-        async session({ session, user, token }) {
-            // if (session.user && session.user.email && session.user.name && session.user.image) {
-            //     const dataReq = {
-            //         name: user.name as string,
-            //         username: user.email.split("@")[0],
-            //         email: user.email,
-            //         avatarUrl: user.image as string,
-            //         token: token
-            //     }
-            //     const userRes = await checkExistUserByAccoutHandle(dataReq);
-
-            //     if (userRes.success) {
-            //         return {
-            //             ...session,
-            //             success: true,
-            //             data: userRes
-            //             // token: userRes.token,
-            //         };
-            //     }
-            // }
-
-            return {
-                ...session,
-                success: false,
-                token: token
-            };
-        },
-
-    },
 });

@@ -20,7 +20,7 @@ import FormLayout from "@/components/Layout/FormLayout";
 const LoginPage = () => {
     const router = useRouter();
 
-    const { data: session, status } : any = useSession();
+    const { data: session, status } = useSession();
     
     const dispatch = useDispatch();
     const { userLoading, isAuthenticated, currentUser } = useSelector(
@@ -83,7 +83,6 @@ const LoginPage = () => {
                     username: session.user.email.split("@")[0],
                     email: session.user.email,
                     avatarUrl: session.user.image as string,
-                    token: session?.token ? "" : ""
                 }
                 const userRes = await checkExistUserByAccoutHandle(dataReq);
                 if(userRes.success) {

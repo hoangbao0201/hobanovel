@@ -1,7 +1,7 @@
 import axios from "axios";
 import { apiUrl } from "@/constants";
 
-export const checkExistUserByAccoutHandle = async (data : { name?: string, username?: string, email?: string, avatarUrl?: string, token: any }) => {
+export const checkExistUserByAccoutHandle = async (data : { name?: string, username?: string, email?: string, avatarUrl?: string}) => {
     try {
         const { } = data;
         const userRes = await axios.post(`${apiUrl}/api/users/exist`, {
