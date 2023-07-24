@@ -5,17 +5,17 @@ import { useRouter } from "next/router";
 import { GetServerSideProps } from "next";
 import { ChangeEvent, FormEvent, ReactNode, useEffect, useState } from "react";
 
-import { getSession, signIn, useSession } from 'next-auth/react';
+import { signIn, useSession } from 'next-auth/react';
 import { useDispatch, useSelector } from "react-redux";
 
 
+import MainLayout from "@/components/Layout/MainLayout";
+import FormLayout from "@/components/Layout/FormLayout";
 import CustomInput from "@/components/Share/CustomInput";
+import { addUserHandle, loadingUserHandle } from "@/redux/userSlice";
+import { checkExistUserByAccoutHandle } from "@/services/user.services";
 import { connectUserHandle, loginUserHandle } from "@/services/auth.services";
 import { addAccessToken, getAccessTokenOnServer } from "@/services/cookies.servies";
-import { addUserHandle, loadingUserHandle } from "@/redux/userSlice";
-import MainLayout from "@/components/Layout/MainLayout";
-import { checkExistUserByAccoutHandle } from "@/services/user.services";
-import FormLayout from "@/components/Layout/FormLayout";
 
 const LoginPage = () => {
     const router = useRouter();
@@ -117,7 +117,7 @@ const LoginPage = () => {
         <>
             <div className="bg-slate-100 min-h-screen transition-all ease-linear">
                 <div className="mx-auto max-w-[500px]">
-                    <h2 className="py-10 flex justify-center">
+                    <h2 className="py-6 flex justify-center text-2xl font-semibold">
                         <Link className="" href="/">
                             HOBANOVEL
                         </Link>
@@ -126,7 +126,7 @@ const LoginPage = () => {
                     <FormLayout loading={userLoading} className="w-full min-h-[300px] drop-shadow-md bg-white" classChild="py-6 sm:px-10 px-5">
 
                         <form onSubmit={eventSubmitForm} className="grid">
-                            <h1 className="pl-4 mb-7 border-l-4 border-blue-700 text-3xl font-semibold">
+                            <h1 className="pl-4 mb-7 border-l-8 uppercase border-blue-700 text-2xl font-semibold">
                                 Đăng nhập
                             </h1>
                             <div>
@@ -134,7 +134,7 @@ const LoginPage = () => {
                                     name="accout"
                                     value={dataForm.accout}
                                     handleOnchangeValue={eventChangeValueInput}
-                                    label="Username or email address"
+                                    label="Tài khoản"
                                     id="AccoutInputRegister"
                                 />
                                 <CustomInput
@@ -142,15 +142,15 @@ const LoginPage = () => {
                                     value={dataForm.password}
                                     handleOnchangeValue={eventChangeValueInput}
                                     type="password"
-                                    label="Password"
+                                    label="Mật khẩu"
                                     id="passwordInputRegister"
                                 />
                             </div>
-                            <div className="mb-3">
+                            {/* <div className="mb-3">
                                 <Link className="text-blue-700 font-semibold" href="/">
                                     <span>Forgot password?</span>
                                 </Link>
-                            </div>
+                            </div> */}
                             <div className="mt-2">
                                 <button
                                     className=" transition-all w-full text-center py-3 rounded bg-blue-600 hover:bg-blue-700 active:bg-blue-800 active:shadow-xl text-white"
@@ -219,7 +219,6 @@ const LoginPage = () => {
 
 export const getServerSideProps : GetServerSideProps = async (ctx) => {
 
-    const session = await getSession(ctx);
     const token = getAccessTokenOnServer(ctx.req.headers.cookie as string);
     if(!token) {
         return {
@@ -228,7 +227,7 @@ export const getServerSideProps : GetServerSideProps = async (ctx) => {
     }
 
     const userResponse = await connectUserHandle(token as string);
-    if(userResponse?.success || session) {
+    if(userResponse?.success) {
         return {
             redirect: {
                 destination: "/",

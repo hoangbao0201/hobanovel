@@ -15,7 +15,7 @@ interface BreadcrumbProps {
 const Breadcrumb = ({ path }: BreadcrumbProps) => {
     return (
         <div className="flex items-center mx-4 border-l-4 border-l-blue-500 mr-3 mb-4">
-            <ul
+            <ol
                 itemScope
                 itemType="http://schema.org/BreadcrumbList"
                 className="flex items-center flex-wrap text-sm gap-2 px-3"
@@ -26,9 +26,15 @@ const Breadcrumb = ({ path }: BreadcrumbProps) => {
                     itemType="http://schema.org/ListItem"
                     className="text-blue-500"
                 >
-                    <Link itemProp="item" itemType="http://schema.org/Thing" href="/">
+                    <Link
+                        itemScope 
+                        itemProp="item"
+                        itemType="http://schema.org/Thing"
+                        href="/"
+                    >
                         <span itemProp="name">hobanovel</span>
                     </Link>
+                    <meta itemProp="position" content="1" />
                 </li>
                 {path.length > 0 && (
                     <>
@@ -45,18 +51,20 @@ const Breadcrumb = ({ path }: BreadcrumbProps) => {
                                         {iconAngleDouble}
                                     </i>
                                     <Link
+                                        itemScope 
                                         itemProp="item"
                                         itemType="http://schema.org/Thing"
                                         href={item.url}
                                     >
                                         <span itemProp="name">{item.title}</span>
                                     </Link>
+                                    <meta itemProp="position" content={String(index+2)} />
                                 </li>
                             );
                         })}
                     </>
                 )}
-            </ul>
+            </ol>
         </div>
     );
 };

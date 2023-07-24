@@ -88,7 +88,7 @@ const HomePage = ({
 
     return (
         <>
-            <Head />
+            <Head novels={novelsOutstending}/>
             <WrapperLayout className="xs:-translate-y-28">
                 <div className="grid">
 

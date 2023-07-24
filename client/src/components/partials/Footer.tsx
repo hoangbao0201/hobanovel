@@ -23,12 +23,13 @@ const Footer = () => {
                             </Link>
                         </div>
     
-                        <p className="mb-2">Copyright © 2022 HobaNovel</p>
+                        <p className="mb-2">Copyright © 2022 hobanovel</p>
                     </div>
 
                     <div className="lg:w-3/5">
                         <h4 className="mb-4">Từ khóa</h4>
                         <ul className="flex flex-wrap gap-2 text-xs whitespace-nowrap text-center [&>li]:bg-slate-200 [&>li]:border [&>li]:border-gray-500 [&>li]:px-2 [&>li]:text-sm">
+                            <li><Link target="_self" href="/">hobanovel</Link></li>
                             <li><Link target="_self" href="/">Truyện chữ</Link></li>
                             <li><Link target="_self" href="/">Truyện chữ online</Link></li>
                             <li><Link target="_self" href="/">Đọc truyện chữ</Link></li>

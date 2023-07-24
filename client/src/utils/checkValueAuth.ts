@@ -1,13 +1,12 @@
 
 
-export const checkValueAuth = (data : { lastName: string, firstName: string, username: string, email: string, password: string, }) => {
+export const checkValueAuth = (data : { fullname: string, username: string, email: string, password: string, }) => {
 
-    const { lastName, firstName, username, email, password } = data;
+    const { fullname, username, email, password } = data;
 
     let lt = {
         success: true,
-        lastName: "",
-        firstName: "",
+        fullname: "",
         username: "",
         email: "",
         password: "",
@@ -16,18 +15,18 @@ export const checkValueAuth = (data : { lastName: string, firstName: string, use
     const specialCharsRegex = /[!@#$%^&*()_+[\]{};':"\\|,.<>?`~]/;
 
     // ---
-    if (specialCharsRegex.test(lastName)) {
+    // if (specialCharsRegex.test(lastName)) {
+    //     lt = {
+    //         ...lt,
+    //         success: false,
+    //         lastName: "Họ chứa kí tự đặt biệt"
+    //     }
+    // }
+    if (specialCharsRegex.test(fullname)) {
         lt = {
             ...lt,
             success: false,
-            lastName: "Họ chứa kí tự đặt biệt"
-        }
-    }
-    if (specialCharsRegex.test(firstName)) {
-        lt = {
-            ...lt,
-            success: false,
-            firstName: "Tên chứa kí tự đặt biệt"
+            fullname: "Tên chứa kí tự đặt biệt"
         }
     }
     if (specialCharsRegex.test(username)) {
@@ -38,18 +37,18 @@ export const checkValueAuth = (data : { lastName: string, firstName: string, use
         }
     }
     // ---
-    if (lastName.length < 3 || lastName.length > 20) {
+    // if (lastName.length < 3 || lastName.length > 20) {
+    //     lt = {
+    //         ...lt,
+    //         success: false,
+    //         lastName: "Họ từ 3 đến 20 kí tự"
+    //     }
+    // }
+    if (fullname.length < 5 || fullname.length > 25) {
         lt = {
             ...lt,
             success: false,
-            lastName: "Họ từ 3 đến 20 kí tự"
-        }
-    }
-    if (firstName.length < 3 || firstName.length > 20) {
-        lt = {
-            ...lt,
-            success: false,
-            firstName: "Tên từ 3 đến 20 kí tự"
+            fullname: "Tên từ 5 đến 25 kí tự"
         }
     }
     if (username.length < 3 || username.length > 20) {
