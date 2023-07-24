@@ -10,12 +10,13 @@ import { PROPERTIES_NOVEL } from "../constants";
 
 
 export const createNovelByDataHandle = async (data : NovelType, userId : string) => {
+    let connection;
     try {
         const {
             slug, title, description, author, category, personality, scene, classify, viewFrame
         } = data
 
-        const connection = await pool.getConnection();
+        connection = await pool.getConnection();
 
         const qCreateNovel = `
             INSERT INTO novels(slug, title, description, author, category, personality, scene, classify, viewFrame, userId)
@@ -26,8 +27,6 @@ export const createNovelByDataHandle = async (data : NovelType, userId : string)
 
         const [rows] = await connection.query(qCreateNovel, [values]);
 
-        connection.release();
-
         return {
             success: true,
             data: rows as NovelType[]
@@ -37,6 +36,8 @@ export const createNovelByDataHandle = async (data : NovelType, userId : string)
             success: false,
             error: error?.message
         }
+    } finally {
+        if (connection) connection.release();
     }
 };
 
@@ -124,8 +125,9 @@ export const getChapterCountNovelHandle = async (url: string) => {
 }
 
 export const getNovelByTitleHandle = async ({ title } : NovelType) => {
+    let connection;
     try {
-        const connection = await pool.getConnection();
+        connection = await pool.getConnection();
 
         const qGetNovel = `
             SELECT novelId, slug, title, author, category, personality, scene, classify, viewFrame FROM novels
@@ -135,17 +137,18 @@ export const getNovelByTitleHandle = async ({ title } : NovelType) => {
 
         const [rows] = await connection.query(qGetNovel, [`%${title}%`]);
 
-        connection.release();
-
         return rows as NovelType[]
     } catch (error) {
         return null
+    } finally {
+        if (connection) connection.release();
     }
 };
 
 export const checkNovelExistedHandle = async (slug : string) => {
+    let connection;
     try {
-        const connection = await pool.getConnection();
+        connection = await pool.getConnection();
 
         const qGetNovel = `
             SELECT novelId, slug, title, chapterCount FROM novels
@@ -154,8 +157,6 @@ export const checkNovelExistedHandle = async (slug : string) => {
         `;
 
         const [rows] = await connection.query(qGetNovel, slug);
-
-        connection.release();
 
         return {
             success: true,
@@ -166,12 +167,15 @@ export const checkNovelExistedHandle = async (slug : string) => {
             success: false,
             error: error
         }
+    } finally {
+        if (connection) connection.release();
     }
 };
 
 export const getNovelsByPageHandle = async (page : any) => {
+    let connection;
     try {
-        const connection = await pool.getConnection();
+        connection = await pool.getConnection();
 
         const qGetNovel = `
             SELECT novelId, slug, title, LEFT(description, 150) as description, thumbnailUrl, imageBlurHash, 
@@ -182,17 +186,18 @@ export const getNovelsByPageHandle = async (page : any) => {
 
         const [rows] = await connection.query(qGetNovel, [(page-1)*6]);
 
-        connection.release();
-
         return rows as NovelType[]
     } catch (error) {
         return null
+    } finally {
+        if (connection) connection.release();
     }
 };
 
 export const getNovelBySlugHandle = async ({ slug } : NovelType) => {
+    let connection;
     try {
-        const connection = await pool.getConnection();
+        connection = await pool.getConnection();
 
         const qGetNovel = `
             SELECT novels.novelId, novels.slug, novels.title, novels.thumbnailUrl, novels.imageBlurHash, novels.description, novels.author,
@@ -214,12 +219,8 @@ export const getNovelBySlugHandle = async ({ slug } : NovelType) => {
 
             WHERE novels.slug = ?
         `;
-                // LEFT JOIN history_reading ON history_reading.novelId = novels.novelId AND history_reading.userId = novels.novelId
-                // history_reading.chapterRead
 
         const [rows] = await connection.query(qGetNovel, [slug]);
-
-        connection.release();
 
         return {
             success: true,
@@ -230,12 +231,15 @@ export const getNovelBySlugHandle = async ({ slug } : NovelType) => {
             success: false,
             error: error
         }
+    } finally {
+        if (connection) connection.release();
     }
 };
 
 export const getNovelsByUserIdHandle = async ({ userId } : NovelType) => {
+    let connection;
     try {
-        const connection = await pool.getConnection();
+        connection = await pool.getConnection();
 
         const qGetNovel = `
             SELECT novelId, slug, title, author, updatedAt FROM novels
@@ -244,17 +248,18 @@ export const getNovelsByUserIdHandle = async ({ userId } : NovelType) => {
 
         const [rows] = await connection.query(qGetNovel, [userId]);
 
-        connection.release();
-
         return rows as NovelType[]
     } catch (error) {
         return null
+    } finally {
+        if (connection) connection.release();
     }
 };
 
 export const getChaptersNovelBySlugHandle = async ({ slug } : NovelType) => {
+    let connection;
     try {
-        const connection = await pool.getConnection();
+        connection = await pool.getConnection();
 
         const qGetNovel = `
             SELECT chapterId, novelSlug, title, chapterNumber, createdAt FROM chapters
@@ -264,17 +269,18 @@ export const getChaptersNovelBySlugHandle = async ({ slug } : NovelType) => {
 
         const [rows] = await connection.query(qGetNovel, [slug]);
 
-        connection.release();
-
         return rows as NovelType[]
     } catch (error) {
         return null
+    } finally {
+        if (connection) connection.release();
     }
 };
 
 export const getNovelsByOutstandingHandle = async (page : number) => {
+    let connection;
     try {
-        const connection = await pool.getConnection();
+        connection = await pool.getConnection();
 
         const qGetNovel = `
             SELECT N.novelId, N.slug, N.title, N.thumbnailUrl, N.imageBlurHash, LEFT(N.description, 150) as description, N.author, N.category, N.createdAt, SUM(chapters.views) AS views FROM novels N
@@ -286,8 +292,6 @@ export const getNovelsByOutstandingHandle = async (page : number) => {
 
         const [rows] = await connection.query(qGetNovel, ((page-1)*6));
 
-        connection.release();
-
         return {
             success: true,
             data: rows as NovelType[]
@@ -297,12 +301,15 @@ export const getNovelsByOutstandingHandle = async (page : number) => {
             success: false,
             error: error
         }
+    } finally {
+        if (connection) connection.release();
     }
 };
 
 export const getNovelsByHighlyRatedHandle = async (page : number) => {
+    let connection;
     try {
-        const connection = await pool.getConnection();
+        connection = await pool.getConnection();
 
         const qGetNovel = `
             SELECT N.novelId, N.slug, N.title, N.thumbnailUrl, N.imageBlurHash, N.chapterCount, LEFT(N.description, 150) as description, N.author, N.category, N.createdAt, FORMAT(AVG(reviews.mediumScore), 1) AS mediumScore FROM novels N
@@ -314,8 +321,6 @@ export const getNovelsByHighlyRatedHandle = async (page : number) => {
 
         const [rows] = await connection.query(qGetNovel, ((page-1)*6));
 
-        connection.release();
-
         return {
             success: true,
             data: rows as NovelType[]
@@ -325,12 +330,15 @@ export const getNovelsByHighlyRatedHandle = async (page : number) => {
             success: false,
             error: error
         }
+    } finally {
+        if (connection) connection.release();
     }
 };
 
 export const updateBlurImageNovelHandle = async ({ novelId, imageBlurHash } : NovelType) => {
+    let connection;
     try {
-        const connection = await pool.getConnection();
+        connection = await pool.getConnection();
 
         const qGetBanners = `
             UPDATE novels
@@ -340,8 +348,6 @@ export const updateBlurImageNovelHandle = async ({ novelId, imageBlurHash } : No
 
         const [rows] = await connection.query(qGetBanners, [imageBlurHash, novelId]);
 
-        connection.release();
-
         return {
             success: true,
             data: rows as NovelType[]
@@ -349,23 +355,21 @@ export const updateBlurImageNovelHandle = async ({ novelId, imageBlurHash } : No
 
     } catch (error) {
         return null
+    } finally {
+        if (connection) connection.release();
     }
 };
 
 export const updateAllBlurImageNovelHandle = async () => {
+    let connection;
     try {
-
-        const connection = await pool.getConnection();
+        connection = await pool.getConnection();
 
         const qGetAllNovel = `
             SELECT novels.novelId, novels.thumbnailUrl FROM novels
         `;
-            // WHERE novels.imageBlurHash IS NULL
 
         const [rows] : any = await connection.query(qGetAllNovel);
-
-        
-        connection.release();
         
         for(const novel of rows) {
             const hashUrl = await getBlurDataURL(novel.thumbnailUrl) || "";
@@ -385,14 +389,17 @@ export const updateAllBlurImageNovelHandle = async () => {
             success: false,
             error: error
         }
+    } finally {
+        if (connection) connection.release();
     }
 };
 
 export const getNovelsByDataHanle = async (data : NovelType & { page: number }) => {
+    let connection;
     try {
         const { conditions, params } = NovelSearchConditions(data);
 
-        const connection = await pool.getConnection();
+        connection = await pool.getConnection();
 
         const qGetNovel = `            
             SELECT novels.novelId, novels.title, novels.slug, novels.thumbnailUrl, novels.imageBlurHash, novels.category, novels.personality, novels.scene, novels.classify,
@@ -407,8 +414,6 @@ export const getNovelsByDataHanle = async (data : NovelType & { page: number }) 
 
         const [rows] = await connection.query(qGetNovel, [...params, (Number(data.page) - 1) * 5]);
 
-        connection.release();
-
         return {
             success: true,
             data: rows as NovelType[],
@@ -418,12 +423,15 @@ export const getNovelsByDataHanle = async (data : NovelType & { page: number }) 
             success: false,
             error: error
         }
+    } finally {
+        if (connection) connection.release();
     }
 };
 
 export const readingNovelHandle = async ({ novelId, userId, chapterRead } : HistoryReadingType) => {
+    let connection;
     try {
-        const connection = await pool.getConnection();
+        connection = await pool.getConnection();
 
         const qUpdateReadingNovel = `
             UPDATE history_reading
@@ -442,8 +450,6 @@ export const readingNovelHandle = async ({ novelId, userId, chapterRead } : Hist
             await connection.query(qCreateReadingNovel, [novelId, userId, chapterRead]);
         }
 
-        connection.release();
-
         return {
             success: true,
             data: rows.affectedRows === 0  ? "Tạo reading" : "Update Reading",
@@ -453,12 +459,15 @@ export const readingNovelHandle = async ({ novelId, userId, chapterRead } : Hist
             success: false,
             error: error
         }
+    } finally {
+        if (connection) connection.release();
     }
 };
 
 export const getReadingNovelHandle = async ({ userId, page } : HistoryReadingType & { page: number }) => {
+    let connection;
     try {
-        const connection = await pool.getConnection();
+        connection = await pool.getConnection();
 
         const qUpdateReadingNovel = `
             SELECT history_reading.*, novels.slug, novels.title, novels.chapterCount, novels.imageBlurHash, novels.thumbnailUrl FROM history_reading
@@ -470,8 +479,6 @@ export const getReadingNovelHandle = async ({ userId, page } : HistoryReadingTyp
 
         const [rows] : any = await connection.query(qUpdateReadingNovel, [userId, (page-1)*5]);
 
-        connection.release();
-
         return {
             success: true,
             data: rows as HistoryReadingType[]
@@ -481,14 +488,17 @@ export const getReadingNovelHandle = async ({ userId, page } : HistoryReadingTyp
             success: false,
             error: error
         }
+    } finally {
+        if (connection) connection.release();
     }
 };
 
 // Follow Novel
 
 export const getFollowsNovelHandle = async ({ userId, page } : Pick<NovelFollowerType, 'userId'> & { page: number }) => {
+    let connection;
     try {
-        const connection = await pool.getConnection();
+        connection = await pool.getConnection();
 
         const qGetFollowsNovel = `
             SELECT ${fieldGetNovel} FROM novel_followers 
@@ -501,8 +511,6 @@ export const getFollowsNovelHandle = async ({ userId, page } : Pick<NovelFollowe
 
         const [rows] : any = await connection.query(qGetFollowsNovel, [userId, (page-1)*10]);
 
-        connection.release();
-
         return {
             success: true,
             data: rows
@@ -512,12 +520,15 @@ export const getFollowsNovelHandle = async ({ userId, page } : Pick<NovelFollowe
             success: false,
             error: error
         }
+    } finally {
+        if (connection) connection.release();
     }
 };
 
 export const followNovelHandle = async ({ userId, novelId } : NovelFollowerType) => {
+    let connection;
     try {
-        const connection = await pool.getConnection();
+        connection = await pool.getConnection();
 
         const qUpdateReadingNovel = `
             INSERT INTO novel_followers(userId, novelId)
@@ -526,8 +537,6 @@ export const followNovelHandle = async ({ userId, novelId } : NovelFollowerType)
 
         const [rows] : any = await connection.query(qUpdateReadingNovel, [userId, novelId]);
 
-        connection.release();
-
         return {
             success: true,
             data: rows
@@ -537,11 +546,15 @@ export const followNovelHandle = async ({ userId, novelId } : NovelFollowerType)
             success: false,
             error: error
         }
+    } finally {
+        if (connection) connection.release();
     }
 };
+
 export const unfollowNovelHandle = async ({ userId, novelId } : NovelFollowerType) => {
+    let connection;
     try {
-        const connection = await pool.getConnection();
+        connection = await pool.getConnection();
 
         const qUpdateReadingNovel = `
             DELETE FROM novel_followers
@@ -550,8 +563,6 @@ export const unfollowNovelHandle = async ({ userId, novelId } : NovelFollowerTyp
 
         const [rows] : any = await connection.query(qUpdateReadingNovel, [userId, novelId]);
 
-        connection.release();
-
         return {
             success: true,
             data: rows
@@ -561,15 +572,17 @@ export const unfollowNovelHandle = async ({ userId, novelId } : NovelFollowerTyp
             success: false,
             error: error
         }
+    } finally {
+        if (connection) connection.release();
     }
 };
 
 export const getAdvancedNovelHandle = async (data: any) => {
+    let connection;
     try {
-
         const { join, sort, params, conditions, page } = getAdvancedNovelConditions(data)
         
-        const connection = await pool.getConnection();
+        connection = await pool.getConnection();
 
         // Get countPage
         const qGetCountPage = `
@@ -595,8 +608,6 @@ export const getAdvancedNovelHandle = async (data: any) => {
 
         const [rows] : any = await connection.query(qGetNovel, params);
 
-        connection.release()
-
         return {
             success: true,
             data: rows,
@@ -608,20 +619,21 @@ export const getAdvancedNovelHandle = async (data: any) => {
             success: false,
             error: error
         }
+    } finally {
+        if (connection) connection.release();
     }
 }
 
 export const getAllNovelForSeoHandle = async () => {
+    let connection;
     try {
-        const connection = await pool.getConnection();
+        connection = await pool.getConnection();
 
         const qGetAllNovel = `
             SELECT novels.novelId, novels.title, novels.slug, novels.createdAt, novels.updatedAt from novels
         `;
 
         const [rows] : any = await connection.query(qGetAllNovel);
-
-        connection.release();
 
         return {
             success: true,
@@ -632,6 +644,8 @@ export const getAllNovelForSeoHandle = async () => {
             success: false,
             error: error
         }
+    } finally {
+        if (connection) connection.release();
     }
 };
 

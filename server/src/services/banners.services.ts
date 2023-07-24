@@ -3,9 +3,12 @@ import pool from "../library/connectMySQL";
 import { getBlurDataURL } from "../utils/getBlurDataURL";
 
 export const addBannerHandle = async (data : BannersType) => {
+
+    let connection;
+
     try {
         const { novelId, bannersUrl, imageBlurHash, bannersPublicId, isMobile } = data
-        const connection = await pool.getConnection();
+        connection = await pool.getConnection();
 
         const qAddBanners = `
             INSERT INTO banners(novelId, bannersUrl, imageBlurHash, bannersPublicId, isMobile)
@@ -13,8 +16,6 @@ export const addBannerHandle = async (data : BannersType) => {
         `;
 
         const [rows] = await connection.query(qAddBanners, [novelId, bannersUrl, imageBlurHash, bannersPublicId, isMobile]);
-
-        connection.release();
 
         return {
             success: true,
@@ -26,12 +27,17 @@ export const addBannerHandle = async (data : BannersType) => {
             success: false,
             error: error
         }
+    } finally {
+        if (connection) connection.release();
     }
 };
 
 export const getSingleBannerHandle = async (isMobile : boolean) => {
+
+    let connection;
+
     try {
-        const connection = await pool.getConnection();
+        connection = await pool.getConnection();
 
         const qGetBanners = `
             SELECT banners.bannersId, banners.bannersUrl, banners.imageBlurHash, novels.slug FROM banners
@@ -43,8 +49,6 @@ export const getSingleBannerHandle = async (isMobile : boolean) => {
 
         const [rows] = await connection.query(qGetBanners, isMobile);
 
-        connection.release();
-
         return {
             success: true,
             data: rows as BannersType[]
@@ -56,10 +60,16 @@ export const getSingleBannerHandle = async (isMobile : boolean) => {
             error: error
         }
     }
+    finally {
+        if (connection) connection.release();
+    }
 };
 export const getMultipleBannerHandle = async (isMobile : boolean) => {
+
+    let connection;
+
     try {
-        const connection = await pool.getConnection();
+        connection = await pool.getConnection();
 
         const qGetBanners = `
             SELECT banners.*, novels.title FROM banners
@@ -71,8 +81,6 @@ export const getMultipleBannerHandle = async (isMobile : boolean) => {
 
         const [rows] = await connection.query(qGetBanners, isMobile);
 
-        connection.release();
-
         return {
             success: true,
             data: rows as BannersType[]
@@ -83,12 +91,17 @@ export const getMultipleBannerHandle = async (isMobile : boolean) => {
             success: false,
             error: error
         }
+    } finally {
+        if (connection) connection.release();
     }
 };
 
 export const updateBlurImageBannersHandle = async ({ bannersId, imageBlurHash } : BannersType) => {
+
+    let connection;
+
     try {
-        const connection = await pool.getConnection();
+        connection = await pool.getConnection();
 
         const qGetBanners = `
             UPDATE banners
@@ -98,8 +111,6 @@ export const updateBlurImageBannersHandle = async ({ bannersId, imageBlurHash } 
 
         const [rows] = await connection.query(qGetBanners, [imageBlurHash, bannersId]);
 
-        connection.release();
-
         return {
             success: true,
             data: rows as BannersType[]
@@ -108,12 +119,17 @@ export const updateBlurImageBannersHandle = async ({ bannersId, imageBlurHash } 
     } catch (error) {
         return null
     }
+    finally {
+        if (connection) connection.release();
+    }
 };
 
 export const updateAllBlurImageBannersHandle = async () => {
-    try {
 
-        const connection = await pool.getConnection();
+    let connection;
+
+    try {
+        connection = await pool.getConnection();
 
         const qGetAllBanners = `
             SELECT banners.bannersId, banners.bannersUrl FROM banners
@@ -121,9 +137,7 @@ export const updateAllBlurImageBannersHandle = async () => {
         `;
 
         const [rows] : any = await connection.query(qGetAllBanners);
-        
-        connection.release();
-        
+                
         for(const banners of rows) {
             const hashUrl = await getBlurDataURL(banners.bannersUrl) || "";
             if(!hashUrl) {
@@ -142,5 +156,8 @@ export const updateAllBlurImageBannersHandle = async () => {
             success: false,
             error: error
         }
+    }
+    finally {
+        if (connection) connection.release();
     }
 };

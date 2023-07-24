@@ -4,8 +4,9 @@ import { CommentSearchConditions } from "../middleware/conditionsQuery";
 import { CommentType } from "../types";
 
 export const addCommentByNovelHandle = async (data: CommentType ) => {
+    let connection;
     try {
-        const connection = await pool.getConnection();
+        connection = await pool.getConnection();
 
         const { into, values } = CommentSearchConditions(data);
 
@@ -16,26 +17,26 @@ export const addCommentByNovelHandle = async (data: CommentType ) => {
 
         const [rows] = await connection.query(qGetUser, [into]);
 
-        connection.release();
-
         return {
             success: true,
             data: rows as CommentType[],
-            // data: values
         };
     } catch (error) {
         return {
             success: false,
             error: error.message,
         };
+    } finally {
+        if (connection) connection.release();
     }
 };
 
 export const getCommentsHandle = async (data : Partial<CommentType> & { page: number }) => {
+    let connection;
     try {
         const { conditions, params } = CommentSearchConditions(data);
         
-        const connection = await pool.getConnection();
+        connection = await pool.getConnection();
 
         // Get countPage
         const qGetCountPage = `
@@ -64,8 +65,6 @@ export const getCommentsHandle = async (data : Partial<CommentType> & { page: nu
 
         const [rows] = await connection.query(qGetComment, [...params, (Number(data.page) - 1) * 10]);
 
-        connection.release();
-
         return {
             success: true,
             data: rows,
@@ -77,11 +76,15 @@ export const getCommentsHandle = async (data : Partial<CommentType> & { page: nu
             success: false,
             error: error.message,
         };
+    } finally {
+        if (connection) connection.release();
     }
 };
+
 export const destroyCommentByNovelHandle = async ({ commentId, senderId } : CommentType) => {
+    let connection;
     try {
-        const connection = await pool.getConnection();
+        connection = await pool.getConnection();
 
         const qGetReview = `
             DELETE FROM comments
@@ -90,8 +93,6 @@ export const destroyCommentByNovelHandle = async ({ commentId, senderId } : Comm
 
         const [rows] = await connection.query(qGetReview, [commentId, senderId]);
 
-        connection.release();
-
         return {
             success: true,
             data: rows as CommentType[],
@@ -101,12 +102,15 @@ export const destroyCommentByNovelHandle = async ({ commentId, senderId } : Comm
             success: false,
             error: error.message,
         };
+    } finally {
+        if (connection) connection.release();
     }
 };
 
 export const destroyReplyCommentByNovelHandle = async ({ commentId, senderId } : CommentType) => {
+    let connection;
     try {
-        const connection = await pool.getConnection();
+        connection = await pool.getConnection();
 
         const qGetComment = `
             DELETE FROM comments
@@ -115,8 +119,6 @@ export const destroyReplyCommentByNovelHandle = async ({ commentId, senderId } :
 
         const [rows] = await connection.query(qGetComment, [commentId, senderId]);
 
-        connection.release();
-
         return {
             success: true,
             data: rows as CommentType[],
@@ -126,14 +128,17 @@ export const destroyReplyCommentByNovelHandle = async ({ commentId, senderId } :
             success: false,
             error: error.message,
         };
+    } finally {
+        if (connection) connection.release();
     }
 };
 
 export const addReplyCommentHandle = async (data : Pick<CommentType, 'parentId' | 'novelId' | 'senderId' | 'senderName' | 'receiverId' | 'commentText'>) => {
+    let connection;
     try {
         const { parentId, novelId, senderId, senderName, receiverId, commentText } = data
 
-        const connection = await pool.getConnection();
+        connection = await pool.getConnection();
 
         const qAddComment = `
             INSERT INTO comments(parentId, novelId, senderId, senderName, receiverId, commentText)
@@ -142,8 +147,6 @@ export const addReplyCommentHandle = async (data : Pick<CommentType, 'parentId' 
 
         const [rows] = await connection.query(qAddComment, [parentId, novelId, senderId, senderName, receiverId, commentText]);
 
-        connection.release();
-
         return {
             success: true,
             data: rows as CommentType[],
@@ -153,12 +156,15 @@ export const addReplyCommentHandle = async (data : Pick<CommentType, 'parentId' 
             success: false,
             error: error.message,
         };
+    } finally {
+        if (connection) connection.release();
     }
 };
 
 export const getReplyCommentHandle = async (data : CommentType & { page: number }) => {
+    let connection;
     try {
-        const connection = await pool.getConnection();
+        connection = await pool.getConnection();
 
         const qGetComment = `
             SELECT comments.*, 
@@ -178,8 +184,6 @@ export const getReplyCommentHandle = async (data : CommentType & { page: number 
 
         const [rows] = await connection.query(qGetComment, [data.commentId, (Number(data.page) - 1) * 10]);
 
-        connection.release();
-
         return {
             success: true,
             data: rows as CommentType[],
@@ -189,12 +193,15 @@ export const getReplyCommentHandle = async (data : CommentType & { page: number 
             success: false,
             error: error.message,
         };
+    } finally {
+        if (connection) connection.release();
     }
 };
 
 export const getCommentNotifyHandle = async (receiverId: string, page: number) => {
+    let connection;
     try {
-        const connection = await pool.getConnection();
+        connection = await pool.getConnection();
 
         const qGetComment = `
             SELECT comments.parentId, comments.commentId, comments.senderName, comments.isRead, comments.createdAt, novels.title, novels.slug FROM comments
@@ -206,8 +213,6 @@ export const getCommentNotifyHandle = async (receiverId: string, page: number) =
 
         const [rows] = await connection.query(qGetComment, [receiverId, receiverId, (Number(page) - 1) * 8]);
 
-        connection.release();
-
         return {
             success: true,
             data: rows as CommentType[],
@@ -217,11 +222,15 @@ export const getCommentNotifyHandle = async (receiverId: string, page: number) =
             success: false,
             error: error.message,
         };
+    } finally {
+        if (connection) connection.release();
     }
 };
+
 export const addReadCommentNotifyHandle = async (commentId: string, receiverId: string) => {
+    let connection;
     try {
-        const connection = await pool.getConnection();
+        connection = await pool.getConnection();
 
         const qReadComment = `
             UPDATE comments
@@ -231,8 +240,6 @@ export const addReadCommentNotifyHandle = async (commentId: string, receiverId: 
 
         const [rows] = await connection.query(qReadComment, [commentId, receiverId]);
 
-        connection.release();
-
         return {
             success: true,
             data: rows as CommentType[],
@@ -242,6 +249,8 @@ export const addReadCommentNotifyHandle = async (commentId: string, receiverId: 
             success: false,
             error: error.message,
         };
+    } finally {
+        if (connection) connection.release();
     }
 };
 

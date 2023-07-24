@@ -24,10 +24,8 @@ export const uploadThumbnailHandle = async (urlImage: string) => {
 };
 
 export const uploadThumbnailNovelHandle = async ({ slug, urlImage } : { slug : string, urlImage: string }) => {
-    
+    let connection;
     try {
-        // const { imageUrl, imagePublicId, imageBlur } = await uploadThumbnailHandle(urlImage);
-
         const image = await cloudinary.uploader.upload(urlImage, {
             public_id: `${Date.now()}`,
             resource_type: "auto",
@@ -38,7 +36,7 @@ export const uploadThumbnailNovelHandle = async ({ slug, urlImage } : { slug : s
         }
         const imageBlur = await getBlurDataURL(image.url)
 
-        const connection = await pool.getConnection();
+        connection = await pool.getConnection();
 
         const qGetNovel = `
             UPDATE novels
@@ -48,18 +46,18 @@ export const uploadThumbnailNovelHandle = async ({ slug, urlImage } : { slug : s
 
         const [rows] = await connection.query(qGetNovel, [image.url, image.public_id, imageBlur, slug]);
 
-        connection.release();
-
         return {
             success: true,
             data: rows
-            // test: image
         }
     } catch (error) {
         return {
             success: false,
             error: error?.message
         }
+    }
+    finally {
+        if (connection) connection.release();
     }
 };
 

@@ -41,8 +41,11 @@ export const getDataChapterByUrlMTCHandle = async ({ novelSlug, chapterNumber } 
 }
 
 export const createChapterByDataHandle = async (data : ChapterType) => {
+
+    let connection;
+
     try {
-        const connection = await pool.getConnection();
+        connection = await pool.getConnection();
 
         const {
             userId, novelSlug, novelName, novelId, title, content, chapterNumber
@@ -57,8 +60,6 @@ export const createChapterByDataHandle = async (data : ChapterType) => {
 
         const [rows] = await connection.query(qCreateChapter, values);
 
-        connection.release();
-
         return {
             success: true,
             data: rows
@@ -68,12 +69,17 @@ export const createChapterByDataHandle = async (data : ChapterType) => {
             success: false,
             error: error
         }
+    } finally {
+        if (connection) connection.release();
     }
 };
 
 export const getChapterDetailHandle = async ({ userId, novelSlug, chapterNumber } : ChapterType) => {
+
+    let connection;
+
     try {
-        const connection = await pool.getConnection();
+        connection = await pool.getConnection();
 
         const qCreateChapter = `
             SELECT chapters.chapterId, chapters.novelName, chapters.novelSlug, chapters.title, users.name AS creator, users.userId AS creatorId,
@@ -85,15 +91,12 @@ export const getChapterDetailHandle = async ({ userId, novelSlug, chapterNumber 
                 
             WHERE chapters.novelSlug = ? AND chapters.chapterNumber = ?;
         `;
-        // LEFT JOIN novel_followers ON novel_followers.novelId = chapters.novelId ${userId ? 'AND novel_followers.userId = ?' : ''}
                 
         let params = [novelSlug, chapterNumber]
         if(userId) {
             params.push(userId)
         }
         const [rows] = await connection.query(qCreateChapter, params);
-
-        connection.release();
 
         return {
             success: true,
@@ -104,12 +107,17 @@ export const getChapterDetailHandle = async ({ userId, novelSlug, chapterNumber 
             success: false,
             error: error
         }
+    } finally {
+        if (connection) connection.release();
     }
 };
 
 export const getChapterBasicHandle = async ({ novelSlug, chapterNumber } : ChapterType) => {
+
+    let connection;
+
     try {
-        const connection = await pool.getConnection();
+        connection = await pool.getConnection();
 
         const qCreateChapter = `
             SELECT chapterId, novelName, novelSlug, title, chapterNumber, chapters.views, updatedAt, novelId FROM chapters
@@ -118,17 +126,19 @@ export const getChapterBasicHandle = async ({ novelSlug, chapterNumber } : Chapt
 
         const [rows] = await connection.query(qCreateChapter, [novelSlug, chapterNumber]);
 
-        connection.release();
-
         return rows
     } catch (error) {
         return error
+    } finally {
+        if (connection) connection.release();
     }
 };
 
 export const increaseViewChapterHandle = async ({ userId, chapterId } : ChapterViewersType) => {
+
+    let connection;
     try {
-        const connection = await pool.getConnection();
+        connection = await pool.getConnection();
 
         const conditionsInc = `userId ${userId ? '= ?' : 'IS NULL'} AND chapterId = ? `
         let paramsInc = [chapterId]
@@ -152,8 +162,6 @@ export const increaseViewChapterHandle = async ({ userId, chapterId } : ChapterV
             await connection.query(qCreateChapter, [userId || null, chapterId]);
         }
 
-        connection.release();
-
         return {
             success: true,
             data: rowsInc
@@ -163,6 +171,8 @@ export const increaseViewChapterHandle = async ({ userId, chapterId } : ChapterV
             success: false,
             error: error
         }
+    } finally {
+        if (connection) connection.release();
     }
 };
 

@@ -3,13 +3,10 @@ import pool from "../library/connectMySQL";
 
 import { NovelType, ReviewType } from "../types";
 
-export const addReviewByNovelHandle = async ({
-    novelId,
-    userId,
-    dataFeelback,
-}: NovelType & { dataFeelback: ReviewType }) => {
+export const addReviewByNovelHandle = async ({ novelId, userId, dataFeelback }: NovelType & { dataFeelback: ReviewType }) => {
+    let connection;
     try {
-        const connection = await pool.getConnection();
+        connection = await pool.getConnection();
 
         const qGetUser = `
             INSERT INTO reviews(mediumScore, pointStoryline, pointPersonality, pointScene, pointTranslation, commentText, isSpoiler, userId, novelId)
@@ -28,8 +25,6 @@ export const addReviewByNovelHandle = async ({
             novelId,
         ]);
 
-        connection.release();
-
         return {
             success: true,
             data: rows as ReviewType[],
@@ -39,12 +34,15 @@ export const addReviewByNovelHandle = async ({
             success: false,
             error: error,
         };
+    } finally {
+        if (connection) connection.release();
     }
 };
 
 export const getReviewsByNovelHandle = async (data : ReviewType & { page: number }) => {
+    let connection;
     try {
-        const connection = await pool.getConnection();
+        connection = await pool.getConnection();
 
         const { conditions, params } = ReviewSearchConditions(data);
         
@@ -67,8 +65,6 @@ export const getReviewsByNovelHandle = async (data : ReviewType & { page: number
 
         const [rows] = await connection.query(qGetComment, [...params, (Number(data.page) - 1) * 10]);
 
-        connection.release();
-
         return {
             success: true,
             data: rows as ReviewType[],
@@ -78,12 +74,15 @@ export const getReviewsByNovelHandle = async (data : ReviewType & { page: number
             success: false,
             error: error,
         };
+    } finally {
+        if (connection) connection.release();
     }
 };
 
 export const checkReviewExistenceHandle = async ({ userId, novelId } : ReviewType) => {
+    let connection;
     try {
-        const connection = await pool.getConnection();
+        connection = await pool.getConnection();
         
         const qGetComment = `
             SELECT 1 FROM reviews
@@ -92,8 +91,6 @@ export const checkReviewExistenceHandle = async ({ userId, novelId } : ReviewTyp
 
         const [rows] = await connection.query(qGetComment, [userId, novelId]);
 
-        connection.release();
-
         return {
             success: true,
             data: rows as ReviewType[],
@@ -103,12 +100,15 @@ export const checkReviewExistenceHandle = async ({ userId, novelId } : ReviewTyp
             success: false,
             error: error,
         };
+    } finally {
+        if (connection) connection.release();
     }
 };
 
 export const destroyReviewByNovelHandle = async ({ reviewId, userId } : ReviewType) => {
+    let connection;
     try {
-        const connection = await pool.getConnection();
+        connection = await pool.getConnection();
 
         const qGetReview = `
             DELETE FROM reviews
@@ -117,8 +117,6 @@ export const destroyReviewByNovelHandle = async ({ reviewId, userId } : ReviewTy
 
         const [rows] = await connection.query(qGetReview, [reviewId, userId]);
 
-        connection.release();
-
         return {
             success: true,
             data: rows as ReviewType[],
@@ -128,12 +126,15 @@ export const destroyReviewByNovelHandle = async ({ reviewId, userId } : ReviewTy
             success: false,
             error: error,
         };
+    } finally {
+        if (connection) connection.release();
     }
 };
 
 export const destroyReplyReviewByNovelHandle = async ({ reviewId, userId } : ReviewType) => {
+    let connection;
     try {
-        const connection = await pool.getConnection();
+        connection = await pool.getConnection();
 
         const qGetReview = `
             DELETE FROM reviews
@@ -142,8 +143,6 @@ export const destroyReplyReviewByNovelHandle = async ({ reviewId, userId } : Rev
 
         const [rows] = await connection.query(qGetReview, [reviewId, userId]);
 
-        connection.release();
-
         return {
             success: true,
             data: rows as ReviewType[],
@@ -153,12 +152,15 @@ export const destroyReplyReviewByNovelHandle = async ({ reviewId, userId } : Rev
             success: false,
             error: error,
         };
+    } finally {
+        if (connection) connection.release();
     }
 };
 
 export const addReplyReviewHandle = async ({ novelId, reviewId, userId, commentText } : ReviewType) => {
+    let connection;
     try {
-        const connection = await pool.getConnection();
+        connection = await pool.getConnection();
 
         const qGetReview = `
             INSERT INTO reviews(isRating, commentText, parentId, userId, novelId)
@@ -167,8 +169,6 @@ export const addReplyReviewHandle = async ({ novelId, reviewId, userId, commentT
 
         const [rows] = await connection.query(qGetReview, [false, commentText, reviewId, userId, novelId]);
 
-        connection.release();
-
         return {
             success: true,
             data: rows as ReviewType[],
@@ -179,11 +179,15 @@ export const addReplyReviewHandle = async ({ novelId, reviewId, userId, commentT
             error: error,
         };
     }
+    finally {
+        if (connection) connection.release();
+    }
 };
 
 export const getReplyReviewHandle = async (reviewId : string) => {
+    let connection;
     try {
-        const connection = await pool.getConnection();
+        connection = await pool.getConnection();
 
         const qGetReview = `
             SELECT reviews.*, us_sender.name as senderName, us_sender.username as senderUsername, us_sender.userId as senderId, us_sender.avatarUrl as senderAvatarUrl, us_sender.rank as senderRank,
@@ -198,8 +202,6 @@ export const getReplyReviewHandle = async (reviewId : string) => {
 
         const [rows] = await connection.query(qGetReview, [reviewId]);
 
-        connection.release();
-
         return {
             success: true,
             data: rows as ReviewType[],
@@ -209,5 +211,7 @@ export const getReplyReviewHandle = async (reviewId : string) => {
             success: false,
             error: error,
         };
+    } finally {
+        if (connection) connection.release();
     }
 };

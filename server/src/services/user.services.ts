@@ -4,16 +4,15 @@ import { UserType } from "../types";
 
 
 export const getUserByUsernameEmailHandle = async ({ username, email }: UserType) => {
+    let connection;
     try {
-        const connection = await pool.getConnection();
+        connection = await pool.getConnection();
 
         const qGetUser = `
             SELECT userId FROM USERS
             WHERE username = ? OR email = ?
         `;
         const [rows] = await connection.query(qGetUser, [username, email]);
-
-        connection.release();
 
         return {
             success: true,
@@ -24,12 +23,15 @@ export const getUserByUsernameEmailHandle = async ({ username, email }: UserType
             success: false,
             error: error
         }
+    } finally {
+        if (connection) connection.release();
     }
 };
 
 export const createUserHandle = async ({ name, username, email, password, avatarUrl = null }: Pick<UserType, 'name' | 'username' | "email" | 'password' | 'avatarUrl'>) => {
+    let connection;
     try {
-        const connection = await pool.getConnection();
+        connection = await pool.getConnection();
 
         // Hash password
         const hashPassword = password ? bcrypt.hashSync(password, 10) : null;
@@ -41,8 +43,6 @@ export const createUserHandle = async ({ name, username, email, password, avatar
         `
         const [rows] = await connection.query(qCreateUser, [valuesCreateUser]);
 
-        connection.release();
-
         return {
             success: true,
             data: rows as UserType[]
@@ -52,12 +52,15 @@ export const createUserHandle = async ({ name, username, email, password, avatar
             success: false,
             error: error
         }
+    } finally {
+        if (connection) connection.release();
     }
 };
 
 export const getUserByAccoutHandle = async (accout : string) => {
+    let connection;
     try {
-        const connection = await pool.getConnection();
+        connection = await pool.getConnection();
 
         const qGetUser = accout.includes("@")
         ? "SELECT userId, password FROM USERS WHERE email = ?"
@@ -65,8 +68,6 @@ export const getUserByAccoutHandle = async (accout : string) => {
 
         const [rows] = await connection.query(qGetUser, [accout]);
 
-        connection.release();
-
         return {
             success: true,
             data: rows as UserType[]
@@ -76,12 +77,15 @@ export const getUserByAccoutHandle = async (accout : string) => {
             success: false,
             error: error
         }
+    } finally {
+        if (connection) connection.release();
     }
 }
 
 export const getUserByUsernameHandle = async ({ username } : UserType) => {
+    let connection;
     try {
-        const connection = await pool.getConnection();
+        connection = await pool.getConnection();
 
         const qGetUser = `
             SELECT userId, username, email, rank, description, createAt FROM USERS
@@ -89,8 +93,6 @@ export const getUserByUsernameHandle = async ({ username } : UserType) => {
         `
 
         const [rows] = await connection.query(qGetUser, [username]);
-
-        connection.release();
 
         return {
             success: true,
@@ -101,15 +103,18 @@ export const getUserByUsernameHandle = async ({ username } : UserType) => {
             success: false,
             error: error.message
         }
+    } finally {
+        if (connection) connection.release();
     }
 }
 
 export const updatePasswordUserHandle = async ({ userId, email, password } : UserType) => {
+    let connection;
     try {
         // Hash password
         const hashPassword = password ? bcrypt.hashSync(password, 10) : null;
         
-        const connection = await pool.getConnection();
+        connection = await pool.getConnection();
 
         const qUpdatePasswordUser = `
             UPDATE users
@@ -119,8 +124,6 @@ export const updatePasswordUserHandle = async ({ userId, email, password } : Use
 
         const [rows] = await connection.query(qUpdatePasswordUser, [hashPassword, userId, email]);
 
-        connection.release();
-
         return {
             success: true,
             data: rows as UserType[]
@@ -130,12 +133,15 @@ export const updatePasswordUserHandle = async ({ userId, email, password } : Use
             success: false,
             error: error.message
         }
+    } finally {
+        if (connection) connection.release();
     }
 }
 
 export const getUserByIdHandle = async ({userId} : UserType) => {
+    let connection;
     try {
-        const connection = await pool.getConnection();
+        connection = await pool.getConnection();
 
         const qGetUser = `
             SELECT userId, name, username, email, rank, description, avatarUrl, createdAt FROM USERS 
@@ -144,13 +150,12 @@ export const getUserByIdHandle = async ({userId} : UserType) => {
 
         const [rows] = await connection.query(qGetUser, [userId]);
 
-        connection.release();
-
         return rows as UserType[]
     } catch (error) {
         return null
+    } finally {
+        if (connection) connection.release();
     }
-
 }
 
 // export const updateUserSignInSocialHanlde = async (data : Partial<UserType>) => {
