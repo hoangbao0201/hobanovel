@@ -24,7 +24,7 @@ export default function SwiperButton({
     }
 
     return (
-        <button className={classNames(styleButton)} onClick={handleClickButton}>
+        <button aria-label={type === "next" ? "sau" : "trước"} className={classNames(styleButton)} onClick={handleClickButton}>
             {type === "next" ? (
                 <i>
                    <svg

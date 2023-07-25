@@ -23,7 +23,7 @@ const PolicyPage = () => {
                     <h1 className="text-2xl font-extrabold mb-5">Chính sách bảo mật</h1>
     
                     <h2 className="text-xl font-bold mb-4">Chúng tôi là ai</h2>
-                    <p className="mb-2">Địa chỉ website là: www.hobanovel.online, website đọc truyện tranh online.</p>
+                    <p className="mb-2">Địa chỉ website là: <Link href={`/`} className="text-blue-700"><u>hobanovel.online</u></Link>, website đọc truyện tranh online.</p>
     
                     <h2 className="text-xl font-bold mb-4">
                         Thông tin cá nhân nào bị thu thập và tại sao thu thập

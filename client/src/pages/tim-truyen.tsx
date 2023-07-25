@@ -9,13 +9,12 @@ import { NovelResType } from "@/types";
 import Head from "@/components/Share/Head";
 import ItemNovel from "@/components/Share/ItemNovel";
 import MainLayout from "@/components/Layout/MainLayout";
+import ItemNovelLazy from "@/components/Share/ItemNovelLazy";
+import { AdsenseForm } from "@/components/Share/AdsenseForm";
 import WrapperLayout from "@/components/Layout/WrapperLayout";
 import { iconAngleDouble, iconClose } from "../../public/icons";
 import { advancedSearchNovelHandle } from "@/services/novels.services";
 import { PaginationLayout } from "@/components/Share/PaginationLayout";
-import ItemNovelLazy from "@/components/Share/ItemNovelLazy";
-import ClientOnly from "@/components/Share/ClientOnly";
-import { AdsenseForm } from "@/components/Share/AdsenseForm";
 
 
 // Data Default
@@ -543,12 +542,9 @@ const SearchNovel = ({ queryPage }: SearchNovelProps) => {
                             </div>
                         </div>
 
-                        
-
                     </div>
                     <div>
                         <div className="grid pl-4">
-                            {/* <ul className={`[&>li]:inline-block [&>li]:cursor-pointer`}> */}
                             <ul className={`flex items-center [&>li]:cursor-pointer whitespace-nowrap`}>
                                 <li>
                                     <Select

@@ -125,7 +125,7 @@ const JustPosted = ({ novels = [] } : JustPostedProps) => {
                                                 {novels[indexActiveNovel].title}
                                             </Link>
                                         </h3>
-                                        <span className="line-clamp-2 mb-5 text-gray-500">{novels[indexActiveNovel].description.replace(/<[^>]+>/g, '')}</span>
+                                        <span className="line-clamp-2 mb-5 text-gray-700">{novels[indexActiveNovel].description.replace(/<[^>]+>/g, '')}</span>
                                         <div className="text-base flex align-middle items-center justify-between">
                                             <span title={`tác giả ${novels[indexActiveNovel].author}`} className="max-w-[54%] text-base mr-2 line-clamp-1 align-middle">{novels[indexActiveNovel].author}</span>
                                             <span className="px-2 text-xs text-orange-700 line-clamp-1 align-middle text-center border border-orange-700">{PROPERTIES_NOVEL['genres'][novels[indexActiveNovel].category-1].value}</span>

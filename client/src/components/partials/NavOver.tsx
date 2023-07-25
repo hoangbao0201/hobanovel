@@ -80,21 +80,16 @@ export const NavOver = ({ routerP, user = null, isShow = false, handle, handleLo
                             Con trai
                         </Link>
                     </li>
-                    <li className="">
+                    <li className=" mb-6">
                         <a target="_blank" href={`https://www.facebook.com/hobanovel`}>
                             Group
                         </a>
                     </li>
 
-
-                </ul>
-
-                <div className="mt-4">
-
                     {
                         user ? (
                             <>
-                                <div className="flex items-center mb-3">
+                                <li className="flex items-center mb-3">
                                     <Image
                                         width={44}
                                         height={44}
@@ -106,22 +101,21 @@ export const NavOver = ({ routerP, user = null, isShow = false, handle, handleLo
                                         }
                                     />
                                     <div className="ml-3 flex-1 line-clamp-1">{user.name}</div>
-                                </div>
-                                <div className="cursor-pointer" onClick={handleLogout}>Đăng xuất</div>
+                                </li>
+                                <li className="cursor-pointer" onClick={handleLogout}>Đăng xuất</li>
                             </>
                         ) : (
                             <>
-                                <div className="py-2 border-b">
+                                <li className="border-b">
                                     <Link href={`/auth/login?callbackurl=${router.query?.callbackurl ? `${router.query.callbackurl}` : router.asPath || "/"}`}>Đăng nhập</Link>
-                                </div>
-                                <div className="py-2">
+                                </li>
+                                <li className="">
                                     <Link href={`/auth/register?callbackurl=${router.query?.callbackurl ? `${router.query.callbackurl}` : router.asPath || "/"}`}>Đăng kí</Link>
-                                </div>
+                                </li>
                             </>
                         )
                     }
-
-                </div>
+                </ul>
 
             </div>
         </>

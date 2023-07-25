@@ -17,9 +17,9 @@ const HighlyRated = ({ novels = [] } : HighlyRatedProps) => {
                 novels?.length ? (
                     novels.map((novel) => {
                         return (
-                            <Fragment key={novel?.novelId}>
+                            <li key={novel?.novelId}>
                                 <ItemNovel novel={novel} isRating={true}/>
-                            </Fragment>
+                            </li>
                         )
                     })
                 ) : (

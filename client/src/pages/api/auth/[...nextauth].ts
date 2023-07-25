@@ -2,7 +2,8 @@ import NextAuth, { Session, User } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import GithubProvider from "next-auth/providers/github";
 import FacebookProvider from "next-auth/providers/facebook";
-
+import { testHandle } from "@/services/auth.services";
+import jwt from "next-auth/jwt";
 
 export default NextAuth({
     providers: [

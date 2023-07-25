@@ -26,6 +26,7 @@ const ItemNovel = ({ novel, isRating = false, isAuthor = false, isChapterCount =
                         blurDataURL={novel?.imageBlurHash || placeholderBlurhash}
                         className="group-hover:scale-105 group-hover:duration-500 h-28 w-20"
                         placeholder="blur"
+                        // data-original={novel?.thumbnailUrl}
                         src={novel?.thumbnailUrl}
                     />
                 </LazyLoad>

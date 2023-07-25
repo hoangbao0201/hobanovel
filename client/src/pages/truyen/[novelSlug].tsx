@@ -10,19 +10,18 @@ import { ParsedUrlQuery } from "querystring";
 import { Tab, Transition } from "@headlessui/react";
 
 import Head from "@/components/Share/Head";
+import { REVALIDATE_TIME } from "@/constants";
+import ClientOnly from "@/components/Share/ClientOnly";
+import Breadcrumb from "@/components/Share/Breadcrumb";
 import MainLayout from "@/components/Layout/MainLayout";
-import { NovelBySlugType, NovelFollowerType } from "@/types";
 import { getAccessToken } from "@/services/cookies.servies";
+import { NovelBySlugType, NovelFollowerType } from "@/types";
+import { AdsenseForm } from "@/components/Share/AdsenseForm";
 import WrapperLayout from "@/components/Layout/WrapperLayout";
 import { getNovelBySlugHandle } from "@/services/novels.services";
-import { REVALIDATE_TIME } from "@/constants";
-import { checkFollowNovelHandle, followNovelHandle, unfollowNovelHandle } from "@/services/follow.services";
-import ClientOnly from "@/components/Share/ClientOnly";
-
 import ContentNovelDetail from "@/components/Share/ContentNovelDetail";
-import Breadcrumb from "@/components/Share/Breadcrumb";
 import { FormCommentReceiver } from "@/components/Share/ContentNovelDetail/FormCommentReceiver";
-import { AdsenseForm } from "@/components/Share/AdsenseForm";
+import { checkFollowNovelHandle, followNovelHandle, unfollowNovelHandle } from "@/services/follow.services";
 
 // import FormIntroduce from "@/components/Share/ContentNovelDetail/FormIntroduce";
 // import FormReviews from "@/components/Share/ContentNovelDetail/FormReviews";

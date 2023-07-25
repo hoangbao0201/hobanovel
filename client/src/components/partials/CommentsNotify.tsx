@@ -97,7 +97,7 @@ export const CommentsNotify = ({ receiverId } : CommentsNotifyProps) => {
             <ClientOnly>
                 <div ref={notifyDropdownRef} className="ml-auto mr-2 h-[50px]">
 
-                    <button onClick={() => setIsDropdownNotify(value => !value)} className={`h-[50px]  top-0 px-2 ${isDropdownNotify ? 'bg-white [&>i]:fill-blue-400' : ''}`}>
+                    <button title="Thông báo" onClick={() => setIsDropdownNotify(value => !value)} className={`h-[50px]  top-0 px-2 ${isDropdownNotify ? 'bg-white [&>i]:fill-blue-400' : ''}`}>
                         <i className="w-6 h-6 mx-1 block fill-gray-500">{iconComment}</i>
                     </button>
                     <div ref={notifyDropdownRef} className={`absolute ${isDropdownNotify ? "block" : "hidden"} md:right-14 right-0 max-md:left-0 md:max-w-lg w-full bg-white top-[50px] shadow-lg rounded z-20`}>

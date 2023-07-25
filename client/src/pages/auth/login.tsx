@@ -111,7 +111,9 @@ const LoginPage = () => {
         if(status == "authenticated") {
             handleLogin()
         }
-    }, [status])
+    }, [status]);
+
+    // console.log(se)
 
     return (
         <>
@@ -123,12 +125,23 @@ const LoginPage = () => {
                         </Link>
                     </h2>
 
-                    <FormLayout loading={userLoading} className="w-full min-h-[300px] drop-shadow-md bg-white" classChild="py-6 sm:px-10 px-5">
+                    <FormLayout loading={userLoading} className="w-full drop-shadow-md bg-white" classChild="py-6 sm:px-10 px-5">
 
                         <form onSubmit={eventSubmitForm} className="grid">
-                            <h1 className="pl-4 mb-7 border-l-8 uppercase border-blue-700 text-2xl font-semibold">
+                            <h1 className="border-l-8 border-pink-600 pl-6 leading-none py-3 uppercase text-2xl font-semibold mb-6">
                                 Đăng nhập
                             </h1>
+                            <h3 className="mb-6">
+                                Bạn chưa có tài khoản?{" "}
+                                <Link
+                                    className="ml-3 text-sm text-blue-700 font-semibold"
+                                    href={`/auth/register?callback=${
+                                        (router.query.callback as string) || "/"
+                                    }`}
+                                >
+                                    Đăng kí ngay
+                                </Link>
+                            </h3>
                             <div>
                                 <CustomInput
                                     name="accout"
@@ -176,7 +189,7 @@ const LoginPage = () => {
                                     className="w-7 h-7 block my-[5px] ml-3 border-r pr-2"
                                     src={`/emotions/iconFB.svg`}
                                 />
-                                Signin Facebook
+                                Đăng nhập bằng Facebook
                             </button>
                             <button
                                 onClick={() =>
@@ -191,7 +204,7 @@ const LoginPage = () => {
                                     className="w-7 h-7 block my-[5px] ml-3 border-r pr-2"
                                     src={`/emotions/iconGG.svg`}
                                 />
-                                Signin Google
+                                Đăng nhập bằng Google
                             </button>
                             <button
                                 onClick={() =>
@@ -206,7 +219,7 @@ const LoginPage = () => {
                                     className="w-7 h-7 block my-[5px] ml-3 border-r pr-2"
                                     src={`/emotions/iconGH.svg`}
                                 />
-                                Signin Github
+                                Đăng nhập bằng Github
                             </button>
                         </div>
 

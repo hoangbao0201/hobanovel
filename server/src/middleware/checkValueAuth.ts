@@ -1,6 +1,6 @@
 
 
-export const checkValueAuth = (data : { name: string, username: string, email: string, password: string }) => {
+export const checkValueAuth = (data : { name: string, username: string, email: string, password: string, }) => {
 
     const { name, username, email, password } = data;
 
@@ -15,6 +15,13 @@ export const checkValueAuth = (data : { name: string, username: string, email: s
     const specialCharsRegex = /[!@#$%^&*()_+[\]{};':"\\|,.<>?`~]/;
 
     // ---
+    // if (specialCharsRegex.test(lastName)) {
+    //     lt = {
+    //         ...lt,
+    //         success: false,
+    //         lastName: "Họ chứa kí tự đặt biệt"
+    //     }
+    // }
     if (specialCharsRegex.test(name)) {
         lt = {
             ...lt,
@@ -29,6 +36,14 @@ export const checkValueAuth = (data : { name: string, username: string, email: s
             username: "Tên tài khoản chứa kí tự đặt biệt"
         }
     }
+    // ---
+    // if (lastName.length < 3 || lastName.length > 20) {
+    //     lt = {
+    //         ...lt,
+    //         success: false,
+    //         lastName: "Họ từ 3 đến 20 kí tự"
+    //     }
+    // }
     if (name.length < 5 || name.length > 25) {
         lt = {
             ...lt,
@@ -50,6 +65,8 @@ export const checkValueAuth = (data : { name: string, username: string, email: s
             password: "Mật khẩu từ 3 đến 20 kí tự"
         }
     }
+
+
 
     // Check Email
     if (!emailRegex.test(email)) {

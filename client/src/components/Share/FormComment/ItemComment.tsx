@@ -391,7 +391,7 @@ export const Comment = ({ user, comment, position, handleSetFormSend, handleDest
                         }
 
                         <div ref={optionRef} className="relative">
-                            <button onClick={() => setIsOptions(value => !value)} className="p-2 rounded-full hover:bg-gray-200">
+                            <button title="hành động" onClick={() => setIsOptions(value => !value)} className="p-2 rounded-full hover:bg-gray-200">
                                 <i className="w-3 h-3 block">{iconEllipsis}</i>
                             </button>
                             {

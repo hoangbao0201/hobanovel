@@ -2,6 +2,7 @@ import axios from "axios";
 import { UserType } from "@/types";
 import { removeAccessToken } from "./cookies.servies";
 import { apiUrl } from "@/constants";
+import { JWT } from "next-auth/jwt";
 
 export const connectUserHandle = async (token : string) => {
     try {
@@ -86,3 +87,24 @@ export const connectUserAuthHanlde = async (data: { name: string, email: string,
     }
 }
 
+export const testHandle = async (token: JWT) => {
+    try {
+        const connectUser = await axios.get(`${apiUrl}/api/tests/demo`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
+    
+        return connectUser.data
+    } catch (error) {
+        // removeAccessToken();
+        if(axios.isAxiosError(error) && error.response?.data) {
+            return error.response.data;
+        } else {
+            return {
+                success: false,
+                message: (error as Error).message
+            };
+        }
+    }
+}

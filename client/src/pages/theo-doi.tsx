@@ -1,23 +1,21 @@
 import Link from "next/link";
-import Image from "next/image"
+import { useRouter } from "next/router";
 import { ReactNode, useEffect, useState } from "react";
 
-import LazyLoad from "react-lazy-load";
 import { useSelector } from "react-redux";
 
 import { NovelResType } from "@/types";
 import Head from "@/components/Share/Head";
-import MainLayout from "@/components/Layout/MainLayout";
-import WrapperLayout from "@/components/Layout/WrapperLayout";
-import { getAccessToken } from "@/services/cookies.servies";
-import { getFollowNovelHandle } from "@/services/follow.services";
-import ClientOnly from "@/components/Share/ClientOnly";
 import PageTitle from "@/components/Share/PageTitle";
 import ItemNovel from "@/components/Share/ItemNovel";
-import ItemNovelLazy from "@/components/Share/ItemNovelLazy";
 import BlurImage from "@/components/Share/BlurImage";
 import Breadcrumb from "@/components/Share/Breadcrumb";
-import { useRouter } from "next/router";
+import ClientOnly from "@/components/Share/ClientOnly";
+import MainLayout from "@/components/Layout/MainLayout";
+import { getAccessToken } from "@/services/cookies.servies";
+import ItemNovelLazy from "@/components/Share/ItemNovelLazy";
+import WrapperLayout from "@/components/Layout/WrapperLayout";
+import { getFollowNovelHandle } from "@/services/follow.services";
 
 
 interface NovelFollowPageProps {
@@ -71,7 +69,7 @@ const NovelFollowPage = ({ page }: NovelFollowPageProps) => {
                         <div className="">
                             {isAuthenticated ? (
                                 <div className="lg:flex my-5">
-    
+
                                     <div className="lg:w-8/12 px-4 mb-5">
                                         {
                                             novelsFollows ? (
@@ -101,9 +99,9 @@ const NovelFollowPage = ({ page }: NovelFollowPageProps) => {
                                             )
                                         }
                                     </div>
-    
+
                                     <div className="lg:w-4/12 px-4 mb-5">right</div>
-    
+
                                 </div>
                             ) : (
                                 <div className="px-4">
@@ -113,7 +111,7 @@ const NovelFollowPage = ({ page }: NovelFollowPageProps) => {
                                         <Link className="text-blue-600 font-" href={`/auth/login?callbackurl=${router.query?.callbackurl ? `${router.query.callbackurl}` : router.asPath || "/"}`}><u>Đăng nhập</u></Link> để truy cập truyện đã
                                         theo dõi của bạn ở bất cứ đâu
                                     </div>
-    
+
                                     <div className="w-full h-[500px]">
                                         <BlurImage
                                             width={500}

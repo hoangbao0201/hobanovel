@@ -21,8 +21,6 @@ import MainLayout from "@/components/Layout/MainLayout";
 import useScrollRestoration from "@/hook/useScrollRestoration";
 
 
-
-
 type NextPageWithLayout = NextPage & {
     getLayout?: (page: ReactElement) => ReactNode;
 };
@@ -80,8 +78,9 @@ const MyApp = ({
                 <Provider store={store}>
 
                         <PersistGate loading={false} persistor={persistor}>
-                            
+
                                 {() => getLayout(<Component {...pageProps} />)}
+                                {/* {getLayout(<Component {...pageProps} />)} */}
 
                         </PersistGate>
 

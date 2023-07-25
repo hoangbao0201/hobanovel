@@ -21,7 +21,7 @@ const EmojiPicker = ({ handleAddEmoji } : EmojiPickerProps) => {
     }
 
     const eventCallAddEmoji = (emoji: string) => {
-        const imgEmoji = `<img src="${emoji}"/>`
+        const imgEmoji = `<img src="${emoji}" alt="emoji"/>`
 
         handleAddEmoji(imgEmoji)
         handleIsHiddenListEmoji()

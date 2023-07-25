@@ -1,23 +1,23 @@
 import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/router";
+import { signOut } from "next-auth/react";
 import { useEffect, useRef, useState } from "react";
 
-import { useDispatch, useSelector } from "react-redux";
 import { useMediaQuery } from "usehooks-ts";
+import { logoutUserHandle } from "@/redux/userSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 import { NavOver } from "./NavOver";
 import BlurImage from "../Share/BlurImage";
+import ClientOnly from "../Share/ClientOnly";
 import SearchInput from "../Share/SearchInput";
-import { iconBars, iconTimes } from "../../../public/icons";
+import { CommentsNotify } from "./CommentsNotify";
 import { placeholderBlurhash } from "@/constants";
-import { logoutUserHandle } from "@/redux/userSlice";
 import { useClickOutSide } from "@/hook/useClickOutSide";
 import { GENRES_VALUE, RANK_VALUE } from "@/constants/data";
+import { iconBars, iconTimes } from "../../../public/icons";
 import { removeAccessToken } from "@/services/cookies.servies";
-import ClientOnly from "../Share/ClientOnly";
-import { useRouter } from "next/router";
-import { CommentsNotify } from "./CommentsNotify";
-import { signOut } from "next-auth/react";
 
 
 
@@ -184,7 +184,7 @@ const Header = ({ autoHidden = true } : HeaderProps) => {
                     <div className="flex">
                                     
                         <ClientOnly>
-
+                                    
                             {   
                                 matchesMobile ? (
                                     <div className="relative">

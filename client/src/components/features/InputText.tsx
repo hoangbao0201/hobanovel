@@ -76,7 +76,7 @@ const InputText = ({ text, isShow, receiver, handleOnchange }: InputTextProps) =
             // quillRef?.current.focus();
             // console.log(quillRef)
         // }
-        console.log(ReactQuill)
+        // console.log(ReactQuill)
 
     };
 
