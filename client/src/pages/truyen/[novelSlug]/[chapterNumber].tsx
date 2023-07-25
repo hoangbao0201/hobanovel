@@ -36,11 +36,10 @@ import { AdsenseForm } from "@/components/Share/AdsenseForm";
 import { getAccessToken } from "@/services/cookies.servies";
 import WrapperLayout from "@/components/Layout/WrapperLayout";
 import { readingNovelHandle } from "@/services/novels.services";
-import { LoadingButton, LoadingForm } from "@/components/Layout/LoadingLayout";
+import { LoadingButton } from "@/components/Layout/LoadingLayout";
 import OptionsListChapter from "@/components/Share/ContentChapter/OptionsListChapter";
 import { checkFollowNovelHandle, followNovelHandle, unfollowNovelHandle } from "@/services/follow.services";
 import { useMediaQuery } from "usehooks-ts";
-import ClientOnly from "@/components/Share/ClientOnly";
 
 interface Params extends ParsedUrlQuery {
     slug: string;
@@ -225,7 +224,7 @@ const ChapterDetailPage = ({ chapter }: ChapterDetailPageProps) => {
     return (
         
         <>  
-            <ClientOnly>
+            {/* <ClientOnly>
                 {
                     matchesDestop && (
                         <div className="max-[1420px]:hidden absolute left-0 w-[250px] top-[50px] z-10 text-left items-start pt-4 pl-3">
@@ -237,7 +236,7 @@ const ChapterDetailPage = ({ chapter }: ChapterDetailPageProps) => {
                         </div>
                     )
                 }
-            </ClientOnly>
+            </ClientOnly> */}
             
             
             <WrapperLayout bg="bg-[#eae4d3]" className="lg:max-w-4xl min-h-screen">
@@ -388,7 +387,7 @@ const ChapterDetailPage = ({ chapter }: ChapterDetailPageProps) => {
                                                     </div>
                                 
                                                     <div
-                                                        className="sm:text-xl px-6 text-base leading-relaxed overflow-hidden"
+                                                        className="sm:text-2xl text-xl px-6 leading-relaxed overflow-hidden"
                                                         dangerouslySetInnerHTML={{
                                                             __html: chapter?.content || "Lỗi hiển thị",
                                                         }}
@@ -468,7 +467,7 @@ const ChapterDetailPage = ({ chapter }: ChapterDetailPageProps) => {
                 }
             </WrapperLayout>
 
-            <ClientOnly>
+            {/* <ClientOnly>
                 {
                     matchesDestop && (
                         <div className="max-[1420px]:hidden absolute right-0 w-[250px] top-[50px] z-10 text-right items-end pt-4 pr-3">
@@ -480,7 +479,7 @@ const ChapterDetailPage = ({ chapter }: ChapterDetailPageProps) => {
                         </div>
                     )
                 }
-            </ClientOnly>
+            </ClientOnly> */}
         </>
                 
     );
