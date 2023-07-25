@@ -37,7 +37,7 @@ const ContentNovelDetail = ({ novel, handleUnfollowNovel, handleFollowNovel, isF
                         key={`image-${novel?.slug}`}
                         alt={`truyện ${novel?.title}`}
                         blurDataURL={novel?.imageBlurHash || placeholderBlurhash}
-                        className="group-hover:scale-105 group-hover:duration-500 mx-auto object-cover shadow"
+                        className="w-[208px] h-[280px] mx-auto object-cover shadow"
                         placeholder="blur"
                         src={novel?.thumbnailUrl}
                     />

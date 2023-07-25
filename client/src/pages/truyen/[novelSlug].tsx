@@ -19,7 +19,7 @@ import { NovelBySlugType, NovelFollowerType } from "@/types";
 import { AdsenseForm } from "@/components/Share/AdsenseForm";
 import WrapperLayout from "@/components/Layout/WrapperLayout";
 import { getNovelBySlugHandle } from "@/services/novels.services";
-import ContentNovelDetail from "@/components/Share/ContentNovelDetail";
+// import ContentNovelDetail from "@/components/Share/ContentNovelDetail";
 import { FormCommentReceiver } from "@/components/Share/ContentNovelDetail/FormCommentReceiver";
 import { checkFollowNovelHandle, followNovelHandle, unfollowNovelHandle } from "@/services/follow.services";
 
@@ -28,6 +28,11 @@ import { checkFollowNovelHandle, followNovelHandle, unfollowNovelHandle } from "
 // import FormListChapters from "@/components/Share/ContentNovelDetail/FormListChapters";
 // import FormComment from "@/components/Share/ContentNovelDetail/FormComment";
 
+const ContentNovelDetail = dynamic(
+    () => import("../../components/Share/ContentNovelDetail", {
+        ssr: false,
+    } as ImportCallOptions)
+)
 const FormIntroduce = dynamic(
     () => import("../../components/Share/ContentNovelDetail/FormIntroduce", {
         ssr: false,
@@ -169,162 +174,165 @@ const NovelDetailPage = ({ novel, tab } : NovelDetailPageProps) => {
                 novelId={novel?.novelId}
             />
 
-            <>
-                <Head title={`${novel?.title ? novel?.title : ''} [Tới Chap ${novel ? novel?.chapterCount : ''}] Tiếng Việt - HobaNovel`}/>
+            <WrapperLayout className="pt-5 max-lg:max-w-3xl min-h-screen">
+                {
+                    novel && (
+                        <>
+                            <Head title={`${novel?.title ? novel?.title : ''} [Tới Chap ${novel ? novel?.chapterCount : ''}] Tiếng Việt - HobaNovel`}/>
+                            <div className="grid">
 
-                <WrapperLayout className="pt-5 max-lg:max-w-3xl">
-                    <div className="grid">
+                                <Breadcrumb 
+                                    path={[
+                                        { title: 'Truyện', url: '/' },
+                                        { title: `${novel?.title || ''}`, url: `/truyen/${novel?.slug || ''}` },
+                                    ]}
+                                />
 
-                        <Breadcrumb 
-                            path={[
-                                { title: 'Truyện', url: '/' },
-                                { title: `${novel?.title || ''}`, url: `/truyen/${novel?.slug || ''}` },
-                            ]}
-                        />
+                                <ContentNovelDetail
+                                    novel={novel}
+                                    isFollow={isFollow}
+                                    handleFollowNovel={handleFollowNovel}
+                                    handleUnfollowNovel={handleUnfollowNovel}
+                                />
 
-                        <ContentNovelDetail
-                            novel={novel}
-                            isFollow={isFollow}
-                            handleFollowNovel={handleFollowNovel}
-                            handleUnfollowNovel={handleUnfollowNovel}
-                        />
-
-                        
-                        <div className="mb-5">
-                            <Tab.Group
-                                defaultIndex={0}
-                                selectedIndex={numberTab}
-                                onChange={(index: number) => setNumberTab(index)}
-                            >
-                                <Tab.List className={`border-b mb-4 sm:px-4 sm:text-base text-sm font-semibold max-sm:grid max-sm:grid-cols-4`}>
-                                    <Tab
-                                        className={`outline-none border-b-4 border-transparent hover:text-yellow-600 py-3 sm:mr-8 ${
-                                            numberTab == 0 && "border-yellow-600"
-                                        }`}
+                                
+                                <div className="mb-5">
+                                    <Tab.Group
+                                        defaultIndex={0}
+                                        selectedIndex={numberTab}
+                                        onChange={(index: number) => setNumberTab(index)}
                                     >
-                                        <h2>Giới thiệu</h2>
-                                    </Tab>
-                                    <Tab
-                                        className={`outline-none border-b-4 border-transparent hover:text-yellow-600 py-3 sm:mr-8 ${
-                                            numberTab == 1 && "border-yellow-600"
-                                        }`}
-                                    >
-                                        <h2>Đánh giá</h2>
-                                    </Tab>
-                                    <Tab
-                                        className={`outline-none border-b-4 border-transparent hover:text-yellow-600 py-3 sm:mr-8 ${
-                                            numberTab == 2 && "border-yellow-600"
-                                        }`}
-                                    >
-                                        <h2>D.s chương</h2>
-                                    </Tab>
-                                    <Tab
-                                        className={`outline-none border-b-4 border-transparent hover:text-yellow-600 py-3 sm:mr-8 ${
-                                            numberTab == 3 && "border-yellow-600"
-                                        }`}
-                                    >
-                                        <h2>Bình luận</h2>
-                                    </Tab>
-                                    <ClientOnly>
-                                        <Tab
-                                            className={`max-sm:hidden outline-none border-b-4 border-transparent hover:text-yellow-600 py-3 sm:mr-8 ${
-                                                numberTab == 4 && "border-yellow-600"
-                                            }`}
-                                        >
-                                            <h2>Hâm mộ</h2>
-                                        </Tab>
-                                    </ClientOnly>
-                                </Tab.List>
-                                <Tab.Panels className="min-h-[400px]">
-                                    <Tab.Panel>
-                                        <Transition
-                                            appear
-                                            show={numberTab == 0}
-                                            enter="transition-opacity duration-500"
-                                            enterFrom="opacity-0"
-                                            enterTo="opacity-100"
-                                            leave="transition-opacity duration-500"
-                                            leaveFrom="opacity-100"
-                                            leaveTo="opacity-0"
-                                        >
-                                            <FormIntroduce
-                                                description={novel?.description || ""} 
-                                            />
-                                        </Transition>
-                                    </Tab.Panel>
-                                    <Tab.Panel>
-                                        <Transition
-                                            appear
-                                            show={numberTab == 1}
-                                            enter="transition-opacity duration-500"
-                                            enterFrom="opacity-0"
-                                            enterTo="opacity-100"
-                                            leave="transition-opacity duration-500"
-                                            leaveFrom="opacity-100"
-                                            leaveTo="opacity-0"
-                                        >
-                                            <FormReviews
-                                                tab={numberTab}
-                                                novelId={novel?.novelId}
-                                            />
-                                        </Transition>
-                                    </Tab.Panel>
-                                    <Tab.Panel>
-                                        <Transition
-                                            appear
-                                            show={numberTab == 2}
-                                            enter="transition-opacity duration-500"
-                                            enterFrom="opacity-0"
-                                            enterTo="opacity-100"
-                                            leave="transition-opacity duration-500"
-                                            leaveFrom="opacity-100"
-                                            leaveTo="opacity-0"
-                                        >
-                                            <FormListChapters tab={numberTab} slug={novel?.slug} />
-                                        </Transition>
-                                    </Tab.Panel>
-                                    <Tab.Panel>
-                                        <Transition
-                                            appear
-                                            show={numberTab == 3}
-                                            enter="transition-opacity duration-500"
-                                            enterFrom="opacity-0"
-                                            enterTo="opacity-100"
-                                            leave="transition-opacity duration-500"
-                                            leaveFrom="opacity-100"
-                                            leaveTo="opacity-0"
-                                        >
-                                            <FormComment novelId={novel?.novelId}/>
-                                        </Transition>
-                                    </Tab.Panel>
-                                    
-                                    <Tab.Panel className="max-sm:hidden">
-                                        <Transition
-                                            appear
-                                            show={numberTab == 4}
-                                            enter="transition-opacity duration-500"
-                                            enterFrom="opacity-0"
-                                            enterTo="opacity-100"
-                                            leave="transition-opacity duration-500"
-                                            leaveFrom="opacity-100"
-                                            leaveTo="opacity-0"
-                                        >
-                                            <div>Hâm mộ</div>
-                                        </Transition>
-                                    </Tab.Panel>
+                                        <Tab.List className={`border-b mb-4 sm:px-4 sm:text-base text-sm font-semibold max-sm:grid max-sm:grid-cols-4`}>
+                                            <Tab
+                                                className={`outline-none border-b-4 border-transparent hover:text-yellow-600 py-3 sm:mr-8 ${
+                                                    numberTab == 0 && "border-yellow-600"
+                                                }`}
+                                            >
+                                                <h2>Giới thiệu</h2>
+                                            </Tab>
+                                            <Tab
+                                                className={`outline-none border-b-4 border-transparent hover:text-yellow-600 py-3 sm:mr-8 ${
+                                                    numberTab == 1 && "border-yellow-600"
+                                                }`}
+                                            >
+                                                <h2>Đánh giá</h2>
+                                            </Tab>
+                                            <Tab
+                                                className={`outline-none border-b-4 border-transparent hover:text-yellow-600 py-3 sm:mr-8 ${
+                                                    numberTab == 2 && "border-yellow-600"
+                                                }`}
+                                            >
+                                                <h2>D.s chương</h2>
+                                            </Tab>
+                                            <Tab
+                                                className={`outline-none border-b-4 border-transparent hover:text-yellow-600 py-3 sm:mr-8 ${
+                                                    numberTab == 3 && "border-yellow-600"
+                                                }`}
+                                            >
+                                                <h2>Bình luận</h2>
+                                            </Tab>
+                                            <ClientOnly>
+                                                <Tab
+                                                    className={`max-sm:hidden outline-none border-b-4 border-transparent hover:text-yellow-600 py-3 sm:mr-8 ${
+                                                        numberTab == 4 && "border-yellow-600"
+                                                    }`}
+                                                >
+                                                    <h2>Hâm mộ</h2>
+                                                </Tab>
+                                            </ClientOnly>
+                                        </Tab.List>
+                                        <Tab.Panels className="min-h-[400px]">
+                                            <Tab.Panel>
+                                                <Transition
+                                                    appear
+                                                    show={numberTab == 0}
+                                                    enter="transition-opacity duration-500"
+                                                    enterFrom="opacity-0"
+                                                    enterTo="opacity-100"
+                                                    leave="transition-opacity duration-500"
+                                                    leaveFrom="opacity-100"
+                                                    leaveTo="opacity-0"
+                                                >
+                                                    <FormIntroduce
+                                                        description={novel?.description || ""} 
+                                                    />
+                                                </Transition>
+                                            </Tab.Panel>
+                                            <Tab.Panel>
+                                                <Transition
+                                                    appear
+                                                    show={numberTab == 1}
+                                                    enter="transition-opacity duration-500"
+                                                    enterFrom="opacity-0"
+                                                    enterTo="opacity-100"
+                                                    leave="transition-opacity duration-500"
+                                                    leaveFrom="opacity-100"
+                                                    leaveTo="opacity-0"
+                                                >
+                                                    <FormReviews
+                                                        tab={numberTab}
+                                                        novelId={novel?.novelId}
+                                                    />
+                                                </Transition>
+                                            </Tab.Panel>
+                                            <Tab.Panel>
+                                                <Transition
+                                                    appear
+                                                    show={numberTab == 2}
+                                                    enter="transition-opacity duration-500"
+                                                    enterFrom="opacity-0"
+                                                    enterTo="opacity-100"
+                                                    leave="transition-opacity duration-500"
+                                                    leaveFrom="opacity-100"
+                                                    leaveTo="opacity-0"
+                                                >
+                                                    <FormListChapters tab={numberTab} slug={novel?.slug} />
+                                                </Transition>
+                                            </Tab.Panel>
+                                            <Tab.Panel>
+                                                <Transition
+                                                    appear
+                                                    show={numberTab == 3}
+                                                    enter="transition-opacity duration-500"
+                                                    enterFrom="opacity-0"
+                                                    enterTo="opacity-100"
+                                                    leave="transition-opacity duration-500"
+                                                    leaveFrom="opacity-100"
+                                                    leaveTo="opacity-0"
+                                                >
+                                                    <FormComment novelId={novel?.novelId}/>
+                                                </Transition>
+                                            </Tab.Panel>
+                                            
+                                            <Tab.Panel className="max-sm:hidden">
+                                                <Transition
+                                                    appear
+                                                    show={numberTab == 4}
+                                                    enter="transition-opacity duration-500"
+                                                    enterFrom="opacity-0"
+                                                    enterTo="opacity-100"
+                                                    leave="transition-opacity duration-500"
+                                                    leaveFrom="opacity-100"
+                                                    leaveTo="opacity-0"
+                                                >
+                                                    <div>Hâm mộ</div>
+                                                </Transition>
+                                            </Tab.Panel>
 
-                                </Tab.Panels>
-                            </Tab.Group>
-                        </div>
+                                        </Tab.Panels>
+                                    </Tab.Group>
+                                </div>
 
-                        
+                                
 
-                        <AdsenseForm />
+                                <AdsenseForm />
 
 
-                    </div>
-                </WrapperLayout>
-            </>
+                            </div>
+                        </>
+                    )
+                }
+            </WrapperLayout>
 
         </>
     )
