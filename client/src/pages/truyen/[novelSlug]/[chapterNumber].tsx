@@ -229,11 +229,11 @@ const ChapterDetailPage = ({ chapter }: ChapterDetailPageProps) => {
                 {
                     matchesDestop && (
                         <div className="max-[1420px]:hidden absolute left-0 w-[250px] top-[50px] z-10 text-left items-start pt-4 pl-3">
-                            <AdsenseForm />
-                            <AdsenseForm />
-                            <AdsenseForm />
-                            <AdsenseForm />
-                            <AdsenseForm />
+                            <AdsenseForm key={1}/>
+                            <AdsenseForm key={2}/>
+                            <AdsenseForm key={3}/>
+                            <AdsenseForm key={4}/>
+                            <AdsenseForm key={5}/>
                         </div>
                     )
                 }
@@ -448,7 +448,7 @@ const ChapterDetailPage = ({ chapter }: ChapterDetailPageProps) => {
                                 </>
             
                                 
-                                <AdsenseForm />
+                                <AdsenseForm key={11}/>
                     
             
                                 <div className="">
@@ -472,11 +472,11 @@ const ChapterDetailPage = ({ chapter }: ChapterDetailPageProps) => {
                 {
                     matchesDestop && (
                         <div className="max-[1420px]:hidden absolute right-0 w-[250px] top-[50px] z-10 text-right items-end pt-4 pr-3">
-                            <AdsenseForm />
-                            <AdsenseForm />
-                            <AdsenseForm />
-                            <AdsenseForm />
-                            <AdsenseForm />
+                            <AdsenseForm key={6}/>
+                            <AdsenseForm key={7}/>
+                            <AdsenseForm key={8}/>
+                            <AdsenseForm key={9}/>
+                            <AdsenseForm key={10}/>
                         </div>
                     )
                 }

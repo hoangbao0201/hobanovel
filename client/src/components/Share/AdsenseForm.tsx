@@ -6,9 +6,10 @@ interface AdsenseFormProps {
     layout?: string
     format?: string
     slot?: string
+    key?: number
 }
 
-export const AdsenseForm = ({ layout, format, slot } : AdsenseFormProps) => {
+export const AdsenseForm = ({ layout, format, slot, key = 1 } : AdsenseFormProps) => {
 
     // if(process.env.NODE_ENV !== "production") {
     //     return null;
@@ -25,6 +26,7 @@ export const AdsenseForm = ({ layout, format, slot } : AdsenseFormProps) => {
                         slot={slot}
                         responsive="true"
                         layout={layout}
+                        key={key}
                     />
                 ) : (
                     <Adsense
@@ -33,6 +35,7 @@ export const AdsenseForm = ({ layout, format, slot } : AdsenseFormProps) => {
                         format="auto"
                         slot="6844017742"
                         responsive="true"
+                        key={key}
                     />
                 )
             }
