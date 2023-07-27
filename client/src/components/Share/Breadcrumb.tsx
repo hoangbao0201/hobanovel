@@ -27,6 +27,7 @@ const Breadcrumb = ({ path }: BreadcrumbProps) => {
                     className="text-blue-500"
                 >
                     <Link
+                        id="0"
                         itemScope 
                         itemProp="item"
                         itemType="http://schema.org/Thing"
@@ -40,7 +41,7 @@ const Breadcrumb = ({ path }: BreadcrumbProps) => {
                     <>
                         {path.map((item, index) => {
                             return (
-                                <li
+                                <li 
                                     key={index}
                                     itemScope
                                     itemProp="itemListElement"
@@ -51,6 +52,7 @@ const Breadcrumb = ({ path }: BreadcrumbProps) => {
                                         {iconAngleDouble}
                                     </i>
                                     <Link
+                                        id={`${index+1}`}
                                         itemScope 
                                         itemProp="item"
                                         itemType="http://schema.org/Thing"

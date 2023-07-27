@@ -11,6 +11,7 @@ import { getAccessToken, removeAccessToken } from "@/services/cookies.servies";
 import Header from "../partials/Header";
 import Footer from "../partials/Footer";
 import BannersIntro from "../partials/BannersIntro";
+import NavHead from "../partials/NavHead";
 
 
 // const Header = dynamic(() => import('../partials/Header', {
@@ -88,6 +89,8 @@ const MainLayout = ({
             }
 
             { isHeader && <Header autoHidden={autoHidden} /> }
+
+            {/* { <NavHead /> } */}
 
             { isBannerPage && <BannersIntro /> }
 

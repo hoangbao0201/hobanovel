@@ -6,6 +6,7 @@ export const checkCreateChapter = async (
     res: Response,
     next: NextFunction
 ) => {
+    let connection;
     try {
         const { slug, chapterNumber } = req.params;
         if(!slug || !chapterNumber) {
@@ -16,7 +17,7 @@ export const checkCreateChapter = async (
             return;
         }
         
-        const connection = await pool.getConnection();
+        connection = await pool.getConnection();
 
         const qCheckCreateChapter = `
             SELECT novelId, title FROM novels
@@ -31,11 +32,11 @@ export const checkCreateChapter = async (
             return;
         }
 
-        connection.release()
-
         res.locals.novel = rows[0]
         next();
     } catch (error) {
         next(error);
+    } finally {
+        if (connection) connection.release();
     }
 };

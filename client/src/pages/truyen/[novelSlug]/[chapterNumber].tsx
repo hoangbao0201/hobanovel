@@ -447,7 +447,7 @@ const ChapterDetailPage = ({ chapter }: ChapterDetailPageProps) => {
                                 </>
             
                                 
-                                <AdsenseForm key={11}/>
+                                <AdsenseForm />
                     
             
                                 <div className="">

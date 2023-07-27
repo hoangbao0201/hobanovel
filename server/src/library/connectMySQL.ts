@@ -11,7 +11,7 @@ const pool = mysql.createPool({
     user: process.env.DB_MYSQL_USER as string,
     password: process.env.DB_MYSQL_PASSWORD as string,
     database: process.env.DB_MYSQL_DATABASE as string,
-    connectionLimit: 100,
+    connectionLimit: 10,
     ssl: {
         ca: sslCertPath,
         rejectUnauthorized: false
@@ -22,12 +22,16 @@ export default pool;
 
 
 async function checkConnection() {
+    let connection;
     try {
-        const connection = await pool.getConnection();
+        connection = await pool.getConnection();
         console.log("Connected to MySQL!");
-        connection.release();
+
     } catch (error) {
         console.error("Failed to connect to MySQL:", error);
+    }
+    finally {
+        if (connection) connection.release();
     }
 }
 checkConnection();

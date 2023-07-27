@@ -113,14 +113,11 @@ const NovelDetailPage = ({ novel, tab } : NovelDetailPageProps) => {
     // Handle follow
     const handleFollowNovel = async () => {
         const token = getAccessToken()
-        if(!token || !novel?.novelId) {
-            console.log("Không có token")
-            return
-        }
-        if(!isAuthenticated) {
-            console.log("Chưa đăng nhập")
+        if(!token || !isAuthenticated) {
+            alert("Vui lòng đăng nhập để bình luận.")
             return;
         }
+        
         try {
             const dataFollowNovel = {
                 userId: currentUser.userId,

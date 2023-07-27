@@ -100,9 +100,9 @@ const Header = ({ autoHidden = true } : HeaderProps) => {
             ${ autoHidden && (isHeader ? "opacity-100" : "opacity-0 pointer-events-none")}`}
         >
             <div className={`w-full`}>
-                <div className="max-w-7xl mx-auto flex items-center h-[50px] px-3 relative">
-                    <h1 className="text-center align-middle font-bold text-2xl">
-                        <Link href="/">
+                <div className="max-w-5xl mx-auto flex items-center h-[50px] px-3 relative">
+                    <h1 className="text-center align-middle font-bold text-2xl font-sans">
+                        <Link href="/" title="hobanovel">
                             hobanovel
                         </Link>
                     </h1>
