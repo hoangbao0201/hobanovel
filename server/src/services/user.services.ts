@@ -88,7 +88,7 @@ export const getUserByUsernameHandle = async ({ username } : UserType) => {
         connection = await pool.getConnection();
 
         const qGetUser = `
-            SELECT userId, username, email, rank, description, createAt FROM USERS
+            SELECT userId, username, email, "rank", description, createAt FROM USERS
             WHERE username = ?
         `
 
@@ -144,7 +144,7 @@ export const getUserByIdHandle = async ({userId} : UserType) => {
         connection = await pool.getConnection();
 
         const qGetUser = `
-            SELECT userId, name, username, email, rank, description, avatarUrl, createdAt FROM USERS 
+            SELECT userId, name, username, email, "rank", description, avatarUrl, createdAt FROM USERS 
             WHERE userId = ?
         `
 

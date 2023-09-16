@@ -215,7 +215,7 @@ const Header = ({ autoHidden = true } : HeaderProps) => {
                                                         className="group-hover:scale-105 group-hover:duration-500 object-cover w-9 h-9"
                                                         placeholder="blur"
                                                         src={
-                                                            currentUser.avatarUrl ||
+                                                            currentUser?.avatarUrl ||
                                                             "/images/avatar-default.png"
                                                         }
                                                     />
@@ -229,15 +229,15 @@ const Header = ({ autoHidden = true } : HeaderProps) => {
                                                         alt="image-demo"
                                                         className="w-11 h-11 object-cover"
                                                         src={
-                                                            currentUser.thumbnailUrl ||
+                                                            currentUser?.thumbnailUrl ||
                                                             "/images/avatar-default.png"
                                                         }
                                                     />
-                                                    <div className="ml-3 flex-1 line-clamp-1">{currentUser.username}</div>
+                                                    <div className="ml-3 flex-1 line-clamp-1">{currentUser?.username}</div>
                                                 </div>
                                                 <ul className="dropdown-content">
                                                     {
-                                                        currentUser.username === "admin" ? (
+                                                        currentUser?.username === "admin" ? (
                                                             <li>
                                                                 <Link href={`/admin`} className="hover:bg-gray-100 py-2 px-2 block cursor-pointer">
                                                                     Admin
@@ -245,7 +245,7 @@ const Header = ({ autoHidden = true } : HeaderProps) => {
                                                             </li>
                                                         ) : (
                                                             <li>
-                                                                <Link href={`/user/${currentUser.username}`} className="hover:bg-gray-100 py-2 px-2 block cursor-pointer">
+                                                                <Link href={`/user/${currentUser?.username}`} className="hover:bg-gray-100 py-2 px-2 block cursor-pointer">
                                                                     Hồ sơ
                                                                 </Link>
                                                             </li>
