@@ -187,7 +187,7 @@ const BannersIntro = ({}: BannersIntroProps) => {
                                 ) : (
                                     <SwiperSlide data-banner-id={`bannerCp`} key={"bannerCp"} className="">
                                         <Link
-                                            href="/truyen/truong-sinh-theo-cuoi-vo-bat-dau"
+                                            href={`/truyen/${banners?.slug}`}
                                             className="w-full h-full"
                                         >
                                             {
