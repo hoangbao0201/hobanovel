@@ -679,21 +679,21 @@ const SearchNovel = ({ queryPage }: SearchNovelProps) => {
 };
 export default SearchNovel;
 
-export const getServerSideProps = async (
-    context: any
-) => {
-    const { query } = context;    
+// export const getServerSideProps = async (
+//     context: any
+// ) => {
+//     const { query } = context;    
 
-    try {
-        return {
-            props: {
-                queryPage: query
-            },
-        };
-    } catch (error) {
-        return { notFound: true };
-    }
-};
+//     try {
+//         return {
+//             props: {
+//                 queryPage: query
+//             },
+//         };
+//     } catch (error) {
+//         return { notFound: true };
+//     }
+// };
 
 SearchNovel.getLayout = (page: ReactNode) => {
     return (

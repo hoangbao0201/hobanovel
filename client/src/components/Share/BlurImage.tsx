@@ -9,7 +9,7 @@ interface BlurImage extends WithClassName, ComponentProps<typeof Image> {
 }
 
 const BlurImage = (props : BlurImage) => {
-    const [isLoading, setLoading] = useState(true);
+    // const [isLoading, setLoading] = useState(true);
     const [imgSrc, setImgSrc] = useState(props.src);
 
     return (
@@ -26,7 +26,8 @@ const BlurImage = (props : BlurImage) => {
             )}
             loading="lazy"
             src={imgSrc || "/images/novel-default.png"}
-            onLoadingComplete={() => setLoading(false)}
+            // src={"/images/novel-default.png"}
+            // onLoadingComplete={() => setLoading(false)}
             onError={() => setImgSrc("/images/novel-default.png")}
         />
     )
